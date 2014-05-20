@@ -1,0 +1,13 @@
+@import "common.css";
+@import "page.css";
+
+.page_body > .cate_nav { margin-bottom: 20px; }
+
+.page_body > .article_list > li { margin-bottom: 20px; }
+.page_body > .article_list > li > ol > .list_title { margin-bottom: 5px; }
+	.page_body > .article_list > li > ol > .list_title > a { font-size: 18px; }
+.page_body > .article_list > li > ol > .list_time { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px dashed #fff; }
+.page_body > .article_list > li > ol > .list_excerpt { margin-bottom: 5px; }
+.page_body > .article_list > li > ol > .list_read { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px dashed #fff; }
+
+.page_body > .page_global { padding: 10px 0px; float: right; }

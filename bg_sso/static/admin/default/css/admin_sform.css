@@ -1,0 +1,17 @@
+@import "admin_common.css";
+
+	/*表单样式*/
+	.page_body > dd > .tform > ul { padding: 15px 40px 15px 15px; }
+
+		.page_body > dd > .tform > ul > .title { color: #999; padding-bottom: 5px; }
+		.page_body > dd > .tform > ul > .field { padding-bottom: 15px; }
+			.page_body > dd > .tform > ul > .field > div { padding-bottom: 5px; }
+
+			.page_body > dd > .tform > ul > li > input[type="text"] { width: 500px; font-size: 20px; }
+			.page_body > dd > .tform > ul > li > button { margin: 0px 10px 20px 0px; }
+
+			.page_body > dd > .tform > ul > li > strong { color: #000; font-size: 14px; margin-bottom: 10px; word-wrap: break-word; word-break: normal; }
+			.page_body > dd > .tform > ul > li > span { margin-left: 10px; color: #c30; }
+			.page_body > dd > .tform > ul > li > label { margin-right: 10px; color: #000; }
+			.page_body > dd > .tform > ul > li > .narrow { width: 300px; height: 300px; }
+

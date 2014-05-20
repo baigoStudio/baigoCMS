@@ -1,0 +1,33 @@
+@import "global.css";
+
+body { margin: 0px; padding: 0px; background: #fff; background: url(../image/admin_bg_main.png) repeat-y; }
+
+.page_head { background: url(../image/admin_bg_head.png) #f0f0ee; }
+	.page_head > .head_title { width: 130px; height: 20px; padding: 10px; font-size: 18px; color: #0477c8; background: url(../image/admin_bg_head.png) left bottom #c5ecff; float: left; }
+	.page_head > .head_name { height: 20px; padding: 10px; float: left; font-size: 18px; }
+	.page_head > .head_menu { height: 20px; padding: 10px; float: right; }
+
+.page_body { min-height: 1000px; }
+
+		/*左侧菜单*/
+	.page_body > dt { width: 150px; position: absolute; text-align: left; }
+
+
+		.page_body > dt > ul > li > a { height: 16px; display: block; padding: 12px 8px; font-size: 14px; background: url(../image/admin_menu.png) #b9ddef; color: #576d7a; }
+		.page_body > dt > ul > li > a:hover { background-position: 0px -40px; color: #000; }
+
+		/*子菜单*/
+		.page_body > dt > ul > li > ol { display: none; }
+
+			.page_body > dt > ul > li > ol > li > a { display: block; padding: 12px 15px; font-size: 14px; background: url(../image/admin_menu.png) #f0f0ee 0px -80px; color: #777; }
+			.page_body > dt > ul > li > ol > li > a:hover { background-position: 0px -120px; color: #000; }
+
+		/*右侧表单*/
+		.page_body > dd { margin-left: 150px; }
+
+.page_foot { background: url(../image/admin_bg_foot.png) #fff; }
+
+	.page_foot > .foot_logo { width: 130px; height: 15px; padding: 10px; background: url(../image/admin_bg_foot.png) left bottom #c5ecff; float: left; }
+		.page_foot > .foot_logo > a { display: block; width: 100px; height: 0px; margin: 0px auto; padding-top: 15px; overflow: hidden; background: url(../image/admin_power_by.png) 0px -15px; }
+
+	.page_foot > .foot_power_by { height: 15px; padding: 10px; float: left; }

@@ -1,0 +1,36 @@
+@import "global.css";
+
+body { margin: 0px; padding: 0px; background: #fff; }
+
+.global_head { background: url(../image/admin_bg_head.png) 0px -80px; }
+	.global_head > .head_name { height: 20px; padding: 10px; float: left; font-size: 18px; color: #ddd; }
+	.global_head > .head_logo > a { width: 150px; height: 0px; background: url(../image/admin_power_by.png) 0px -80px; padding-top: 40px; float: right; overflow: hidden; margin-right: 10px; }
+
+.page_head { background: url(../image/admin_bg_head.png); }
+	.page_head > .head_title { width: 130px; height: 20px; padding: 10px; font-size: 18px; color: #0477c8; background: url(../image/admin_bg_head.png) 0px -40px; float: left; }
+	.page_head > .head_name { height: 20px; padding: 10px; float: left; font-size: 18px; }
+	.page_head > .head_menu { height: 20px; padding: 10px; float: right; margin-right: 10px; }
+
+.page_body { min-height: 1000px; background: url(../image/admin_bg_main.png) repeat-y; }
+
+		/*左侧菜单*/
+	.page_body > dt { width: 150px; position: absolute; text-align: left; }
+
+		.page_body > dt > ul > li > a { height: 16px; display: block; padding: 12px 8px; font-size: 14px; background: url(../image/admin_menu.png); color: #576d7a; }
+		.page_body > dt > ul > li > a:hover { background-position: 0px -40px; color: #000; }
+
+		/*子菜单*/
+		.page_body > dt > ul > li > ol { display: none; }
+
+			.page_body > dt > ul > li > ol > li > a { display: block; padding: 12px 15px; font-size: 14px; background: url(../image/admin_menu.png) 0px -80px; color: #777; }
+			.page_body > dt > ul > li > ol > li > a:hover { background-position: 0px -120px; color: #000; }
+
+		/*右侧表单*/
+		.page_body > dd { margin-left: 150px; }
+
+.page_foot { background: url(../image/admin_bg_foot.png); }
+
+	.page_foot > .foot_logo { width: 150px; height: 40px; background: url(../image/admin_bg_foot.png) 0px -80px; float: left; }
+		.page_foot > .foot_logo > a { display: block; width: 150px; height: 0px; padding-top: 40px; overflow: hidden; background: url(../image/admin_power_by.png) 0px -40px; }
+
+	.page_foot > .foot_power_by { height: 20px; padding: 10px; float: left; }

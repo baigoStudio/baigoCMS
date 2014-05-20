@@ -1,0 +1,21 @@
+@import "global.css";
+
+body { background: #fff; padding: 0px; margin: 30px; }
+
+h1 { padding-bottom: 10px; border-bottom: 1px dashed #ccc; margin-bottom: 20px; }
+
+ul > .title { color: #999; margin-bottom: 5px; }
+ul > .field { margin-bottom: 10px; }
+ul > .title_b { margin-bottom: 10px; font-size: 20px; color: #000; }
+ul > .list { height: 30px; }
+	ul > .list input[type="text"] { width: 100px; margin-left: 10px; }
+
+	ul > li > input[type="text"] { width: 200px; }
+	ul > li > input[type="password"] { width: 200px; }
+	ul > li > span { margin-left: 10px; color: #c30; }
+	ul > li > label { margin-right: 10px; color: #000; }
+	ul > li > strong { font-size: 14px; color: #000; }
+	ul > li > button { margin: 10px 10px 20px 0px; }
+
+	ul > li > #seccode { width: 100px; }
+		ul > li > a > #seccodeImg { vertical-align: middle; margin-left: 10px; }

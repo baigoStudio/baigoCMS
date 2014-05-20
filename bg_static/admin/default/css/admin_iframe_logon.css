@@ -1,0 +1,34 @@
+@import "global.css";
+
+body { background: #fff; padding: 0px; margin: 30px; }
+
+.global > .global_body > .page_head { padding-bottom: 10px; border-bottom: 1px dashed #ccc; margin-bottom: 20px; }
+
+	.global > .global_body > .page_head > .head_title { float: left; font-size: 20px; }
+	.global > .global_body > .page_head > .head_name { float: right; height: 20px; overflow: hidden; }
+
+.global > .global_body > .page_body { text-align: left; }
+
+	.global > .global_body > .page_body > form > .msg { height: 40px; color: #c30; font-size: 16px; }
+	.global > .global_body > .page_body > form > .btn_logon { margin-top: 40px; }
+
+		.global > .global_body > .page_body > form > div > a { font-size: 14px; background: url(../image/submit.png) no-repeat; padding: 9px 9px 9px 40px; color: #4C826A; }
+		.global > .global_body > .page_body > form > div > a:hover { background-position: 0px -34px; color: #005839; }
+
+	.global > .global_body > .page_body > form > ul > li { margin-bottom: 10px; }
+
+		.global > .global_body > .page_body > form > ul > li > ol { width: 290px; float: left; }
+
+			.global > .global_body > .page_body > form > ul > li > ol > .label { width: 50px; margin-top: 8px; float: left; color: #999; }
+			.global > .global_body > .page_body > form > ul > li > ol > .field { width: 236px; float: left; }
+
+				.global > .global_body > .page_body > form > ul > li > ol > .field > input { width: 220px; float: left; font-size: 20px; }
+				.global > .global_body > .page_body > form > ul > li > ol > .field > #seccode { width: 100px; }
+				.global > .global_body > .page_body > form > ul > li > ol > .field > a { float: right; }
+
+		.global > .global_body > .page_body > form > ul > li > span { float: left; margin: 8px 0px 0px 10px; color: #c30; }
+
+
+.global > .global_body > .page_foot { text-align: left; }
+
+	.global > .global_body > .page_foot > a { display: block; width: 100px; height: 0px; padding-top: 15px; overflow: hidden; background: url(../image/admin_power_by.png); }

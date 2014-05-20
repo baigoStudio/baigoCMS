@@ -1,0 +1,10 @@
+.page_global { list-style: none; }
+.page_global > li { float: left; }
+.page_global > li > a { padding: 5px; background: url(); }
+.page_global > li > strong { padding: 5px; font: bolder; color: #999999; }
+
+.page_global > .page_pre_ten > strong { display: none; }
+.page_global > .page_pre > strong { display: none; }
+.page_global > .page_list > strong { color: #ff0000; }
+.page_global > .page_next > strong { display: none; }
+.page_global > .page_next_ten > strong { display: none; }

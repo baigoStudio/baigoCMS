@@ -1,0 +1,11 @@
+@import "global.css";
+
+	.page_body > .tform { padding: 15px 40px 15px 15px; }
+
+		.page_body > .tform > h1 { padding-bottom: 15px; }
+			.page_body > .tform > h1 > img { vertical-align: middle; margin-right: 10px; }
+
+		.page_body > .tform > h2 { padding-bottom: 15px; }
+			.page_body > .tform > h2 > a { font-size: 16px; }
+
+		.page_body > .tform > h3 { padding-bottom: 15px; font-size: 12px; }
