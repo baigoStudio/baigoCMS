@@ -17,10 +17,6 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/admin.class.php"); //载入栏目控�
 $ajax_admin = new AJAX_ADMIN(); //初始化设置对象
 
 switch ($act_post) {
-	case "my":
-		$ajax_admin->ajax_my();
-	break;
-
 	case "submit":
 		$ajax_admin->ajax_submit();
 	break;

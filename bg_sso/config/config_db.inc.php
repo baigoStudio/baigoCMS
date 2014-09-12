@@ -5,9 +5,9 @@
 -----------------------------------------------------------------*/
 
 /*-------------------------数据库配置-------------------------*/
-define("BG_DB_HOST", "127.0.0.1"); //数据库服务器
+define("BG_DB_HOST", "localhost"); //数据库服务器
 define("BG_DB_USER", "sso"); //数据库用户名
-define("BG_DB_PASS", "ZvCvPyfZHXY5NRa2"); //数据库密码
+define("BG_DB_PASS", ""); //数据库密码
 define("BG_DB_NAME", "sso"); //数据库名
 define("BG_DB_CHARSET", "utf8"); //数据库编码
 define("BG_DB_TABLE", "sso_"); //数据表前缀

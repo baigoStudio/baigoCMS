@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "mime.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "mime.class.php"); //载入后台用户类
 
@@ -37,23 +36,17 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["admin_allow_sys"]["upfile"]["mime"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"] != 1) {
 			$this->obj_ajax->halt_alert("x080302");
 		}
 
-		$_arr_mimePost = fn_mimePost();
+		$_arr_mimeSubmit = $this->mdl_mime->input_submit();
 
-		if ($_arr_mimePost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_mimePost["str_alert"]);
+		if ($_arr_mimeSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_mimeSubmit["str_alert"]);
 		}
 
-		$_arr_mimeRow = $this->mdl_mime->mdl_read($_arr_mimePost["mime_name"], "mime_name");
-
-		if ($_arr_mimeRow["str_alert"] == "y080102") {
-			$this->obj_ajax->halt_alert("x080206");
-		}
-
-		$_arr_mimeRow = $this->mdl_mime->mdl_submit($_arr_mimePost["mime_name"], $_arr_mimePost["mime_ext"], $_arr_mimePost["mime_note"]);
+		$_arr_mimeRow = $this->mdl_mime->mdl_submit();
 
 		$this->obj_ajax->halt_alert($_arr_mimeRow["str_alert"]);
 	}
@@ -66,16 +59,16 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["admin_allow_sys"]["upfile"]["mime"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"] != 1) {
 			$this->obj_ajax->halt_alert("x080304");
 		}
 
-		$_arr_mimeDo = fn_mimeDo();
-		if ($_arr_mimeDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_mimeDo["str_alert"]);
+		$_arr_mimeIds = $this->mdl_mime->input_ids();
+		if ($_arr_mimeIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_mimeIds["str_alert"]);
 		}
 
-		$_arr_mimeRow = $this->mdl_mime->mdl_del($_arr_mimeDo["mime_ids"]);
+		$_arr_mimeRow = $this->mdl_mime->mdl_del();
 
 		$this->obj_ajax->halt_alert($_arr_mimeRow["str_alert"]);
 	}
@@ -89,8 +82,9 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_mimeName = fn_getSafe($_GET["mime_name"], "txt", "");
-		$_arr_mimeRow = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name");
+		$_str_mimeName    = fn_getSafe($_GET["mime_name"], "txt", "");
+		$_num_mimeId      = fn_getSafe($_GET["mime_id"], "int", 0);
+		$_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
 		if ($_arr_mimeRow["str_alert"] == "y080102") {
 			$this->obj_ajax->halt_re("x080206");
 		}

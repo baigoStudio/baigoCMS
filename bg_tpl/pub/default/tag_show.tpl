@@ -2,15 +2,15 @@
 {$cfg = [
 	title      => $tplData.tagRow.tag_name,
 	css        => "tag_show",
-	str_url    => "{$tplData.tagRow.tag_url}{$tplData.tagRow.page_attach}",
-	page_ext   => $tplData.tagRow.page_ext
+	str_url    => "{$tplData.tagRow.urlRow.tag_url}{$tplData.tagRow.urlRow.page_attach}",
+	page_ext   => $tplData.search.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 
 	<div class="tag_nav">
-		<a href="{$smarty.const.BG_URL_PUB}">首页</a>
+		<a href="{$smarty.const.BG_URL_ROOT}">首页</a>
 		&raquo;
-		<a href="{$common.tagUrl}">TAG</a>
+		<a href="{$tplData.search.urlRow.tag_url}">TAG</a>
 		&raquo;
 		{$tplData.tagRow.tag_name}
 	</div>
@@ -31,7 +31,7 @@
 							{else}
 								{$_str_class = "normal"}
 							{/if}
-							<a href="{$tag_value.tag_url}" class="{$_str_class}">{$tag_value.tag_name}</a>{if !$tag_value@last},{/if}
+							<a href="{$tag_value.urlRow.tag_url}" class="{$_str_class}">{$tag_value.tag_name}</a>
 						{/foreach}
 					</li>
 				</ol>

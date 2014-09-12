@@ -24,8 +24,8 @@ switch ($act_post) {
 
 	default:
 		switch ($act_get) {
-			case "chkthumb":
-				$ajax_thumb->ajax_chkthumb();
+			case "chk":
+				$ajax_thumb->ajax_chk();
 			break;
 		}
 	break;

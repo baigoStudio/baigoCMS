@@ -1,78 +1,72 @@
 {* install_1.tpl 登录界面 *}
-
+{$cfg = [
+	sub_title  => $lang.page.installBase,
+	sub_active => "base",
+	mod_help   => "install",
+	act_help   => "base"
+]}
 {include "include/install_head.tpl" cfg=$cfg}
 
-	<div class="page_head">
-		{$lang.page.installStep}
-		&raquo;
-		{$lang.page.installBase}
-	</div>
+	<form name="install_form_base" id="install_form_base">
+		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="act_post" value="base">
 
-	<div class="page_body">
-		<form name="instal_form_base" id="instal_form_base">
-			<input type="hidden" name="act_post" value="base">
-			<ul>
-				{foreach $opt["base"] as $key=>$value}
-					{if $tplData.optRows[$key].opt_value}
-						{$_this_value = $tplData.optRows[$key].opt_value}
-					{else}
-						{$_this_value = $value.default}
+		{include "include/install_form.tpl" cfg=$cfg}
+
+		<div class="form-group">
+			<label for="opt_BG_SITE_TPL" class="control-label">{$lang.label.tpl}<span id="msg_BG_SITE_TPL">*</span></label>
+			<select name="opt[BG_SITE_TPL]" id="opt_BG_SITE_TPL" class="validate form-control input-lg">
+				{foreach $tplData.tplRows as $key=>$value}
+					{if $value["type"] == "dir"}
+					<option {if $tplData.optRows.BG_SITE_TPL.opt_value == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
 					{/if}
-					<li class="title">{$value.label} {$value.note}<span id="msg_{$key}">{if $value.min > 0}*{/if}</span></li>
-					<li class="field">
-						{if $value.type == "select"}
-							<select name="opt[{$key}]" id="{$key}" class="validate">
-								{foreach $value.option as $_key=>$_value}
-								<option {if $_this_value == $_key}selected="selected"{/if} value="{$_key}">{$_value}</option>
-								{/foreach}
-							</select>
-						{else if $value.type == "radio"}
-							{foreach $value.option as $_key=>$_value}
-								<input type="radio" {if $_this_value == $_key}checked="checked"{/if} value="{$_key}" name="opt[{$key}]" id="{$key}_{$_key}" />
-								<label for="{$key}_{$_key}">{$_value}</label>
-							{/foreach}
-						{else if $value.type == "textarea"}
-							<textarea name="opt[{$key}]" id="{$key}" class="validate">{$_this_value}</textarea>
-						{else}
-							<input type="text" value="{$_this_value}" name="opt[{$key}]" id="{$key}" class="validate" />
-						{/if}
-					</li>
 				{/foreach}
+			</select>
+		</div>
 
-				<li class="line_dashed"> </li>
-
-				<li>
-					<button type="button" id="go_pre" class="float_left">{$lang.btn.installPre}</button>
-					<button type="button" id="go_skip" class="float_left">{$lang.btn.skip}</button>
-					<button type="button" id="go_next" class="float_right">{$lang.btn.submit}</button>
-				</li>
-			<ul>
-		</form>
-	</div>
+		<div class="form-group">
+			<div class="btn-group">
+				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.save}</button>
+				{include "include/install_drop.tpl" cfg=$cfg}
+			</div>
+		</div>
+	</form>
 
 {include "include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
 		{foreach $opt["base"] as $key=>$value}
-		"{$key}": {
-			length: { min: {$value.min}, max: 900 },
-			validate: { type: "{$value.type}", format: "{$value.format}" },
-			msg: { id: "msg_{$key}", too_short: "{$alert.x040201}{$value.label}", too_long: "{$value.label}{$alert.x040202}" }
-		}{if !$value@last},{/if}
+			{if $value.type == "str" || $value.type == "textarea"}
+				{$str_msg_min = "too_short"}
+				{$str_msg_max = "too_long"}
+			{else}
+				{$str_msg_min = "too_few"}
+				{$str_msg_max = "too_many"}
+			{/if}
+			"opt_{$key}": {
+				length: { min: {$value.min}, max: 900 },
+				validate: { type: "{$value.type}", format: "{$value.format}" },
+				msg: { id: "msg_{$key}", {$str_msg_min}: "{$alert.x060201}{$value.label}", {$str_msg_max}: "{$value.label}{$alert.x060202}", format_err: "{$value.label}{$alert.x060203}" }
+			},
 		{/foreach}
+		"opt_BG_SITE_TPL": {
+			length: { min: 1, max: 900 },
+			validate: { type: "select" },
+			msg: { id: "msg_BG_SITE_TPL", too_few: "{$alert.x060201}{$lang.label.tpl}" }
+		}
 	};
-	var opts_submit_form = { ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install", btn_text: "{$lang.btn.installNext}", btn_url: "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=visit" };
+
+	var opts_submit_form = {
+		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
+		btn_text: "{$lang.btn.installNext}",
+		btn_close: "{$lang.btn.close}",
+		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=visit"
+	};
 
 	$(document).ready(function(){
-		var obj_validator_form = $("#instal_form_base").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#instal_form_base").baigoSubmit(opts_submit_form);
-		$("#go_pre").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=dbtable";
-		});
-		$("#go_skip").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=visit";
-		});
+		var obj_validator_form = $("#install_form_base").baigoValidator(opts_validator_form);
+		var obj_submit_form = $("#install_form_base").baigoSubmit(opts_submit_form);
 		$("#go_next").click(function(){
 			if (obj_validator_form.validateSubmit()) {
 				obj_submit_form.formSubmit();

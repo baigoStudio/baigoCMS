@@ -34,5 +34,10 @@ return array(
 		"log"     => "日志",
 		"opt"     => "设置",
 	),
+
+	"prd" => array(
+		"cms"   => "bg_install",
+		"sm"    => "install",
+	),
 );
 ?>

@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "cate.func.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目类
 
@@ -35,7 +34,7 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_order() {
-		if ($this->adminLogged["admin_allow_sys"]["cate"]["edit"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
 			$this->obj_ajax->halt_alert("x110303");
 		}
 		if (!fn_token("chk")) { //令牌
@@ -55,22 +54,8 @@ class AJAX_CATE {
 
 		$_num_parentId    = fn_getSafe($_POST["cate_parent_id"], "int", 0);
 		$_str_orderType   = fn_getSafe($_POST["order_type"], "txt", "order_first");
-
-		switch ($_str_orderType) {
-			case "order_before":
-				$_num_targetId = fn_getSafe($_POST["order_target_before"], "int", 0);
-			break;
-
-			case "order_after":
-				$_num_targetId = fn_getSafe($_POST["order_target_after"], "int", 0);
-			break;
-
-			default:
-				//$_num_targetId = 0;
-			break;
-		}
-
-		$_arr_cateRow = $this->mdl_cate->mdl_order($_str_orderType, $_num_cateId, $_num_targetId, $_num_parentId);
+		$_num_targetId    = fn_getSafe($_POST["order_target"], "int", 0);
+		$_arr_cateRow     = $this->mdl_cate->mdl_order($_str_orderType, $_num_cateId, $_num_targetId, $_num_parentId);
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
 	}
@@ -83,39 +68,23 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_submit() {
-		$_arr_cataPost = fn_catePost();
+		$_arr_cateSubmit = $this->mdl_cate->input_submit();
 
-		if ($_arr_cataPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cataPost["str_alert"]);
+		if ($_arr_cateSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_cateSubmit["str_alert"]);
 		}
 
-		if ($_arr_cataPost["cate_id"] > 0) {
-			if ($this->adminLogged["admin_allow_sys"]["cate"]["edit"] != 1) {
+		if ($_arr_cateSubmit["cate_id"] > 0) {
+			if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
 				$this->obj_ajax->halt_alert("x110303");
 			}
-			$_arr_cateRow = $this->mdl_cate->mdl_read($_arr_cataPost["cate_id"]);
-			if ($_arr_cateRow["str_alert"] != "y110102") {
-				$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
-			}
 		} else {
-			if ($this->adminLogged["admin_allow_sys"]["cate"]["add"] != 1) {
+			if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"] != 1) {
 				$this->obj_ajax->halt_alert("x110302");
 			}
 		}
 
-		$_arr_cateRow = $this->mdl_cate->mdl_read($_arr_cataPost["cate_name"], "cate_name", $_arr_cataPost["cate_id"], $_arr_cataPost["cate_parent_id"]);
-		if ($_arr_cateRow["str_alert"] == "y110102") {
-			$this->obj_ajax->halt_alert("x110203");
-		}
-
-		if ($_arr_cataPost["cate_alias"]) {
-			$_arr_cateRow = $this->mdl_cate->mdl_read($_arr_cataPost["cate_alias"], "cate_alias", $_arr_cataPost["cate_id"], $_arr_cataPost["cate_parent_id"]);
-			if ($_arr_cateRow["str_alert"] == "y110102") {
-				$this->obj_ajax->halt_alert("x110206");
-			}
-		}
-
-		$_arr_cateRow = $this->mdl_cate->mdl_submit($_arr_cataPost["cate_id"], $_arr_cataPost["cate_name"], $_arr_cataPost["cate_type"], $_arr_cataPost["cate_status"], $_arr_cataPost["cate_tpl"], $_arr_cataPost["cate_alias"], $_arr_cataPost["cate_content"], $_arr_cataPost["cate_link"], $_arr_cataPost["cate_parent_id"], $_arr_cataPost["cate_domain"], $_arr_cataPost["cate_ftp_host"], $_arr_cataPost["cate_ftp_port"], $_arr_cataPost["cate_ftp_user"], $_arr_cataPost["cate_ftp_pass"], $_arr_cataPost["cate_ftp_path"]);
+		$_arr_cateRow = $this->mdl_cate->mdl_submit();
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
 	}
@@ -128,13 +97,13 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["admin_allow_sys"]["cate"]["edit"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
 			$this->obj_ajax->halt_alert("x110303");
 		}
 
-		$_arr_cataDo = fn_cateDo();
-		if ($_arr_cataDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cataDo["str_alert"]);
+		$this->cateIds = $this->mdl_cate->input_ids();
+		if ($this->cateIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($this->cateIds["str_alert"]);
 		}
 
 		$_str_cateStatus = fn_getSafe($_POST["act_post"], "txt", "");
@@ -142,7 +111,7 @@ class AJAX_CATE {
 			$this->obj_ajax->halt_alert("x110216");
 		}
 
-		$_arr_cateRow = $this->mdl_cate->mdl_status($_arr_cataDo["cate_ids"], $_str_cateStatus);
+		$_arr_cateRow = $this->mdl_cate->mdl_status($_str_cateStatus);
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
 	}
@@ -155,16 +124,16 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["admin_allow_sys"]["cate"]["del"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["del"] != 1) {
 			$this->obj_ajax->halt_alert("x110304");
 		}
 
-		$_arr_cataDo = fn_cateDo();
-		if ($_arr_cataDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cataDo["str_alert"]);
+		$this->cateIds = $this->mdl_cate->input_ids();
+		if ($this->cateIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($this->cateIds["str_alert"]);
 		}
 
-		$_arr_cateRow = $this->mdl_cate->mdl_del($_arr_cataDo["cate_ids"]);
+		$_arr_cateRow = $this->mdl_cate->mdl_del();
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
 	}

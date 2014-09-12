@@ -18,6 +18,45 @@ class MODEL_THUMB {
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
+	function mdl_create() {
+		$_arr_thumbCreat = array(
+			"thumb_id"       => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"thumb_width"    => "int(11) NOT NULL COMMENT '宽度'",
+			"thumb_height"   => "int(11) NOT NULL COMMENT '高度'",
+			"thumb_type"     => "varchar(10) NOT NULL COMMENT '类型'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "thumb", $_arr_thumbCreat, "thumb_id", "缩略图");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y090105"; //更新成功
+		} else {
+			$_str_alert = "x090105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "thumb'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
 	/*============提交缩略图============
 	@num_thumbWidth 宽度
 	@num_thumbHeight 高度
@@ -27,43 +66,78 @@ class MODEL_THUMB {
 		num_thumbId ID
 		str_alert 提示
 	*/
-	function mdl_submit($num_thumbWidth, $num_thumbHeight, $str_thumbType) {
+	function mdl_submit() {
 		$_arr_thumbData = array(
-			"thumb_width"    => $num_thumbWidth,
-			"thumb_height"   => $num_thumbHeight,
-			"thumb_type"     => $str_thumbType,
+			"thumb_width"    => $this->thumbSubmit["thumb_width"],
+			"thumb_height"   => $this->thumbSubmit["thumb_height"],
+			"thumb_type"     => $this->thumbSubmit["thumb_type"],
 		);
 
-		$_num_thumbId = $this->obj_db->insert(BG_DB_TABLE . "thumb", $_arr_thumbData);
+		if ($this->thumbSubmit["thumb_id"] == 0) {
+			$_num_thumbId = $this->obj_db->insert(BG_DB_TABLE . "thumb", $_arr_thumbData);
 
-		if ($_num_thumbId > 0) { //数据库插入是否成功
-			$_str_alert = "y090101";
+			if ($_num_thumbId > 0) { //数据库插入是否成功
+				$_str_alert = "y090101";
+			} else {
+				return array(
+					"str_alert" => "x090101",
+				);
+				exit;
+			}
 		} else {
+			$_num_thumbId    = $this->thumbSubmit["thumb_id"];
+			$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData,"thumb_id=" . $_num_thumbId);
+
+			if ($_num_mysql > 0) { //数据库插入是否成功
+				$_str_alert = "y090103";
+			} else {
+				return array(
+					"str_alert" => "x090103",
+				);
+				exit;
+			}
+		}
+
+		return array(
+			"thumb_id"   => $_num_thumbId,
+			"str_alert"  => $_str_alert,
+		);
+	}
+
+	function mdl_read($num_thumbId) {
+
+		$_arr_thumbSelect = array(
+			"thumb_id",
+			"thumb_width",
+			"thumb_height",
+			"thumb_type",
+		);
+
+		$_str_sqlWhere = "thumb_id=" . $num_thumbId;
+
+		$_arr_thumbRows = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
+		$_arr_thumbRow = $_arr_thumbRows[0];
+
+		if (!$_arr_thumbRow) { //用户名不存在则返回错误
 			return array(
-				"str_alert" => "x090101",
+				"str_alert" => "x090102", //不存在记录
 			);
 			exit;
 		}
 
-		return array(
-			"thumb_id" => $_num_thumbId,
-			"str_alert" => $_str_alert,
-		);
+		$_arr_thumbRow["str_alert"] = "y090102";
+
+		return $_arr_thumbRow;
 	}
 
-	/*============缩略图检查============
-	@num_thumbWidth 宽度
-	@num_thumbHeight 高度
 
-	返回提示
-	*/
-	function mdl_read($num_thumbWidth = 0, $num_thumbHeight = 0, $str_thumbType = "") {
+	function mdl_check($num_thumbWidth = 0, $num_thumbHeight = 0, $str_thumbType = "", $num_notId = 0) {
 		if ($num_thumbWidth == 100 && $num_thumbHeight == 100 && $str_thumbType == "cut") {
 			return array(
 				"thumb_width"   => 100,
 				"thumb_height"  => 100,
 				"thumb_type"    => "cut",
-				"str_alert"     => "y090102", //不存在记录
+				"str_alert"     => "y090102", //存在记录
 			);
 			exit;
 		}
@@ -89,6 +163,10 @@ class MODEL_THUMB {
 			$_str_sqlWhere .= " AND thumb_type='" . $str_thumbType . "'";
 		}
 
+		if ($num_notId > 0) {
+			$_str_sqlWhere .= " AND thumb_id<>" . $num_notId;
+		}
+
 		$_arr_thumbRows = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
 		$_arr_thumbRow = $_arr_thumbRows[0];
 
@@ -110,7 +188,7 @@ class MODEL_THUMB {
 		thumb_width 缩略图宽度
 		thumb_height 缩略图高度
 	*/
-	function mdl_list($num_no, $num_except = 0, $str_type = "") {
+	function mdl_list($num_no, $num_except = 0) {
 		$_arr_thumbSelect = array(
 			"thumb_id",
 			"thumb_width",
@@ -119,10 +197,6 @@ class MODEL_THUMB {
 		);
 
 		$_str_sqlWhere = "thumb_id > 0";
-
-		if ($str_type) {
-			$_str_sqlWhere .= " AND thumb_type='" . $str_type . "'";
-		}
 
 		$_arr_thumb = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere . " ORDER BY thumb_id DESC", $num_no, $num_except); //查询数据
 		$_arr_thumbRow[] = array(
@@ -137,12 +211,8 @@ class MODEL_THUMB {
 	}
 
 
-	function mdl_count($str_type = "") {
+	function mdl_count() {
 		$_str_sqlWhere = "thumb_id > 0";
-
-		if ($str_type) {
-			$_str_sqlWhere .= " AND thumb_type='" . $str_type . "'";
-		}
 
 		$_num_count = $this->obj_db->count(BG_DB_TABLE . "thumb", $_str_sqlWhere); //查询数据
 
@@ -154,11 +224,11 @@ class MODEL_THUMB {
 	 * mdl_del function.
 	 *
 	 * @access public
-	 * @param mixed $arr_thumbId
+	 * @param mixed $this->thumbIds["thumb_ids"]
 	 * @return void
 	 */
-	function mdl_del($arr_thumbId) {
-		$_str_thumbId = implode(",", $arr_thumbId);
+	function mdl_del() {
+		$_str_thumbId = implode(",", $this->thumbIds["thumb_ids"]);
 
 		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "thumb", "thumb_id IN (" . $_str_thumbId . ")"); //删除数据
 
@@ -174,5 +244,128 @@ class MODEL_THUMB {
 		);
 	}
 
+
+	function input_submit() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$this->thumbSubmit["thumb_id"] = fn_getSafe($_POST["thumb_id"], "int", 0);
+
+		if ($this->thumbSubmit["thumb_id"] > 0) {
+			$_arr_thumbRow = $this->mdl_read($this->thumbSubmit["thumb_id"]);
+			if ($_arr_thumbRow["str_alert"] != "y090102") {
+				return $_arr_thumbRow;
+				exit;
+			}
+		}
+
+		$_arr_thumbWidth = validateStr($_POST["thumb_width"], 1, 0);
+		switch ($_arr_thumbWidth["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x090201",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x090202",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->thumbSubmit["thumb_width"] = $_arr_thumbWidth["str"];
+			break;
+
+		}
+
+		$_arr_thumbHeight = validateStr($_POST["thumb_height"], 1, 0);
+		switch ($_arr_thumbHeight["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x090203",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x090204",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->thumbSubmit["thumb_height"] = $_arr_thumbHeight["str"];
+			break;
+
+		}
+
+		$_arr_thumbType = validateStr($_POST["thumb_type"], 1, 0);
+		switch ($_arr_thumbType["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x090205",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->thumbSubmit["thumb_type"] = $_arr_thumbType["str"];
+			break;
+
+		}
+
+		$_arr_thumbRow = $this->mdl_check($this->thumbSubmit["thumb_width"], $this->thumbSubmit["thumb_height"], $this->thumbSubmit["thumb_type"], $this->thumbSubmit["thumb_id"]);
+		if ($_arr_thumbRow["str_alert"] == "y090102") {
+			return array(
+				"str_alert" => "x090206",
+			);
+			exit;
+		}
+
+		$this->thumbSubmit["str_alert"] = "ok";
+		return $this->thumbSubmit;
+	}
+
+
+	/**
+	 * input_ids function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_thumbIds = $_POST["thumb_id"];
+
+		if ($_arr_thumbIds) {
+			foreach ($_arr_thumbIds as $_key=>$_value) {
+				$_arr_thumbIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->thumbIds = array(
+			"str_alert"   => $_str_alert,
+			"thumb_ids"   => $_arr_thumbIds
+		);
+
+		return $this->thumbIds;
+	}
 }
 ?>

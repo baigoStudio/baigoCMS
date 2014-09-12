@@ -1,5 +1,5 @@
 <?php
-define("BG_DB_HOST", "127.0.0.1");
+define("BG_DB_HOST", "localhost");
 define("BG_DB_NAME", "baigo_cms");
 define("BG_DB_USER", "baigo_cms");
 define("BG_DB_PASS", "");

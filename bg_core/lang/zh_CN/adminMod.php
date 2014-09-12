@@ -15,6 +15,7 @@ return array(
 		"main" => array(
 			"title"  => "文章管理",
 			"mod"    => "article",
+			"icon"   => "file",
 		),
 		"sub" => array(
 			"list" => array(
@@ -26,6 +27,11 @@ return array(
 				"title"     => "创建文章",
 				"mod"       => "article",
 				"act_get"   => "form",
+			),
+			"spec" => array(
+				"title"     => "专题",
+				"mod"       => "spec",
+				"act_get"   => "list",
 			),
 			"tag" => array(
 				"title"     => "TAG",
@@ -44,6 +50,7 @@ return array(
 			"edit"       => "编辑",
 			"del"        => "删除",
 			"approve"    => "审核",
+			"spec"       => "专题",
 			"tag"        => "TAG",
 			"mark"       => "标记",
 		),
@@ -52,6 +59,7 @@ return array(
 		"main" => array(
 			"title"  => "栏目管理",
 			"mod"    => "cate",
+			"icon"   => "th-large",
 		),
 		"sub" => array(
 			"list" => array(
@@ -72,19 +80,20 @@ return array(
 			"del"    => "删除",
 		),
 	),
-	"upfile" => array(
+	"attach" => array(
 		"main" => array(
-			"title"  => "上传管理",
-			"mod"    => "upfile",
+			"title"  => "附件管理",
+			"mod"    => "attach",
+			"icon"   => "paperclip",
 		),
 		"sub" => array(
 			"list" => array(
 				"title"     => "所有文件",
-				"mod"       => "upfile",
+				"mod"       => "attach",
 				"act_get"   => "list",
 			),
 			"mime" => array(
-				"title"     => "上传类型",
+				"title"     => "附件类型",
 				"mod"       => "mime",
 				"act_get"   => "list",
 			),
@@ -98,7 +107,7 @@ return array(
 			"browse" => "浏览",
 			"del"    => "删除",
 			"upload" => "上传",
-			"mime"   => "上传类型",
+			"mime"   => "附件类型",
 			"thumb"  => "缩略图",
 		),
 	),
@@ -106,6 +115,7 @@ return array(
 		"main" => array(
 			"title"  => "调用管理",
 			"mod"    => "call",
+			"icon"   => "list",
 		),
 		"sub" => array(
 			"list" => array(
@@ -182,6 +192,7 @@ return array(
 		"main" => array(
 			"title"  => "管理员",
 			"mod"    => "admin",
+			"icon"   => "user",
 		),
 		"sub" => array(
 			"list" => array(
@@ -212,6 +223,7 @@ return array(
 		"main" => array(
 			"title"  => "群组管理",
 			"mod"    => "group",
+			"icon"   => "bookmark",
 		),
 		"sub" => array(
 			"list" => array(
@@ -236,6 +248,7 @@ return array(
 		"main" => array(
 			"title"  => "系统设置",
 			"mod"    => "opt",
+			"icon"   => "cog",
 		),
 		"sub" => array(
 			"base" => array(
@@ -253,10 +266,10 @@ return array(
 				"mod"       => "opt",
 				"act_get"   => "visit",
 			),
-			"upfile" => array(
+			"upload" => array(
 				"title"     => "上传设置",
 				"mod"       => "opt",
-				"act_get"   => "upfile",
+				"act_get"   => "upload",
 			),
 			"sso" => array(
 				"title"     => "SSO 设置",
@@ -268,7 +281,7 @@ return array(
 			"base"   => "基本",
 			"db"     => "数据库",
 			"visit"  => "访问方式",
-			"upfile" => "上传",
+			"upload" => "上传设置",
 			"sso"    => "SSO 设置",
 		),
 	),

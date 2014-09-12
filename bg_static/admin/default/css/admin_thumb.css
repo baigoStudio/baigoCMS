@@ -1,6 +1,0 @@
-dl.thumb { list-style: none; }
-dl.thumb > dd { display: none; position: absolute; }
-dl.thumb:hover dd { display: block; }
-dl.thumb > a:hover dd { display: block; }
-dl.thumb > dd > a { display: block; padding: 3px 5px; background: #c30; color: #fff; width: 100%; }
-dl.thumb > dd > a:hover { background: #f99; color: #000; }

@@ -22,11 +22,6 @@ return array(
 				"mod"       => "user",
 				"act_get"   => "list",
 			),
-			"form" => array(
-				"title"     => "创建用户",
-				"mod"       => "user",
-				"act_get"   => "form",
-			),
 		),
 		"allow" => array(
 			"browse" => "浏览",
@@ -107,15 +102,15 @@ return array(
 			"mod"    => "opt",
 		),
 		"sub" => array(
-			"db" => array(
-				"title"     => "数据库设置",
-				"mod"       => "opt",
-				"act_get"   => "db",
-			),
 			"base" => array(
 				"title"     => "基本设置",
 				"mod"       => "opt",
 				"act_get"   => "base",
+			),
+			"db" => array(
+				"title"     => "数据库设置",
+				"mod"       => "opt",
+				"act_get"   => "db",
 			),
 			"reg" => array(
 				"title"     => "注册设置",
@@ -129,8 +124,8 @@ return array(
 			),*/
 		),
 		"allow" => array(
-			"db"     => "数据库设置",
 			"base"   => "基本设置",
+			"db"     => "数据库设置",
 			"reg"    => "注册设置",
 			//"mail" => "邮件设置",
 		),

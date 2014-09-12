@@ -11,7 +11,6 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入模板类
 include_once(BG_PATH_FUNC . "baigocode.func.php"); //载入模板类
-include_once(BG_PATH_FUNC . "app.func.php"); //载入模板类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "app.class.php"); //载入管理帐号模型
 include_once(BG_PATH_MODEL . "log.class.php"); //载入管理帐号模型
@@ -98,20 +97,15 @@ class AJAX_APP {
 	 * @return void
 	 */
 	function ajax_submit() {
-		$_arr_appPost = fn_appPost();
+		$_arr_appSubmit = $this->mdl_app->input_submit();
 
-		if ($_arr_appPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appPost["str_alert"]);
+		if ($_arr_appSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appSubmit["str_alert"]);
 		}
 
-		if ($_arr_appPost["app_id"] > 0) {
+		if ($_arr_appSubmit["app_id"] > 0) {
 			if ($this->adminLogged["admin_allow"]["app"]["edit"] != 1) {
 				$this->obj_ajax->halt_alert("x050303");
-			}
-			//检查用户是否存在
-			$_arr_appRow = $this->mdl_app->mdl_read($_arr_appPost["app_id"]);
-			if ($_arr_appRow["str_alert"] != "y050102") {
-				$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
 			}
 		} else {
 			if ($this->adminLogged["admin_allow"]["app"]["add"] != 1) {
@@ -119,7 +113,7 @@ class AJAX_APP {
 			}
 		}
 
-		$_arr_appRow = $this->mdl_app->mdl_submit($_arr_appPost["app_id"], $_arr_appPost["app_name"], $_arr_appPost["app_notice"], $_arr_appPost["app_note"], $_arr_appPost["app_status"], $_arr_appPost["app_ip_allow"], $_arr_appPost["app_ip_bad"], $_arr_appPost["app_sync"], $_arr_appPost["app_allow"]);
+		$_arr_appRow = $this->mdl_app->mdl_submit();
 
 		if ($_arr_appRow["str_alert"] == "y050101" || $_arr_appRow["str_alert"] == "y050103") {
 			$_arr_targets[] = array(
@@ -152,15 +146,15 @@ class AJAX_APP {
 
 		$_str_status = fn_getSafe($_POST["act_post"], "txt", "");
 
-		$_arr_appDo = fn_appDo();
-		if ($_arr_appDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appDo["str_alert"]);
+		$_arr_appIds = $this->mdl_app->input_ids();
+		if ($_arr_appIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appIds["str_alert"]);
 		}
 
-		$_arr_appRow = $this->mdl_app->mdl_status($_arr_appDo["app_ids"], $_str_status);
+		$_arr_appRow = $this->mdl_app->mdl_status($_str_status);
 
 		if ($_arr_appRow["str_alert"] == "y050103") {
-			foreach ($_arr_appDo["app_ids"] as $_value) {
+			foreach ($_arr_appIds["app_ids"] as $_value) {
 				$_arr_targets[] = array(
 					"app_id" => $_value,
 				);
@@ -185,15 +179,15 @@ class AJAX_APP {
 			$this->obj_ajax->halt_alert("x050304");
 		}
 
-		$_arr_appDo = fn_appDo();
-		if ($_arr_appDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appDo["str_alert"]);
+		$_arr_appIds = $this->mdl_app->input_ids();
+		if ($_arr_appIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appIds["str_alert"]);
 		}
 
-		$_arr_appRow = $this->mdl_app->mdl_del($_arr_appDo["app_ids"]);
+		$_arr_appRow = $this->mdl_app->mdl_del();
 
 		if ($_arr_appRow["str_alert"] == "y050104") {
-			foreach ($_arr_appDo["app_ids"] as $_value) {
+			foreach ($_arr_appIds["app_ids"] as $_value) {
 				$_arr_targets[] = array(
 					"app_id" => $_value,
 				);

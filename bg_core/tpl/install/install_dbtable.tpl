@@ -1,42 +1,44 @@
 {* install_1.tpl 登录界面 *}
+{$cfg = [
+	sub_title  => $lang.page.installTable,
+	mod_help   => "install",
+	act_help   => "dbtable"
+]}
 
 {include "include/install_head.tpl" cfg=$cfg}
 
-	<div class="page_head">
-		{$lang.page.installStep}
-		&raquo;
-		{$lang.page.installTable}
-	</div>
+	<form name="instal_form_dbtable" id="instal_form_dbtable">
+		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="act_post" value="dbtable">
 
-	<div class="page_body">
-		<form name="instal_form_dbtable" id="instal_form_dbtable">
-			<input type="hidden" name="act_post" value="dbtable">
-			<ul>
-				<li class="note">{$lang.label.installTable}</li>
+		<div class="alert alert-warning">
+			<h4>
+				<span class="glyphicon glyphicon-warning-sign"></span>
+				{$lang.label.installTable}
+			</h4>
+		</div>
 
-				<li class="line_dashed"> </li>
-				<li>
-					<button type="button" id="go_pre" class="float_left">{$lang.btn.installPre}</button>
-					<button type="button" id="go_skip" class="float_left">{$lang.btn.skip}</button>
-					<button type="button" id="go_next" class="float_right">{$lang.btn.submit}</button>
-				</li>
-			<ul>
-		</form>
-	</div>
+		<div class="form-group">
+			<div class="btn-group">
+				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.submit}</button>
+				{include "include/install_drop.tpl" cfg=$cfg}
+			</div>
+		</div>
+	</form>
+
 
 {include "include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
-	var opts_submit_form = { ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install", btn_text: "{$lang.btn.installNext}", btn_url: "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=base" };
+	var opts_submit_form = {
+		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
+		btn_text: "{$lang.btn.installNext}",
+		btn_close: "{$lang.btn.close}",
+		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=base"
+	};
 
 	$(document).ready(function(){
 		var obj_submit_form = $("#instal_form_dbtable").baigoSubmit(opts_submit_form);
-		$("#go_pre").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSTALL}install.php";
-		});
-		$("#go_skip").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=base";
-		});
 		$("#go_next").click(function(){
 			obj_submit_form.formSubmit();
 		});

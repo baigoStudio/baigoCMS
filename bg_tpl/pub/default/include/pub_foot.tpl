@@ -4,7 +4,7 @@
 
 <div class="page_foot">
 	<ul>
-		<li>&copy; {$smarty.now|date_format:"%Y"} Copyright baigo Studio / <a href="http://baigo.nbfone.com" target="_blank">baigo.nbfone.com</a></li>
+		<li>&copy; {$smarty.now|date_format:"%Y"} Copyright baigo Studio / <a href="http://www.baigo.net" target="_blank">www.baigo.net</a></li>
 	</ul>
 </div>
 

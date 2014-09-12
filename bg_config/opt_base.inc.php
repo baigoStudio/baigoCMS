@@ -1,7 +1,7 @@
 <?php
 define("BG_SITE_NAME", "baigo Studio");
-define("BG_SITE_DOMAIN", "nbfone.com");
-define("BG_SITE_URL", "http://test.nbfone.com");
+define("BG_SITE_DOMAIN", $_SERVER["SERVER_NAME"]);
+define("BG_SITE_URL", "http://" . $_SERVER["SERVER_NAME"]);
 define("BG_SITE_PERPAGE", 10);
 define("BG_SITE_TIMEZONE", "Etc/GMT+8");
 define("BG_SITE_DATE", "Y-m-d");

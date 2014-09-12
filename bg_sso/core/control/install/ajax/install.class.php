@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "admin.func.php"); //载入开放平台类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
@@ -21,6 +20,7 @@ class AJAX_INSTALL {
 
 	function __construct() { //构造函数
 		$this->obj_ajax       = new CLASS_AJAX(); //初始化 AJAX 基对象
+
 		if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
 			$this->obj_ajax->halt_alert("x030403");
 		}
@@ -34,6 +34,10 @@ class AJAX_INSTALL {
 	 * @return void
 	 */
 	function ajax_dbconfig() {
+		if (!fn_token("chk")) { //令牌
+			$this->obj_ajax->halt_alert("x030102");
+		}
+
 		$_str_dbHost      = fn_getSafe($_POST["db_host"], "txt", "localhost");
 		$_str_dbName      = fn_getSafe($_POST["db_name"], "txt", "sso");
 		$_str_dbUser      = fn_getSafe($_POST["db_user"], "txt", "sso");
@@ -56,117 +60,36 @@ class AJAX_INSTALL {
 	}
 
 
-	function ajax_dbtable() {
-		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030404");
-		}
+	function ajax_auto() {
+		$this->check_db();
 
-		$this->obj_db = new CLASS_MYSQL(); //初始化基类
+		$_str_pathParent  = fn_getSafe($_POST["pathParent"], "txt", "");
+		$this->pathParent = base64_decode($_str_pathParent);
 
-		$_str_sql = "CREATE TABLE IF NOT EXISTS `" . BG_DB_TABLE . "admin` (
-			`admin_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-			`admin_name` varchar(30) NOT NULL COMMENT '用户名',
-			`admin_pass` varchar(32) NOT NULL COMMENT '密码',
-			`admin_rand` varchar(6) NOT NULL COMMENT '随机串',
-			`admin_note` varchar(30) NOT NULL COMMENT '备注',
-			`admin_status` varchar(20) NOT NULL COMMENT '状态',
-			`admin_allow` varchar(3000) NOT NULL COMMENT '权限',
-			`admin_time` int(11) NOT NULL COMMENT '创建时间',
-			`admin_time_login` int(11) NOT NULL COMMENT '登录时间',
-			`admin_ip` varchar(15) NOT NULL COMMENT '最后IP地址',
-			PRIMARY KEY (`admin_id`),
-			UNIQUE KEY `admin_name` (`admin_name`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='管理员' AUTO_INCREMENT=1";
-
-		$_arr_reselt = $this->obj_db->query($_str_sql);
-
-		if (!$_arr_reselt) {
+		if (!file_exists($this->pathParent)) {
 			$this->obj_ajax->halt_alert("x030103");
 		}
 
+		$this->table_admin();
+		$this->table_user();
+		$this->table_app();
+		$this->table_log();
+		$this->table_opt();
 
-		$_str_sql = "CREATE TABLE IF NOT EXISTS `" . BG_DB_TABLE . "user` (
-			`user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-			`user_name` varchar(30) NOT NULL COMMENT '用户名',
-			`user_mail` varchar(300) NOT NULL COMMENT 'E-mail',
-			`user_pass` varchar(32) NOT NULL COMMENT '密码',
-			`user_rand` varchar(6) NOT NULL COMMENT '随机串',
-			`user_nick` varchar(30) NOT NULL COMMENT '备注',
-			`user_status` varchar(20) NOT NULL COMMENT '状态',
-			`user_note` varchar(30) NOT NULL COMMENT '备注',
-			`user_time` int(11) NOT NULL COMMENT '创建时间',
-			`user_time_login` int(11) NOT NULL COMMENT '登录时间',
-			`user_ip` varchar(15) NOT NULL COMMENT '最后IP地址',
-			PRIMARY KEY (`user_id`),
-			UNIQUE KEY `user_name` (`user_name`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='用户' AUTO_INCREMENT=1";
+		$this->record_app();
 
-		$_arr_reselt = $this->obj_db->query($_str_sql);
-
-		if (!$_arr_reselt) {
-			$this->obj_ajax->halt_alert("x030104");
-		}
+		$this->obj_ajax->halt_alert("y030104");
+	}
 
 
-		$_str_sql = "CREATE TABLE IF NOT EXISTS `" . BG_DB_TABLE . "app` (
-			`app_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-			`app_name` varchar(30) NOT NULL COMMENT '应用名',
-			`app_key` varchar(64) NOT NULL COMMENT '校验码',
-			`app_notice` varchar(3000) NOT NULL COMMENT '通知接口URL',
-			`app_token` varchar(64) NOT NULL COMMENT '访问口令',
-			`app_token_expire` int(11) NOT NULL COMMENT '口令存活期',
-			`app_token_time` int(11) NOT NULL COMMENT '上次授权时间',
-			`app_status` varchar(20) NOT NULL COMMENT '状态',
-			`app_note` varchar(30) NOT NULL COMMENT '备注',
-			`app_time` int(11) NOT NULL COMMENT '创建时间',
-			`app_ip_allow` varchar(1000) NOT NULL COMMENT '允许调用IP地址',
-			`app_ip_bad` varchar(1000) NOT NULL COMMENT '禁止IP',
-			`app_sync` varchar(30) NOT NULL COMMENT '是否同步',
-			`app_allow` varchar(3000) NOT NULL COMMENT '权限',
-			PRIMARY KEY (`app_id`),
-			UNIQUE KEY `app_name` (`app_name`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='应用' AUTO_INCREMENT=1";
+	function ajax_dbtable() {
+		$this->check_db();
 
-		$_arr_reselt = $this->obj_db->query($_str_sql);
-
-		if (!$_arr_reselt) {
-			$this->obj_ajax->halt_alert("x030105");
-		}
-
-
-		$_str_sql = "CREATE TABLE IF NOT EXISTS `" . BG_DB_TABLE . "log` (
-			`log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-			`log_time` int(11) NOT NULL COMMENT '时间',
-			`log_operator_id` int(11) NOT NULL COMMENT '操作者 ID',
-			`log_targets` text NOT NULL COMMENT '目标 JSON',
-			`log_target_type` varchar(20) NOT NULL COMMENT '目标类型',
-			`log_title` varchar(1000) NOT NULL COMMENT '操作标题',
-			`log_result` varchar(1000) NOT NULL COMMENT '操作结果',
-			`log_type` varchar(30) NOT NULL COMMENT '日志类型',
-			`log_status` varchar(20) NOT NULL COMMENT '状态',
-			`log_level` varchar(30) NOT NULL COMMENT '日志级别',
-			PRIMARY KEY (`log_id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='日志' AUTO_INCREMENT=1";
-
-		$_arr_reselt = $this->obj_db->query($_str_sql);
-
-		if (!$_arr_reselt) {
-			$this->obj_ajax->halt_alert("x030106");
-		}
-
-
-		$_str_sql = "CREATE TABLE IF NOT EXISTS `" . BG_DB_TABLE . "opt` (
-			`opt_key` varchar(100) NOT NULL COMMENT '设置键名',
-			`opt_value` varchar(1000) NOT NULL COMMENT '设置键值',
-			PRIMARY KEY (`opt_key`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='选项'";
-
-		$_arr_reselt = $this->obj_db->query($_str_sql);
-
-		if (!$_arr_reselt) {
-			$this->obj_ajax->halt_alert("x030107");
-		}
-
+		$this->table_admin();
+		$this->table_user();
+		$this->table_app();
+		$this->table_log();
+		$this->table_opt();
 
 		$this->obj_ajax->halt_alert("y030103");
 	}
@@ -199,22 +122,20 @@ class AJAX_INSTALL {
 
 
 	function ajax_admin() {
-		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030404");
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
+			$this->install_over();
+			$this->obj_ajax->halt_alert("y030407");
 		}
 
-		$GLOBALS["obj_db"]    = new CLASS_MYSQL(); //初始化基类
-		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理组模型
+		$this->check_db();
 
-		$_arr_adminPost       = fn_adminPost();
+		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
+		$_mdl_admin  = new MODEL_ADMIN();
 
-		if ($_arr_adminPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminPost["str_alert"]);
-		}
+		$_arr_adminSubmit = $_mdl_admin->input_submit();
 
-		$_arr_adminRow = $this->mdl_admin->mdl_read($_arr_adminPost["admin_name"], "admin_name", $_arr_adminPost["admin_id"]);
-		if ($_arr_adminRow["str_alert"] == "y020102") {
-			$this->obj_ajax->halt_alert("x020204");
+		if ($_arr_adminSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminSubmit["str_alert"]);
 		}
 
 		$_arr_adminPass = validateStr($_POST["admin_pass"], 1, 0);
@@ -246,18 +167,24 @@ class AJAX_INSTALL {
 		$_str_adminRand      = fn_rand(6);
 		$_str_adminPassDo    = fn_baigoEncrypt($_str_adminPass, $_str_adminRand);
 
-		$_arr_adminRow = $this->mdl_admin->mdl_submit(0, $_arr_adminPost["admin_name"], $_str_adminPassDo, $_str_adminRand, $_arr_adminPost["admin_note"], "enable", $_arr_adminPost["admin_allow"]);
+		$_arr_adminRow = $_mdl_admin->mdl_submit($_str_adminPassDo, $_str_adminRand);
 
+		$this->obj_ajax->halt_alert("y030407");
+	}
+
+
+	function ajax_over() {
 		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_INSTALL_VER\", " . PRD_SSO_VER . ");" . PHP_EOL;
+		$_str_content .= "define(\"BG_INSTALL_VER\", \"" . PRD_SSO_VER . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_INSTALL_PUB\", " . PRD_SSO_PUB . ");" . PHP_EOL;
 		$_str_content .= "define(\"BG_INSTALL_TIME\", " . time() . ");" . PHP_EOL;
 		$_str_content .= "?>";
 
 		file_put_contents(BG_PATH_CONFIG . "is_install.php", $_str_content);
 
-		$this->obj_ajax->halt_alert("y030407");
+		$this->obj_ajax->halt_alert("y030408");
 	}
+
 
 	/**
 	 * opt_post function.
@@ -267,12 +194,9 @@ class AJAX_INSTALL {
 	 * @return void
 	 */
 	private function opt_post($str_type) {
-		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030404");
-		}
+		$this->check_db();
 
-		$GLOBALS["obj_db"]    = new CLASS_MYSQL(); //初始化基类
-		$this->mdl_opt        = new MODEL_OPT(); //设置管理组模型
+		$_mdl_opt = new MODEL_OPT(); //设置管理组模型
 
 		$_arr_opt = $_POST["opt"];
 
@@ -285,7 +209,7 @@ class AJAX_INSTALL {
 			} else {
 				$_str_content .= "define(\"" . $_key . "\", \"" . str_replace(PHP_EOL, "|", $_str_optValue) . "\");" . PHP_EOL;
 			}
-			$_arr_optRow = $this->mdl_opt->mdl_submit($_key, $_str_optValue);
+			$_arr_optRow = $_mdl_opt->mdl_submit($_key, $_str_optValue);
 		}
 
 		if ($str_type == "base") {
@@ -297,6 +221,131 @@ class AJAX_INSTALL {
 		$_str_content = str_replace("||", "", $_str_content);
 
 		file_put_contents(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_content);
+	}
+
+
+	private function check_db() {
+		if (!fn_token("chk")) { //令牌
+			$this->obj_ajax->halt_alert("x030102");
+		}
+
+		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
+			$this->obj_ajax->halt_alert("x030404");
+		} else {
+			$GLOBALS["obj_db"]   = new CLASS_MYSQL(); //初始化基类
+			$this->obj_db        = $GLOBALS["obj_db"];
+		}
+	}
+
+
+	private function table_admin() {
+		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
+		$_mdl_admin  = new MODEL_ADMIN();
+		$_arr_adminRow    = $_mdl_admin->mdl_create();
+
+		if ($_arr_adminRow["str_alert"] != "y020105") {
+			$this->obj_ajax->halt_alert($_arr_adminRow["str_alert"]);
+		}
+	}
+
+
+	private function table_user() {
+		include_once(BG_PATH_MODEL . "user.class.php"); //载入管理帐号模型
+		$_mdl_user  = new MODEL_USER();
+		$_arr_userRow    = $_mdl_user->mdl_create();
+
+		if ($_arr_userRow["str_alert"] != "y010105") {
+			$this->obj_ajax->halt_alert($_arr_userRow["str_alert"]);
+		}
+	}
+
+
+	private function table_app() {
+		include_once(BG_PATH_MODEL . "app.class.php"); //载入管理帐号模型
+		$_mdl_app  = new MODEL_APP();
+		$_arr_appRow    = $_mdl_app->mdl_create();
+
+		if ($_arr_appRow["str_alert"] != "y050105") {
+			$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		}
+	}
+
+
+	private function table_log() {
+		include_once(BG_PATH_MODEL . "log.class.php"); //载入管理帐号模型
+		$_mdl_log  = new MODEL_LOG();
+		$_arr_logRow    = $_mdl_log->mdl_create();
+
+		if ($_arr_logRow["str_alert"] != "y060105") {
+			$this->obj_ajax->halt_alert($_arr_logRow["str_alert"]);
+		}
+	}
+
+
+	private function table_opt() {
+		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
+		$_mdl_opt  = new MODEL_OPT();
+		$_arr_optRow    = $_mdl_opt->mdl_create();
+
+		if ($_arr_optRow["str_alert"] != "y040105") {
+			$this->obj_ajax->halt_alert($_arr_optRow["str_alert"]);
+		}
+	}
+
+
+	private function record_app() {
+
+		$_arr_appAllow = array(
+			"user" => array(
+				"reg"       => 1,
+				"login"     => 1,
+				"get"       => 1,
+				"edit"      => 1,
+				"del"       => 1,
+				"chkname"   => 1,
+				"chkmail"   => 1,
+			),
+			"code" => array(
+				"signature" => 1,
+				"verify"    => 1,
+				"encode"    => 1,
+				"decode"    => 1,
+			),
+		);
+
+		$_str_appAllow    = json_encode($_arr_appAllow);
+		$_str_appKey      = fn_rand(64);
+
+		$_arr_appInsert = array(
+			"app_name"           => "baigo CMS",
+			"app_key"            => $_str_appKey,
+			"app_notice"         => BG_SITE_URL . BG_URL_API . "sso_note.php",
+			"app_token"          => "",
+			"app_token_expire"   => 604800,
+			"app_token_time"     => time(),
+			"app_status"         => "enable",
+			"app_note"           => "baigo CMS",
+			"app_time"           => time(),
+			"app_ip_allow"       => "",
+			"app_ip_bad"         => "",
+			"app_sync"           => "on",
+			"app_allow"          => $_str_appAllow,
+		);
+
+		$_num_appId = $this->obj_db->insert(BG_DB_TABLE . "app", $_arr_appInsert);
+
+		if ($_num_appId <= 0 || !$_num_appId) {
+			$this->obj_ajax->halt_alert("x050101");
+		}
+
+		$_str_content = "<?php" . PHP_EOL;
+			$_str_content .= "define(\"BG_SSO_URL\", \"" . BG_SITE_URL . BG_URL_API . "api.php\");" . PHP_EOL;
+			$_str_content .= "define(\"BG_SSO_APPID\", " . $_num_appId . ");" . PHP_EOL;
+			$_str_content .= "define(\"BG_SSO_APPKEY\", \"" . $_str_appKey . "\");" . PHP_EOL;
+			$_str_content .= "define(\"BG_SSO_SYNLOGON\", \"on\");" . PHP_EOL;
+		$_str_content .= "?>";
+
+		file_put_contents($this->pathParent . "opt_sso.inc.php", $_str_content);
 	}
 }
 ?>

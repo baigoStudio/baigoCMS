@@ -9,57 +9,95 @@
 
 {include "include/admin_head.tpl" cfg=$cfg}
 
-	<form class="tform">
+	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list">{$adminMod.admin.main.title}</a></li>
+	<li>{$lang.page.show}</li>
 
-		<input type="hidden" name="token_session" value="{$common.token_session}" />
-		<input type="hidden" name="act_post" value="submit" />
-		<input type="hidden" name="admin_id" value="{$tplData.adminRow.admin_id}" />
+	{include "include/admin_left.tpl" cfg=$cfg}
 
-		<div>
-			<ol>
-				<li class="title">{$lang.label.status}</li>
-				<li>
-					<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.adminRow.admin_status == "enable"}y{else}x{/if}.png" />
-					<label>{$status.admin[$tplData.adminRow.admin_status]}</label>
-				</li>
+	<div class="form-group">
+		<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+			{$lang.href.back}
+		</a>
+	</div>
 
-				<li class="line_dashed"> </li>
+	<div class="row">
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.username}</label>
+						<p class="form-control-static static_input">{$tplData.adminRow.admin_name}</p>
+					</div>
 
-				<li class="title_b">
-					<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=admin&act_get=form&admin_id={$tplData.adminRow.admin_id}">{$lang.href.edit}</a>
-				</li>
-			</ol>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.nick}</label>
+						<p class="form-control-static static_input">{$tplData.adminRow.admin_nick}</p>
+					</div>
 
-			<ul>
-				<li class="title">{$lang.label.username}</li>
-				<li class="title_b">{$tplData.adminRow.admin_name}</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.allow}</label>
+						<dl>
+							{foreach $adminMod as $key_m=>$value_m}
+								<dt>{$value_m.main.title}</dt>
+								<dd>
+									<ul class="list-inline">
+										{foreach $value_m.allow as $key_s=>$value_s}
+											<li>
+												<span class="glyphicon glyphicon-{if $tplData.adminRow.admin_allow[$key_m][$key_s] == 1}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+												{$value_s}
+											</li>
+										{/foreach}
+									</ul>
+								</dd>
+							{/foreach}
+						</dl>
+					</div>
 
-				<li class="title">{$lang.label.allow}</li>
-				<li class="title">
-					<ol>
-						{foreach $adminMod as $key_m=>$value_m}
-							<li class="title">{$value_m.main.title}</li>
-							<li class="field">
-								{foreach $value_m.allow as $key_s=>$value_s}
-									<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.adminRow.admin_allow[$key_m][$key_s] == 1}y{else}x{/if}.png" />
-									<label>{$value_s}</label>
-								{/foreach}
-							</li>
-						{/foreach}
-					</ol>
-				</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.note}</label>
+						<p class="form-control-static static_input">{$tplData.adminRow.admin_note}</p>
+					</div>
 
-				<li class="title">{$lang.label.note}</li>
-				<li class="title_b">{$tplData.adminRow.admin_note}</li>
-
-				<li class="title_b">
-					<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=admin&act_get=form&admin_id={$tplData.adminRow.admin_id}">{$lang.href.edit}</a>
-				</li>
-			</ul>
+					<div class="form-group">
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=form&admin_id={$tplData.adminRow.admin_id}">
+							<span class="glyphicon glyphicon-edit"></span>
+							{$lang.href.edit}
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 
-	</form>
+		<div class="col-md-3">
+			<div class="well">
+				<div class="form-group">
+					<label class="control-label">{$lang.label.id}</label>
+					<p class="form-control-static">{$tplData.adminRow.admin_id}</p>
+				</div>
+
+				{if $tplData.adminRow.admin_status == "enable"}
+					{$_css_status = "success"}
+				{else}
+					{$_css_status = "danger"}
+				{/if}
+
+				<div class="form-group">
+					<label class="control-label">{$lang.label.status}</label>
+					<p class="form-control-static">
+						<span class="label label-{$_css_status}">{$status.admin[$tplData.adminLogged.admin_status]}</span>
+					</p>
+				</div>
+
+				<div class="form-group">
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=form&admin_id={$tplData.adminRow.admin_id}">
+						<span class="glyphicon glyphicon-edit"></span>
+						{$lang.href.edit}
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl" cfg=$cfg}

@@ -63,7 +63,7 @@ class AJAX_OPT {
 
 		$this->opt_post("mail");
 
-		$_arr_mail = array(BG_MAIL_FROM);
+		$_arr_mail    = array(BG_MAIL_FROM);
 		$_arr_mailRow = fn_mailsend($_arr_mail, "test", "test", false);
 
 		if ($_arr_mailRow["str_alert"] != "y030201") {
@@ -183,10 +183,8 @@ class AJAX_OPT {
 		}
 
 		if ($_arr_targets) {
-			$_str_targets = json_encode($_arr_targets);
-
-			$_str_return = json_encode($_arr_return);
-
+			$_str_targets    = json_encode($_arr_targets);
+			$_str_return     = json_encode($_arr_return);
 			$this->mdl_log->mdl_submit($_str_targets, "opt", $this->log["opt"]["edit"], $_str_return, "admin", $this->adminLogged["admin_id"]);
 		}
 

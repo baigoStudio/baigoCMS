@@ -49,7 +49,7 @@ class API_CODE {
 			$this->log_do($_arr_appRow, "read");
 			$this->obj_api->halt_re($_arr_appRow);
 		}
-		$this->appAllow = json_decode($_arr_appRow["app_allow"], true);
+		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
 		if ($_arr_appChk["str_alert"] != "ok") {

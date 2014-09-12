@@ -29,17 +29,17 @@ class AJAX_OPT {
 	}
 
 	/**
-	 * ajax_upfile function.
+	 * ajax_upload function.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	function ajax_upfile() {
-		if ($this->adminLogged["admin_allow_sys"]["opt"]["upfile"] != 1) {
+	function ajax_upload() {
+		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"] != 1) {
 			$this->obj_ajax->halt_alert("x060302");
 		}
 
-		$this->opt_post("upfile");
+		$this->opt_post("upload");
 
 		$this->obj_ajax->halt_alert("y060402");
 	}
@@ -52,7 +52,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_sso() {
-		if ($this->adminLogged["admin_allow_sys"]["opt"]["sso"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"] != 1) {
 			$this->obj_ajax->halt_alert("x060303");
 		}
 
@@ -69,7 +69,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_visit() {
-		if ($this->adminLogged["admin_allow_sys"]["opt"]["visit"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"] != 1) {
 			$this->obj_ajax->halt_alert("x060304");
 		}
 
@@ -77,7 +77,7 @@ class AJAX_OPT {
 
 		if ($_POST["opt"]["BG_VISIT_TYPE"] == "pstatic") {
 
-			$_str_content = "# BEGIN baigoCMS" . PHP_EOL;
+			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
 			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
 				$_str_content .= "RewriteEngine On" . PHP_EOL;
 				$_str_content .= "RewriteBase /" . PHP_EOL;
@@ -90,13 +90,13 @@ class AJAX_OPT {
 				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ /index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
 				$_str_content .= "RewriteRule ^search/$ /index.php?mod=search&act_get=show [L]" . PHP_EOL;
 			$_str_content .= "</IfModule>" . PHP_EOL;
-			$_str_content .= "# END baigoCMS" . PHP_EOL;
+			$_str_content .= "# END baigo CMS" . PHP_EOL;
 
 			file_put_contents(BG_PATH_ROOT . ".htaccess", $_str_content);
 
 		} else {
 			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-				unlink(BG_PATH_ROOT . ".htaccess", $_str_content);
+				unlink(BG_PATH_ROOT . ".htaccess");
 			}
 		}
 
@@ -111,7 +111,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_base() {
-		if ($this->adminLogged["admin_allow_sys"]["opt"]["base"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"] != 1) {
 			$this->obj_ajax->halt_alert("x060301");
 		}
 
@@ -128,7 +128,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_db() {
-		if ($this->adminLogged["admin_allow_sys"]["opt"]["db"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"] != 1) {
 			$this->obj_ajax->halt_alert("x060306");
 		}
 

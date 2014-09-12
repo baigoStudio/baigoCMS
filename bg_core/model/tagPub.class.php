@@ -14,19 +14,56 @@ class MODEL_TAG_PUB {
 
 	private $obj_db;
 
+	function mdl_create() {
+		$_arr_tagCreat = array(
+			"article_id"         => BG_DB_TABLE . "article",
+			"article_title"      => BG_DB_TABLE . "article",
+			"article_excerpt"    => BG_DB_TABLE . "article",
+			"article_link"       => BG_DB_TABLE . "article",
+			"article_time_pub"   => BG_DB_TABLE . "article",
+			"article_attach_id"  => BG_DB_TABLE . "article",
+			"article_status"     => BG_DB_TABLE . "article",
+			"article_box"        => BG_DB_TABLE . "article",
+			"article_top"        => BG_DB_TABLE . "article",
+			"belong_tag_id"      => BG_DB_TABLE . "tag_belong",
+		);
+		
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "article` ON (`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`=`" . BG_DB_TABLE . "article`.`article_id`)";
+	
+		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_tagCreat, BG_DB_TABLE . "tag_belong", $_str_sqlJoin);
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y130108"; //更新成功
+		} else {
+			$_str_alert = "x130108"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
 	function __construct() { //构造函数
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
 
-	function mdl_read($str_tag) {
+	function mdl_read($str_tag, $str_readBy = "tag_id") {
 		$_arr_tagSelect = array(
 			"tag_id",
 			"tag_name",
 			"tag_status",
 		);
 
-		$_str_sqlWhere = "tag_name='" . $str_tag . "'";
+		switch ($str_readBy) {
+			case "tag_id":
+				$_str_sqlWhere = $str_readBy . "=" . $str_tag;
+			break;
+			default:
+				$_str_sqlWhere = $str_readBy . "='" . $str_tag . "'";
+			break;
+		}
 
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
 		$_arr_tagRow  = $_arr_tagRows[0];
@@ -52,24 +89,25 @@ class MODEL_TAG_PUB {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $num_articleId = 0) {
+	function mdl_list($num_no, $num_except = 0, $arr_tagIds = false) {
 		$_arr_tagSelect = array(
-			"tag_id",
-			"tag_name",
-			"tag_article_count",
+			"belong_tag_id",
+			"article_id",
+			"article_title",
+			"article_excerpt",
+			"article_link",
+			"article_time_pub",
+			"article_attach_id",
 		);
 
-		$_str_sqlWhere = "tag_status='show'";
+		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
-		if ($num_articleId > 0) {
-			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
+		if ($arr_tagIds) {
+			$_str_tagIds = implode(",", $arr_tagIds);
+			$_str_sqlWhere .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
 		}
 
-		$_str_sqlWhere .= " GROUP BY belong_tag_id";
-
-		$_str_sqlOn = " ON belong_tag_id=tag_id";
-
-		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_belong",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY tag_id DESC", $num_no, $num_except, array("belong_tag_id"), BG_DB_TABLE . "tag" . $_str_sqlOn);
+		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_view",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY article_id DESC", $num_no, $num_except);
 
 		return $_arr_tagRows;
 	}
@@ -82,20 +120,16 @@ class MODEL_TAG_PUB {
 	 * @param int $num_articleId (default: 0)
 	 * @return void
 	 */
-	function mdl_count($num_articleId = 0) {
+	function mdl_count($arr_tagIds = false) {
 
-		$_str_sqlWhere = "tag_status='show'";
+		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
-		if ($num_articleId > 0) {
-			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
+		if ($arr_tagIds) {
+			$_str_tagIds = implode(",", $arr_tagIds);
+			$_str_sqlWhere .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
 		}
-
-		$_str_sqlOn = " ON belong_tag_id=tag_id";
-
-		$_num_tagCount = $this->obj_db->count(BG_DB_TABLE . "tag_belong", $_str_sqlWhere, array("belong_tag_id"), BG_DB_TABLE . "tag" . $_str_sqlOn); //查询数据
-
-		/*print_r($_arr_userRow);
-		exit;*/
+		
+		$_num_tagCount = $this->obj_db->count(BG_DB_TABLE . "tag_view", $_str_sqlWhere); //查询数据
 
 		return $_num_tagCount;
 	}

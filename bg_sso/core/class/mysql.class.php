@@ -232,6 +232,44 @@ class CLASS_MYSQL {
 		return $array_structute[1];
 	}
 
+	function create_table($table, $data, $primary, $comment = "", $engine = "MyISAM", $charset = "utf8") {
+		$sql      = "CREATE TABLE IF NOT EXISTS `" . $table."` (";
+		$values   = array();
+		foreach ($data as $key => $value) {
+			$values[] = "`" . $key . "` " . $value;
+		}
+		$sql         .= implode(",", $values);
+		$sql         .= ", PRIMARY KEY (`" . $primary . "`)) ENGINE=" . $engine . "  DEFAULT CHARSET=" . $charset . " COMMENT='" . $comment . "' AUTO_INCREMENT=1";
+		$this->db_rs  = $this->query($sql);
+		return $this->db_rs;
+	}
+
+	function alert_table($table, $data = false, $rename = false) {
+		$sql      = "ALTER TABLE `" . $table."` ";
+		if ($rename) {
+			$sql .= " RENAME TO `" . $rename . "`";
+		}
+		if ($data) {
+			$values   = array();
+			foreach ($data as $key => $value) {
+				switch ($value[0]) {
+					case "ADD":
+						$values[] = $value[0] . " COLUMN `" . $key . "` " . $value[1];
+					break;
+					case "DROP":
+						$values[] = $value[0] . " COLUMN `" . $key . "`";
+					break;
+					case "CHANGE":
+						$values[] = $value[0] . " COLUMN `" . $key . "` `" . $value[2] . "` " . $value[1];
+					break;
+				}
+			}
+			$sql         .= implode(",", $values);
+		}
+		$this->db_rs  = $this->query($sql);
+		return $this->db_rs;
+	}
+	
 	function insert($table, $data) {
 		$sql      = "INSERT INTO `" . $table."` SET ";
 		$values   = array();
@@ -265,15 +303,12 @@ class CLASS_MYSQL {
 		return $this->affected_rows();
 	}
 
-	function count($table, $condition = "", $distinct = "", $left_join = "") {
+	function count($table, $condition = "", $distinct = "") {
 		$sql = "SELECT";
 		if ($distinct) {
 			$sql .= " COUNT(DISTINCT `" . implode("`,`", $distinct) . "`) FROM `" . $table . "`";
 		} else {
 			$sql .= " COUNT(*) FROM `" . $table . "`";
-		}
-		if ($left_join) {
-			$sql .= " LEFT JOIN " . $left_join;
 		}
 		if ($condition) {
 			$sql .= " WHERE " . $condition;
@@ -283,7 +318,7 @@ class CLASS_MYSQL {
 		return $obj_temp[0];
 	}
 
-	function select_obj($table, $data = "", $condition = "", $length = 0, $start = 0, $distinct = "", $left_join = "", $field = false) {
+	function select_obj($table, $data = "", $condition = "", $length = 0, $start = 0, $distinct = "", $field = false) {
 		$sql = "SELECT";
 		if ($data) {
 			if ($field) {
@@ -298,9 +333,6 @@ class CLASS_MYSQL {
 			$sql .= ", COUNT(DISTINCT `" . implode(",", $distinct) . "`)";
 		}
 		$sql .= " FROM `" . $table . "`";
-		if ($left_join) {
-			$sql .= " LEFT JOIN " . $left_join;
-		}
 		if ($condition) {
 			$sql .= " WHERE " . $condition;
 		}
@@ -317,7 +349,7 @@ class CLASS_MYSQL {
 		return $obj;
 	}
 
-	function select_array($table, $data = "", $condition = "", $length = 0, $start = 0, $distinct = "", $left_join = "", $field = false) {
+	function select_array($table, $data = "", $condition = "", $length = 0, $start = 0, $distinct = "", $field = false) {
 		$sql = "SELECT";
 		if ($data) {
 			if ($field) {
@@ -332,15 +364,17 @@ class CLASS_MYSQL {
 			$sql .= ", COUNT(DISTINCT `" . implode(",", $distinct) . "`)";
 		}
 		$sql .= " FROM `" . $table . "`";
-		if ($left_join) {
-			$sql .= " LEFT JOIN " . $left_join;
-		}
 		if ($condition) {
 			$sql .= " WHERE " . $condition;
 		}
 		if ($length > 0) {
 			$sql .= " LIMIT " . $start . ", " . $length;
 		}
+
+		/*if ($field) {
+		print_r($sql . "\n");
+		}*/
+
 		$this->db_rs  = $this->query($sql);
 		$obj          = array();
 

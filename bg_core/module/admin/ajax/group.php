@@ -19,6 +19,11 @@ switch ($act_post) {
 		$ajax_group->ajax_submit();
 	break;
 
+	case "enable":
+	case "disable":
+		$ajax_group->ajax_status();
+	break;
+
 	case "del":
 		$ajax_group->ajax_del();
 	break;

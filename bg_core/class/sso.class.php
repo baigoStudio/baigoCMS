@@ -38,7 +38,30 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=code", $_arr_ssoData, "get"); //提交
-		$this->arr_decode = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		$this->arr_decode = fn_jsonDecode($_arr_get["ret"], "decode"); //将解码得到的JSON解码
+	}
+
+
+	function sso_admin($str_adminName, $str_adminPass) {
+		$_arr_sso = array(
+			"act_post"   => "add",
+			"admin_name"  => $str_adminName,
+			"admin_pass"  => md5($str_adminPass),
+		);
+
+		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
+		$_arr_get         = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
+		$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+
+		if ($this->arr_result["str_alert"] != "y020101" && $this->arr_result["str_alert"] != "y020103") {
+			return $this->arr_result;
+			exit;
+		}
+
+		$this->sso_decode(); //解码
+		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+
+		return $this->arr_decode;
 	}
 
 
@@ -95,8 +118,6 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
-		//print_r($_arr_get);
-		//exit;
 		$this->arr_result = json_decode($_arr_get["ret"], true);
 
 		if ($this->arr_result["str_alert"] != "y010401") {
@@ -157,18 +178,20 @@ class CLASS_SSO {
 	 * @return 解码后数组 编辑结果
 	 */
 	function sso_edit($str_userName, $str_userPass = "", $str_userPassNew = "", $str_userMail = "", $str_userNick = "", $str_userBy = "user_name", $str_checkPass = false) {
+		if ($str_userPassNew) {
+			$_str_userPassNew = md5($str_userPassNew);
+		}
+
 		$_arr_sso = array(
 			"act_post"           => "edit",
 			"user_by"            => $str_userBy,
 			$str_userBy          => $str_userName,
 			"user_check_pass"    => $str_checkPass,
 			"user_pass"          => md5($str_userPass),
-			"user_pass_new"      => md5($str_userPassNew),
+			"user_pass_new"      => $_str_userPassNew,
 			"user_mail"          => $str_userMail,
 			"user_nick"          => $str_userNick,
 		);
-
-		//file_put_contents(BG_PATH_ROOT . "test.txt", $str_userPassNew);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交

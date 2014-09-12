@@ -1,18 +1,36 @@
-{* admin_foot.tpl 管理后台底部 *}
+			</div>
 
-	</dd>
-</dl>
+			<div class="col-md-2 col-md-pull-10">
+				<div class="panel panel-info">
+					<div class="list-group">
+						{foreach $adminMod as $key_m=>$value_m}
+							<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod={$value_m.main.mod}" class="list-group-item{if $cfg.menu_active == $key_m} active{/if}">
+								<span class="glyphicon glyphicon-{$value_m.main.icon}"></span>
+								{$value_m.main.title}
+								<span class="caret"></span>
+							</a>
+							{if $cfg.menu_active == $key_m}
+								{foreach $value_m.sub as $key_s=>$value_s}
+									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod={$value_s.mod}&act_get={$value_s.act_get}" class="list-group-item {if $cfg.sub_active == $key_s}list-group-item-info{else}sub_normal{/if}">{$value_s.title}</a>
+								{/foreach}
+							{/if}
+						{/foreach}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<dl class="page_foot">
-	<dt class="foot_logo">
-		<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME} {$smarty.const.PRD_CMS_VER}</a>
-	</dt>
-	<dd class="foot_power_by">
-		{$smarty.const.PRD_CMS_POWERED}
-		<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_NAME}</a>
-		{$smarty.const.PRD_CMS_VER}
-	</dd>
-	<dd class="float_clear"></dd>
-</dl>
+	<footer class="bg-info page_foot">
+		<div class="pull-left foot_logo">
+			<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME} {$smarty.const.PRD_CMS_VER}</a>
+		</div>
+		<div class="pull-right foot_power">
+			{$smarty.const.PRD_CMS_POWERED}
+			<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_NAME}</a>
+			{$smarty.const.PRD_CMS_VER}
+		</div>
+		<div class="clearfix"></div>
+	</footer>
 
 </body>

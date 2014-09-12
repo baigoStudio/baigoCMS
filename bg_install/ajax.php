@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 include_once("../bg_config/config.inc.php"); //载入配置
 
-$arr_mod = array("install");
+$arr_mod = array("install", "upgrade");
 
 $mod = $_GET["mod"];
 

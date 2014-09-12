@@ -1,6 +1,6 @@
 /*
 v0.0.9 jQuery baigoCheckall plugin 表单全选插件
-(c) 2013 baigo studio - http://baigo.nbfone.com/baigoCheckall/
+(c) 2013 baigo studio - http://www.baigo.net/baigoCheckall/
 License: http://www.opensource.org/licenses/mit-license.php
 */
 

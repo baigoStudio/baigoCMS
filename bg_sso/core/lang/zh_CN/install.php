@@ -17,12 +17,12 @@ return array(
 	"x030403" => "<h3>如需重新安装，请执行如下步骤：</h3>
 		<ol>
 			<li>删除 ./" . BG_NAME_CONFIG . "/is_install.php 文件</li>
-			<li>重新运行 <a href=\"" . BG_URL_INSTALL . "install.php\">" . BG_URL_INSTALL . "install.php</a></li>
+			<li>重新运行 <a href=\"" . BG_URL_INSTALL . "ctl.php\">" . BG_URL_INSTALL . "ctl.php</a></li>
 		<ol>",
 
 	"x030404" => "<h3>数据库未正确设置：</h3>
 		<ol>
-			<li><a href=\"" . BG_URL_INSTALL . "install.php\">返回重新设置</a></li>
+			<li><a href=\"" . BG_URL_INSTALL . "ctl.php\">返回重新设置</a></li>
 		</ol>"
 
 );

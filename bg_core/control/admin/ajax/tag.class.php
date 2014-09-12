@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "tag.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "tag.class.php"); //载入后台用户类
 
@@ -30,31 +29,15 @@ class AJAX_TAG {
 	}
 
 	function ajax_submit() {
-		if ($this->adminLogged["admin_allow_sys"]["article"]["tag"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
 			$this->obj_ajax->halt_alert("x130303");
 		}
-		$_arr_tagPost = fn_tagPost();
-		if ($_arr_tagPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagPost["str_alert"]);
+		$_arr_tagSubmit = $this->mdl_tag->input_submit();
+		if ($_arr_tagSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagSubmit["str_alert"]);
 		}
 
-		if ($_arr_tagPost["tag_id"] > 0) {
-			$_arr_tagRow = $this->mdl_tag->mdl_read($_arr_tagPost["tag_id"]);
-			if ($_arr_tagRow["str_alert"] != "y130102") {
-				$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
-			}
-			$_arr_tagRow = $this->mdl_tag->mdl_read($_arr_tagPost["tag_name"], "tag_name", $_arr_tagPost["tag_id"]);
-			if ($_arr_tagRow["str_alert"] == "y130102") {
-				$this->obj_ajax->halt_alert("x130203");
-			}
-		} else {
-			$_arr_tagRow = $this->mdl_tag->mdl_read($_arr_tagPost["tag_name"], "tag_name");
-			if ($_arr_tagRow["str_alert"] == "y130102") {
-				$this->obj_ajax->halt_alert("x130203");
-			}
-		}
-
-		$_arr_tagRow = $this->mdl_tag->mdl_submit($_arr_tagPost["tag_id"], $_arr_tagPost["tag_name"], $_arr_tagPost["tag_status"]);
+		$_arr_tagRow = $this->mdl_tag->mdl_submit($_arr_tagSubmit["tag_name"], $_arr_tagSubmit["tag_status"]);
 
 		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
 	}
@@ -66,14 +49,14 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["admin_allow_sys"]["article"]["tag"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
 			$this->obj_ajax->halt_alert("x130303");
 		}
 
-		$_arr_tagDo = fn_tagDo();
+		$_arr_tagIds = $this->mdl_tag->input_ids();
 
-		if ($_arr_tagDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagDo["str_alert"]);
+		if ($_arr_tagIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagIds["str_alert"]);
 		}
 
 		$_str_tagStatus = fn_getSafe($_POST["act_post"], "txt", "");
@@ -81,7 +64,7 @@ class AJAX_TAG {
 			$this->obj_ajax->halt_alert("x130204");
 		}
 
-		$_arr_tagRow = $this->mdl_tag->mdl_status($_arr_tagDo["tag_ids"], $_str_tagStatus);
+		$_arr_tagRow = $this->mdl_tag->mdl_status($_str_tagStatus);
 
 		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
 	}
@@ -93,16 +76,16 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["admin_allow_sys"]["article"]["tag"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
 			$this->obj_ajax->halt_alert("x130304");
 		}
 
-		$_arr_tagDo = fn_tagDo();
-		if ($_arr_tagDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagDo["str_alert"]);
+		$_arr_tagIds = $this->mdl_tag->input_ids();
+		if ($_arr_tagIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagIds["str_alert"]);
 		}
 
-		$_arr_tagRow = $this->mdl_tag->mdl_del($_arr_tagDo["tag_ids"]);
+		$_arr_tagRow = $this->mdl_tag->mdl_del();
 
 		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
 	}
@@ -116,8 +99,8 @@ class AJAX_TAG {
 	 */
 	function ajax_chkname() {
 		$_str_tagName = fn_getSafe($_GET["tag_name"], "txt", "");
-		$_num_tagId = fn_getSafe($_GET["tag_id"], "int", 0);
-		$_arr_tagRow = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
+		$_num_tagId   = fn_getSafe($_GET["tag_id"], "int", 0);
+		$_arr_tagRow  = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
 		if ($_arr_tagRow["str_alert"] == "y130102") {
 			$this->obj_ajax->halt_re("x130203");
 		}
@@ -137,8 +120,8 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_list() {
-		$_str_tagName = fn_getSafe($_GET["tag_name"], "txt", "");
-		$_arr_tagRows = $this->mdl_tag->mdl_list(1000, 0, $_str_tagName, "show");
+		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
+		$_arr_tagRows = $this->mdl_tag->mdl_list(1000, 0, $_str_key, "show");
 		foreach ($_arr_tagRows as $_value) {
 			$_arr_tagRow[] = $_value["tag_name"];
 		}

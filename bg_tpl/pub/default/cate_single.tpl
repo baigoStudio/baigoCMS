@@ -2,20 +2,17 @@
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
 	css        => "cate_show",
-	str_url    => "{$tplData.cateRow.cate_url}{$tplData.cateRow.page_attach}",
-	page_ext   => $tplData.cateRow.page_ext
+	str_url    => "{$tplData.cateRow.urlRow.cate_url}"
 ]}
 
 {include "include/pub_head.tpl" cfg=$cfg}
 
-	<div class="cate_nav">
-		<a href="{$smarty.const.BG_URL_PUB}">首页</a>
-		&raquo;
-		{foreach $tplData.cateTrees as $value}
-			<a href="{$value.cate_url}">{$value.cate_name}</a>
-			{if !$value@last}&raquo;{/if}
+	<ol class="breadcrumb">
+		<li><a href="{$smarty.const.BG_URL_ROOT}">首页</a></li>
+		{foreach $tplData.cateRow.cate_trees as $value}
+			<li><a href="{$value.urlRow.cate_url}">{$value.cate_name}</a></li>
 		{/foreach}
-	</div>
+	</ol>
 
 	<div class="cate_content">
 		{$tplData.cateRow.cate_content}

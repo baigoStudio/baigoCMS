@@ -1,31 +1,53 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-{* html_head.tpl html 头部通用 *}
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN" xml:lang="zh_CN">
+<!DOCTYPE html>
+<html lang="{$config.lang}">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
-<title>{$lang.page.install}</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>{$lang.page.install}</title>
 
 	<!--jQuery 库-->
 	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
-	<link href="{$smarty.const.BG_URL_STATIC_INSTALL}css/install.css" type="text/css" rel="stylesheet" />
+	<link href="{$smarty.const.BG_URL_STATIC_INSTALL}css/install.css" type="text/css" rel="stylesheet">
 
-	<!--colorbox 样式-->
-	<link href="{$smarty.const.BG_URL_JS}colorbox/colorbox.css" type="text/css" rel="stylesheet" />
-	<script src="{$smarty.const.BG_URL_JS}colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
+	<!--bootstrap-->
+	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<script src="{$smarty.const.BG_URL_JS}bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<!--表单验证 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet" />
+	<link href="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet">
 	<script src="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.js" type="text/javascript"></script>
 
 	<!--表单 ajax 提交 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet" />
+	<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
 	<script src="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.js" type="text/javascript"></script>
-
 </head>
 
 <body>
 
-	<div class="global">
+	<div class="container global">
 
-		<div class="global_body">
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="{$smarty.const.PRD_SSO_URL}" target="_blank">
+						<img alt="baigo SSO" src="{$smarty.const.BG_URL_STATIC_ADMIN}default/image/admin_logo.png">
+					</a>
+				</div>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							{$lang.btn.jump}
+							<span class="caret"></span>
+						</a>
+						{include "include/install_menu.tpl" cfg=$cfg}
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<h4>{$lang.page.install} <span class="label label-success">{$cfg.sub_title}</span></h4>
+			</div>
+
+			<div class="panel-body">

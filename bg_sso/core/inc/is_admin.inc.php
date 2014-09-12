@@ -13,9 +13,9 @@ if(!defined("IN_BAIGO")) {
 
 if ($GLOBALS["adminLogged"]["str_alert"] != "y020102") {
 	if ($GLOBALS["view"]) {
-		$_str_location = "Location: " . BG_URL_ADMIN . "admin.php?mod=alert&act_get=display&alert=" . $GLOBALS["adminLogged"]["str_alert"] . "&view=" . $GLOBALS["view"];
+		$_str_location = "Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $GLOBALS["adminLogged"]["str_alert"] . "&view=" . $GLOBALS["view"];
 	} else {
-		$_str_location = "Location: " . BG_URL_ADMIN . "admin.php?mod=logon&forward=" . base64_encode($_SERVER["REQUEST_URI"]);
+		$_str_location = "Location: " . BG_URL_ADMIN . "ctl.php?mod=logon&forward=" . base64_encode($_SERVER["REQUEST_URI"]);
 	}
 	header($_str_location);  //未登录就跳转至登录界面
 	exit;

@@ -1,30 +1,46 @@
-{* alert.tpl 提示信息界面 *}
-{if $smarty.get.view}
-	{$str_tpl = $smarty.get.view}
-	{$str_css = "admin_{$smarty.get.view}_alert"}
-{else}
-	{$str_tpl = "admin"}
-	{$str_css = "admin_alert"}
-{/if}
-
 {$cfg = [
-	title  => $lang.page.alert,
-	css    => $str_css
+	title  => $lang.page.alert
 ]}
 
-{include "include/{$str_tpl}_head.tpl" cfg=$cfg}
+{if $tplData.view != "iframe"}
+	{include "include/admin_head.tpl" cfg=$cfg}
 
-	<div class="tform">
-		<h1>
-			<img src="{$smarty.const.BG_URL_IMAGE}alert_{$smarty.get.alert|truncate:1:""}.png" alt="{$lang.page.alert}" />
-			{$alert[$smarty.get.alert]}
-		</h1>
-		<h2>{$lang.text[$smarty.get.alert]}</h2>
-		<h2><a href="javascript:history.go(-1);">{$lang.href.back}</a></h2>
+	<li>{$lang.page.alert}</li>
+
+	{include "include/admin_left.tpl" cfg=$cfg}
+
+	<div class="form-group">
+		<a href="javascript:history.go(-1);">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+			{$lang.href.back}
+		</a>
+	</div>
+{else}
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		{$lang.page.alert}
+	</div>
+	<div class="modal-body">
+{/if}
+
+	<div class="alert alert-{if $tplData.status == "y"}success{else}danger{/if}">
 		<h3>
-			{$lang.label.alert} : {$smarty.get.alert}
+			<span class="glyphicon glyphicon-{if $tplData.status == "y"}ok-circle{else}remove-circle{/if}"></span>
+			{$alert[$tplData.alert]}
 		</h3>
+		<p>{$lang.text[$tplData.alert]}</p>
+		<p>
+			{$lang.label.alert}
+			:
+			{$tplData.alert}
+		</p>
 	</div>
 
-{include "include/{$str_tpl}_foot.tpl" cfg=$cfg}
-{include "include/html_foot.tpl" cfg=$cfg}
+{if $smarty.get.view != "iframe"}
+	{include "include/admin_foot.tpl" cfg=$cfg}
+	{include "include/html_foot.tpl" cfg=$cfg}
+{else}
+	</div>
+	<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">{$lang.btn.close}</button></div>
+{/if}
+

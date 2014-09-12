@@ -37,9 +37,19 @@ return array(
 		"disable" => "禁用", //隐藏
 	),
 
+	"group" => array(
+		"enable"  => "启用", //发布
+		"disable" => "禁用", //隐藏
+	),
+
 	"call" => array(
 		"enable"  => "启用", //发布
 		"disable" => "禁用", //隐藏
+	),
+
+	"spec" => array(
+		"show"    => "显示", //正常
+		"hide"    => "隐藏", //隐藏
 	),
 );
 ?>

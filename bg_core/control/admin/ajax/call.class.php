@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "call.func.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "call.class.php"); //载入后台用户类
 
@@ -36,26 +35,22 @@ class AJAX_CALL {
 	 * @return void
 	 */
 	function ajax_submit() {
-		$_arr_callPost = fn_callPost();
-		if ($_arr_callPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_callPost["str_alert"]);
+		$_arr_callSubmit = $this->mdl_call->input_submit();
+		if ($_arr_callSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_callSubmit["str_alert"]);
 		}
 
-		if ($_arr_callPost["call_id"] > 0) {
-			if ($this->adminLogged["admin_allow_sys"]["call"]["edit"] != 1) {
+		if ($_arr_callSubmit["call_id"] > 0) {
+			if ($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"] != 1) {
 				$this->obj_ajax->halt_alert("x170303");
 			}
-			$_arr_callRow = $this->mdl_call->mdl_read($_arr_callPost["call_id"]);
-			if ($_arr_callRow["str_alert"] != "y170102") {
-				$this->obj_ajax->halt_alert($_arr_callRow["str_alert"]);
-			}
 		} else {
-			if ($this->adminLogged["admin_allow_sys"]["call"]["add"] != 1) {
+			if ($this->adminLogged["groupRow"]["group_allow"]["call"]["add"] != 1) {
 				$this->obj_ajax->halt_alert("x170302");
 			}
 		}
 
-		$_arr_callRow = $this->mdl_call->mdl_submit($_arr_callPost["call_id"], $_arr_callPost["call_name"], $_arr_callPost["call_type"], $_arr_callPost["call_file"], $_arr_callPost["call_status"], $_arr_callPost["call_amount"], $_arr_callPost["call_trim"], $_arr_callPost["call_css"], $_arr_callPost["call_cate_ids"], $_arr_callPost["call_cate_id"], $_arr_callPost["call_upfile"], $_arr_callPost["call_mark_ids"], $_arr_callPost["call_show"]);
+		$_arr_callRow = $this->mdl_call->mdl_submit();
 
 		$this->obj_ajax->halt_alert($_arr_callRow["str_alert"]);
 	}
@@ -68,16 +63,16 @@ class AJAX_CALL {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["admin_allow_sys"]["call"]["del"] != 1) {
+		if ($this->adminLogged["groupRow"]["group_allow"]["call"]["del"] != 1) {
 			$this->obj_ajax->halt_alert("x170304");
 		}
 
-		$_arr_callDo = fn_callDo();
-		if ($_arr_callDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_callDo["str_alert"]);
+		$_arr_callIds = $this->mdl_call->input_ids();
+		if ($_arr_callIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_callIds["str_alert"]);
 		}
 
-		$_arr_callRow = $this->mdl_call->mdl_del($_arr_callDo["call_ids"]);
+		$_arr_callRow = $this->mdl_call->mdl_del();
 
 		$this->obj_ajax->halt_alert($_arr_callRow["str_alert"]);
 	}

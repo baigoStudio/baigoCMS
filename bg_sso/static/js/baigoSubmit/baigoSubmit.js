@@ -1,6 +1,6 @@
 /*
 v0.0.9 jQuery baigoSubmit plugin 表单全选插件
-(c) 2013 baigo studio - http://baigo.nbfone.com/baigoSubmit/
+(c) 2013 baigo studio - http://www.baigo.net/baigoSubmit/
 License: http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -29,29 +29,31 @@ License: http://www.opensource.org/licenses/mit-license.php
 			class_err: "baigoSubmit_x",
 			class_loading: "baigoSubmit_loading",
 			btn_url: "",
-			btn_text: "OK"
+			btn_text: "OK",
+			btn_close: "Close",
 		};
 
 		var opts = $.extend(defaults, options);
 
-		//调用colorbox
-		var callColorbox = function () {
-			$.colorbox({ inline: true, href: "#ajax_box", scrolling: false, width: opts.width, height: opts.height });
+		//调用弹出框
+		var callModal = function () {
+			$("#ajax_box").modal("show")
 		}
 
 		var boxAppend = function () {
-			$("body").append("<div class=\"baigoSubmit_box\">" +
-				"<ul id=\"ajax_box\">" +
-					"<li id=\"ajax_msg\">" +
-						"<div id=\"msg_box\"></div>" +
-					"</li>" +
-					"<li id=\"ajax_alert\">" +
-						"<div id=\"alert_box\"></div>" +
-					"</li>" +
-					"<li id=\"ajax_btn\">" +
-						"<a href=\"" + opts.btn_url + "\" target=\"_top\">" + opts.btn_text + "</a>" +
-					"</li>" +
-				"</ul>" +
+			$("body").append("<div class=\"modal fade\" id=\"ajax_box\">" +
+				"<div class=\"modal-dialog\">" +
+					 "<div class=\"modal-content\">" +
+						"<div class=\"modal-body\">" +
+							"<h4 id=\"box_msg\"></h4>" +
+							"<div id=\"box_alert\"></div>" +
+						"</div>" +
+						"<div class=\"modal-footer\">" +
+							"<a href=\"" + opts.btn_url + "\" id=\"btn_jump\" class=\"btn btn-primary\" target=\"_top\">" + opts.btn_text + "</a>" +
+							"<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">" + opts.btn_close + "</button>" +
+						"</li>" +
+					"</div>" +
+				"</div>" +
 			"</div>");
 		}
 
@@ -84,28 +86,27 @@ License: http://www.opensource.org/licenses/mit-license.php
 					dataType: "json", //数据格式为json
 					data: $(thisForm).serialize(),
 					beforeSend: function(){
-						$("#ajax_btn").hide();
-						$("#msg_box").empty();
-						$("#msg_box").attr("class", opts.class_loading);
-						$("#msg_box").append("loading ..."); //填充消息内容
-						callColorbox(); //输出消息
+						$("#btn_jump").hide();
+						$("#box_msg").empty();
+						$("#box_msg").attr("class", opts.class_loading);
+						$("#box_msg").append("loading ..."); //填充消息内容
+						callModal(); //输出消息
 					}, //输出消息
 					success: function(_result){ //读取返回结果
 						var _image_pre = _result.alert.substr(0, 1);
 						if (_image_pre == "x") {
 							var _class = opts.class_err;
-							$("#ajax_btn").hide();
+							$("#btn_jump").hide();
 						} else {
 							var _class = opts.class_ok;
-							$("#ajax_btn").show();
+							$("#btn_jump").show();
 						}
-						var _image = opts.img_url + "alert_" + _image_pre + ".png";
-						$("#msg_box").empty();
-						$("#msg_box").attr("class", _class);
-						$("#msg_box").append(_result.msg); //填充消息内容
-						$("#alert_box").empty();
-						$("#alert_box").append(_result.alert);
-						callColorbox(); //输出消息
+						$("#box_msg").empty();
+						$("#box_msg").attr("class", _class);
+						$("#box_msg").append(_result.msg); //填充消息内容
+						$("#box_alert").empty();
+						$("#box_alert").append(_result.alert);
+						callModal(); //输出消息
 					}
 				});
 			}

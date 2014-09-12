@@ -1,61 +1,52 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-{* html_head.tpl html 头部通用 *}
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{$config.lang}" xml:lang="{$config.lang}">
+<!DOCTYPE html>
+<html lang="{$config.lang}">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-<title>{$cfg.title} - {$lang.page.admin} - {$smarty.const.BG_SITE_NAME}</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>{$cfg.title} - {$lang.page.admin} - {$smarty.const.BG_SITE_NAME}</title>
 
-<!--jQuery 库-->
-<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
-<link href="{$smarty.const.BG_URL_STATIC_ADMIN}default/css/{$cfg.css}.css" type="text/css" rel="stylesheet" />
+	<!--jQuery 库-->
+	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
+	<link href="{$smarty.const.BG_URL_STATIC_ADMIN}default/css/admin_common.css" type="text/css" rel="stylesheet">
+	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 
-{if $cfg.menu_active}
-	<style type="text/css">
-	#menu_{$cfg.menu_active} a { background-position: 0px -40px; color: #0477c8; }
-	#sub_{$cfg.menu_active} { display: block; }
-	#sub_{$cfg.menu_active}_{$cfg.sub_active} a { background-position: 0px -120px; color: #c30; }
-	</style>
-{/if}
+	{if $cfg.tagmanager}
+		<link rel="stylesheet" href="{$smarty.const.BG_URL_JS}typeahead/typeahead.css" type="text/css" rel="stylesheet">
+		<link rel="stylesheet" href="{$smarty.const.BG_URL_JS}tagmanager/tagmanager.css" type="text/css" rel="stylesheet">
+	{/if}
 
-{if $cfg.colorbox}
-	<!--colorbox 样式-->
-	<link href="{$smarty.const.BG_URL_JS}colorbox/colorbox.css" type="text/css" rel="stylesheet" />
-	<script src="{$smarty.const.BG_URL_JS}colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
-{/if}
+	{if $cfg.upload}
+		<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+		<link rel="stylesheet" href="{$smarty.const.BG_URL_JS}jQuery-File-Upload/jquery.fileupload.css" type="text/css" rel="stylesheet">
+	{/if}
 
-{if $cfg.uploadify}
-	<!--上传插件-->
-	<link href="{$smarty.const.BG_URL_JS}uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-{/if}
+	{if $cfg.datepicker}
+		<link href="{$smarty.const.BG_URL_JS}datetimepicker/jquery.datetimepicker.css" type="text/css" rel="stylesheet">
+	{/if}
 
-{if $cfg.baigoValidator}
-	<!--表单验证 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet" />
-{/if}
+	{if $cfg.baigoValidator}
+		<!--表单验证 js-->
+		<link href="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet">
+	{/if}
 
-{if $cfg.baigoSubmit}
-	<!--表单 ajax 提交 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet" />
-{/if}
+	{if $cfg.baigoSubmit}
+		<!--表单 ajax 提交 js-->
+		<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
+	{/if}
 
-{if $cfg.kindeditor}
-	<!--html 编辑器-->
-	<script src="{$smarty.const.BG_URL_JS}kindeditor/kindeditor-all-min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-	var k_options = {
-		items: [
-			'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikethrough', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', '|', 'insertorderedlist', 'insertunorderedlist', '/',
-			'indent', 'outdent', 'subscript', 'superscript', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'lineheight', '|', 'image', 'flash', 'table', 'map', '|', 'code', '/',
-			'hr', 'anchor', 'link', 'unlink', '|', 'selectall', 'clearhtml', 'removeformat', 'quickformat', '|', 'preview', 'source', '|', 'about'
-		],
-		langType: '{$config.lang}',
-		resizeType: 1,
-		allowImageUpload: false,
-		allowFlashUpload: false,
-		cssPath : '{$smarty.const.BG_URL_JS}kindeditor/plugins/code/prettify.css'
-	}
-	</script>
-{/if}
+	{if $cfg.tinymce}
+		<!--html 编辑器-->
+		<script src="{$smarty.const.BG_URL_JS}tinymce/tinymce.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		tinyMCE.init({
+			selector: "textarea.tinymce",
+			language: "{$config.lang}",
+			plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
+			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image"
+		});
+		</script>
+	{/if}
 
 </head>

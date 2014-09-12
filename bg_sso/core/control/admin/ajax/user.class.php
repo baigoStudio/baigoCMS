@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "user.func.php"); //载入模板类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "user.class.php"); //载入管理帐号模型
 include_once(BG_PATH_MODEL . "log.class.php"); //载入管理帐号模型
@@ -40,26 +39,15 @@ class AJAX_USER {
 		str_alert 提示信息
 	*/
 	function ajax_submit() {
-		$_arr_userPost = fn_userPost();
+		$_arr_userSubmit = $this->mdl_user->input_submit();
 
-		if ($_arr_userPost["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_userPost["str_alert"]);
+		if ($_arr_userSubmit["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_userSubmit["str_alert"]);
 		}
 
-		//检验用户名是否重复
-		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userPost["user_name"], "user_name", $_arr_userPost["user_id"]);
-		if ($_arr_userRow["str_alert"] == "y010102") {
-			$this->obj_ajax->halt_alert("x010205");
-		}
-
-		if ($_arr_userPost["user_id"] > 0) {
+		if ($_arr_userSubmit["user_id"] > 0) {
 			if ($this->adminLogged["admin_allow"]["user"]["edit"] != 1) {
 				$this->obj_ajax->halt_alert("x010303");
-			}
-			//检查用户是否存在
-			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userPost["user_id"]);
-			if ($_arr_userRow["str_alert"] != "y010102") {
-				$this->obj_ajax->halt_alert($_arr_userRow["str_alert"]);
 			}
 			$_str_userPass = $_POST["user_pass"];
 			if ($_str_userPass) {
@@ -84,19 +72,7 @@ class AJAX_USER {
 			$_str_userPassDo = fn_baigoEncrypt($_str_userPass, $_str_userRand);
 		}
 
-		$_arr_userStatus = validateStr($_POST["user_status"], 1, 0);
-		switch ($_arr_userStatus["status"]) {
-			case "too_short":
-				$this->obj_ajax->halt_alert("x010216");
-			break;
-
-			case "ok":
-				$_str_userStatus = $_arr_userStatus["str"];
-			break;
-
-		}
-
-		$_arr_userRow = $this->mdl_user->mdl_submit($_arr_userPost["user_id"], $_arr_userPost["user_name"], $_arr_userPost["user_mail"], $_str_userPassDo, $_str_userRand, $_arr_userPost["user_nick"], $_arr_userPost["user_note"], $_str_userStatus);
+		$_arr_userRow = $this->mdl_user->mdl_submit($_str_userPassDo, $_str_userRand);
 
 		$this->obj_ajax->halt_alert($_arr_userRow["str_alert"]);
 	}
@@ -114,12 +90,12 @@ class AJAX_USER {
 
 		$_str_status = fn_getSafe($_POST["act_post"], "txt", "");
 
-		$_arr_userDo = fn_userDo();
-		if ($_arr_userDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_userDo["str_alert"]);
+		$_arr_userIds = $this->mdl_user->input_ids();
+		if ($_arr_userIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_userIds["str_alert"]);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_status($_arr_userDo["user_ids"], $_str_status);
+		$_arr_userRow = $this->mdl_user->mdl_status($_str_status);
 
 		$this->obj_ajax->halt_alert($_arr_userRow["str_alert"]);
 	}
@@ -134,15 +110,15 @@ class AJAX_USER {
 			$this->obj_ajax->halt_alert("x010304");
 		}
 
-		$_arr_userDo = fn_userDo();
-		if ($_arr_userDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_userDo["str_alert"]);
+		$_arr_userIds = $this->mdl_user->input_ids();
+		if ($_arr_userIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_userIds["str_alert"]);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_del($_arr_userDo["user_ids"]);
+		$_arr_userRow = $this->mdl_user->mdl_del();
 
 		if ($_arr_userRow["str_alert"] == "y010104") {
-			foreach ($_arr_userDo["user_ids"] as $_value) {
+			foreach ($_arr_userIds["user_ids"] as $_value) {
 				$_arr_targets[] = array(
 					"user_id" => $_value,
 				);
@@ -163,13 +139,13 @@ class AJAX_USER {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_arr_userName = fn_userChkName();
+		$_arr_userName = $this->mdl_user->input_user_name();
 
 		if ($_arr_userName["str_alert"] != "ok") {
 			$this->obj_ajax->halt_re($_arr_userName["str_alert"]);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_name"], "user_name", $_arr_userName["user_id"]);
+		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_name"], "user_name", $_arr_userName["not_id"]);
 
 		if ($_arr_userRow["str_alert"] == "y010102") {
 			$this->obj_ajax->halt_re("x010205");
@@ -189,14 +165,14 @@ class AJAX_USER {
 	 * @return void
 	 */
 	function ajax_chkmail() {
-		$_arr_userMail = fn_userChkMail();
+		$_arr_userMail = $this->mdl_user->input_user_mail();
 
 		if ($_arr_userMail["str_alert"] != "ok") {
 			$this->obj_ajax->halt_re($_arr_userMail["str_alert"]);
 		}
 
 		if ($_arr_userMail["user_mail"]) {
-			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userMail["user_mail"], "user_mail", $_arr_userMail["user_id"]);
+			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userMail["user_mail"], "user_mail", $_arr_userMail["not_id"]);
 			if ($_arr_userRow["str_alert"] == "y010102") {
 				$this->obj_ajax->halt_re("x010211");
 			}

@@ -1,38 +1,4 @@
-@import "global.css";
+.global { max-width: 500px!important; margin: 40px auto; }
+label > span { color: #c30; margin-left: 10px; }
+.foot_logo > a { display: block; width: 110px; height: 0; margin: 0 auto; padding-top: 20px; overflow: hidden; background: url(../image/admin_foot.png) -20px -50px; }
 
-body { margin: 0px; padding: 0px; text-align: center; background: url(../image/admin_logon_bg.png) repeat-x #90D0BF; }
-
-.global { width: 500px; margin: 0px auto; }
-
-.global > .global_body { width: 500px; position: absolute; top: 50%; margin-top: -250px; background: url(../image/admin_logon.png); }
-
-.global > .global_body > .page_head { width: 460px; padding: 20px; }
-
-	.global > .global_body > .page_head > .head_title { float: left; font-size: 20px; }
-	.global > .global_body > .page_head > .head_name { float: right; height: 20px; overflow: hidden; }
-
-.global > .global_body > .page_body { width: 440px; padding: 20px 30px; text-align: left; }
-
-	.global > .global_body > .page_body > form > .msg { height: 40px; color: #c30; font-size: 16px; }
-	.global > .global_body > .page_body > form > .btn_logon { margin-top: 40px; }
-
-		.global > .global_body > .page_body > form > div > a { font-size: 14px; background: url(../image/submit.png) no-repeat; padding: 9px 9px 9px 40px; color: #4C826A; }
-		.global > .global_body > .page_body > form > div > a:hover { background-position: 0px -34px; color: #005839; }
-
-	.global > .global_body > .page_body > form > ul > li { margin-bottom: 20px; }
-
-		.global > .global_body > .page_body > form > ul > li > ol { width: 290px; float: left; border-bottom: 1px solid #ccc; }
-
-			.global > .global_body > .page_body > form > ul > li > ol > .label { width: 50px; margin: 16px 0px 0px 4px; float: left; color: #999; }
-			.global > .global_body > .page_body > form > ul > li > ol > .field { width: 236px; float: left; }
-
-				.global > .global_body > .page_body > form > ul > li > ol > .field > input { width: 220px; float: left; font-size: 25px; padding: 5px; background: #fff; border: none; }
-				.global > .global_body > .page_body > form > ul > li > ol > .field > #seccode { width: 100px; }
-				.global > .global_body > .page_body > form > ul > li > ol > .field > a { float: right; }
-
-		.global > .global_body > .page_body > form > ul > li > span { float: left; margin: 16px 0px 0px 10px; color: #c30; }
-
-
-.global > .global_body > .page_foot { width: 460px; padding: 20px; }
-
-	.global > .global_body > .page_foot > a { display: block; width: 100px; height: 0px; margin: 0px auto; padding-top: 15px; overflow: hidden; background: url(../image/admin_power_by.png); }

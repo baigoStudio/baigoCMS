@@ -18,6 +18,43 @@ class MODEL_OPT {
 	}
 
 
+	function mdl_create() {
+		$_arr_optCreat = array(
+			"opt_key"    => "varchar(100) NOT NULL COMMENT '键'",
+			"opt_value"  => "varchar(3000) NOT NULL COMMENT '值'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "opt", $_arr_optCreat, "opt_key", "设置项");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y060105"; //更新成功
+		} else {
+			$_str_alert = "x060105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "opt'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
 	/**
 	 * mdl_submit function.
 	 *

@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "log.func.php"); //载入模板类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "log.class.php"); //载入管理帐号模型
 
@@ -43,12 +42,12 @@ class AJAX_LOG {
 
 		$_str_status = fn_getSafe($_POST["act_post"], "txt", "");
 
-		$_arr_logDo = fn_logDo();
-		if ($_arr_logDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_logDo["str_alert"]);
+		$_arr_logIds = $this->mdl_log->input_ids();
+		if ($_arr_logIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_logIds["str_alert"]);
 		}
 
-		$_arr_logRow = $this->mdl_log->mdl_status($_arr_logDo["log_ids"], $_str_status);
+		$_arr_logRow = $this->mdl_log->mdl_status($_str_status);
 
 		$this->obj_ajax->halt_alert($_arr_logRow["str_alert"]);
 	}
@@ -63,15 +62,15 @@ class AJAX_LOG {
 			$this->obj_ajax->halt_alert("x060304");
 		}
 
-		$_arr_logDo = fn_logDo();
-		if ($_arr_logDo["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_logDo["str_alert"]);
+		$_arr_logIds = $this->mdl_log->input_ids();
+		if ($_arr_logIds["str_alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_logIds["str_alert"]);
 		}
 
-		$_arr_logRow = $this->mdl_log->mdl_del($_arr_logDo["log_ids"]);
+		$_arr_logRow = $this->mdl_log->mdl_del();
 
 		if ($_arr_logRow["str_alert"] == "y060104") {
-			foreach ($_arr_logDo["log_ids"] as $_value) {
+			foreach ($_arr_logIds["log_ids"] as $_value) {
 				$_arr_targets[] = array(
 					"log_id" => $_value,
 				);

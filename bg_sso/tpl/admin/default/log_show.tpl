@@ -1,64 +1,74 @@
 {* admin_form.tpl 管理员编辑界面 *}
-{$cfg = [
-	title          => "{$adminMod.log.main.title} - {$lang.page.detail}",
-	css            => "admin_form",
-	menu_active    => "log",
-	sub_active     => "list"
-]}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	{$adminMod.log.main.title} - {$lang.page.detail}
+</div>
+<div class="modal-body">
 
-{include "include/admin_head.tpl" cfg=$cfg}
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.id}</label>
+		<p class="form-control-static static_input">{$tplData.logRow.log_id}</p>
+	</div>
 
-	<form class="tform">
-		<div>
-			<ol>
-				<li class="title_b">{$lang.label.id}: {$tplData.logRow.log_id}</li>
+	{if $tplData.logRow.log_status == "read"}
+		{$_css_status = "success"}
+	{else}
+		{$_css_status = "warning"}
+	{/if}
 
-				<li class="line_dashed"> </li>
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.status}</label>
+		<p class="form-control-static">
+			<span class="label label-{$_css_status}">{$status.log[$tplData.logRow.log_status]}</span>
+		</p>
+	</div>
 
-				<li class="title">{$lang.label.status}</li>
-				<li>
-					<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.logRow.log_status == "read"}y{else}x{/if}.png" />
-					<label>{$status.log[$tplData.logRow.log_status]}</label>
-				</li>
-			</ol>
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.content}</label>
+		<p class="form-control-static static_input">{$tplData.logRow.log_title}</p>
+	</div>
 
-			<ul>
-				<li class="title">{$lang.label.content}</li>
-				<li class="title_b">{$tplData.logRow.log_title}</li>
-
-				<li class="title">{$lang.label.target}</li>
-				<li class="title_b">
-					{foreach $tplData.logRow.log_targets as $_key=>$_value}
-						<div>
-							{if $tplData.logRow.log_target_type == "opt"}
-								{$type.logTarget[$tplData.logRow.log_target_type]}: {$_value.target_name}
-							{else}
-								<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod={$tplData.logRow.log_target_type}&act_get=show&{$tplData.logRow.log_target_type}_id={$_value.target_id}">
-									{$type.logTarget[$tplData.logRow.log_target_type]}: {$_value.target_name} [ {$lang.label.id}: {$_value.target_id} ]
-								</a>
-							{/if}
-						</div>
-					{/foreach}
-				</li>
-
-				<li class="title">{$lang.label.type}</li>
-				<li class="title_b">{$type.log[$tplData.logRow.log_type]}</li>
-
-				<li class="title">{$lang.label.operator}</li>
-				<li class="title_b">
-					{if $tplData.logRow.log_type != "system"}
-						<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod={$tplData.logRow.log_type}&act_get=show&{$tplData.logRow.log_type}_id={$tplData.logRow.log_operator_id}">{$tplData.logRow.log_operator_name}</a>
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.target}</label>
+		<p class="form-control-static">
+			{foreach $tplData.logRow.log_targets as $_key=>$_value}
+				<div>
+					{if $tplData.logRow.log_target_type == "opt"}
+						{$type.logTarget[$tplData.logRow.log_target_type]}: {$_value.target_name}
+					{else}
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod={$tplData.logRow.log_target_type}&act_get=show&{$tplData.logRow.log_target_type}_id={$_value.target_id}">
+							{$type.logTarget[$tplData.logRow.log_target_type]}: {$_value.target_name} [ {$lang.label.id}: {$_value.target_id} ]
+						</a>
 					{/if}
-				</li>
+				</div>
+			{/foreach}
+		</p>
+	</div>
 
-				<li class="title">{$lang.label.result}</li>
-				<li class="title_b">
-					{$tplData.logRow.log_result|@debug_print_var}
-				</li>
-			</ul>
-		</div>
-	</form>
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.type}</label>
+		<p class="form-control-static static_input">{$type.log[$tplData.logRow.log_type]}</p>
+	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.operator}</label>
+		<p class="form-control-static">
+			{if $tplData.logRow.log_type != "system"}
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod={$tplData.logRow.log_type}&act_get=show&{$tplData.logRow.log_type}_id={$tplData.logRow.log_operator_id}">{$tplData.logRow.log_operator_name}</a>
+			{else}
+				{$type.log[$value.log_type]}
+			{/if}
+		</p>
+	</div>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+	<div class="form-group">
+		<label class="control-label static_label">{$lang.label.result}</label>
+		<p class="form-control-static static_input">
+			{$tplData.logRow.log_result|@debug_print_var}
+		</p>
+	</div>
+
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">{$lang.btn.close}</button>
+</div>

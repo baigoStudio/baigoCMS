@@ -25,17 +25,23 @@ return array(
 		"upload"          => "上传", //上传
 		"order"           => "排序",
 		"show"            => "查看",
-		"adminMy"         => "管理员个人信息",
+		"profile"         => "管理员个人信息",
+		"pass"            => "修改密码",
+
+		"upgrade"         => "baigo CMS 升级程序",
+		"upgradeTable"    => "升级数据表",
+		"upgradeOver"     => "完成升级",
+
 		"install"         => "baigo CMS 安装程序",
-		"installStep"     => "安装",
 		"installDb"       => "数据库设置",
 		"installTable"    => "创建数据表",
 		"installBase"     => "基本设置",
 		"installVisit"    => "访问方式设置",
-		"installUpfile"   => "上传设置",
+		"installUpload"   => "上传设置",
 		"installSso"      => "SSO 设置",
-		"installSsoauto"  => "SSO 自动部署",
+		"installSsoAuto"  => "SSO 自动部署",
 		"installAdmin"    => "创建管理员",
+		"installOver"     => "完成安装",
 	),
 
 	/*------链接文字------*/
@@ -58,30 +64,36 @@ return array(
 		"order"           => "排序",
 		"browseOriginal"  => "查看原图",
 		"show"            => "查看",
+		"help"            => "帮助",
 
 		"toGroup"         => "加入组", //加入组
 
+		"specSelect"      => "选择文章",
+
 		"pageFirst"       => "首页", //首页
-		"pagePreList"     => "上十页", //上十页
-		"pagePre"         => "上一页", //上一页
+		"pagePrevList"    => "上十页", //上十页
+		"pagePrev"        => "上一页", //上一页
 		"pageNext"        => "下一页", //下一页
 		"pageNextList"    => "下十页", //下十页
 		"pageLast"        => "末页", //尾页
 
-		"ssoauto"         => "SSO 自动部署", //尾页
+		"adminAuth"       => "授权为管理员", //授权
+		"ssoAuto"         => "SSO 自动部署", //尾页
+		"ssoUpgrade"      => "SSO 升级", //尾页
 
-		"insert"          => "插入", //插入
-		"insertOriginal"  => "插入原图", //插入原图
-
-		"upload"          => "上传", //上传
+		"insert"          => "插入附件",
+		"insertOriginal"  => "插入原始文档",
+		"insertThumb"     => "插入",
+		"upload"          => "上传附件",
 		"uploadList"      => "上传或插入", //上传或插入
 
-		"upfileList"      => "媒体库", //媒体库
+		"attachList"      => "媒体库", //媒体库
 		"articleList"     => "浏览文章", //浏览文章
 	),
 
 	/*------说明文字------*/
 	"label" => array(
+		"top"             => "置顶",
 		"id"              => "ID", //ID
 		"seccode"         => "验证码", //验证码
 		"all"             => "全部",
@@ -99,17 +111,39 @@ return array(
 		"admin"           => "管理员", //管理员
 		"adminGroup"      => "隶属群组", //管理组
 		"adminUnknow"     => "未知管理员，建议删除",
+		"profileAllow"    => "个人权限",
+		"nick"            => "昵称",
+
+		"spec"            => "专题",
+		"specName"        => "专题名称",
+		"specContent"     => "专题内容",
+
+		"profileInfo"     => "禁止修改个人信息",
+		"profilePass"     => "禁止修改密码",
+
+		"belongArticle"   => "已选文章",
+		"selectArticle"   => "待选文章",
 
 		"username"        => "用户名", //用户名
 		"password"        => "密码", //密码
-		"passwordOld"     => "旧密码", //密码
-		"passwordNew"     => "新密码", //密码
-		"passwordConfirm" => "确认密码", //密码
+		"passOld"         => "旧密码", //密码
+		"passNew"         => "新密码", //密码
+		"passConfirm"     => "确认密码", //密码
+		"upgrade"         => "正在进行升级安装",
+		"to"              => "至",
+		"complete"        => "升级安装无法创建管理员，点完成完成安装",
 
 		"mail"            => "E-mail",
 
+		"loading"         => "正在载入……",
+		"uploading"       => "正在上传",
+
+		"upgradeTable"    => "即将升级数据表",
+		"upgradeOver"     => "还差最后一步，完成升级",
+
+		"installOver"     => "还差最后一步，完成安装",
 		"installTable"    => "即将创建数据表",
-		"installSso"      => "即将自动部署 SSO",
+		"installSso"      => "即将执行自动部署第一步",
 
 		"modOnly"         => "（需要修改时输入）", //需要修改时输入
 		"time"            => "时间", //时间
@@ -124,7 +158,6 @@ return array(
 		"order"           => "排序",
 		"orderFirst"      => "移到最前",
 		"orderLast"       => "移到最后",
-		"orderBefore"     => "该 ID 之前",
 		"orderAfter"      => "该 ID 之后",
 
 		"group"           => "群组", //组名
@@ -136,15 +169,15 @@ return array(
 		"articleTitle"    => "文章标题", //文章标题
 		"articleContent"  => "文章内容", //文章标题
 		"articleLink"     => "跳转至", //跳转至
-		"articleLinkNote" => "（必须以 http:// 开始）", //跳转至
-		"articleCate"     => "所属栏目", //所属栏目
+		"articleLinkNote" => "必须以 http:// 开始", //跳转至
+		"articleCate"     => "从属栏目", //从属栏目
 		"articleBelong"   => "附加至栏目", //附加栏目
 		"articleMark"     => "标记", //标记
 		"articleTag"      => "TAG", //TAG
-		"articleTagNote"  => "（多个 TAG 请用半角逗号 , 隔开）", //TAG
 		"articleExcerpt"  => "摘要", //摘要
-		"articleMore"     => "显示更多选项", //显示高级选项
+		"more"            => "显示更多选项", //显示高级选项
 		"articleCount"    => "文章数",
+		"articleSpec"     => "专题",
 
 		"cateAllow"       => "栏目管理权限", //栏目权限
 		"cateName"        => "栏目名称", //栏目名称
@@ -172,20 +205,21 @@ return array(
 		"callTrim"        => "显示字数",
 		"callMark"        => "标记（不选则显示全部）",
 		"callCate"        => "栏目",
-		"callUpfile"      => "是否带图片",
+		"callAttach"      => "是否带图片",
 		"callShow"        => "显示以下项目",
 		"callShowImg"     => "图片",
 		"callCss"         => "应用 CSS 类名",
+		"showBase"        => "基本项目",
 
 		"tagName"         => "TAG", //TAG
 		"markName"        => "标记", //标记
 
-		"upfileName"      => "文件名", //文件名
-		"upfilePath"      => "保存路径", //保存路径
-		"upfileSize"      => "允许上传大小", //允许文件大小
-		"upfileThumb"     => "缩略图", //缩略图
-		"upfileMime"      => "允许下列扩展名",
-		"uploadSucc"      => "个文件上传成功",
+		"attachName"      => "文件名", //文件名
+		"attachPath"      => "保存路径", //保存路径
+		"attachSize"      => "允许上传大小", //允许文件大小
+		"attachThumb"     => "缩略图", //缩略图
+		"attachMime"      => "允许下列扩展名",
+		"uploadSucc"      => "上传成功",
 
 		"thumbWidth"      => "最大宽度", //缩略图宽度
 		"thumbHeight"     => "最大高度", //缩略图高度
@@ -236,6 +270,9 @@ return array(
 		"asParent"        => "作为一级栏目", //作为一级栏目
 		"noGroup"         => "不加入组",
 		"noImg"           => "不显示",
+		"noTime"          => "不显示",
+		"noMark"          => "无标记",
+		"noSpec"          => "不加入专题",
 		"original"        => "原图",
 		"tplInherit"      => "继承上一级", //继承上一级模板
 
@@ -252,10 +289,16 @@ return array(
 
 	/*------长篇文字------*/
 	"text" => array(
-		"installSso"  => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 SSO 自动部署。",
-		"x070405"     => "尚未设置允许上传的文件类型，<a href=\"" . BG_URL_ADMIN . "admin.php?mod=mime&act_get=list\" target=\"_top\">点击立刻设置</>",
-		"x110401"     => "尚未创建栏目，<a href=\"" . BG_URL_ADMIN . "admin.php?mod=cate&act_get=form\" target=\"_top\">点击立刻创建</>",
+		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
+		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
+		"installAdmin"    => "本操作将向 SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有全部的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。",
+		"installSsoAdmin" => "本操作将同时为 CMS 与 SSO 创建管理员，拥有全部的管理权限。请牢记用户名与密码。",
+		"installAuth"     => "本操作将用您输入的 SSO 用户作为管理员，拥有全部的管理权限。您必须输入该用户的用户名和密码才能进行授权。",
+		"x070405"         => "尚未设置允许上传的文件类型，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=mime&act_get=list\" target=\"_top\">点击立刻设置</>",
+		"x110401"         => "尚未创建栏目，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=cate&act_get=form\" target=\"_top\">点击立刻创建</>",
 	),
+
+	"digit"    => array("日", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"),
 
 	/*------按钮------*/
 	"btn" => array(
@@ -263,14 +306,25 @@ return array(
 		"ok"          => "确定", //确定
 		"login"       => "登录", //登录
 		"submit"      => "提交", //提交
+		"close"       => "关闭", //提交
+		"save"        => "保存", //提交
+		"cancel"      => "取消",
 		"del"         => "永久删除", //删除
+		"complete"    => "完成",
 		"search"      => "搜索", //搜索
 		"filter"      => "筛选", //筛选
+		"thumb"       => "缩略图",
+		"upload"      => "上传附件",
 		"recycle"     => "移至回收站", //移至回收站
 		"empty"       => "清空我的回收站", //清空回收站
 		"browse"      => "请选择文件 ...",
 		"skip"        => "跳过",
-		"installPre"  => "上一步",
+		"jump"        => "跳转至",
+		"over"        => "完成",
+		"menu"        => "菜单",
+		"belongAdd"   => "选择",
+		"belongDel"   => "移除",
+		"reloadSpec"  => "重载专题",
 		"installNext" => "下一步",
 	),
 

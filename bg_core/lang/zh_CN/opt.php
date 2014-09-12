@@ -11,10 +11,10 @@ if(!defined("IN_BAIGO")) {
 
 for ($_i = 14; $_i >= -12; $_i--) {
 	if ($_i >= 0) {
-		$_i_key = "Etc/GMT+" . $_i;
+		$_i_key   = "Etc/GMT+" . $_i;
 		$_i_value = "Etc/GMT+" . $_i;
 	} else {
-		$_i_key = $_i;
+		$_i_key   = $_i;
 		$_i_value = "Etc/GMT" . $_i;
 	}
 	$_timezone[$_i_key] = $_i_value;
@@ -42,7 +42,7 @@ return array(
 			"format"     => "url",
 			"min"        => 1,
 			"default"    => "http://" . $_SERVER["SERVER_NAME"],
-			"note"       => "（末尾请勿加 /）",
+			"note"       => "末尾请勿加 /",
 		),
 		"BG_SITE_PERPAGE" => array(
 			"label"      => "每页显示数",
@@ -65,9 +65,9 @@ return array(
 			"default"    => "Y-m-d",
 			"option" => array(
 				"Y-m-d"         => date("Y-m-d"),
-				"Y年m月d日"  => date("Y年m月d日"),
+				"Y年m月d日"      => date("Y年m月d日"),
 				"y-m-d"         => date("y-m-d"),
-				"y年m月d日"  => date("y年m月d日"),
+				"y年m月d日"      => date("y年m月d日"),
 				"M. d, Y"       => date("M. d, Y"),
 			),
 		),
@@ -78,7 +78,7 @@ return array(
 			"default"    => "m-d",
 			"option" => array(
 				"m-d"       => date("m-d"),
-				"m月d日"  => date("m月d日"),
+				"m月d日"     => date("m月d日"),
 				"M. d"      => date("M. d"),
 			),
 		),
@@ -103,16 +103,16 @@ return array(
 			),
 		),
 	),
-	"upfile" => array(
-		"BG_UPFILE_SIZE" => array(
+	"upload" => array(
+		"BG_UPLOAD_SIZE" => array(
 			"label"      => "允许上传大小",
 			"type"       => "str",
 			"format"     => "int",
 			"min"        => 1,
 			"default"    => 200,
-			"note"       => "（单位请参考下一项）",
+			"note"       => "单位请参考下一项",
 		),
-		"BG_UPFILE_UNIT" => array(
+		"BG_UPLOAD_UNIT" => array(
 			"label"      => "允许上传单位",
 			"type"       => "select",
 			"format"     => "txt",
@@ -123,57 +123,57 @@ return array(
 				"MB"    => "MB",
 			),
 		),
-		"BG_UPFILE_COUNT" => array(
+		"BG_UPLOAD_COUNT" => array(
 			"label"      => "允许同时上传数",
 			"type"       => "str",
 			"format"     => "int",
 			"min"        => 1,
 			"default"    => 10,
 		),
-		"BG_UPFILE_URL" => array(
+		"BG_UPLOAD_URL" => array(
 			"label"      => "绑定 URL ",
 			"type"       => "str",
 			"format"     => "url",
 			"min"        => 0,
 			"default"    => "http://" . $_SERVER["SERVER_NAME"],
-			"note"       => "（末尾请勿加 /）",
+			"note"       => "末尾请勿加 /",
 		),
-		"BG_UPFILE_FTPHOST" => array(
+		"BG_UPLOAD_FTPHOST" => array(
 			"label"      => "分发 FTP 地址",
 			"type"       => "str",
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"       => "（如上传至本服务器，可为空）"
+			"note"       => "如上传至本服务器，可为空"
 		),
-		"BG_UPFILE_FTPPORT" => array(
+		"BG_UPLOAD_FTPPORT" => array(
 			"label"      => "FTP 端口",
 			"type"       => "str",
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "21",
 		),
-		"BG_UPFILE_FTPUSER" => array(
+		"BG_UPLOAD_FTPUSER" => array(
 			"label"      => "FTP 用户名",
 			"type"       => "str",
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
 		),
-		"BG_UPFILE_FTPPASS" => array(
+		"BG_UPLOAD_FTPPASS" => array(
 			"label"      => "FTP 密码",
 			"type"       => "str",
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
 		),
-		"BG_UPFILE_FTPPATH" => array(
+		"BG_UPLOAD_FTPPATH" => array(
 			"label"      => "FTP 远程路径",
 			"type"       => "str",
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"        => "（末尾请勿加 /）",
+			"note"        => "末尾请勿加 /",
 		),
 	),
 	"sso" => array(
@@ -183,6 +183,7 @@ return array(
 			"format"     => "url",
 			"min"        => 1,
 			"default"    => "",
+			"note"       => "必须以 http:// 开始", //跳转至
 		),
 		"BG_SSO_APPID" => array(
 			"label"      => "APP ID",
@@ -204,8 +205,12 @@ return array(
 			"min"        => 1,
 			"default"    => "off",
 			"option" => array(
-				"on"    => "开启",
-				"off"   => "关闭",
+				"on"    => array(
+					"value"    => "开启"
+				),
+				"off"   => array(
+					"value"    => "关闭"
+				),
 			),
 		),
 	),
@@ -216,9 +221,18 @@ return array(
 			"min"        => 1,
 			"default"    => "default",
 			"option" => array(
-				"default"   => "默认 &raquo; 例: " . BG_SITE_URL . "/index.php?mod=article&act_get=show&article_id=123",
-				"pstatic"   => "伪静态 &raquo; 例: " . BG_SITE_URL . "/article/123 (需服务器支持)",
-				"static"    => "纯静态 &raquo; 例: " . BG_SITE_URL . "/article/" . date("Y") . "/" . date("m") . "/123." . BG_VISIT_FILE . " (需安装静态页面模块)",
+				"default"   => array(
+					"value"    => "默认",
+					"note"     => "例：" . BG_SITE_URL . "/index.php?mod=article&act_get=show&article_id=123",
+				),
+				"pstatic"   => array(
+					"value"    => "伪静态",
+					"note"     => "例：" . BG_SITE_URL . "/article/123 (需服务器支持)",
+				),
+				"static"    => array(
+					"value"    => "纯静态",
+					"note"     => "例：" . BG_SITE_URL . "/article/" . date("Y") . "/" . date("m") . "/123." . BG_VISIT_FILE . " (需安装静态页面模块)",
+				),
 			),
 		),
 		"BG_VISIT_FILE" => array(

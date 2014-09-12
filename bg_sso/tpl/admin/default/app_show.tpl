@@ -1,98 +1,144 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {$cfg = [
 	title          => "{$adminMod.app.main.title} - {$lang.page.detail}",
-	css            => "admin_form",
 	menu_active    => "app",
 	sub_active     => "list"
 ]}
 
 {include "include/admin_head.tpl" cfg=$cfg}
 
-	<h1>
+	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=list">{$adminMod.app.main.title}</a></li>
+	<li>{$lang.page.detail}</li>
 
-	</h1>
+	{include "include/admin_left.tpl" cfg=$cfg}
 
-	<form class="tform">
-		<div>
-			<ol>
-				<li class="title_b">
-					{$lang.label.id}: {$tplData.appRow.app_id}
-				</li>
+	<div class="form-group">
+		<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=list">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+			{$lang.href.back}
+		</a>
+	</div>
 
-				<li class="line_dashed"> </li>
+	<div class="row">
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.appName}</label>
+						<p class="form-control-static static_input">{$tplData.appRow.app_name}</p>
+					</div>
 
-				<li class="title">{$lang.label.status}</li>
-				<li>
-					<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.appRow.app_status == "enable"}y{else}x{/if}.png" />
-					<label>{$status.app[$tplData.appRow.app_status]}</label>
-				</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.apiUrl}</label>
+						<p class="form-control-static">{$smarty.const.BG_SITE_URL}{$smarty.const.BG_URL_API}api.php</p>
+					</div>
 
-				<li class="line_dashed"> </li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.appId}</label>
+						<p class="form-control-static static_input">{$tplData.appRow.app_id}</p>
+					</div>
 
-				<li class="title">{$lang.label.sync}</li>
-				<li>
-					<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.appRow.app_sync == "on"}y{else}x{/if}.png" />
-					<label>{$status.appSync[$tplData.appRow.app_sync]}</label>
-				</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.appKey}</label>
+						<p class="form-control-static">{$tplData.appRow.app_key}</p>
+					</div>
 
-				<li class="line_dashed"> </li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.appNotice}</label>
+						<p class="form-control-static">{$tplData.appRow.app_notice}</p>
+					</div>
 
-				<li class="title_b">
-					<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=app&act_get=form&app_id={$tplData.appRow.app_id}">{$lang.href.edit}</a>
-				</li>
-			</ol>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.allow}</label>
+						<dl>
+							{foreach $allow as $key_m=>$value_m}
+								<dt>{$value_m.title}</dt>
+								<dd>
+									<ul class="list-inline">
+										{foreach $value_m.allow as $key_s=>$value_s}
+											<li>
+												<span class="glyphicon glyphicon-{if $tplData.appRow.app_allow[$key_m][$key_s] == 1}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+												{$value_s}
+											</li>
+										{/foreach}
+									</ul>
+								</dd>
+							{/foreach}
+						</dl>
+					</div>
 
-			<ul>
-				<li class="title">{$lang.label.appName}</li>
-				<li class="title_b">{$tplData.appRow.app_name}</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.ipAllow}</label>
+						<p class="form-control-static">
+							<pre>{$tplData.appRow.app_ip_allow}</pre>
+						</p>
+					</div>
 
-				<li class="title">{$lang.label.apiUrl}</li>
-				<li class="title_b">{$smarty.const.BG_SITE_URL}{$smarty.const.BG_URL_API}api.php</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.ipBad}</label>
+						<p class="form-control-static">
+							<pre>{$tplData.appRow.app_ip_bad}</pre>
+						</p>
+					</div>
 
-				<li class="title">{$lang.label.appId}</li>
-				<li class="title_b">{$tplData.appRow.app_id}</li>
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.note}</label>
+						<p class="form-control-static static_input">{$tplData.appRow.app_note}</p>
+					</div>
 
-				<li class="title">{$lang.label.appKey}</li>
-				<li class="title_b">{$tplData.appRow.app_key}</li>
+					<div class="form-group">
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=form&app_id={$tplData.appRow.app_id}">
+							<span class="glyphicon glyphicon-edit"></span>
+							{$lang.href.edit}
+						</a>
+					</div>
 
-				<li class="title">{$lang.label.appNotice}</li>
-				<li class="title_b">{$tplData.appRow.app_notice}</li>
-
-				<li class="title">{$lang.label.allow}</li>
-				<li>
-					<ol>
-						{foreach $allow as $key_m=>$value_m}
-							<li class="title">{$value_m.title}</li>
-							<li class="field">
-								{foreach $value_m.allow as $key_s=>$value_s}
-									<img src="{$smarty.const.BG_URL_IMAGE}allow_{if $tplData.appRow.app_allow[$key_m][$key_s] == 1}y{else}x{/if}.png" />
-									<label>{$value_s}</label>
-								{/foreach}
-							</li>
-						{/foreach}
-					</ol>
-				</li>
-
-				<li class="title">{$lang.label.ipAllow}</li>
-				<li class="title_b">
-					<pre>{$tplData.appRow.app_ip_allow}</pre>
-				</li>
-
-				<li class="title">{$lang.label.ipBad}</li>
-				<li>
-					<pre>{$tplData.appRow.app_ip_bad}</pre>
-				</li>
-
-				<li class="title">{$lang.label.note}</li>
-				<li class="title_b">{$tplData.appRow.app_note}</li>
-
-				<li class="title_b">
-					<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=app&act_get=form&app_id={$tplData.appRow.app_id}">{$lang.href.edit}</a>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</div>
-	</form>
+
+		<div class="col-md-3">
+			<div class="well">
+				<div class="form-group">
+					<label class="control-label">{$lang.label.id}</label>
+					<p class="form-control-static">{$tplData.appRow.app_id}</p>
+				</div>
+
+				{if $tplData.appRow.app_status == "enable"}
+					{$_css_status = "success"}
+				{else}
+					{$_css_status = "danger"}
+				{/if}
+
+				<div class="form-group">
+					<label class="control-label">{$lang.label.status}</label>
+					<p class="form-control-static">
+						<span class="label label-{$_css_status}">{$status.app[$tplData.appRow.app_status]}</span>
+					</p>
+				</div>
+
+				{if $tplData.appRow.app_sync == "on"}
+					{$_css_status = "success"}
+				{else}
+					{$_css_status = "danger"}
+				{/if}
+
+				<div class="form-group">
+					<label class="control-label">{$lang.label.sync}</label>
+					<p class="form-control-static">
+						<span class="label label-{$_css_status}">{$status.appSync[$tplData.appRow.app_sync]}</span>
+					</p>
+				</div>
+
+				<div class="form-group">
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=form&app_id={$tplData.appRow.app_id}">
+						<span class="glyphicon glyphicon-edit"></span>
+						{$lang.href.edit}
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl" cfg=$cfg}

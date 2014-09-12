@@ -402,6 +402,16 @@ function fn_eachArray($arr, $method = "encode") {
 		foreach ($arr as $_key=>$_value) {
 			if (is_array($_value)) {
 				$arr[$_key] = fn_eachArray($_value, $method);
+			} else {
+				switch ($method) {
+					case "encode":
+						$arr[$_key] = base64_encode($_value);
+					break;
+
+					case "decode":
+						$arr[$_key] = base64_decode($_value);
+					break;
+				}
 			}
 		}
 	} else {

@@ -14,7 +14,6 @@ include_once(BG_PATH_SMARTY . "smarty.class.php"); //载入 Smarty 类
 /*-------------前台模板类-------------*/
 class CLASS_TPL {
 
-	public $common; //通用
 	public $obj_base;
 	private $obj_smarty; //Smarty
 	public $config; //配置
@@ -42,20 +41,7 @@ class CLASS_TPL {
 	 * @return void
 	 */
 	function tplDisplay($str_tpl, $arr_tplData = "") {
-		switch (BG_VISIT_TYPE) {
-			case "static":
-			case "pstatic":
-				$_str_tagUrl = BG_SITE_URL . BG_URL_ROOT . "tag/";
-			break;
-			default:
-				$_str_tagUrl = BG_SITE_URL . BG_URL_ROOT . "index.php?mod=tag&act_get=list";
-			break;
-		}
-
-		$this->common["tagUrl"]   = $_str_tagUrl;
-
 		$this->obj_smarty->assign("alert", $this->alert);
-		$this->obj_smarty->assign("common", $this->common);
 		$this->obj_smarty->assign("config", $this->config);
 		$this->obj_smarty->assign("tplData", $arr_tplData);
 

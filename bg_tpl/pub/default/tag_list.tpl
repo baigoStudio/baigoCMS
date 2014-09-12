@@ -2,12 +2,13 @@
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
 	css        => "tag_list",
-	str_url    => "{$smarty.const.BG_URL_PUB}index.php?mod=tag&{$tplData.query}"
+	str_url    => "{$tplData.search.urlRow.tag_url}{$tplData.search.urlRow.page_attach}",
+	page_ext   => $tplData.search.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 
 	<div class="tag_nav">
-		<a href="{$smarty.const.BG_URL_PUB}">首页</a>
+		<a href="{$smarty.const.BG_URL_ROOT}">首页</a>
 		&raquo;
 		TAG
 	</div>
@@ -20,7 +21,7 @@
 				{$_str_class = "tag_size_common"}
 			{/if}
 			<li class="tag_name">
-				<a href="{$value.tag_url}" target="_blank" class="{$_str_class}">
+				<a href="{$value.urlRow.tag_url}" target="_blank" class="{$_str_class}">
 					{$value.tag_name}
 					({$value.tag_article_count})
 				</a>

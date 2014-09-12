@@ -49,9 +49,9 @@ return array(
 	),
 
 	/*------是否有图片类型------*/
-	"callUpfile" => array(
+	"callAttach" => array(
 		"all"     => "全部", //普通
-		"upfile"  => "仅显示带图片文章", //单页
+		"attach"  => "仅显示带图片文章", //单页
 		"none"    => "仅显示无图片文章", //跳转至
 	),
 

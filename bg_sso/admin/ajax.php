@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 include_once("../config/config.inc.php"); //载入配置
 
-$arr_mod = array("user", "app", "log", "admin", "opt", "seccode");
+$arr_mod = array("user", "app", "log", "admin", "opt", "profile", "seccode");
 
 $mod = $_GET["mod"];
 

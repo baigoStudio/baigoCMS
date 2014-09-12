@@ -42,7 +42,7 @@ return array(
 			"format"     => "url",
 			"min"        => 1,
 			"default"    => "http://" . $_SERVER["SERVER_NAME"],
-			"note"       => "（末尾请勿加 /）",
+			"note"       => "末尾请勿加 /",
 		),
 		"BG_SITE_PERPAGE" => array(
 			"label"      => "每页显示数",
@@ -109,8 +109,12 @@ return array(
 			"type"   => "radio",
 			"min"    => 1,
 			"option" => array(
-				"on"    => "开",
-				"off"   => "关",
+				"on"    => array(
+					"value"    => "开启"
+				),
+				"off"   => array(
+					"value"    => "关闭"
+				),
 			),
 			"default" => "off",
 		),
@@ -119,8 +123,12 @@ return array(
 			"type"   => "radio",
 			"min"    => 1,
 			"option" => array(
-				"true"  => "是",
-				"false" => "否",
+				"true"    => array(
+					"value"    => "是"
+				),
+				"false"   => array(
+					"value"    => "否"
+				),
 			),
 			"default" => "false",
 		),
@@ -130,7 +138,7 @@ return array(
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"       => "（只填域名部分，每行一个域名，如 @hotmail.com）",
+			"note"       => "只填域名部分，每行一个域名，如 @hotmail.com",
 		),
 		"BG_BAD_MAIL" => array(
 			"label"      => "禁止注册的 E-mail",
@@ -138,7 +146,7 @@ return array(
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"       => "（只填域名部分，每行一个域名，如 @hotmail.com）",
+			"note"       => "只填域名部分，每行一个域名，如 @hotmail.com",
 		),
 		"BG_BAD_NAME" => array(
 			"label"      => "禁止注册的用户名",
@@ -146,7 +154,7 @@ return array(
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"       => "（每行一个用户名，可使用通配符 * 如 *版主*）",
+			"note"       => "每行一个用户名，可使用通配符 * 如 *版主*",
 		),
 	),
 	"mail" => array(
@@ -176,8 +184,12 @@ return array(
 			"type"   => "radio",
 			"min"    => 1,
 			"option" => array(
-				"true"  => "是",
-				"false" => "否",
+				"true"    => array(
+					"value"    => "是"
+				),
+				"false"   => array(
+					"value"    => "否"
+				),
 			),
 			"default" => "true",
 		),

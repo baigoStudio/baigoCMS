@@ -18,6 +18,53 @@ class MODEL_ADMIN {
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
+
+	function mdl_create() {
+		$_arr_adminCreate = array(
+			"admin_id"               => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"admin_name"             => "varchar(30) NOT NULL COMMENT '用户名'",
+			"admin_note"             => "varchar(30) NOT NULL COMMENT '备注'",
+			"admin_rand"             => "varchar(6) NOT NULL COMMENT '随机码'",
+			"admin_allow_cate"       => "varchar(1000) NOT NULL COMMENT '栏目权限'",
+			"admin_group_id"         => "int(11) NOT NULL COMMENT '从属用户组ID'",
+			"admin_time"             => "int(11) NOT NULL COMMENT '登录时间'",
+			"admin_time_login"       => "int(11) NOT NULL COMMENT '最后登录'",
+			"admin_status"           => "varchar(10) NOT NULL COMMENT '状态'",
+			"admin_ip"               => "varchar(15) NOT NULL COMMENT 'IP'",
+			"admin_allow_profile"    => "varchar(1000) NOT NULL COMMENT '个人权限'",
+			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "admin", $_arr_adminCreate, "admin_id", "管理帐号");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y020105"; //更新成功
+		} else {
+			$_str_alert = "x020105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "admin'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
 	/**
 	 * mdl_login function.
 	 *
@@ -43,7 +90,25 @@ class MODEL_ADMIN {
 		return array(
 			"str_alert" => $_str_alert, //更新成功
 		);
+	}
 
+
+	function mdl_profile($num_adminId) {
+
+		$_arr_adminData = array(
+			"admin_nick" => $this->adminProfile["admin_nick"],
+		);
+
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "admin_id=" . $num_adminId); //更新数据
+		if ($_num_mysql > 0) {
+			$_str_alert = "y020103"; //更新成功
+		} else {
+			$_str_alert = "x020103"; //更新失败
+		}
+
+		return array(
+			"str_alert"  => $_str_alert, //成功
+		);
 	}
 
 
@@ -58,25 +123,27 @@ class MODEL_ADMIN {
 	 * @param mixed $str_adminAllowCate
 	 * @return void
 	 */
-	function mdl_submit($num_adminId, $str_adminName = "", $str_adminNote = "", $str_adminRand = "", $str_adminStatus = "enable", $str_adminAllowCate = "") {
+	function mdl_submit($num_adminId) {
 
 		$_arr_adminRow = $this->mdl_read($num_adminId);
 
 		$_arr_adminData = array(
-			"admin_note"         => $str_adminNote,
-			"admin_status"       => $str_adminStatus,
-			"admin_allow_cate"   => $str_adminAllowCate,
+			"admin_note"             => $this->adminSubmit["admin_note"],
+			"admin_status"           => $this->adminSubmit["admin_status"],
+			"admin_allow_cate"       => $this->adminSubmit["admin_allow_cate"],
+			"admin_allow_profile"    => $this->adminSubmit["admin_allow_profile"],
+			"admin_nick"             => $this->adminSubmit["admin_nick"],
 		);
 
 		if ($_arr_adminRow["str_alert"] == "x020102") {
 			$_arr_insert = array(
 				"admin_id"      => $num_adminId,
-				"admin_rand"    => $str_adminRand,
-				"admin_name"    => $str_adminName,
+				"admin_rand"    => fn_rand(6),
+				"admin_name"    => $this->adminSubmit["admin_name"],
 				"admin_time"    => time(),
 			);
-			$_arr_data = array_merge($_arr_adminData, $_arr_insert);
-			$_num_adminId = $this->obj_db->insert(BG_DB_TABLE . "admin", $_arr_data); //插入数据
+			$_arr_data       = array_merge($_arr_adminData, $_arr_insert);
+			$_num_adminId    = $this->obj_db->insert(BG_DB_TABLE . "admin", $_arr_data); //插入数据
 			if ($_num_adminId >= 0) {
 				$_str_alert = "y020101"; //插入成功
 			} else {
@@ -86,8 +153,8 @@ class MODEL_ADMIN {
 				exit;
 			}
 		} else {
-			$_num_adminId = $num_adminId;
-			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "admin_id=" . $_num_adminId); //更新数据
+			$_num_adminId    = $num_adminId;
+			$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "admin_id=" . $_num_adminId); //更新数据
 			if ($_num_mysql > 0) {
 				$_str_alert = "y020103"; //更新成功
 			} else {
@@ -102,7 +169,6 @@ class MODEL_ADMIN {
 			"admin_id"   => $_num_adminId,
 			"str_alert"  => $_str_alert, //成功
 		);
-
 	}
 
 
@@ -141,13 +207,13 @@ class MODEL_ADMIN {
 	 * mdl_status function.
 	 *
 	 * @access public
-	 * @param mixed $arr_adminId
+	 * @param mixed $this->adminIds["admin_ids"]
 	 * @param mixed $str_status
 	 * @return void
 	 */
-	function mdl_status($arr_adminId, $str_status = "enable") {
+	function mdl_status($str_status) {
 
-		$_str_adminId = implode(",", $arr_adminId);
+		$_str_adminId = implode(",", $this->adminIds["admin_ids"]);
 
 		$_arr_adminUpdate = array(
 			"admin_status" => $str_status,
@@ -188,6 +254,8 @@ class MODEL_ADMIN {
 			"admin_time",
 			"admin_ip",
 			"admin_allow_cate",
+			"admin_allow_profile",
+			"admin_nick",
 		);
 
 		$_arr_adminRows = $this->obj_db->select_array(BG_DB_TABLE . "admin", $_arr_adminSelect, "admin_id=" . $num_adminId, 1, 0); //检查本地表是否存在记录
@@ -203,7 +271,9 @@ class MODEL_ADMIN {
 			exit;
 		}
 
-		$_arr_adminRow["str_alert"] = "y020102";
+		$_arr_adminRow["admin_allow_cate"]    = json_decode($_arr_adminRow["admin_allow_cate"], true); //json解码
+		$_arr_adminRow["admin_allow_profile"] = json_decode($_arr_adminRow["admin_allow_profile"], true); //json解码
+		$_arr_adminRow["str_alert"]           = "y020102";
 
 		return $_arr_adminRow;
 
@@ -229,6 +299,7 @@ class MODEL_ADMIN {
 			"admin_note",
 			"admin_group_id",
 			"admin_status",
+			"admin_nick",
 		);
 
 		$_str_sqlWhere = "admin_id > 0";
@@ -288,12 +359,12 @@ class MODEL_ADMIN {
 	 * mdl_del function.
 	 *
 	 * @access public
-	 * @param mixed $arr_adminId
+	 * @param mixed $this->adminIds["admin_ids"]
 	 * @return void
 	 */
-	function mdl_del($arr_adminId) {
+	function mdl_del() {
 
-		$_str_adminId = implode(",", $arr_adminId);
+		$_str_adminId = implode(",", $this->adminIds["admin_ids"]);
 
 		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "admin", "admin_id IN (" . $_str_adminId . ")"); //删除数据
 
@@ -308,6 +379,214 @@ class MODEL_ADMIN {
 			"str_alert" => $_str_alert,
 		); //成功
 
+	}
+
+
+	function input_profile() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_adminNick = validateStr($_POST["admin_nick"], 0, 30);
+		switch ($_arr_adminNick["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x020216",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminProfile["admin_nick"] = $_arr_adminNick["str"];
+			break;
+		}
+
+		$_arr_adminMail = validateStr($_POST["admin_mail"], 0, 900, "str", "email");
+		switch ($_arr_adminMail["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x020208",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x020209",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminProfile["admin_mail"] = $_arr_adminMail["str"];
+			break;
+		}
+
+		$this->adminProfile["str_alert"] = "ok";
+
+		return $this->adminProfile;
+	}
+
+
+	/**
+	 * input_submit function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_submit() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$this->adminSubmit["admin_id"] = fn_getSafe($_POST["admin_id"], "int", 0);
+
+		if ($this->adminSubmit["admin_id"] > 0) {
+			$_arr_adminRow = $this->mdl_read($this->adminSubmit["admin_id"]);
+			if ($_arr_adminRow["str_alert"] != "y020102") {
+				return $_arr_adminRow;
+				exit;
+			}
+		}
+
+		$_arr_adminName = validateStr($_POST["admin_name"], 1, 30, "str", "strDigit");
+		switch ($_arr_adminName["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x020201",
+				);
+				exit;
+			break;
+
+			case "too_long":
+				return array(
+					"str_alert" => "x020202",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x020203",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminSubmit["admin_name"] = $_arr_adminName["str"];
+			break;
+		}
+
+		$_arr_adminMail = validateStr($_POST["admin_mail"], 0, 900, "str", "email");
+		switch ($_arr_adminMail["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x020208",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x020209",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminSubmit["admin_mail"] = $_arr_adminMail["str"];
+			break;
+
+		}
+
+		$_arr_adminNick = validateStr($_POST["admin_nick"], 0, 30);
+		switch ($_arr_adminNick["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x020216",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminSubmit["admin_nick"] = $_arr_adminNick["str"];
+			break;
+		}
+
+		$_arr_adminNote = validateStr($_POST["admin_note"], 0, 30);
+		switch ($_arr_adminNote["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x020212",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminSubmit["admin_note"] = $_arr_adminNote["str"];
+			break;
+		}
+
+		$_arr_adminStatus = validateStr($_POST["admin_status"], 1, 0);
+		switch ($_arr_adminStatus["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x020213",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->adminSubmit["admin_status"] = $_arr_adminStatus["str"];
+			break;
+
+		}
+
+		$this->adminSubmit["admin_allow_cate"]    = json_encode($_POST["admin_allow_cate"]);
+		$this->adminSubmit["admin_allow_profile"] = json_encode($_POST["admin_allow_profile"]);
+		$this->adminSubmit["str_alert"]           = "ok";
+
+		return $this->adminSubmit;
+	}
+
+
+	/**
+	 * input_ids function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_adminIds = $_POST["admin_id"];
+
+		if ($_arr_adminIds) {
+			foreach ($_arr_adminIds as $_key=>$_value) {
+				$_arr_adminIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->adminIds = array(
+			"str_alert"   => $_str_alert,
+			"admin_ids"   => $_arr_adminIds
+		);
+
+		return $this->adminIds;
 	}
 }
 ?>

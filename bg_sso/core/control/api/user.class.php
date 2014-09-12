@@ -9,7 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "user.func.php"); //载入开放平台类
 include_once(BG_PATH_FUNC . "http.func.php"); //载入开放平台类
 include_once(BG_PATH_FUNC . "baigocode.func.php"); //载入开放平台类
 include_once(BG_PATH_CLASS . "api.class.php"); //载入模板类
@@ -62,7 +61,7 @@ class API_USER {
 			$this->log_do($_arr_logTarget, "app", $_arr_appRow, $_arr_logType);
 			$this->obj_api->halt_re($_arr_appRow);
 		}
-		$this->appAllow = json_decode($_arr_appRow["app_allow"], true);
+		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
 		if ($_arr_appChk["str_alert"] != "ok") {
@@ -111,32 +110,15 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userReg = fn_userReg(); //获取数据
+		$_arr_userReg = $this->mdl_user->api_reg(); //获取数据
 		if ($_arr_userReg["str_alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userReg);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userReg["user_name"], "user_name");
-		if ($_arr_userRow["str_alert"] == "y010102") {
-			$_arr_return = array(
-				"str_alert" => "x010205",
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
-
-		if (BG_REG_ONEMAIL == "false" && BG_REG_NEEDMAIL == "on") {
-			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userReg["user_mail"], "user_mail"); //检查Email
-			if ($_arr_userRow["str_alert"] == "y010102") {
-				$_arr_return = array(
-					"str_alert" => "x010211",
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		}
 
 		$_str_userRand    = fn_rand(6);
 		$_str_userPass    = fn_baigoEncrypt($_arr_userReg["user_pass"], $_str_userRand, true);
-		$_arr_userRow     = $this->mdl_user->mdl_submit(0, $_arr_userReg["user_name"], $_arr_userReg["user_mail"], $_str_userPass, $_str_userRand, $_arr_userReg["user_nick"], $_arr_userReg["user_nick"], "enable");
+		$_arr_userRow     = $this->mdl_user->mdl_submit($_str_userPass, $_str_userRand);
 		$_str_code        = $this->obj_api->api_encode($_arr_userRow, $_str_userRand);
 
 		$_arr_return = array(
@@ -176,12 +158,12 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userLogin = fn_userLogin();
+		$_arr_userLogin = $this->mdl_user->api_login();
 		if ($_arr_userLogin["str_alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userLogin);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_loginChk($_arr_userLogin["user_str"], $_arr_userLogin["user_by"]);
+		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userLogin["user_str"], $_arr_userLogin["user_by"]);
 		if ($_arr_userRow["str_alert"] != "y010102") {
 			$this->obj_api->halt_re($_arr_userRow);
 		}
@@ -194,17 +176,18 @@ class API_USER {
 		}
 
 		if ($_arr_userRow["user_status"] != "enable") {
-			return array(
+			$_arr_return = array(
 				"str_alert" => "x010401",
 			);
-			exit;
+			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_str_userRand = fn_rand(6);
-		$this->mdl_user->mdl_loginSubmit($_arr_userRow["user_id"], fn_baigoEncrypt($_arr_userLogin["user_pass"], $_str_userRand, true), $_str_userRand);
+		//print_r($_arr_userRow);
 
-		unset($_arr_userRow["user_rand"], $_arr_userRow["user_pass"], $_arr_userRow["user_status"]);
+		$this->mdl_user->mdl_login($_arr_userRow["user_id"]);
 
+		unset($_arr_userRow["user_rand"], $_arr_userRow["user_pass"], $_arr_userRow["user_status"], $_arr_userRow["user_note"]);
+		$_str_userRand    = fn_rand(6);
 		$_str_code = $this->obj_api->api_encode($_arr_userRow, $_str_userRand);
 
 		$_arr_return = array(
@@ -239,7 +222,7 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userGet = fn_userGetBy("get");
+		$_arr_userGet = $this->mdl_user->input_get_by("get");
 
 		if ($_arr_userGet["str_alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userGet);
@@ -250,9 +233,9 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_userRow);
 		}
 
-		$_str_userRand = $_arr_userRow["user_rand"];
-		unset($_arr_userRow["user_note"], $_arr_userRow["user_rand"]);
+		unset($_arr_userRow["user_rand"], $_arr_userRow["user_pass"], $_arr_userRow["user_status"], $_arr_userRow["user_note"]);
 
+		$_str_userRand    = fn_rand(6);
 		$_str_code = $this->obj_api->api_encode($_arr_userRow, $_str_userRand);
 
 		$_arr_return = array(
@@ -286,12 +269,13 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userEdit = fn_userEdit();
+		$_arr_userEdit = $this->mdl_user->api_edit();
+
 		if ($_arr_userEdit["str_alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userEdit);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_loginChk($_arr_userEdit["user_str"], $_arr_userEdit["user_by"]);
+		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userEdit["user_str"], $_arr_userEdit["user_by"]);
 		if ($_arr_userRow["str_alert"] != "y010102") {
 			$this->obj_api->halt_re($_arr_userRow);
 		}
@@ -312,13 +296,6 @@ class API_USER {
 			exit;
 		}
 
-		if ($_arr_userEdit["user_pass_new"]) {
-			$_str_userRand = fn_rand(6);
-			$_str_userPass = fn_baigoEncrypt($_arr_userEdit["user_pass_new"], $_str_userRand, true);
-		} else {
-			$_str_userRand = $_arr_userRow["user_rand"];
-		}
-
 		if (BG_REG_ONEMAIL == "false" && BG_REG_NEEDMAIL == "on" && $_arr_userEdit["user_mail"]) {
 			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userEdit["user_mail"], "user_mail", $_arr_userRow["user_id"]);
 			if ($_arr_userRow["str_alert"] == "y010102") {
@@ -329,10 +306,11 @@ class API_USER {
 			}
 		}
 
-		//file_put_contents(BG_PATH_ROOT . "test.txt", $_arr_userEdit["user_pass_new"]);
+		//file_put_contents(BG_PATH_ROOT . "test.txt", $_str_userPass . "||" . $_str_userRand);
 
-		$_arr_userRow = $this->mdl_user->mdl_my($_arr_userRow["user_id"], $_arr_userEdit["user_mail"], $_str_userPass, $_str_userRand, $_arr_userEdit["user_nick"]);
-		$_str_code    = $this->obj_api->api_encode($_arr_userRow, $_str_userRand);
+		$_str_userRand    = fn_rand(6);
+		$_arr_userRow     = $this->mdl_user->mdl_edit($_arr_userRow["user_id"]);
+		$_str_code        = $this->obj_api->api_encode($_arr_userRow, $_str_userRand);
 
 		$_arr_return = array(
 			"code"   => $_str_code,
@@ -366,12 +344,12 @@ class API_USER {
 			$_arr_logTarget[] = array(
 				"app_id" => $this->appGet["app_id"]
 			);
-			$_arr_logType = array("user", "edit");
+			$_arr_logType = array("user", "del");
 			$this->log_do($_arr_logTarget, "app", $_arr_return, $_arr_logType);
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userIds = $_POST["user_id"];
+		$_arr_userIds = $this->mdl_user->input_ids();
 
 		if ($_arr_userIds && is_array($_arr_userIds)) {
 			foreach ($_arr_userIds as $_key=>$_value) {
@@ -379,17 +357,16 @@ class API_USER {
 			}
 		}
 
-		$_arr_userDel = $this->mdl_user->mdl_del($_arr_userIds);
+		$_arr_userDel = $this->mdl_user->mdl_del();
 
-		if ($_arr_userRow["str_alert"] == "y010104") {
-			foreach ($_arr_userDo["user_ids"] as $_value) {
+		if ($_arr_userDel["str_alert"] == "y010104") {
+			foreach ($_arr_userIds["user_ids"] as $_value) {
 				$_arr_targets[] = array(
 					"user_id" => $_value,
 				);
 				$_str_targets = json_encode($_arr_targets);
 			}
-			$_str_userRow = json_encode($_arr_userRow);
-			$this->mdl_log->mdl_submit($_str_targets, "user", $this->log["user"]["del"], $_str_userRow, "app", $this->appGet["app_id"]);
+			$this->mdl_log->mdl_submit($_str_targets, "user", $this->log["user"]["del"], $_str_targets, "app", $this->appGet["app_id"]);
 		}
 
 		$_arr_notice              = $_arr_userDel;
@@ -417,12 +394,12 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userName = fn_userChkName();
+		$_arr_userName = $this->mdl_user->input_user_name();
 		if ($_arr_userName["str_alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userName);
 		}
 
-		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_name"], "user_name");
+		$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_name"], "user_name", $_arr_userName["not_id"]);
 		if ($_arr_userRow["str_alert"] == "y010102") {
 			$_str_alert = "x010205";
 		} else {
@@ -457,7 +434,7 @@ class API_USER {
 				$this->obj_api->halt_re($_arr_userMail);
 			}
 
-			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_mail"], "user_mail", $_arr_userName["user_id"]);
+			$_arr_userRow = $this->mdl_user->mdl_read($_arr_userName["user_mail"], "user_mail", $_arr_userMail["not_id"]);
 			if ($_arr_userRow["str_alert"] == "y010102") {
 				$_str_alert = "x010211";
 			} else {

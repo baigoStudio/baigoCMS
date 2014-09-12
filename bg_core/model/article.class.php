@@ -18,50 +18,83 @@ class MODEL_ARTICLE {
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
-
-	/**
-	 * mdl_submit function.
-	 *
-	 * @access public
-	 * @param mixed $num_articleId
-	 * @param mixed $str_articleTitle
-	 * @param mixed $str_articleContent
-	 * @param string $str_articleExcerpt (default: "")
-	 * @param float $num_articleCateId (default: -1)
-	 * @param int $num_articleMarkId (default: 0)
-	 * @param string $str_articleStatus (default: "")
-	 * @param string $str_articleBox (default: "")
-	 * @param string $str_articleLink (default: "")
-	 * @param string $str_articleTag (default: "")
-	 * @param int $tm_articleTimePub (default: 0)
-	 * @param int $num_adminId (default: 0)
-	 * @return void
-	 */
-	function mdl_submit($num_articleId, $str_articleTitle, $str_articleContent, $str_articleExcerpt = "", $num_articleCateId = -1, $num_articleMarkId = 0, $str_articleStatus = "", $str_articleBox = "", $str_articleLink = "", $str_articleTag = "", $tm_articleTimePub = 0, $num_adminId = 0, $num_upfileId = 0) {
-
-		$_arr_articleData = array(
-			"article_title"      => $str_articleTitle,
-			"article_excerpt"    => $str_articleExcerpt,
-			"article_content"    => $str_articleContent,
-			"article_cate_id"    => $num_articleCateId,
-			"article_mark_id"    => $num_articleMarkId,
-			"article_status"     => $str_articleStatus,
-			"article_box"        => $str_articleBox,
-			"article_link"       => $str_articleLink,
-			"article_tag"        => $str_articleTag,
-			"article_time_pub"   => $tm_articleTimePub,
-			"article_upfile_id"  => $num_upfileId,
+	function mdl_create() {
+		$_arr_articleCreat = array(
+			"article_id"         => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"article_cate_id"    => "int(11) NOT NULL COMMENT '栏目ID'",
+			"article_title"      => "varchar(300) NOT NULL COMMENT '标题'",
+			"article_excerpt"    => "varchar(900) NOT NULL COMMENT '内容提要'",
+			"article_content"    => "text NOT NULL COMMENT '内容'",
+			"article_mark_id"    => "int(11) NOT NULL COMMENT '标记 ID'",
+			"article_status"     => "varchar(20) NOT NULL COMMENT '状态'",
+			"article_box"        => "varchar(20) NOT NULL COMMENT '盒子'",
+			"article_link"       => "varchar(900) NOT NULL COMMENT '链接'",
+			"article_time"       => "int(11) NOT NULL COMMENT '时间'",
+			"article_time_pub"   => "int(11) NOT NULL COMMENT '定时发布'",
+			"article_admin_id"   => "int(11) NOT NULL COMMENT '发布用户'",
+			"article_hits_day"   => "int(11) NOT NULL COMMENT '日点击'",
+			"article_hits_week"  => "int(11) NOT NULL COMMENT '周点击'",
+			"article_hits_month" => "int(11) NOT NULL COMMENT '月点击'",
+			"article_hits_year"  => "int(11) NOT NULL COMMENT '年点击'",
+			"article_hits_all"   => "int(11) NOT NULL COMMENT '总点击'",
+			"article_top"        => "int(11) NOT NULL COMMENT '置顶'",
+			"article_attach_id"  => "int(11) NOT NULL COMMENT '附件ID'",
+			"article_spec_id"    => "int(11) NOT NULL COMMENT '专题ID'",
 		);
 
-		if ($num_articleId == 0) {
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article", $_arr_articleCreat, "article_id", "文章");
 
-			$_arr_insert = array(
-				"article_admin_id"  => $num_adminId,
-				"article_time"      => time(),
-			);
-			$_arr_data = array_merge($_arr_articleData, $_arr_insert);
+		if ($_num_mysql > 0) {
+			$_str_alert = "y120105"; //更新成功
+		} else {
+			$_str_alert = "x120105"; //更新成功
+		}
 
-			$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article", $_arr_data); //插入数据
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "article'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
+	function mdl_submit($num_adminId = 0) {
+
+		$_arr_articleData = array(
+			"article_title"      => $this->articleSubmit["article_title"],
+			"article_excerpt"    => $this->articleSubmit["article_excerpt"],
+			"article_content"    => $this->articleSubmit["article_content"],
+			"article_cate_id"    => $this->articleSubmit["article_cate_id"],
+			"article_mark_id"    => $this->articleSubmit["article_mark_id"],
+			"article_status"     => $this->articleSubmit["article_status"],
+			"article_box"        => $this->articleSubmit["article_box"],
+			"article_link"       => $this->articleSubmit["article_link"],
+			"article_time_pub"   => $this->articleSubmit["article_time_pub"],
+			"article_attach_id"  => $this->articleSubmit["article_attach_id"],
+			"article_spec_id"    => $this->articleSubmit["article_spec_id"],
+		);
+
+		if ($this->articleSubmit["article_id"] == 0) {
+
+			$_arr_articleData["article_admin_id"]    = $num_adminId;
+			$_arr_articleData["article_time"]        = time();
+
+			$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article", $_arr_articleData); //插入数据
 
 			if ($_num_articleId > 0) {
 				$_str_alert = "y120101";
@@ -73,8 +106,8 @@ class MODEL_ARTICLE {
 			}
 
 		} else {
-			$_num_articleId = $num_articleId;
-			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
+			$_num_articleId  = $this->articleSubmit["article_id"];
+			$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
 
 			if ($_num_mysql > 0) {
 				$_str_alert = "y120103";
@@ -97,27 +130,7 @@ class MODEL_ARTICLE {
 	}
 
 
-	/**
-	 * mdl_list function.
-	 *
-	 * @access public
-	 * @param mixed $num_no
-	 * @param int $num_except (default: 0)
-	 * @param string $str_key (default: "")
-	 * @param bool $arr_tagIds (default: false)
-	 * @param string $str_year (default: "")
-	 * @param string $str_month (default: "")
-	 * @param string $str_status (default: "")
-	 * @param string $str_box (default: "")
-	 * @param bool $arr_cateIds (default: false)
-	 * @param bool $arr_markIds (default: false)
-	 * @param string $_str_callUpfile (default: "")
-	 * @param int $num_adminId (default: 0)
-	 * @param bool $is_pub (default: false)
-	 * @param string $_str_callType (default: "")
-	 * @return void
-	 */
-	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $str_status = "", $str_box = "", $arr_cateIds = false, $arr_markIds = false, $arr_tagIds = false, $num_adminId = 0, $is_pub = false) {
+	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $str_status = "", $str_box = "", $arr_cateIds = false, $num_markId = 0, $num_specId = 0, $num_adminId = 0, $not_specId = 0) {
 		$_arr_articleSelect = array(
 			"article_id",
 			"article_cate_id",
@@ -126,8 +139,8 @@ class MODEL_ARTICLE {
 			"article_status",
 			"article_box",
 			"article_link",
-			"article_tag",
 			"article_admin_id",
+			"article_mark_id",
 			"article_hits_day",
 			"article_hits_week",
 			"article_hits_month",
@@ -135,6 +148,8 @@ class MODEL_ARTICLE {
 			"article_hits_all",
 			"article_time",
 			"article_time_pub",
+			"article_top",
+			"article_spec_id",
 		);
 
 		$_str_sqlWhere = "article_id > 0";
@@ -151,18 +166,14 @@ class MODEL_ARTICLE {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(article_time, '%m')='" . $str_month . "'";
 		}
 
-		if ($is_pub) {
-			$_str_sqlWhere .= " AND LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
-		} else {
-			if ($str_status) {
-				$_str_sqlWhere .= " AND article_status='" . $str_status . "'";
-			}
+		if ($str_status) {
+			$_str_sqlWhere .= " AND article_status='" . $str_status . "'";
+		}
 
-			if ($str_box) {
-				$_str_sqlWhere .= " AND article_box='" . $str_box . "'";
-			} else {
-				$_str_sqlWhere .= " AND article_box='normal'";
-			}
+		if ($str_box) {
+			$_str_sqlWhere .= " AND article_box='" . $str_box . "'";
+		} else {
+			$_str_sqlWhere .= " AND article_box='normal'";
 		}
 
 		if ($arr_cateIds) {
@@ -170,14 +181,16 @@ class MODEL_ARTICLE {
 			$_str_sqlWhere .= " AND  article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
-		if ($arr_markIds) {
-			$_str_markIds = implode(",", $arr_markIds);
-			$_str_sqlWhere .= " AND article_mark_id IN (" . $_str_markIds . ")";
+		if ($num_markId > 0) {
+			$_str_sqlWhere .= " AND article_mark_id=" . $num_markId;
 		}
 
-		if ($arr_tagIds) {
-			$_str_tagIds = implode(",", $arr_tagIds);
-			$_str_sqlWhere .= " AND article_tag_id IN (" . $_str_tagIds . ")";
+		if ($num_specId > 0) {
+			$_str_sqlWhere .= " AND article_spec_id=" . $num_specId;
+		}
+
+		if ($not_specId > 0) {
+			$_str_sqlWhere .= " AND article_spec_id<>" . $not_specId;
 		}
 
 		if ($num_adminId > 0) {
@@ -207,12 +220,13 @@ class MODEL_ARTICLE {
 			"article_status",
 			"article_box",
 			"article_link",
-			"article_tag",
 			"article_admin_id",
 			"article_hits_all",
 			"article_time",
 			"article_time_pub",
 			"article_content",
+			"article_top",
+			"article_spec_id",
 		);
 
 		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
@@ -237,21 +251,21 @@ class MODEL_ARTICLE {
 	 * mdl_top function.
 	 *
 	 * @access public
-	 * @param mixed $arr_articleId
+	 * @param mixed $this->articleIds["article_ids"]
 	 * @param mixed $num_top
 	 * @param bool $arr_cateIds (default: false)
 	 * @return void
 	 */
-	function mdl_top($arr_articleId, $num_top, $arr_cateIds = false) {
+	function mdl_top($num_top, $arr_cateIds = false) {
 
-		$_str_articleId = implode(",", $arr_articleId);
+		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
 
 		$_arr_articleUpdate = array(
 			"article_top" => $num_top,
 		);
 
 		if ($arr_cateIds) {
-			$_str_cateIds     = implode(",", $arr_cateIds);
+			$_str_cateIds    = implode(",", $arr_cateIds);
 			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
@@ -274,15 +288,14 @@ class MODEL_ARTICLE {
 	 * mdl_status function.
 	 *
 	 * @access public
-	 * @param mixed $arr_articleId
 	 * @param mixed $str_status
 	 * @param bool $arr_cateIds (default: false)
 	 * @param int $num_adminId (default: 0)
 	 * @return void
 	 */
-	function mdl_status($arr_articleId, $str_status, $arr_cateIds = false, $num_adminId = 0) {
+	function mdl_status($str_status, $arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $arr_articleId);
+		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
 
 		$_arr_articleUpdate = array(
 			"article_status" => $str_status,
@@ -312,26 +325,52 @@ class MODEL_ARTICLE {
 	}
 
 
+	function mdl_toSpec($str_act, $num_specId = 0) {
+
+		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
+
+		if ($str_act != "to") {
+			$num_specId = 0;
+		}
+
+		$_arr_articleUpdate = array(
+			"article_spec_id" => $num_specId,
+		);
+
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+
+		//如车影响行数小于0则返回错误
+		if ($_num_mysql > 0) {
+			$_str_alert = "y120103";
+		} else {
+			$_str_alert = "x120103";
+		}
+
+		return array(
+			"str_alert" => $_str_alert,
+		); //成功
+	}
+
+
 	/**
 	 * mdl_box function.
 	 *
 	 * @access public
-	 * @param mixed $arr_articleId
 	 * @param mixed $str_box
 	 * @param bool $arr_cateIds (default: false)
 	 * @param int $num_adminId (default: 0)
 	 * @return void
 	 */
-	function mdl_box($arr_articleId, $str_box, $arr_cateIds = false, $num_adminId = 0) {
+	function mdl_box($str_box, $arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $arr_articleId);
+		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
 
 		$_arr_articleUpdate = array(
 			"article_box"        => $str_box,
 		);
 
 		if ($arr_cateIds) {
-			$_str_cateIds     = implode(",", $arr_cateIds);
+			$_str_cateIds    = implode(",", $arr_cateIds);
 			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
@@ -358,17 +397,16 @@ class MODEL_ARTICLE {
 	 * mdl_del function.
 	 *
 	 * @access public
-	 * @param mixed $arr_articleId
 	 * @param bool $arr_cateIds (default: false)
 	 * @param int $num_adminId (default: 0)
 	 * @return void
 	 */
-	function mdl_del($arr_articleId, $arr_cateIds = false, $num_adminId = 0) {
+	function mdl_del($arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $arr_articleId);
+		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
 
 		if ($arr_cateIds) {
-			$_str_cateIds     = implode(",", $arr_cateIds);
+			$_str_cateIds    = implode(",", $arr_cateIds);
 			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
@@ -380,9 +418,9 @@ class MODEL_ARTICLE {
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
-			$_str_alert = "y120103";
+			$_str_alert = "y120104";
 		} else {
-			$_str_alert = "x120103";
+			$_str_alert = "x120104";
 		}
 
 		return array(
@@ -399,7 +437,7 @@ class MODEL_ARTICLE {
 	 * @return void
 	 */
 	function mdl_empty($num_adminId = 0) {
-		$_str_sqlWhere = "article_status='recycle'";
+		$_str_sqlWhere = "article_box='recycle'";
 
 		if ($num_adminId > 0) {
 			$_str_sqlWhere .= " AND article_admin_id=" . $num_adminId;
@@ -424,7 +462,6 @@ class MODEL_ARTICLE {
 	 * mdl_unknowCate function.
 	 *
 	 * @access public
-	 * @param mixed $arr_articleId
 	 * @return void
 	 */
 	function mdl_unknowCate($arr_articleId) {
@@ -465,7 +502,7 @@ class MODEL_ARTICLE {
 	 * @param bool $is_pub (default: false)
 	 * @return void
 	 */
-	function mdl_count($str_key = "", $str_year = "", $str_month = "", $str_status = "", $str_box = "", $arr_cateIds = false, $arr_markIds = false, $arr_tagIds = false, $num_adminId = 0, $is_pub = false) {
+	function mdl_count($str_key = "", $str_year = "", $str_month = "", $str_status = "", $str_box = "", $arr_cateIds = false, $num_markId = 0, $num_adminId = 0, $is_pub = false) {
 		$_str_sqlWhere = "article_id > 0";
 
 		if ($str_key) {
@@ -480,18 +517,14 @@ class MODEL_ARTICLE {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(article_time, '%m')='" . $str_month . "'";
 		}
 
-		if ($is_pub) {
-			$_str_sqlWhere .= " AND LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
-		} else {
-			if ($str_status) {
-				$_str_sqlWhere .= " AND article_status='" . $str_status . "'";
-			}
+		if ($str_status) {
+			$_str_sqlWhere .= " AND article_status='" . $str_status . "'";
+		}
 
-			if ($str_box) {
-				$_str_sqlWhere .= " AND article_box='" . $str_box . "'";
-			} else {
-				$_str_sqlWhere .= " AND article_box='normal'";
-			}
+		if ($str_box) {
+			$_str_sqlWhere .= " AND article_box='" . $str_box . "'";
+		} else {
+			$_str_sqlWhere .= " AND article_box='normal'";
 		}
 
 		if ($arr_cateIds) {
@@ -499,14 +532,8 @@ class MODEL_ARTICLE {
 			$_str_sqlWhere .= " AND  article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
-		if ($arr_markIds) {
-			$_str_markIds = implode(",", $arr_markIds);
-			$_str_sqlWhere .= " AND article_mark_id IN (" . $_str_markIds . ")";
-		}
-
-		if ($arr_tagIds) {
-			$_str_tagIds = implode(",", $arr_tagIds);
-			$_str_sqlWhere .= " AND article_tag_id IN (" . $_str_tagIds . ")";
+		if ($num_markId > 0) {
+			$_str_sqlWhere .= " AND article_mark_id=" . $num_markId;
 		}
 
 		if ($num_adminId > 0) {
@@ -527,18 +554,204 @@ class MODEL_ARTICLE {
 	 */
 	function mdl_year() {
 		$_arr_articleSelect = array(
-			"FROM_UNIXTIME(article_time, '%Y') AS article_year",
-		);
-
-		$_arr_distinct = array(
-			"article_time",
+			"DISTINCT FROM_UNIXTIME(article_time, '%Y') AS article_year",
 		);
 
 		$_str_sqlWhere = "article_time > 0";
 
-		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere . " ORDER BY article_time ASC", 100, 0, $_arr_distinct, "", true);
+		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere . " ORDER BY article_time ASC", 100, 0, false, true);
 
 		return $_arr_articleRows;
+	}
+
+
+	function input_submit() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$this->articleSubmit["article_id"] = fn_getSafe($_POST["article_id"], "int", 0);
+
+		if ($this->articleSubmit["article_id"] > 0) {
+			$_arr_articleRow = $this->mdl_read($this->articleSubmit["article_id"]);
+			if ($_arr_articleRow["str_alert"] != "y120102") {
+				return $_arr_articleRow;
+				exit;
+			}
+		}
+
+		$_arr_articleTitle = validateStr($_POST["article_title"], 1, 300);
+		switch ($_arr_articleTitle["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x120201",
+				);
+				exit;
+			break;
+
+			case "too_long":
+				return array(
+					"str_alert" => "x120202",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_title"] = $_arr_articleTitle["str"];
+			break;
+
+		}
+
+		$_arr_articleLink = validateStr($_POST["article_link"], 0, 900, "str", "url");
+		switch ($_arr_articleLink["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x120204",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x120204",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_link"] = $_arr_articleLink["str"];
+			break;
+		}
+
+		$_arr_articleExcerpt = validateStr($_POST["article_excerpt"], 0, 900);
+		switch ($_arr_articleExcerpt["status"]) {
+			case "too_long":
+				return array(
+					"str_alert" => "x120205",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_excerpt"] = $_arr_articleExcerpt["str"];
+			break;
+		}
+
+		$_arr_articleStatus = validateStr($_POST["article_status"], 1, 0);
+		switch ($_arr_articleStatus["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x120208",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_status"] = $_arr_articleStatus["str"];
+			break;
+
+		}
+
+		$_arr_articleBox = validateStr($_POST["article_box"], 1, 0);
+		switch ($_arr_articleBox["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x120209",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_box"] = $_arr_articleBox["str"];
+			break;
+
+		}
+
+
+		$_arr_articleTimePub = validateStr($_POST["article_time_pub"], 1, 0, "str", "datetime");
+		switch ($_arr_articleTimePub["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x120210",
+				);
+				exit;
+			break;
+
+			case "format_err":
+				return array(
+					"str_alert" => "x120211",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_time_pub"] = strtotime($_arr_articleTimePub["str"]);
+			break;
+		}
+
+		$_arr_cateIds = $_POST["cate_ids"];
+		if (!$_arr_cateIds) {
+			return array(
+				"str_alert" => "x120207",
+			);
+			exit;
+		}
+
+		foreach ($_arr_cateIds as $_value) {
+			$this->articleSubmit["cate_ids"][] = fn_getSafe($_value, "int", 0);
+		}
+
+		$this->articleSubmit["article_cate_id"]   = $this->articleSubmit["cate_ids"][0];
+		$this->articleSubmit["article_content"]   = $_POST["article_content"];
+
+		if (!$this->articleSubmit["article_excerpt"] || $this->articleSubmit["article_excerpt"] == "<br>") {
+			$this->articleSubmit["article_excerpt"] = substr($this->articleSubmit["article_content"], 0, 900);
+		}
+
+		$this->articleSubmit["article_attach_id"] = fn_getAttach($this->articleSubmit["article_content"]);
+		$this->articleSubmit["article_mark_id"]   = fn_getSafe($_POST["article_mark_id"], "int", 0);
+		$this->articleSubmit["article_spec_id"]   = fn_getSafe($_POST["article_spec_id"], "int", 0);
+		$this->articleSubmit["article_tags"]      = fn_getSafe($_POST["hidden-article_tag"], "txt", "");
+		$this->articleSubmit["str_alert"]         = "ok";
+
+		return $this->articleSubmit;
+	}
+
+
+	/**
+	 * fn_articleDo function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_articleIds = $_POST["article_id"];
+
+		if ($_arr_articleIds) {
+			foreach ($_arr_articleIds as $_key=>$_value) {
+				$_arr_articleIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->articleIds = array(
+			"str_alert"      => $_str_alert,
+			"article_ids"    => $_arr_articleIds
+		);
+
+		return $this->articleIds;
 	}
 }
 ?>

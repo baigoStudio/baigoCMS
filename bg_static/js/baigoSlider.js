@@ -1,6 +1,6 @@
 /*
 v1.0.0 jQuery baigoSlider plugin 表单全选插件
-(c) 2013 baigo studio - http://baigo.nbfone.com/jQuery/baigoSlider/
+(c) 2013 baigo studio - http://www.baigo.net/jQuery/baigoSlider/
 License: http://www.opensource.org/licenses/mit-license.php
 */
 

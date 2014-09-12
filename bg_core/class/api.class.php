@@ -224,7 +224,7 @@ class CLASS_API {
 	 */
 	function api_encode($arr_data, $str_key) {
 		unset($arr_data["str_alert"]);
-		$_str_src     = urldecode(fn_jsonEncode($arr_data, "encode"));
+		$_str_src     = base64_decode(fn_jsonEncode($arr_data, "encode"));
 		$_str_code    = fn_baigoEncode($_str_src, $str_key);
 		return $_str_code;
 	}
@@ -238,7 +238,7 @@ class CLASS_API {
 	 * @return void
 	 */
 	function halt_re($arr_re) {
-		exit(urldecode(fn_jsonEncode($arr_re, "encode"))); //输出错误信息
+		exit(base64_decode(fn_jsonEncode($arr_re, "encode"))); //输出错误信息
 	}
 }
 ?>

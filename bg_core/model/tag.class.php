@@ -19,6 +19,45 @@ class MODEL_TAG {
 	}
 
 
+	function mdl_create() {
+		$_arr_tagCreat = array(
+			"tag_id"             => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"tag_name"           => "varchar(30) NOT NULL COMMENT '标题'",
+			"tag_status"         => "varchar(20) NOT NULL COMMENT '状态'",
+			"tag_article_count"  => "int(11) NOT NULL COMMENT '标签统计'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "tag", $_arr_tagCreat, "tag_id", "标签");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y130105"; //更新成功
+		} else {
+			$_str_alert = "x130105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "tag'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
 	/**
 	 * mdl_submit function.
 	 *
@@ -29,13 +68,13 @@ class MODEL_TAG {
 	 * @param mixed $str_tagStatus
 	 * @return void
 	 */
-	function mdl_submit($num_tagId, $str_tagName, $str_tagStatus = "show") {
+	function mdl_submit($_str_tagName, $_str_tagStatus) {
 		$_arr_tagData = array(
-			"tag_name"   => $str_tagName,
-			"tag_status" => $str_tagStatus,
+			"tag_name"   => $_str_tagName,
+			"tag_status" => $_str_tagStatus,
 		);
 
-		if ($num_tagId == 0) {
+		if ($this->tagSubmit["tag_id"] == 0) {
 			$_num_tagId = $this->obj_db->insert(BG_DB_TABLE . "tag", $_arr_tagData);
 
 			if ($_num_tagId > 0) { //数据库插入是否成功
@@ -47,7 +86,7 @@ class MODEL_TAG {
 				exit;
 			}
 		} else {
-			$_num_tagId = $num_tagId;
+			$_num_tagId = $this->tagSubmit["tag_id"];
 			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "tag_id=" . $_num_tagId);
 
 			if ($_num_mysql > 0) {
@@ -138,6 +177,7 @@ class MODEL_TAG {
 			exit;
 		}
 
+		$_arr_tagRow["urlRow"]    = $this->url_process($_arr_tagRow);
 		$_arr_tagRow["str_alert"] = "y130102";
 
 		return $_arr_tagRow;
@@ -173,6 +213,10 @@ class MODEL_TAG {
 
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY tag_id DESC", $num_no, $num_except);
 
+		foreach ($_arr_tagRows as $_key=>$_value) {
+			$_arr_tagRows[$_key]["urlRow"] = $this->url_process($_arr_tagRow);
+		}
+
 		return $_arr_tagRows;
 	}
 
@@ -181,12 +225,12 @@ class MODEL_TAG {
 	 * mdl_status function.
 	 *
 	 * @access public
-	 * @param mixed $arr_tagId
+	 * @param mixed $this->tagIds["tag_ids"]
 	 * @param mixed $str_status
 	 * @return void
 	 */
-	function mdl_status($arr_tagId, $str_status) {
-		$_str_tagId = implode(",", $arr_tagId);
+	function mdl_status($str_status) {
+		$_str_tagId = implode(",", $this->tagIds["tag_ids"]);
 
 		$_arr_tagData = array(
 			"tag_status" => $str_status,
@@ -211,11 +255,11 @@ class MODEL_TAG {
 	 * mdl_del function.
 	 *
 	 * @access public
-	 * @param mixed $arr_tagId
+	 * @param mixed $this->tagIds["tag_ids"]
 	 * @return void
 	 */
-	function mdl_del($arr_tagId) {
-		$_str_tagId = implode(",", $arr_tagId);
+	function mdl_del() {
+		$_str_tagId = implode(",", $this->tagIds["tag_ids"]);
 
 		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "tag",  "tag_id IN (" . $_str_tagId . ")"); //删除数据
 
@@ -251,6 +295,130 @@ class MODEL_TAG {
 		exit;*/
 
 		return $_num_tagCount;
+	}
+
+
+	function input_submit() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$this->tagSubmit["tag_id"] = fn_getSafe($_POST["tag_id"], "int", 0);
+
+		if ($this->tagSubmit["tag_id"] > 0) {
+			$_arr_tagRow = $this->mdl_read($this->tagSubmit["tag_id"]);
+			if ($_arr_tagRow["str_alert"] != "y130102") {
+				return $_arr_tagRow;
+				exit;
+			}
+		}
+
+		$_arr_tagName = validateStr($_POST["tag_name"], 1, 30);
+		switch ($_arr_tagName["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x130201",
+				);
+				exit;
+			break;
+
+			case "too_long":
+				return array(
+					"str_alert" => "x130202",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->tagSubmit["tag_name"] = $_arr_tagName["str"];
+			break;
+		}
+
+		$_arr_tagRow = $this->mdl_read($this->tagSubmit["tag_name"], "tag_name", $this->tagSubmit["tag_id"]);
+		if ($_arr_tagRow["str_alert"] == "y130102") {
+			return array(
+				"str_alert" => "x130203",
+			);
+			exit;
+		}
+
+		$_arr_tagStatus = validateStr($_POST["tag_status"], 1, 0);
+		switch ($_arr_tagStatus["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x130204",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->tagSubmit["tag_status"] = $_arr_tagStatus["str"];
+			break;
+		}
+
+		$this->tagSubmit["str_alert"] = "ok";
+		return $this->tagSubmit;
+	}
+
+
+	/**
+	 * input_ids function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_tagIds = $_POST["tag_id"];
+
+		if ($_arr_tagIds) {
+			foreach ($_arr_tagIds as $_key=>$_value) {
+				$_arr_tagIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->tagIds = array(
+			"str_alert"  => $_str_alert,
+			"tag_ids"    => $_arr_tagIds
+		);
+
+		return $this->tagIds;
+	}
+
+
+	private function url_process($_arr_tagRow) {
+		switch (BG_VISIT_TYPE) {
+			case "static":
+				$_str_tagUrl        = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
+				$_str_pageAttach    = "page_";
+			break;
+
+			case "pstatic":
+				$_str_tagUrl = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
+			break;
+
+			default:
+				$_str_tagUrl        = BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=" . $_arr_tagRow["tag_name"];
+				$_str_pageAttach    = "&page=";
+			break;
+		}
+
+		return array(
+			"tag_url"       => $_str_tagUrl,
+			"page_attach"   => $_str_pageAttach,
+		);
 	}
 }
 ?>

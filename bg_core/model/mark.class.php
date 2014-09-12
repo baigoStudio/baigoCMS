@@ -19,6 +19,44 @@ class MODEL_MARK {
 	}
 
 
+
+	function mdl_create() {
+		$_arr_markCreat = array(
+			"mark_id"    => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"mark_name"  => "varchar(30) NOT NULL COMMENT '标记名称'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "mark", $_arr_markCreat, "mark_id", "标记");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y140105"; //更新成功
+		} else {
+			$_str_alert = "x140105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "mark'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
 	/**
 	 * mdl_submit function.
 	 *
@@ -29,13 +67,13 @@ class MODEL_MARK {
 	 * @param mixed $str_markStatus
 	 * @return void
 	 */
-	function mdl_submit($num_markId, $str_markName) {
+	function mdl_submit() {
 
 		$_arr_markData = array(
-			"mark_name"   => $str_markName,
+			"mark_name"   => $this->markSubmit["mark_name"],
 		);
 
-		if ($num_markId == 0) {
+		if ($this->markSubmit["mark_id"] == 0) {
 
 			$_num_markId = $this->obj_db->insert(BG_DB_TABLE . "mark", $_arr_markData);
 
@@ -49,8 +87,8 @@ class MODEL_MARK {
 			}
 
 		} else {
-			$_num_markId = $num_markId;
-			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "mark", $_arr_markData, "mark_id=" . $_num_markId);
+			$_num_markId = $this->markSubmit["mark_id"];
+			$_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "mark", $_arr_markData, "mark_id=" . $_num_markId);
 
 			if ($_num_mysql > 0) {
 				$_str_alert = "y140103";
@@ -145,11 +183,11 @@ class MODEL_MARK {
 	 * mdl_del function.
 	 *
 	 * @access public
-	 * @param mixed $arr_markIds
+	 * @param mixed $this->markIds["mark_ids"]
 	 * @return void
 	 */
-	function mdl_del($arr_markIds) {
-		$_str_markIds = implode(",", $arr_markIds);
+	function mdl_del() {
+		$_str_markIds = implode(",", $this->markIds["mark_ids"]);
 
 		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "mark",  "mark_id IN (" . $_str_markIds . ")"); //删除数据
 
@@ -180,6 +218,93 @@ class MODEL_MARK {
 		exit;*/
 
 		return $_num_markCount;
+	}
+
+
+	function input_submit() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$this->markSubmit["mark_id"] = fn_getSafe($_POST["mark_id"], "int", 0);
+
+		if ($this->markSubmit["mark_id"] > 0) {
+			$_arr_markRow = $this->mdl_read($this->markSubmit["mark_id"]);
+			if ($_arr_markRow["str_alert"] != "y140102") {
+				return $_arr_markRow;
+				exit;
+			}
+		}
+
+		$_arr_markName = validateStr($_POST["mark_name"], 1, 30);
+		switch ($_arr_markName["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x140201",
+				);
+				exit;
+			break;
+
+			case "too_long":
+				return array(
+					"str_alert" => "x140202",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->markSubmit["mark_name"] = $_arr_markName["str"];
+			break;
+
+		}
+
+		$_arr_markRow = $this->mdl_read($this->markSubmit["mark_name"], "mark_name", $this->markSubmit["mark_id"]);
+		if ($_arr_markRow["str_alert"] == "y140102") {
+			return array(
+				"str_alert" => "x140203",
+			);
+			exit;
+		}
+
+		$this->markSubmit["str_alert"] = "ok";
+		return $this->markSubmit;
+	}
+
+
+	/**
+	 * input_ids function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_markIds = $_POST["mark_id"];
+
+		if ($_arr_markIds) {
+			foreach ($_arr_markIds as $_key=>$_value) {
+				$_arr_markIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->markIds = array(
+			"str_alert"   => $_str_alert,
+			"mark_ids"    => $_arr_markIds
+		);
+
+		return $this->markIds;
 	}
 }
 ?>

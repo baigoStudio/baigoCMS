@@ -15,8 +15,8 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/opt.class.php"); //载入栏目控制
 $ajax_opt = new AJAX_OPT(); //初始化设置对象
 
 switch ($act_post) {
-	case "upfile":
-		$ajax_opt->ajax_upfile();
+	case "upload":
+		$ajax_opt->ajax_upload();
 	break;
 
 	case "sso":

@@ -1,4 +1,28 @@
 -------------------v1.0 beta2-------------------
-2014.5.17 修复偶尔出现的栏目排序出错问题
+2014-09－10
+增加帮助信息
+
+2014-08-20
+bg_admin 表增加字段 admin_allow_profile, admin_nick;
+bg_article 表删除字段 article_tag, 更名字段 article_upfile_id 至 article_attach_id;
+bg_upfile 表更名至 bg_attach, 更改所有字段前缀 upfile_ 至 attach_;
+bg_call 表更名字段 call_upfile 至 call_attach;
+bg_group 表增加字段 group_status
+
+2014-06-30
+重写 session 存取方式
+
+2014-06-04
+修复 SSO 修改管理员信息时，密码为空时仍然修改密码的 bug
+
+2014-05-23
+更改了与 SSO 之间传输数据时的编码方式
+
+2014-05-22
+修复栏目往上排序时的错误
+
+2014-05-17
+修复偶尔出现的栏目排序出错问题
+
 
 -------------------v1.0 beta-------------------

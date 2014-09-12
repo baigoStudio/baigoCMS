@@ -1,6 +1,6 @@
 /*
 v1.0.0 jQuery baigoValidator plugin 表单全选插件
-(c) 2013 baigo studio - http://baigo.nbfone.com/jQuery/baigoValidator/
+(c) 2013 baigo studio - http://www.baigo.net/jQuery/baigoValidator/
 License: http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -39,16 +39,18 @@ License: http://www.opensource.org/licenses/mit-license.php
 		*/
 		var getLength = function (_str) {
 			var _numLenth = 0;
-			for (var i = 0; i < _str.length; i++) {
-				_chkCode = _str.charCodeAt(i);
-				if (_chkCode < 0x007f) {
-		            _numLenth++;
-				} else if (_chkCode <= 0x07ff) {
-		            _numLenth += 2;
-		        } else if (_chkCode <= 0xffff) {
-		            _numLenth += 3;
-		        } else{
-					_numLenth += 4;
+			if (_str) {
+				for (var i = 0; i < _str.length; i++) {
+					_chkCode = _str.charCodeAt(i);
+					if (_chkCode < 0x007f) {
+			            _numLenth++;
+					} else if (_chkCode <= 0x07ff) {
+			            _numLenth += 2;
+			        } else if (_chkCode <= 0xffff) {
+			            _numLenth += 3;
+			        } else{
+						_numLenth += 4;
+					}
 				}
 			}
 			return _numLenth;
@@ -144,6 +146,25 @@ License: http://www.opensource.org/licenses/mit-license.php
 			return _status;
 		}
 
+		/*------验证是否相同------
+		@_str 需验证的字符串
+		@_str_target 需验证的目标字符串
+		@_length(min, max) 数组，(最小长度, 最大长度) 0 为不限制
+		*/
+		var isConfirm = function (_str, _str_target, _length) {
+			var _status_leng = validateLeng(_str, _length);
+			if(_status_leng != "ok") {
+				_status = _status_leng; //如验证长度出错，直接返回错误
+			} else {
+				if(_str == _str_target) {
+					_status = "ok"; //验证成功，返回正确
+				} else {
+					_status = "not_match"; //验证失败
+				}
+			}
+			return _status;
+		}
+
 		/*------验证数字------
 		@_num 需验证的个数
 		@_length(min, max) 数组，(最小个数, 最大个数) 0 为不限制
@@ -184,13 +205,13 @@ License: http://www.opensource.org/licenses/mit-license.php
 		@_format 格式
 		@_ajax(url, key) 数组，(URL, 关键词)
 		*/
-		var isAjax = function (_str, _length, _format, _ajax, _msg, _validate_id) {
+		var isAjax = function (_str, _length, _validate, _ajax, _msg, _validate_id) {
 			switch (_ajax.type) {
 				case "digit":
-					_status = isDigit(_str, _length, _format); //验证字符串
+					_status = isDigit(_str, _length, _validate.format); //验证字符串
 				break;
 				default:
-					_status = isText(_str, _length, _format); //验证字符串
+					_status = isText(_str, _length, _validate.format); //验证字符串
 				break;
 			}
 
@@ -210,17 +231,17 @@ License: http://www.opensource.org/licenses/mit-license.php
 					dataType: "json", //数据格式为json
 					data: _ajaxData,
 					beforeSend: function(){
-						outPut(_msg.id, _msg.ajaxIng, opts.class_loading);
+						outPut(_msg.id, _msg.ajaxIng, opts.class_loading, "has-warning");
 					}, //输出消息
 					success: function(_result){ //读取返回结果
 						switch (_result.re) {
 							case "ok": //匹配验证错误
-								outPut(_msg.id, "&#160;", opts.class_ok); //输出消息
+								outPut(_msg.id,  _validate.group, "&nbsp;", opts.class_ok, "has-success"); //输出消息
 							break;
 
 							default: //数据库验证错误
 								$("#" + _validate_id).focus(); //焦点
-								outPut(_msg.id, _result.re, opts.class_err); //输出消息
+								outPut(_msg.id,  _validate.group, _result.re, opts.class_err, "has-error"); //输出消息
 							break;
 						}
 						_status = _result.re
@@ -235,11 +256,16 @@ License: http://www.opensource.org/licenses/mit-license.php
 		@_id 消息ID
 		@_msg 消息内容
 		*/
-		var outPut = function (_id, _msg, _class) {
-			$("#" + _id).empty(); //先清空提示框
-			$("#" + _id).append(_msg); //填充消息内容
-			$("#" + _id).attr("class", _class); //定义样式
-			$("#" + _id).show(); //显示消息
+		var outPut = function (_msg_id, _grou_id, _msg, _class, _bootcss) {
+			if (_msg_id) {
+				$("#" + _msg_id).empty(); //先清空提示框
+				$("#" + _msg_id).append(_msg); //填充消息内容
+				$("#" + _msg_id).attr("class", _class); //替换样式
+				$("#" + _msg_id).show(); //显示消息
+			}
+			if (_grou_id) {
+				$("#" + _grou_id).attr("class", _bootcss); //定义样式
+			}
 		}
 
 		var validateStr = function (_validate_id) {
@@ -275,7 +301,12 @@ License: http://www.opensource.org/licenses/mit-license.php
 				case "ajax":
 					var _ajax = _set_data.ajax; //ajax
 					var _str = $("#" + _validate_id).val(); //获取表单值
-					_status = isAjax(_str, _length, _validate.format, _ajax, _msg, _validate_id); //ajax验证
+					_status = isAjax(_str, _length, _validate, _ajax, _msg, _validate_id); //ajax验证
+				break;
+				case "confirm":
+					var _str = $("#" + _validate_id).val(); //获取表单值
+					var _str_target = $("#" + _validate.target).val(); //获取表单值
+					_status = isConfirm(_str, _str_target, _length); //验证字符串
 				break;
 				default:
 					var _str = $("#" + _validate_id).val(); //获取表单值
@@ -284,12 +315,12 @@ License: http://www.opensource.org/licenses/mit-license.php
 			}
 			switch (_status) {
 				case "ok":
-					outPut(_msg.id, "&#160;", opts.class_ok); //输出消息
+					outPut(_msg.id, _validate.group, "&nbsp;", opts.class_ok, "has-success"); //输出消息
 					_result = true;
 				break;
 				default:
 					$("#" + _validate_id).focus(); //焦点
-					outPut(_msg.id, _msg[_status], opts.class_err); //输出消息
+					outPut(_msg.id,  _validate.group, _msg[_status], opts.class_err, "has-error"); //输出消息
 					_result = false;
 				break;
 			}

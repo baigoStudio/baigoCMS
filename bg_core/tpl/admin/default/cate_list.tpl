@@ -2,45 +2,47 @@
 {* 栏目显示函数（递归） *}
 {function cate_list arr=""}
 	{foreach $arr as $value}
-		<ol id="cate_list_{$value.cate_id}">
-			<li class="float_left">
-				<div class="tmini"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate" /></div>
-				<div class="tmini">{$value.cate_id}</div>
-				<div class="float_left">
-					<div class="title {$value.cate_status}">
-						{if $value.cate_level > 0}
-							{for $_i=1 to $value.cate_level}
-								—
-							{/for}
-						{/if}
-						{if $value.cate_name}
-							{$value.cate_name}
-						{else}
-							{$lang.label.noname}
-						{/if}
-					</div>
-					<div class="double">
-						<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
-						&#160;|&#160;
-						<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
-						&#160;|&#160;
-						<a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" class="c_iframe">{$lang.href.order}</a>
-					</div>
-				</div>
-			</li>
-			<li class="float_right {$value.cate_status}">
-				<div class="tlong">
-					{if $value.cate_alias}
-						{$value.cate_alias}
+		{if $value.cate_status == "show"}
+			{$_css_status = "success"}
+		{else}
+			{$_css_status = "danger"}
+		{/if}
+		<tr>
+			<td class="td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
+			<td class="td_mn">{$value.cate_id}</td>
+			<td>
+				<div>
+					{if $value.cate_level > 1}
+						{for $_i=2 to $value.cate_level}
+							--
+						{/for}
+					{/if}
+					{if $value.cate_name}
+						{$value.cate_name}
 					{else}
-						{$value.cate_id}
+						{$lang.label.noname}
 					{/if}
 				</div>
-				<div class="tshort">{$type.cate[$value.cate_type]}</div>
-				<div class="tshort">{$status.cate[$value.cate_status]}</div>
-			</li>
-			<li class="float_clear"></li>
-		</ol>
+				<div>
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
+					&nbsp;|&nbsp;
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
+					&nbsp;|&nbsp;
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" data-toggle="modal" data-target="#cate_modal">{$lang.href.order}</a>
+				</div>
+			</td>
+			<td class="td_bg">
+				{if $value.cate_alias}
+					{$value.cate_alias}
+				{else}
+					{$value.cate_id}
+				{/if}
+			</td>
+			<td class="td_sm">{$type.cate[$value.cate_type]}</td>
+			<td class="td_sm">
+				<span class="label label-{$_css_status}">{$status.cate[$value.cate_status]}</span>
+			</td>
+		</tr>
 
 		{if $value.cate_childs}
 			{cate_list arr=$value.cate_childs}
@@ -50,145 +52,156 @@
 
 {$cfg = [
 	title          => $adminMod.cate.main.title,
-	css            => "admin_list",
 	menu_active    => "cate",
 	sub_active     => "list",
 	baigoCheckall  => "true",
 	validate       => "true",
 	baigoSubmit    => "true",
 	baigoValidator => "true",
-	colorbox       => "true",
-	str_url        => "{$smarty.const.BG_URL_ADMIN}admin.php?mod=cate&{$tplData.query}"
+	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&{$tplData.query}"
 ]}
 
 {include "include/admin_head.tpl" cfg=$cfg}
 
-	<h5>
-		<div><a href="{$smarty.const.BG_URL_ADMIN}admin.php?mod=cate&act_get=form">+ {$lang.href.add}</a></div>
-		<form name="cate_search" id="cate_search" action="{$smarty.const.BG_URL_ADMIN}admin.php" method="get">
-			<input type="hidden" name="mod" value="cate" />
-			<input type="hidden" name="act_get" value="list" />
-			<select name="type">
-				<option value="">{$lang.option.allType}</option>
-				{foreach $type.cate as $key=>$value}
-					<option {if $tplData.search.type == $key}selected="selected"{/if} value="{$key}">{$value}</option>
-				{/foreach}
-			</select>
-			<select name="status">
-				<option value="">{$lang.option.allStatus}</option>
-				{foreach $status.cate as $key=>$value}
-					<option {if $tplData.search.status == $key}selected="selected"{/if} value="{$key}">{$value}</option>
-				{/foreach}
-			</select>
-			<input type="test" name="key" value="{$tplData.search.key}" />
-			<button type="submit">{$lang.btn.filter}</button>
+	<li>{$adminMod.cate.main.title}</li>
+
+	{include "include/admin_left.tpl" cfg=$cfg}
+
+	<div class="form-group">
+		<div class="pull-left">
+			<ul class="list-inline">
+				<li>
+					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form">
+						<span class="glyphicon glyphicon-plus"></span>
+						{$lang.href.add}
+					</a>
+				</li>
+				<li>
+					<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=cate" target="_blank">
+						<span class="glyphicon glyphicon-question-sign"></span>
+						{$lang.href.help}
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="pull-right">
+			<form name="cate_search" id="cate_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
+				<input type="hidden" name="mod" value="cate">
+				<input type="hidden" name="act_get" value="list">
+				<select name="type" class="form-control input-sm">
+					<option value="">{$lang.option.allType}</option>
+					{foreach $type.cate as $key=>$value}
+						<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
+					{/foreach}
+				</select>
+				<select name="status" class="form-control input-sm">
+					<option value="">{$lang.option.allStatus}</option>
+					{foreach $status.cate as $key=>$value}
+						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+					{/foreach}
+				</select>
+				<input type="test" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+			</form>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	<div class="panel panel-default">
+		<form name="cate_list" id="cate_list" class="form-inline">
+
+			<input type="hidden" name="token_session" value="{$common.token_session}">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="td_mn">
+								<label for="chk_all" class="checkbox-inline">
+									<input type="checkbox" name="chk_all" id="chk_all" class="first">
+									{$lang.label.all}
+								</label>
+							</th>
+							<th class="td_mn">{$lang.label.id}</th>
+							<th>{$lang.label.cateName}</th>
+							<th class="td_bg">{$lang.label.cateAlias}</th>
+							<th class="td_sm">{$lang.label.cateType}</th>
+							<th class="td_sm">{$lang.label.status}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{cate_list arr=$tplData.cateRows}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2"><span id="msg_cate_id"></span></td>
+							<td colspan="4">
+								<select name="act_post" id="act_post" class="validate form-control input-sm">
+									<option value="">{$lang.option.batch}</option>
+									{foreach $status.cate as $key=>$value}
+										<option value="{$key}">{$value}</option>
+									{/foreach}
+									<option value="del">{$lang.option.del}</option>
+								</select>
+								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
+								<span id="msg_act_post"></span>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 		</form>
-	</h5>
+	</div>
 
-	<form name="cate_list" id="cate_list" class="tlist">
+	<div class="text-right">
+		{include "include/page.tpl" cfg=$cfg}
+	</div>
 
-		<input type="hidden" name="token_session" value="{$common.token_session}" />
-
-		<ul>
-			<li class="thead">
-				<ol>
-					<li class="float_left">
-						<div class="tmini">
-							<input type="checkbox" name="chk_all" id="chk_all" class="first" />
-							{$lang.label.all}
-						</div>
-						<div class="tmini">{$lang.label.id}</div>
-						<div class="float_left">{$lang.label.cateName}</div>
-					</li>
-					<li class="float_right">
-						<div class="tlong">{$lang.label.cateAlias}</div>
-						<div class="tshort">{$lang.label.cateType}</div>
-						<div class="tshort">{$lang.label.status}</div>
-					</li>
-					<li class="float_clear"></li>
-				</ol>
-			</li>
-			<li class="tbody">
-				{cate_list arr=$tplData.cateRows}
-			</li>
-			<li class="tfoot">
-				<ol>
-					<li class="float_left">
-						<div class="tshort"><span id="msg_cate_id"></span></div>
-					<li class="float_left">
-						<div>
-							<select name="act_post" id="act_post" class="validate">
-								<option value="">{$lang.option.batch}</option>
-								{foreach $status.cate as $key=>$value}
-									<option value="{$key}">{$value}</option>
-								{/foreach}
-								<option value="del">{$lang.option.del}</option>
-							</select>
-							<button type="button" id="go_submit">{$lang.btn.submit}</button>
-							<span id="msg_act_post"></span>
-						</div>
-					</li>
-					<li class="float_clear"></li>
-				</ol>
-			</li>
-		</ul>
-	</form>
-
-	<h6>
-		<ul>
-			<li class="float_right">
-				{include "include/page.tpl" cfg=$cfg}
-			</li>
-			<li class="float_clear"></li>
-		</ul>
-	</h6>
+	<div class="modal fade" id="cate_modal">
+		<div class="modal-dialog">
+			<div class="modal-content"></div>
+		</div>
+	</div>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
 
-<script type="text/javascript">
-var opts_validator_list = {
-	cate_id: {
-		length: { min: 1, max: 0 },
-		validate: { type: "checkbox" },
-		msg: { id: "msg_cate_id", too_few: "{$alert.x030202}" }
-	},
-	act_post: {
-		length: { min: 1, max: 0 },
-		validate: { type: "select" },
-		msg: { id: "msg_act_post", too_few: "{$alert.x030203}" }
-	}
-};
-
-var opts_submit_list = {
-	ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
-	confirm_id: "act_post",
-	confirm_val: "del",
-	confirm_msg: "{$lang.confirm.del}",
-	btn_text: "{$lang.btn.ok}",
-	btn_url: "{$cfg.str_url}"
-};
-
-$(".c_iframe").colorbox({ iframe: true, width: "640px", height: "480px" });
-
-$(document).ready(function(){
-	$(".chk_all").click(function(){
-		var _cate_id = $(this).val();
-		if ($(this).prop("checked")) {
-			$("#cate_list_" + _cate_id).addClass("div_checked");
-		} else {
-			$("#cate_list_" + _cate_id).removeClass("div_checked");
+	<script type="text/javascript">
+	var opts_validator_list = {
+		cate_id: {
+			length: { min: 1, max: 0 },
+			validate: { type: "checkbox" },
+			msg: { id: "msg_cate_id", too_few: "{$alert.x030202}" }
+		},
+		act_post: {
+			length: { min: 1, max: 0 },
+			validate: { type: "select" },
+			msg: { id: "msg_act_post", too_few: "{$alert.x030203}" }
 		}
-	});
-	var obj_validate_list  = $("#cate_list").baigoValidator(opts_validator_list);
-	var obj_submit_list    = $("#cate_list").baigoSubmit(opts_submit_list);
-	$("#go_submit").click(function(){
-		if (obj_validate_list.validateSubmit()) {
-			obj_submit_list.formSubmit();
-		}
-	});
-	$("#cate_list").baigoCheckall();
-})
-</script>
+	};
+
+	var opts_submit_list = {
+		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
+		confirm_id: "act_post",
+		confirm_val: "del",
+		confirm_msg: "{$lang.confirm.del}",
+		btn_text: "{$lang.btn.ok}",
+		btn_close: "{$lang.btn.close}",
+		btn_url: "{$cfg.str_url}"
+	};
+
+	$(document).ready(function(){
+		$("#cate_modal").on("hidden.bs.modal", function() {
+		    $(this).removeData("bs.modal");
+		});
+		var obj_validate_list  = $("#cate_list").baigoValidator(opts_validator_list);
+		var obj_submit_list    = $("#cate_list").baigoSubmit(opts_submit_list);
+		$("#go_submit").click(function(){
+			if (obj_validate_list.validateSubmit()) {
+				obj_submit_list.formSubmit();
+			}
+		});
+		$("#cate_list").baigoCheckall();
+	})
+	</script>
 
 {include "include/html_foot.tpl" cfg=$cfg}
 

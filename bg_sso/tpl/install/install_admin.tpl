@@ -1,55 +1,49 @@
 {* install_1.tpl 登录界面 *}
-
+{$cfg = [
+	sub_title  => $lang.page.installAdmin,
+	mod_help   => "install",
+	act_help   => "admin"
+]}
 {include "include/install_head.tpl" cfg=$cfg}
 
-	<div class="page_head">
-		{$lang.page.installStep}
-		&raquo;
-		{$lang.page.installAdmin}
-	</div>
+	<form name="install_form_admin" id="install_form_admin">
+		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="act_post" value="admin">
+		<input type="hidden" name="admin_status" value="enable">
 
-	<div class="page_body">
-		<form name="instal_form_admin" id="instal_form_admin">
-			<input type="hidden" name="token_session" value="{$common.token_session}" />
-			<input type="hidden" name="act_post" value="admin">
-			<input type="hidden" name="admin_status" value="enable">
-
-			{foreach $adminMod as $key_m=>$value_m}
-				{foreach $value_m.allow as $key_s=>$value_s}
-					<input type="hidden" name="admin_allow[{$key_m}][{$key_s}]" value="1" />
-				{/foreach}
+		{foreach $adminMod as $key_m=>$value_m}
+			{foreach $value_m.allow as $key_s=>$value_s}
+				<input type="hidden" name="admin_allow[{$key_m}][{$key_s}]" value="1">
 			{/foreach}
+		{/foreach}
 
-			<ul>
-				<li class="title">{$lang.label.username}<span id="msg_admin_name">*</span></li>
-				<li class="field">
-					<input type="text" name="admin_name" id="admin_name" class="validate" />
-				</li>
+		<div class="form-group">
+			<label class="control-label">{$lang.label.username}<span id="msg_admin_name">*</span></label>
+			<input type="text" name="admin_name" id="admin_name" class="validate form-control input-lg">
+		</div>
 
-				<li class="title">{$lang.label.password}<span id="msg_admin_pass">*</span></li>
-				<li class="field">
-					<input type="password" name="admin_pass" id="admin_pass" class="validate" />
-				</li>
+		<div class="form-group">
+			<label class="control-label">{$lang.label.password}<span id="msg_admin_pass">*</span></label>
+			<input type="password" name="admin_pass" id="admin_pass" class="validate form-control input-lg">
+		</div>
 
-				<li class="title">{$lang.label.passwordConfirm}<span id="msg_admin_pass_confirm">*</span></li>
-				<li class="field">
-					<input type="password" name="admin_pass_confirm" id="admin_pass_confirm" class="validate" />
-				</li>
+		<div class="form-group">
+			<label class="control-label">{$lang.label.passConfirm}<span id="msg_admin_pass_confirm">*</span></label>
+			<input type="password" name="admin_pass_confirm" id="admin_pass_confirm" class="validate form-control input-lg">
+		</div>
 
-				<li class="title">{$lang.label.note}<span id="msg_admin_note">*</span></li>
-				<li class="field">
-					<input type="text" name="admin_note" id="admin_note" value="{$tplData.adminRow.admin_note}" class="validate" />
-				</li>
+		<div class="form-group">
+			<label class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
+			<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.adminRow.admin_nick}" class="validate form-control input-lg">
+		</div>
 
-				<li class="line_dashed"> </li>
-
-				<li>
-					<button type="button" id="go_pre" class="float_left">{$lang.btn.installPre}</button>
-					<button type="button" id="go_next" class="float_right">{$lang.btn.submit}</button>
-				</li>
-			<ul>
-		</form>
-	</div>
+		<div class="form-group">
+			<div class="btn-group">
+				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.submit}</button>
+				{include "include/install_drop.tpl" cfg=$cfg}
+			</div>
+		</div>
+	</form>
 
 {include "include/install_foot.tpl" cfg=$cfg}
 
@@ -67,26 +61,25 @@
 		},
 		admin_pass_confirm: {
 			length: { min: 1, max: 0 },
-			validate: { type: "str", format: "text" },
-			msg: { id: "msg_admin_pass_confirm", too_short: "{$alert.x020211}" }
+			validate: { type: "confirm", target: "admin_pass" },
+			msg: { id: "msg_admin_pass_confirm", too_short: "{$alert.x020211}", not_match: "{$alert.x020206}" }
 		},
-		admin_note: {
-			length: { min: 1, max: 30 },
+		admin_nick: {
+			length: { min: 0, max: 30 },
 			validate: { type: "str", format: "text" },
-			msg: { id: "msg_admin_note", too_short: "{$alert.x020210}" }
+			msg: { id: "msg_admin_nick", too_short: "{$alert.x020212}" }
 		}
 	};
-	var opts_submit_form = { ajax_url: "{$smarty.const.BG_URL_INSATLL}ajax.php?mod=install", btn_text: "{$lang.btn.login}", btn_url: "{$smarty.const.BG_URL_ADMIN}admin.php" };
+	var opts_submit_form = {
+		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
+		btn_text: "{$lang.btn.installNext}",
+		btn_close: "{$lang.btn.close}",
+		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=over"
+	};
 
 	$(document).ready(function(){
-		var obj_validator_form = $("#instal_form_admin").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#instal_form_admin").baigoSubmit(opts_submit_form);
-		$("#go_pre").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSATLL}install.php?mod=install&act_get=reg";
-		});
-		$("#go_skip").click(function(){
-			window.location.href = "{$smarty.const.BG_URL_INSTALL}install.php?mod=install&act_get=visit";
-		});
+		var obj_validator_form = $("#install_form_admin").baigoValidator(opts_validator_form);
+		var obj_submit_form = $("#install_form_admin").baigoSubmit(opts_submit_form);
 		$("#go_next").click(function(){
 			if (obj_validator_form.validateSubmit()) {
 				obj_submit_form.formSubmit();

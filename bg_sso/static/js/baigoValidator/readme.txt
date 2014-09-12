@@ -1,5 +1,5 @@
 v0.0.9 jQuery baigoValidator plugin 表单验证插件
-(c) 2012 baigo - http://baigo.nbfone.com/baigoValidator/
+(c) 2012 baigo - http://www.baigo.net/baigoValidator/
 License: http://www.opensource.org/licenses/mit-license.php
 
 1 文件
@@ -13,7 +13,7 @@ License: http://www.opensource.org/licenses/mit-license.php
 2 用法
 	2.1 引入文件
 		2.1.1 引入 jQuery 库 <script src="jquery.min.js" type="text/javascript"></script> 此为 jQuery 库，请自行下载 http://jquery.com/download/
-		2.1.2 引入 baigoValidator 样式表 <link href="baigoValidator.css" type="text/css" rel="stylesheet" />
+		2.1.2 引入 baigoValidator 样式表 <link href="baigoValidator.css" type="text/css" rel="stylesheet">
 		2.1.3 引入 baigoValidator 插件 <script src="baigoValidator.js" type="text/javascript"></script>
 	
 	2.2 初始化 baigoValidator，如
@@ -57,12 +57,12 @@ License: http://www.opensource.org/licenses/mit-license.php
 		具体请参考 3
 		
 	2.4 定义需要验证的字段 id 或 group，此处需与 3.1 中的定义一致，如
-		<input type="text" id="name" />
-		<input type="checkbox" id="name" group="test" />
+		<input type="text" id="name">
+		<input type="checkbox" id="name" group="test">
 		
 	2.5 定义需要验证的表单项的 class，值必须为 validate，如
-		<input type="text" id="name" class="validate" />
-		<input type="text" id="name" group="test" class="validate" />
+		<input type="text" id="name" class="validate">
+		<input type="text" id="name" group="test" class="validate">
 	
 	2.6 触发验证，如
 		var obj_form = $("#cate_form").baigoValidator(fileds_set);

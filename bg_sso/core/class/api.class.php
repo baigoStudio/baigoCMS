@@ -192,8 +192,8 @@ class CLASS_API {
 	function api_encode($arr_data, $str_key) {
 		unset($arr_data["str_alert"]);
 
-		$_str_src = urldecode(fn_jsonEncode($arr_data, "encode"));
-		$_str_code = fn_baigoEncode($_str_src, $str_key);
+		$_str_src     = fn_jsonEncode($arr_data, "encode");
+		$_str_code    = fn_baigoEncode($_str_src, $str_key);
 
 		return $_str_code;
 	}

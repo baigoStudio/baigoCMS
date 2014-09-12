@@ -1,14 +1,14 @@
 {* install_1.tpl 登录界面 *}
-
+{$cfg = [
+	sub_title => $lang.page.alert
+]}
 {include "include/install_head.tpl" cfg=$cfg}
 
-	<div class="page_head">
-		<img src="{$smarty.const.BG_URL_STATIC}image/alert_{$smarty.get.alert|truncate:1:""}.png" alt="{$lang.page.alert}" />
-		{$alert[$smarty.get.alert]}
+	<div class="alert alert-{if $tplData.status == "y"}success{else}danger{/if}">
+		<span class="glyphicon glyphicon-{if $tplData.status == "y"}ok-circle{else}remove-circle{/if}"></span>
+		{$alert[$tplData.alert]}
 	</div>
 
-	<div class="page_body">
-		{$install[$smarty.get.alert]}
-	</div>
+	{$install[$tplData.alert]}
 
 {include "include/install_foot.tpl" cfg=$cfg}

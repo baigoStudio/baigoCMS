@@ -20,20 +20,28 @@ $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ajax_install           = new AJAX_INSTALL(); //初始化商家
 
 switch ($act_post) {
+	case "auth":
+		$ajax_install->ajax_auth();
+	break;
+
 	case "admin":
 		$ajax_install->ajax_admin();
 	break;
 
-	case "ssoauto":
-		$ajax_install->ajax_ssoauto();
+	case "ssoAuto":
+		$ajax_install->ajax_ssoAuto();
+	break;
+
+	case "ssoAdmin":
+		$ajax_install->ajax_ssoAdmin();
 	break;
 
 	case "sso":
 		$ajax_install->ajax_sso();
 	break;
 
-	case "upfile":
-		$ajax_install->ajax_upfile();
+	case "upload":
+		$ajax_install->ajax_upload();
 	break;
 
 	case "visit":
@@ -50,6 +58,18 @@ switch ($act_post) {
 
 	case "dbconfig":
 		$ajax_install->ajax_dbconfig();
+	break;
+
+	case "over":
+		$ajax_install->ajax_over();
+	break;
+
+	default:
+		switch ($act_get) {
+			case "chkauth":
+				$ajax_install->ajax_chkauth();
+			break;
+		}
 	break;
 }
 ?>

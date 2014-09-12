@@ -23,10 +23,6 @@ switch ($act_post) {
 		$ajax_admin->ajax_submit();
 	break;
 
-	case "my":
-		$ajax_admin->ajax_my();
-	break;
-
 	case "auth":
 		$ajax_admin->ajax_auth();
 	break;

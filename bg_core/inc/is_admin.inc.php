@@ -10,7 +10,12 @@ if(!defined("IN_BAIGO")) {
 }
 
 if ($GLOBALS["adminLogged"]["str_alert"] != "y020102") {
-	header("Location: " . BG_URL_ADMIN . "admin.php?mod=logon&forward=" . base64_encode($_SERVER["REQUEST_URI"]) . $_url_attach);
+	if ($GLOBALS["view"] == "iframe") {
+		$_str_url = BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $GLOBALS["adminLogged"]["str_alert"];
+	} else {
+		$_str_url = BG_URL_ADMIN . "ctl.php?mod=logon&forward=" . base64_encode($_SERVER["REQUEST_URI"]);
+	}
+	header("Location: " . $_str_url . $_url_attach);
 	exit;
 }
 ?>

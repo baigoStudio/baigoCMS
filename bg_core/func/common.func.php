@@ -392,6 +392,16 @@ function fn_eachArray($arr, $method = "encode") {
 		foreach ($arr as $_key=>$_value) {
 			if (is_array($_value)) {
 				$arr[$_key] = fn_eachArray($_value, $method);
+			} else {
+				switch ($method) {
+					case "encode":
+						$arr[$_key] = base64_encode($_value);
+					break;
+
+					case "decode":
+						$arr[$_key] = base64_decode($_value);
+					break;
+				}
 			}
 		}
 	} else {
@@ -459,35 +469,35 @@ function fn_regChk($str_chk, $str_reg, $str_wild = false) {
  * @param mixed $_str_content
  * @return void
  */
-function fn_getUpfile($_str_content) {
+function fn_getAttach($_str_content) {
 	//print_r($_str_content);
 
-	$_pattern_1        = "/<img.*?src=[\"|']?__baigo__\/" . BG_NAME_UPFILE . "\/.*?[\"|']?\s.*?>/i";
+	$_pattern_1        = "/<img.*?src=[\"|']?__baigo__\/" . BG_NAME_ATTACH . "\/.*?[\"|']?\s.*?>/i";
 	$_pattern_2        = "/\sid=[\"|']?baigo_.*?[\"|']?\s/i";
-	$_str_upfileTemp   = str_replace(BG_UPFILE_URL, "__baigo__", $_str_content);
-	$_str_upfileTemp   = str_replace("\\", "", $_str_upfileTemp);
+	$_str_attachTemp   = str_replace(BG_UPLOAD_URL, "__baigo__", $_str_content);
+	$_str_attachTemp   = str_replace("\\", "", $_str_attachTemp);
 
 	//print_r($_pattern_1);
 	//print_r($_pattern_2);
-	//print_r($_str_upfileTemp);
+	//print_r($_str_attachTemp);
 
-	preg_match($_pattern_1, $_str_upfileTemp, $_match_1);
+	preg_match($_pattern_1, $_str_attachTemp, $_match_1);
 
 	//print_r($_match_1);
 
 	if ($_match_1[0]) {
 		preg_match($_pattern_2, $_match_1[0], $_match_2);
-		$_str_upfile      = trim($_match_2[0]);
-		$_str_upfile      = str_replace("id=", "", $_match_2[0]);
-		$_str_upfile      = str_replace("baigo_", "", $_str_upfile);
-		$_str_upfile      = str_replace("\"", "", $_str_upfile);
-		$_str_upfile      = trim($_str_upfile);
-		$_num_upfileId    = str_replace("'", "", $_str_upfile);
+		$_str_attach      = trim($_match_2[0]);
+		$_str_attach      = str_replace("id=", "", $_match_2[0]);
+		$_str_attach      = str_replace("baigo_", "", $_str_attach);
+		$_str_attach      = str_replace("\"", "", $_str_attach);
+		$_str_attach      = trim($_str_attach);
+		$_num_attachId    = str_replace("'", "", $_str_attach);
 	}
 
 	//print_r($_match_2);
 
-	return $_num_upfileId;
+	return $_num_attachId;
 }
 
 ?>

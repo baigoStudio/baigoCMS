@@ -32,6 +32,14 @@ switch ($act_post) {
 		$ajax_install->ajax_base();
 	break;
 
+	case "over":
+		$ajax_install->ajax_over();
+	break;
+
+	case "auto":
+		$ajax_install->ajax_auto();
+	break;
+
 	case "dbtable":
 		$ajax_install->ajax_dbtable();
 	break;

@@ -18,6 +18,51 @@ class MODEL_LOG {
 	}
 
 
+	function mdl_create() {
+		$_arr_logCreate = array(
+			"log_id"             => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"log_time"           => "int(11) NOT NULL COMMENT '时间'",
+			"log_operator_id"    => "int(11) NOT NULL COMMENT '操作者 ID'",
+			"log_targets"        => "text NOT NULL COMMENT '目标 JSON'",
+			"log_target_type"    => "varchar(20) NOT NULL COMMENT '目标类型'",
+			"log_title"          => "varchar(1000) NOT NULL COMMENT '操作标题'",
+			"log_result"         => "varchar(1000) NOT NULL COMMENT '操作结果'",
+			"log_type"           => "varchar(30) NOT NULL COMMENT '日志类型'",
+			"log_status"         => "varchar(20) NOT NULL COMMENT '状态'",
+			"log_level"          => "varchar(30) NOT NULL COMMENT '日志级别'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "log", $_arr_logCreate, "log_id", "应用");
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y060105"; //更新成功
+		} else {
+			$_str_alert = "x060105"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colSelect = array(
+			"column_name"
+		);
+
+		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "log'";
+
+		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["column_name"];
+		}
+
+		return $_arr_col;
+	}
+
+
 	/**
 	 * mdl_submit function.
 	 *
@@ -55,8 +100,8 @@ class MODEL_LOG {
 		}
 
 		return array(
-			"log_id" => $_num_logId,
-			"str_alert" => $_str_alert, //成功
+			"log_id"     => $_num_logId,
+			"str_alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -65,12 +110,11 @@ class MODEL_LOG {
 	 * mdl_status function.
 	 *
 	 * @access public
-	 * @param mixed $arr_logId
 	 * @param mixed $str_status
 	 * @return void
 	 */
-	function mdl_status($arr_logId, $str_status) {
-		$_str_logId = implode(",", $arr_logId);
+	function mdl_status($str_status) {
+		$_str_logId = implode(",", $this->logIds["log_ids"]);
 
 		$_arr_logUpdate = array(
 			"log_status" => $str_status,
@@ -126,7 +170,9 @@ class MODEL_LOG {
 			exit;
 		}
 
-		$_arr_logRow["str_alert"] = "y060102";
+		$_arr_logRow["log_result"]    = json_decode($_arr_logRow["log_result"], true);
+		$_arr_logRow["log_targets"]   = json_decode($_arr_logRow["log_targets"], true);
+		$_arr_logRow["str_alert"]     = "y060102";
 
 		return $_arr_logRow;
 	}
@@ -186,8 +232,8 @@ class MODEL_LOG {
 
 	返回提示信息
 	*/
-	function mdl_del($arr_logId) {
-		$_str_logId = implode(",", $arr_logId);
+	function mdl_del() {
+		$_str_logId = implode(",", $this->logIds["log_ids"]);
 
 		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "log", "log_id IN (" . $_str_logId . ")"); //删除数据
 
@@ -234,5 +280,34 @@ class MODEL_LOG {
 
 		return $_num_logCount;
 	}
+
+
+	function input_ids() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"str_alert" => "x030101",
+			);
+			exit;
+		}
+
+		$_arr_logIds = $_POST["log_id"];
+
+		if ($_arr_logIds) {
+			foreach ($_arr_logIds as $_key=>$_value) {
+				$_arr_logIds[$_key] = fn_getSafe($_value, "int", 0);
+			}
+			$_str_alert = "ok";
+		} else {
+			$_str_alert = "none";
+		}
+
+		$this->logIds = array(
+			"str_alert"  => $_str_alert,
+			"log_ids"    => $_arr_logIds
+		);
+
+		return $this->logIds;
+	}
+
 }
 ?>
