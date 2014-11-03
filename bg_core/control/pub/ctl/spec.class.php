@@ -22,6 +22,7 @@ class CONTROL_SPEC {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
+		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
 		$this->spec_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_spec       = new MODEL_SPEC();
@@ -29,6 +30,7 @@ class CONTROL_SPEC {
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -40,7 +42,7 @@ class CONTROL_SPEC {
 	 */
 	function ctl_show() {
 		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_specId = fn_getSafe($_GET["spec_id"], "int", 0);
+		$_num_specId  = fn_getSafe($_GET["spec_id"], "int", 0);
 
 		if ($_num_specId == 0) {
 			return array(
@@ -67,7 +69,7 @@ class CONTROL_SPEC {
 		$_arr_page            = fn_page($_num_articleCount); //取得分页数据
 		$_str_query           = http_build_query($this->search);
 		$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", false, false, $_arr_specRow["spec_id"]);
-				
+
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_value["article_id"]);
 			foreach ($_arr_tagBelongRows as $_key_tag=>$_value_tag) {
@@ -90,6 +92,7 @@ class CONTROL_SPEC {
 			"search"         => $this->search,
 			"specRow"        => $_arr_specRow,
 			"articleRows"    => $_arr_articleRows,
+			"cateRows"       => $this->cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("spec_show.tpl", $_arr_tplData);
@@ -117,6 +120,7 @@ class CONTROL_SPEC {
 			"pageRow"    => $_arr_page,
 			"search"     => $this->search,
 			"specRows"   => $_arr_specRows,
+			"cateRows"   => $this->cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("spec_list.tpl", $_arr_tplData);
@@ -154,7 +158,7 @@ class CONTROL_SPEC {
 			$this->config["tpl"] = "default";
 		}
 		$_act_get = fn_getSafe($_GET["act_get"], "txt", "");
-		
+
 		$_arr_urlRow = $this->url_process();
 
 		$this->search = array(
@@ -165,6 +169,8 @@ class CONTROL_SPEC {
 		if (BG_VISIT_TYPE == "static") {
 			$this->search["page_ext"] = "." . BG_VISIT_FILE;
 		}
+
+		$this->cateRows = $this->mdl_cate->mdl_list(1000);
 	}
 }
 ?>

@@ -214,7 +214,7 @@ class MODEL_TAG {
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY tag_id DESC", $num_no, $num_except);
 
 		foreach ($_arr_tagRows as $_key=>$_value) {
-			$_arr_tagRows[$_key]["urlRow"] = $this->url_process($_arr_tagRow);
+			$_arr_tagRows[$_key]["urlRow"] = $this->url_process($_value);
 		}
 
 		return $_arr_tagRows;

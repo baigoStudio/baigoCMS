@@ -1,7 +1,6 @@
 {* cate_single.tpl 单页栏目 *}
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
-	css        => "cate_show",
 	str_url    => "{$tplData.cateRow.urlRow.cate_url}"
 ]}
 
@@ -14,9 +13,11 @@
 		{/foreach}
 	</ol>
 
-	<div class="cate_content">
+	<h3>{$tplData.cateRow.cate_name}</h3>
+
+	<p>
 		{$tplData.cateRow.cate_content}
-	</div>
+	</p>
 
 {include "include/pub_foot.tpl" cfg=$cfg}
 

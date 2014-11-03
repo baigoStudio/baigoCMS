@@ -93,12 +93,12 @@
 		<div class="col-md-3">
 			<div class="well">
 				<div class="form-group">
-					<label class="control-label">{$lang.label.id}</label>
+					<label class="control-label static_label">{$lang.label.id}</label>
 					<p class="form-control-static">{$tplData.articleRow.article_id}</p>
 				</div>
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.articleCate}</label>
+					<label class="control-label static_label">{$lang.label.articleCate}</label>
 					{cate_list arr=$tplData.cateRows}
 				</div>
 
@@ -127,22 +127,22 @@
 				{/if}
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.status}</label>
+					<label class="control-label static_label">{$lang.label.status}</label>
 					<p class="form-control-static">
 						<span class="label label-{$_css_status}">{$_str_status}</span>
 					</p>
 				</div>
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.time}</label>
-					<p class="form-control-static">
+					<label class="control-label static_label">{$lang.label.time}</label>
+					<p class="form-control-static static_input">
 						{$tplData.articleRow.article_time|date_format:"%Y-%m-%d %H:%M"}
 					</p>
 				</div>
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.articleMark}</label>
-					<p class="form-control-static">
+					<label class="control-label static_label">{$lang.label.articleMark}</label>
+					<p class="form-control-static static_input">
 						{$tplData.markRow.mark_name}
 					</p>
 				</div>

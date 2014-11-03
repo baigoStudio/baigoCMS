@@ -20,12 +20,14 @@ class CONTROL_SEARCH {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
+		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
 		$this->search_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -59,17 +61,44 @@ class CONTROL_SEARCH {
 			}
 		}
 
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+
 		$_arr_tplData = array(
 			"query"          => $_str_query,
 			"pageRow"        => $_arr_page,
 			"search"         => $this->search,
 			"articleRows"    => $_arr_articleRows,
+			"cateRows"       => $_arr_cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("search_show.tpl", $_arr_tplData);
 
 		return array(
 			"str_alert" => "y130102",
+		);
+	}
+
+
+	private function url_process() {
+		switch (BG_VISIT_TYPE) {
+			case "static":
+				$_str_searchUrl     = BG_URL_ROOT . "search/";
+				$_str_pageAttach    = "page_";
+			break;
+
+			case "pstatic":
+				$_str_searchUrl     = BG_URL_ROOT . "search/";
+			break;
+
+			default:
+				$_str_searchUrl     = BG_URL_ROOT . "index.php?mod=search&act_get=list";
+				$_str_pageAttach    = "&page=";
+			break;
+		}
+
+		return array(
+			"search_url"     => $_str_searchUrl,
+			"page_attach"    => $_str_pageAttach,
 		);
 	}
 
@@ -85,6 +114,7 @@ class CONTROL_SEARCH {
 
 		$this->search = array(
 			"act_get"    => $_act_get,
+			"urlRow"     => $this->url_process(),
 			"key"        => $_str_key,
 		);
 

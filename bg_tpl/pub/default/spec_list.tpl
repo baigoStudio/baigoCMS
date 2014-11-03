@@ -1,7 +1,6 @@
 {* spec_list.tpl TAG 列表 *}
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
-	css        => "tag_list",
 	str_url    => "{$tplData.search.urlRow.spec_url}{$tplData.search.urlRow.page_attach}",
 	page_ext   => $tplData.search.page_ext
 ]}

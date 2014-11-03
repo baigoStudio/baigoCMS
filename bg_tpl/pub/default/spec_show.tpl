@@ -1,7 +1,6 @@
 {* tag_show.tpl TAG 显示 *}
 {$cfg = [
 	title      => $tplData.tagRow.tag_name,
-	css        => "tag_show",
 	str_url    => "{$tplData.specRow.urlRow.spec_url}{$tplData.specRow.urlRow.page_attach}",
 	page_ext   => $tplData.search.page_ext
 ]}

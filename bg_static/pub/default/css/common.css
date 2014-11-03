@@ -1,22 +1,2 @@
-@import "global.css";
-
-body { margin: 0px; padding: 0px; background: url(../image/global_bg.png); text-align: center; }
-
-.global_head { width: 100%; background: #fff; }
-	.global_head > .head_body { width: 700px; margin: 0px auto; padding: 40px 0px 20px 0px; }
-		.global_head > .head_body > .global_nav { float: left; text-align: left; }
-			.global_head > .head_body > .global_nav > .call_cate { margin-bottom: 5px; }
-
-		.global_head > .head_body > .body_logo { float: right; }
-			.global_head > .head_body > .body_logo > a { width: 380px; height: 0px; display: block; padding-top: 50px; background: url(../image/logo_studio.png); overflow: hidden; }
-
-.page_head { width: 700px; margin: 0px auto; text-align: left; }
-
-.page_body { width: 700px; margin: 0px auto; text-align: left; }
-
-.page_foot { width: 700px; margin: 0px auto; text-align: left; }
-	.page_foot > ul { padding: 10px 0px; }
-		.page_foot > ul > li { padding: 2px 0px; }
-
-.global_foot { width: 700px; margin: 0px auto; text-align: left; }
-	.global_foot > .foot_copy { padding: 20px 0px; border-top: 1px solid #fff; }
+.tag_size_common, .tag_size_common a { font-size: 16px; margin: 10px; display: block; }
+.tag_size_5, .tag_size_5 a { font-size: 20px; margin: 10px; display: block; }

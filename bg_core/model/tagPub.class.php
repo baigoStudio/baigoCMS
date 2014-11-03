@@ -27,9 +27,9 @@ class MODEL_TAG_PUB {
 			"article_top"        => BG_DB_TABLE . "article",
 			"belong_tag_id"      => BG_DB_TABLE . "tag_belong",
 		);
-		
+
 		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "article` ON (`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`=`" . BG_DB_TABLE . "article`.`article_id`)";
-	
+
 		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_tagCreat, BG_DB_TABLE . "tag_belong", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
@@ -109,6 +109,10 @@ class MODEL_TAG_PUB {
 
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_view",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY article_id DESC", $num_no, $num_except);
 
+		foreach ($_arr_tagRows as $_key=>$_value) {
+			$_arr_tagRows[$_key]["article_url"] = $this->url_process($_value);
+		}
+
 		return $_arr_tagRows;
 	}
 
@@ -128,10 +132,33 @@ class MODEL_TAG_PUB {
 			$_str_tagIds = implode(",", $arr_tagIds);
 			$_str_sqlWhere .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
 		}
-		
+
 		$_num_tagCount = $this->obj_db->count(BG_DB_TABLE . "tag_view", $_str_sqlWhere); //查询数据
 
 		return $_num_tagCount;
+	}
+
+	private function url_process($_arr_articleRow) {
+
+		if ($_arr_articleRow["article_link"]) {
+			$_str_articleUrl = $_arr_articleRow["article_link"];
+		} else {
+			switch (BG_VISIT_TYPE) {
+				case "static":
+					$_str_articleUrl = BG_URL_ROOT . "article/" . date("Y", $_arr_articleRow["article_time"]) . "/" . date("m", $_arr_articleRow["article_time"]) . "/" . $_arr_articleRow["article_id"] . "." . BG_VISIT_FILE;
+				break;
+
+				case "pstatic":
+					$_str_articleUrl = BG_URL_ROOT . "article/" . $_arr_articleRow["article_id"];
+				break;
+
+				default:
+					$_str_articleUrl = BG_URL_ROOT . "index.php?mod=article&act_get=show&article_id=" . $_arr_articleRow["article_id"];
+				break;
+			}
+		}
+
+		return $_str_articleUrl;
 	}
 }
 ?>

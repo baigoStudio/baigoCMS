@@ -9,8 +9,6 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
-
 /*-------------文章类-------------*/
 class CONTROL_CATE {
 
@@ -167,8 +165,11 @@ class CONTROL_CATE {
 			$this->config["tpl"] = $_str_tpl;
 		}
 
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+
 		$this->tplData = array(
-			"cateRow"        => $this->cateRow,
+			"cateRows"   => $_arr_cateRows,
+			"cateRow"    => $this->cateRow,
 		);
 	}
 

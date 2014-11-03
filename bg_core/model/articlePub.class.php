@@ -51,6 +51,44 @@ class MODEL_ARTICLE_PUB {
 	}
 
 
+	function mdl_read($num_articleId) {
+		$_arr_articleSelect = array(
+			"article_id",
+			"article_cate_id",
+			"article_mark_id",
+			"article_title",
+			"article_excerpt",
+			"article_status",
+			"article_box",
+			"article_link",
+			"article_admin_id",
+			"article_hits_all",
+			"article_time",
+			"article_time_pub",
+			"article_content",
+			"article_top",
+			"article_spec_id",
+		);
+
+		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
+		$_arr_articleRow = $_arr_articleRows[0];
+
+		if (!$_arr_articleRow) {
+			return array(
+				"str_alert" => "x120102",
+			);
+		}
+
+		/*print_r($_arr_userRow);
+		exit;*/
+
+		$_arr_articleRow["article_url"]   = $this->url_process($_arr_articleRow);
+		$_arr_articleRow["str_alert"]     = "y120102";
+
+		return $_arr_articleRow;
+	}
+
+
 	/**
 	 * mdl_list function.
 	 *

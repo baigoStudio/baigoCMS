@@ -15,6 +15,8 @@ class CONTROL_INDEX {
 	private $obj_tpl;
 
 	function __construct() { //构造函数
+		$this->mdl_cate = new MODEL_CATE(); //设置文章对象
+
 		if(defined("BG_SITE_TPL")) {
 			$_str_tpl = BG_SITE_TPL;
 		} else {
@@ -31,7 +33,13 @@ class CONTROL_INDEX {
 	 * @return void
 	 */
 	function ctl_index() {
-		$this->obj_tpl->tplDisplay("index.tpl", $this->tplData);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+
+		$_arr_tplData = array(
+			"cateRows" => $_arr_cateRows,
+		);
+
+		$this->obj_tpl->tplDisplay("index.tpl", $_arr_tplData);
 	}
 }
 ?>

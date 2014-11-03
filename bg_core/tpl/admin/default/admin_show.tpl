@@ -52,7 +52,7 @@
 					</div>
 
 					<div class="form-group">
-						<label lass="control-label static_label">{$lang.label.mail}</label>
+						<label class="control-label static_label">{$lang.label.mail}</label>
 						<p class="form-control-static static_input">{$tplData.userRow.user_mail}</p>
 					</div>
 
@@ -84,18 +84,18 @@
 		<div class="col-md-3">
 			<div class="well">
 				<div class="form-group">
-					<label class="control-label">{$lang.label.id}</label>
-					<p class="form-control-static">{$tplData.adminRow.admin_id}</p>
+					<label class="control-label static_label">{$lang.label.id}</label>
+					<p class="form-control-static static_input">{$tplData.adminRow.admin_id}</p>
 				</div>
 
 				{if $tplData.adminRow.admin_status == "enable"}
 					{$_css_status = "success"}
 				{else}
-					{$_css_status = "warning"}
+					{$_css_status = "danger"}
 				{/if}
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.status}</label>
+					<label class="control-label static_label">{$lang.label.status}</label>
 					<p class="form-control-static">
 						<span class="label label-{$_css_status}">{$status.admin[$tplData.adminRow.admin_status]}</span>
 					</p>
@@ -116,8 +116,8 @@
 				</div>
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.adminGroup}</label>
-					<p class="form-control-static">
+					<label class="control-label static_label">{$lang.label.adminGroup}</label>
+					<p class="form-control-static static_input">
 						{if $tplData.groupRow.group_name}
 							{$tplData.groupRow.group_name} | <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=show&group_id={$tplData.adminRow.admin_group_id}">{$lang.href.show}</a>
 						{else}

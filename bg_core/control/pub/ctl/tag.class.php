@@ -20,12 +20,14 @@ class CONTROL_TAG {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
+		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
 		$this->tag_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_tagPub     = new MODEL_TAG_PUB();
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -88,6 +90,7 @@ class CONTROL_TAG {
 			"search"         => $this->search,
 			"tagRow"         => $_arr_tagRow,
 			"articleRows"    => $_arr_articleRows,
+			"cateRows"       => $this->cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("tag_show.tpl", $_arr_tplData);
@@ -116,6 +119,7 @@ class CONTROL_TAG {
 			"pageRow"    => $_arr_page,
 			"search"     => $this->search,
 			"tagRows"    => $_arr_tagRows,
+			"cateRows"   => $this->cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("tag_list.tpl", $_arr_tplData);
@@ -156,12 +160,14 @@ class CONTROL_TAG {
 
 		$this->search = array(
 			"act_get"    => $_act_get,
-			"urlRow"     => $_arr_urlRow,
+			"urlRow"     => $this->url_process(),
 		);
 
 		if (BG_VISIT_TYPE == "static") {
 			$this->search["page_ext"] = "." . BG_VISIT_FILE;
 		}
+
+		$this->cateRows = $this->mdl_cate->mdl_list(1000);
 	}
 }
 ?>

@@ -50,7 +50,6 @@ class CONTROL_THUMB {
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
-			"thumb_id"   => $_num_thumbId,
 		);
 
 		$_num_thumbCount  = $this->mdl_thumb->mdl_count();

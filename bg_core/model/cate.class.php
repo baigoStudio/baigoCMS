@@ -406,9 +406,9 @@ class MODEL_CATE {
 
 
 	function mdl_cateIds($num_cateId) {
-		$this->cateRows = $this->mdl_list(1000, 0, "show", "", $num_cateId);
-		$this->cate_ids_process();
-		return $this->cateIds;
+		$_arr_cateRows    = $this->mdl_list(1000, 0, "show", "", $num_cateId);
+		$_arr_cates       = $this->cate_ids_process($_arr_cateRows);
+		return $_arr_cates;
 	}
 
 
@@ -768,9 +768,9 @@ class MODEL_CATE {
 	}
 
 
-	private function cate_ids_process() {
-		foreach ($this->cateRows as $_value) {
-			if ($_value["cate_childs"]) {
+	private function cate_ids_process($_arr_cateRows) {
+		foreach ($_arr_cateRows as $_value) {
+			if (count($_value["cate_childs"]) > 0) {
 				$_arr_cate      = $this->cate_ids_process($_value["cate_childs"]);
 				$this->cateIds  = array_merge($_arr_cate, $this->cateIds);
 			}
@@ -778,6 +778,8 @@ class MODEL_CATE {
 				$this->cateIds[] = $_value["cate_id"];
 			}
 		}
+
+		return $this->cateIds;
 	}
 
 

@@ -118,16 +118,16 @@ class AJAX_INSTALL {
 			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
 				$_str_content .= "RewriteEngine On" . PHP_EOL;
 				$_str_content .= "RewriteBase /" . PHP_EOL;
-				$_str_content .= "RewriteRule ^article/([0-9]*)$ /index.php?mod=article&act_get=show&article_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/$ /index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/([0-9]*)$ /index.php?mod=cate&act_get=show&cate_id=$2&page=$3 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/$ /index.php?mod=tag&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/(.*)/$ /index.php?mod=tag&act_get=show&tag_name=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ /index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/$ /index.php?mod=spec&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/$ /index.php?mod=spec&act_get=show&spec_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/([0-9]*)$ /index.php?mod=spec&act_get=show&spec_id=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/$ /index.php?mod=search&act_get=show [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^article/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=article&act_get=show&article_id=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2&page=$3 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^tag/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^tag/(.*)/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1&page=$2 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^search/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show [L]" . PHP_EOL;
 			$_str_content .= "</IfModule>" . PHP_EOL;
 			$_str_content .= "# END baigo CMS" . PHP_EOL;
 

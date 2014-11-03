@@ -25,12 +25,12 @@
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<div class="form-group">
-						<label class="control-label">{$lang.label.groupName}</label>
-						<p class="form-control-static">{$tplData.groupRow.group_name}</p>
+						<label class="control-label static_label">{$lang.label.groupName}</label>
+						<p class="form-control-static static_input">{$tplData.groupRow.group_name}</p>
 					</div>
 
 					<div class="form-group">
-						<label class="control-label">{$lang.label.groupAllow}</label>
+						<label class="control-label static_label">{$lang.label.groupAllow}</label>
 						<div class="form-group">
 							<dl>
 								{foreach $adminMod as $key_m=>$value_m}
@@ -51,8 +51,8 @@
 					</div>
 
 					<div class="form-group">
-						<label class="control-label">{$lang.label.groupNote}</label>
-						<p class="form-control-static">{$tplData.groupRow.group_note}</p>
+						<label class="control-label static_label">{$lang.label.groupNote}</label>
+						<p class="form-control-static static_input">{$tplData.groupRow.group_note}</p>
 					</div>
 
 					<div class="form-group">
@@ -68,13 +68,13 @@
 		<div class="col-md-3">
 			<div class="well">
 				<div class="form-group">
-					<label class="control-label">{$lang.label.id}</label>
-					<p class="form-control-static">{$tplData.groupRow.group_id}</p>
+					<label class="control-label static_label">{$lang.label.id}</label>
+					<p class="form-control-static static_input">{$tplData.groupRow.group_id}</p>
 				</div>
 
 				<div class="form-group">
-					<label class="control-label">{$lang.label.groupType}</label>
-					<p class="form-control-static">{$type.group[$tplData.groupRow.group_type]}</p>
+					<label class="control-label static_label">{$lang.label.groupType}</label>
+					<p class="form-control-static static_input">{$type.group[$tplData.groupRow.group_type]}</p>
 				</div>
 
 				<div class="form-group">

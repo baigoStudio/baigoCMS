@@ -113,10 +113,9 @@ class MODEL_THUMB {
 			"thumb_type",
 		);
 
-		$_str_sqlWhere = "thumb_id=" . $num_thumbId;
-
-		$_arr_thumbRows = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
-		$_arr_thumbRow = $_arr_thumbRows[0];
+		$_str_sqlWhere    = "thumb_id=" . $num_thumbId;
+		$_arr_thumbRows   = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
+		$_arr_thumbRow    = $_arr_thumbRows[0];
 
 		if (!$_arr_thumbRow) { //用户名不存在则返回错误
 			return array(

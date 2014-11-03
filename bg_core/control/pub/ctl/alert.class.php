@@ -15,6 +15,8 @@ class CONTROL_ALERT {
 	public $obj_tpl;
 
 	function __construct() { //构造函数
+		$this->mdl_cate = new MODEL_CATE(); //设置文章对象
+
 		if(defined("BG_SITE_TPL")) {
 			$_str_tpl = BG_SITE_TPL;
 		} else {
@@ -27,11 +29,13 @@ class CONTROL_ALERT {
 	无返回
 	*/
 	function ctl_alert() {
-		$_str_alert   = fn_getSafe($_GET["alert"], "txt", "");
+		$_str_alert       = fn_getSafe($_GET["alert"], "txt", "");
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$arr_data = array(
-			"alert"          => $_str_alert,
-			"status"         => substr($_str_alert, 0, 1),
+			"alert"      => $_str_alert,
+			"status"     => substr($_str_alert, 0, 1),
+			"cateRows"   => $_arr_cateRows,
 		);
 
 		$this->obj_tpl->tplDisplay("alert.tpl", $arr_data);

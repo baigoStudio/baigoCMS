@@ -80,7 +80,7 @@ class AJAX_THUMB {
 		$_num_thumbHeight = fn_getSafe($_GET["thumb_height"], "int", 0);
 		$_str_thumbType   = fn_getSafe($_GET["thumb_type"], "txt", "");
 
-		$_arr_tagRow  = $this->mdl_tag->mdl_check($_num_thumbWidth, $_num_thumbHeight, $_str_thumbType);
+		$_arr_tagRow  = $this->mdl_thumb->mdl_check($_num_thumbWidth, $_num_thumbHeight, $_str_thumbType);
 		if ($_arr_tagRow["str_alert"] == "y130102") {
 			$this->obj_ajax->halt_re("x130203");
 		}

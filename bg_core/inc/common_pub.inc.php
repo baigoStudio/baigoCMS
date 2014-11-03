@@ -25,5 +25,6 @@ include_once(BG_PATH_MODEL . "tagPub.class.php");
 include_once(BG_PATH_MODEL . "tagBelong.class.php");
 include_once(BG_PATH_MODEL . "call.class.php");
 include_once(BG_PATH_MODEL . "attach.class.php");
+include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
 include_once(BG_PATH_FUNC . "callDisplay.func.php");
 ?>

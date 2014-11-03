@@ -17,19 +17,20 @@ class CONTROL_ARTICLE {
 	private $tplData;
 	private $obj_tpl;
 	private $mdl_cate;
-	private $mdl_article;
+	private $mdl_articlePub;
 	private $mdl_tag;
 	private $mdl_tagBelong;
 	private $mdl_attach;
 
 	function __construct() { //构造函数
 		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
-		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
+		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
 		$this->article_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -145,6 +146,13 @@ class CONTROL_ARTICLE {
 					if (!$this->config["tpl"]) {
 						$this->config["tpl"] = "default";
 					}
+
+					if (is_array($this->cateRow["cate_trees"])) {
+						foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
+							$_arr_cateRow = $this->mdl_cate->mdl_read($_value["cate_id"]);
+							$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
+						}
+					}
 				} else {
 					$this->config["tpl"] = $_str_tpl;
 				}
@@ -155,7 +163,10 @@ class CONTROL_ARTICLE {
 			$this->config["tpl"] = $_str_tpl;
 		}
 
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+
 		$this->tplData = array(
+			"cateRows"   => $_arr_cateRows,
 			"cateRow"    => $this->cateRow,
 			"articleRow" => $this->articleRow,
 		);

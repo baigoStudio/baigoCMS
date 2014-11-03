@@ -1,9 +1,0 @@
-@import "common.css";
-@import "page.css";
-
-.page_body > .tag_nav { margin-bottom: 20px; }
-
-.page_body > .tag_list > .tag_name { margin: 10px 5px; float: left; }
-	.page_body > .tag_list > .tag_name > a.tag_size_5 { font-size: 14px; }
-
-.page_body > .page_global { padding: 10px 0px; float: right; }

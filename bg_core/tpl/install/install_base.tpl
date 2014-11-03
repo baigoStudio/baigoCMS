@@ -35,26 +35,10 @@
 {include "include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
-	var opts_validator_form = {
-		{foreach $opt["base"] as $key=>$value}
-			{if $value.type == "str" || $value.type == "textarea"}
-				{$str_msg_min = "too_short"}
-				{$str_msg_max = "too_long"}
-			{else}
-				{$str_msg_min = "too_few"}
-				{$str_msg_max = "too_many"}
-			{/if}
-			"opt_{$key}": {
-				length: { min: {$value.min}, max: 900 },
-				validate: { type: "{$value.type}", format: "{$value.format}" },
-				msg: { id: "msg_{$key}", {$str_msg_min}: "{$alert.x060201}{$value.label}", {$str_msg_max}: "{$value.label}{$alert.x060202}", format_err: "{$value.label}{$alert.x060203}" }
-			},
-		{/foreach}
-		"opt_BG_SITE_TPL": {
-			length: { min: 1, max: 900 },
-			validate: { type: "select" },
-			msg: { id: "msg_BG_SITE_TPL", too_few: "{$alert.x060201}{$lang.label.tpl}" }
-		}
+	opts_validator_form.opt_BG_SITE_TPL = {
+		length: { min: 1, max: 900 },
+		validate: { type: "select" },
+		msg: { id: "msg_BG_SITE_TPL", too_few: "{$alert.x060201}{$lang.label.tpl}" }
 	};
 
 	var opts_submit_form = {

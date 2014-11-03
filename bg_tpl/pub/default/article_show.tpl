@@ -1,7 +1,6 @@
 {* article_show.tpl 文章显示 *}
 {$cfg = [
-	title  => $tplData.articleRow.article_title,
-	css    => "article_show"
+	title  => $tplData.articleRow.article_title
 ]}
 
 {include "include/pub_head.tpl" cfg=$cfg}
@@ -14,20 +13,23 @@
 	</ol>
 
 
-	<div class="article_title">{$tplData.articleRow.article_title}</div>
-	<div class="article_time">
-		{$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}
-	</div>
+	<h3>{$tplData.articleRow.article_title}</h3>
+	<p>{$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</p>
 
-	<div class="article_content">{$tplData.articleRow.article_content}</div>
+	<p>{$tplData.articleRow.article_content}</p>
 
-	<div class="article_tag">
-		Tags:
+	<hr>
+
+	<ul class="list-inline">
+		<li>
+			<span class="glyphicon glyphicon-tags"></span>
+			Tags:
+		</li>
+
 		{foreach $tplData.tagRows as $tag_value}
-			<a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a>
+			<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
 		{/foreach}
-	</div>
-
+	</ul>
 
 {include "include/pub_foot.tpl" cfg=$cfg}
 
