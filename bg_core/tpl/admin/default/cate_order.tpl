@@ -6,7 +6,7 @@
 <div class="modal-body">
 
 	<form name="cate_order" id="cate_order" class="form_input">
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" id="act_post" value="order">
 		<input type="hidden" name="cate_id" value="{$tplData.cateRow.cate_id}">
 

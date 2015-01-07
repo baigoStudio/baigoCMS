@@ -22,8 +22,8 @@ class CONTROL_GROUP {
 		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->mdl_group      = new MODEL_GROUP(); //设置管理员对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->mdl_group      = new MODEL_GROUP();
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -53,7 +53,7 @@ class CONTROL_GROUP {
 		}
 
 		$_arr_groupRow = $this->mdl_group->mdl_read($_num_groupId);
-		if ($_arr_groupRow["str_alert"] != "y040102") { //UC 中不存在该用户
+		if ($_arr_groupRow["str_alert"] != "y040102") {
 			return $_arr_groupRow;
 			exit;
 		}
@@ -89,7 +89,7 @@ class CONTROL_GROUP {
 				exit;
 			}
 			$_arr_groupRow = $this->mdl_group->mdl_read($_num_groupId);
-			if ($_arr_groupRow["str_alert"] != "y040102") { //UC 中不存在该用户
+			if ($_arr_groupRow["str_alert"] != "y040102") {
 				return $_arr_groupRow;
 				exit;
 			}
@@ -108,7 +108,7 @@ class CONTROL_GROUP {
 
 
 		$_arr_tpl = array(
-			"groupRow" => $_arr_groupRow, //管理员信息
+			"groupRow" => $_arr_groupRow,
 		);
 
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);

@@ -56,10 +56,10 @@
 		<div class="clearfix"></div>
 	</div>
 
-	<div class="panel panel-default">
-		<form name="admin_list" id="admin_list" class="form-inline">
-			<input type="hidden" name="token_session" value="{$common.token_session}">
+	<form name="admin_list" id="admin_list" class="form-inline">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
+		<div class="panel panel-default">
 			<div class="table-responsive">
 				<table class="table table-striped table-hover">
 					<thead>
@@ -72,6 +72,7 @@
 							</th>
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.admin}</th>
+							<th class="td_md">{$lang.label.note}</th>
 							<th class="td_md">{$lang.label.adminGroup}</th>
 							<th class="td_sm">{$lang.label.status}</th>
 						</tr>
@@ -90,8 +91,8 @@
 									<div>
 										{if $value.admin_name}
 											{$value.admin_name}
-											{if $value.admin_note}
-												[ {$value.admin_note} ]
+											{if $value.admin_nick}
+												[ {$value.admin_nick} ]
 											{/if}
 										{else}
 											{$lang.label.adminUnknow}
@@ -113,6 +114,7 @@
 										{/if}
 									</div>
 								</td>
+								<td class="td_md">{$value.admin_note}</td>
 								<td class="td_md">
 									{if $value.groupRow.group_name}
 										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list&group_id={$value.admin_group_id}">{$value.groupRow.group_name}</a>
@@ -144,8 +146,9 @@
 					</tfoot>
 				</table>
 			</div>
-		</form>
-	</div>
+		</div>
+
+	</form>
 
 	<div class="text-right">
 		{include "include/page.tpl" cfg=$cfg}

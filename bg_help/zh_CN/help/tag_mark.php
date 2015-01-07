@@ -1,6 +1,6 @@
-	<h3>TAG</h3>
+	<h3>TAG（标签）</h3>
 	<p>
-		点左侧子菜单的 TAG，进入如下界面，可以对 TAG 进行编辑、删除、改变状态等操作。网站为了区分文章的类别所采用的标签，主要用于关联文章和搜索。
+		点左侧子菜单的 TAG，进入如下界面，可以对 TAG 进行编辑、删除、改变状态等操作。网站为了区分文章的类别所采用的 TAG，主要用于关联文章和搜索。
 	</p>
 	<p>
 		<img src="./zh_CN/help/image/tag_list.jpg" class="img-responsive img-rounded img_border">

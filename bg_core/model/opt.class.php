@@ -43,9 +43,9 @@ class MODEL_OPT {
 			"column_name"
 		);
 
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "opt'";
+		$_str_sqlWhere    = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "opt'";
 
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows     = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
 
 		foreach ($_arr_colRows as $_key=>$_value) {
 			$_arr_col[] = $_value["column_name"];
@@ -87,7 +87,7 @@ class MODEL_OPT {
 			}
 		} else {
 			$_str_optKey = $str_optKey;
-			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "opt", $_arr_optData, "opt_key='" . $_str_optKey . "'"); //更新数据
+			$_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "opt", $_arr_optData, "opt_key='" . $_str_optKey . "'"); //更新数据
 			if ($_num_mysql > 0) {
 				$_str_alert = "y060103"; //更新成功
 			} else {
@@ -119,10 +119,10 @@ class MODEL_OPT {
 			"opt_value",
 		);
 
-		$_str_sqlWhere = "opt_key='" . $str_optKey . "'";
+		$_str_sqlWhere    = "opt_key='" . $str_optKey . "'";
 
-		$_arr_optRows = $this->obj_db->select_array(BG_DB_TABLE . "opt", $_arr_optSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_optRow = $_arr_optRows[0];
+		$_arr_optRows     = $this->obj_db->select_array(BG_DB_TABLE . "opt", $_arr_optSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_optRow      = $_arr_optRows[0];
 
 		if (!$_arr_optRow) { //用户名不存在则返回错误
 			return array(

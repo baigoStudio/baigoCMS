@@ -44,6 +44,7 @@ function fn_ssin_begin() {
 	$_arr_groupRow = $_mdl_group->mdl_read($_arr_adminRow["admin_group_id"]);
 
 	if ($_arr_groupRow["group_status"] == "disable") {
+		fn_ssin_end();
 		$_arr_adminRow["str_alert"] = "x040401";
 		return $_arr_adminRow;
 		exit;

@@ -8,7 +8,7 @@
 {include "include/install_head.tpl" cfg=$cfg}
 
 	<form name="instal_form_dbtable" id="instal_form_dbtable">
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="dbtable">
 
 		<div class="alert alert-warning">
@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
-		btn_text: "{$lang.btn.installNext}",
+		btn_text: "{$lang.btn.stepNext}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=base"
 	};

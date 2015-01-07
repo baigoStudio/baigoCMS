@@ -17,6 +17,10 @@ if ($ssid) {
 session_start(); //开启session
 $GLOBALS["ssid"] = session_id();
 
+/*$_SESSION["count"]++;
+
+print_r($_SESSION);*/
+
 header("Content-Type: text/html; charset=utf-8");
 
 include_once(BG_PATH_FUNC . "common.func.php"); //载入通用函数

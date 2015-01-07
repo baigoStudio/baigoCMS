@@ -37,7 +37,7 @@
 		<div class="col-md-3">
 			<div class="well">
 				<form name="mime_form" id="mime_form">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 					<input type="hidden" name="mime_id" value="{$tplData.mimeRow.mime_id}">
 					<input type="hidden" name="act_post" value="submit">
 
@@ -81,9 +81,10 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="panel panel-default">
-				<form name="mime_list" id="mime_list" class="form-inline">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+			<form name="mime_list" id="mime_list" class="form-inline">
+				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+
+				<div class="panel panel-default">
 					<div class="table-responsive">
 						<table class="table table-striped table-hover">
 							<thead>
@@ -127,8 +128,9 @@
 							</tfoot>
 						</table>
 					</div>
-				</form>
-			</div>
+				</div>
+
+			</form>
 		</div>
 	</div>
 

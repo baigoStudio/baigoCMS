@@ -69,6 +69,7 @@ class CONTROL_SPEC {
 		$_arr_page            = fn_page($_num_articleCount); //取得分页数据
 		$_str_query           = http_build_query($this->search);
 		$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", false, false, $_arr_specRow["spec_id"]);
+		$_arr_attachThumb     = $this->mdl_thumb->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_value["article_id"]);
@@ -79,11 +80,7 @@ class CONTROL_SPEC {
 				}
 			}
 
-			if ($_value["article_attach_id"] > 0) {
-				$_arr_attachThumb                       = $this->mdl_thumb->mdl_list(100);
-				$_arr_attachRow                         = $this->mdl_attach->mdl_read($_value["article_attach_id"]);
-				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_arr_attachRow["attach_id"], $_arr_attachThumb);
-			}
+			$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
 		}
 
 		$_arr_tplData = array(

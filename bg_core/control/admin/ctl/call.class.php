@@ -10,10 +10,10 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "call.class.php"); //载入管理帐号模型
-include_once(BG_PATH_MODEL . "cate.class.php"); //载入管理帐号模型
-include_once(BG_PATH_MODEL . "mark.class.php"); //载入管理帐号模型
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入管理帐号模型
+include_once(BG_PATH_MODEL . "call.class.php");
+include_once(BG_PATH_MODEL . "cate.class.php");
+include_once(BG_PATH_MODEL . "mark.class.php");
+include_once(BG_PATH_MODEL . "thumb.class.php");
 /*-------------用户类-------------*/
 class CONTROL_CALL {
 
@@ -22,14 +22,14 @@ class CONTROL_CALL {
 	public $adminLogged;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->mdl_call       = new MODEL_CALL(); //设置管理员对象
-		$this->mdl_cate       = new MODEL_CATE(); //设置管理员对象
-		$this->mdl_mark       = new MODEL_MARK(); //设置管理员对象
-		$this->mdl_thumb      = new MODEL_THUMB(); //设置管理员对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$this->mdl_call       = new MODEL_CALL();
+		$this->mdl_cate       = new MODEL_CATE();
+		$this->mdl_mark       = new MODEL_MARK();
+		$this->mdl_thumb      = new MODEL_THUMB();
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -59,13 +59,13 @@ class CONTROL_CALL {
 		}
 
 		$_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
-		if ($_arr_callRow["str_alert"] != "y170102") { //UC 中不存在该用户
+		if ($_arr_callRow["str_alert"] != "y170102") {
 			return $_arr_callRow;
 			exit;
 		}
 
 		$_arr_tpl = array(
-			"callRow" => $_arr_callRow, //管理员信息
+			"callRow" => $_arr_callRow,
 		);
 
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
@@ -95,7 +95,7 @@ class CONTROL_CALL {
 				exit;
 			}
 			$_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
-			if ($_arr_callRow["str_alert"] != "y170102") { //UC 中不存在该用户
+			if ($_arr_callRow["str_alert"] != "y170102") {
 				return $_arr_callRow;
 				exit;
 			}
@@ -127,10 +127,10 @@ class CONTROL_CALL {
 		$_arr_thumbRows   = $this->mdl_thumb->mdl_list(1000);
 
 		$_arr_tpl = array(
-			"callRow"    => $_arr_callRow, //管理员信息
-			"cateRows"   => $_arr_cateRows, //管理员信息
-			"markRows"   => $_arr_markRows, //管理员信息
-			"thumbRows"  => $_arr_thumbRows, //管理员信息
+			"callRow"    => $_arr_callRow,
+			"cateRows"   => $_arr_cateRows,
+			"markRows"   => $_arr_markRows,
+			"thumbRows"  => $_arr_thumbRows,
 		);
 
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);

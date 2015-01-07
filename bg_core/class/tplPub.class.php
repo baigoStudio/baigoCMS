@@ -28,6 +28,7 @@ class CLASS_TPL {
 		$this->obj_smarty->compile_dir    = BG_PATH_TPL_COMPILE;
 		$this->obj_smarty->debugging      = BG_SWITCH_SMARTY_DEBUG; //调试模式
 
+		$this->lang   = include_once(BG_PATH_LANG . $this->config["lang"] . "/common.php"); //载入语言文件
 		$this->alert  = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入提示代码
 	}
 
@@ -41,6 +42,7 @@ class CLASS_TPL {
 	 * @return void
 	 */
 	function tplDisplay($str_tpl, $arr_tplData = "") {
+		$this->obj_smarty->assign("common", $this->common);
 		$this->obj_smarty->assign("alert", $this->alert);
 		$this->obj_smarty->assign("config", $this->config);
 		$this->obj_smarty->assign("tplData", $arr_tplData);

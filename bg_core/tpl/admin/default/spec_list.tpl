@@ -50,10 +50,10 @@
 		<div class="clearfix"></div>
 	</div>
 
-	<div class="panel panel-default">
-		<form name="spec_list" id="spec_list" class="form-inline">
+	<form name="spec_list" id="spec_list" class="form-inline">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
-			<input type="hidden" name="token_session" value="{$common.token_session}">
+		<div class="panel panel-default">
 			<div class="table-responsive">
 				<table class="table table-striped table-hover">
 					<thead>
@@ -117,8 +117,9 @@
 					</tfoot>
 				</table>
 			</div>
-		</form>
-	</div>
+		</div>
+
+	</form>
 
 	<div class="text-right">
 		{include "include/page.tpl" cfg=$cfg}

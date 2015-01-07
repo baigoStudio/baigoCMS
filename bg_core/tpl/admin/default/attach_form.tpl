@@ -67,7 +67,7 @@ function reload_attach(_page, _year, _month, _ext) {
 	$("#attach_list").empty();
 	$("#attach_page").empty();
 
-	$.getJSON("{$smarty.const.BG_URL_USER}ajax.php?mod=attach&act_get=list&page=" + _page + "&year=" + _year + "&month=" + _month + "&ext=" + _ext, function(result){
+	$.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=attach&act_get=list&page=" + _page + "&year=" + _year + "&month=" + _month + "&ext=" + _ext, function(result){
 		//alert(result.pageRow.page);
 		_str_appent_page = "<ul class=\"pagination pagination-sm\">";
 
@@ -170,7 +170,6 @@ function insertAttach(src, name, id, type, ext) {
 			_str = "<img src='{$smarty.const.BG_URL_IMAGE}file_" + ext + ".png'> <a href='" + src + "'>" + name + "</a>"
 		break;
 	}
-	//{$tplData.target}.insertHtml(_str);
 
 	tinyMCE.execCommand("mceInsertContent", false , _str);
 }

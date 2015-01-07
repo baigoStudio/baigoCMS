@@ -17,6 +17,13 @@ class AJAX_SECCODE {
 		$this->alert      = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入提示代码
 	}
 
+
+	/**
+	 * ajax_check function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_check() {
 		$seccode = fn_getSafe($_GET["seccode"], "txt", "");
 
@@ -30,7 +37,7 @@ class AJAX_SECCODE {
 			"re" => $_str_alert
 		);
 
-		echo json_encode($arr_re);
+		exit(json_encode($arr_re));
 	}
 }
 ?>

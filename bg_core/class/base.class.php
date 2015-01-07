@@ -21,7 +21,7 @@ class CLASS_BASE {
 	}
 
 
-	/** 设置语言
+	/**
 	 * getLang function.
 	 *
 	 * @access public
@@ -57,7 +57,7 @@ class CLASS_BASE {
 	}
 
 
-	/** 设置界面
+	/**
 	 * getUi function.
 	 *
 	 * @access public
@@ -97,7 +97,7 @@ class CLASS_BASE {
 	}
 
 
-	/** 设置时区
+	/**
 	 * setTimezone function.
 	 *
 	 * @access public

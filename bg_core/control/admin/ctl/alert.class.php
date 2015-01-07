@@ -20,7 +20,7 @@ class CONTROL_ALERT {
 		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 	}
 
 
@@ -33,7 +33,7 @@ class CONTROL_ALERT {
 	function ctl_alert() {
 		$_str_alert   = fn_getSafe($_GET["alert"], "txt", "");
 		$_str_view    = fn_getSafe($_GET["view"], "txt", "");
-				
+
 		$arr_data = array(
 			"adminLogged"    => $this->adminLogged,
 			"alert"          => $_str_alert,

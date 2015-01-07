@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "tag.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "tag.class.php");
 
 /*-------------允许类-------------*/
 class CONTROL_TAG {
@@ -20,11 +20,11 @@ class CONTROL_TAG {
 	public $adminLogged;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
 		$this->mdl_tag        = new MODEL_TAG(); //设置上传信息对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -63,6 +63,10 @@ class CONTROL_TAG {
 
 		if ($_num_tagId > 0) {
 			$_arr_tagRow = $this->mdl_tag->mdl_read($_num_tagId);
+			if ($_arr_tagRow != "y130102") {
+				return $$$_arr_tagRow;
+				exit;
+			}
 		} else {
 			$_arr_tagRow = array(
 				"tag_status" => "show"

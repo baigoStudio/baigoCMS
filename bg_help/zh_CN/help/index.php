@@ -23,45 +23,45 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th>菜单</th>
-						<th>功能</th>
+						<th class="nowrap">菜单</th>
+						<th class="nowrap">功能</th>
 						<th>说明</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td class="nowrap">文章管理</td>
-						<td>网站的文章的管理功能</td>
+						<td class="nowrap">网站的文章的管理功能</td>
 						<td>文章是指网站发布的每一条具体内容，比如新闻、公告等，您也可以将文章视为信息、产品等。</td>
 					</tr>
 					<tr>
 						<td class="nowrap">栏目管理</td>
-						<td>网站栏目的管理功能</td>
+						<td class="nowrap">网站栏目的管理功能</td>
 						<td> </td>
 					</tr>
 					<tr>
 						<td class="nowrap">附件管理</td>
-						<td>网站使用的图片、附件等管理功能</td>
+						<td class="nowrap">网站使用的图片、附件等管理功能</td>
 						<td>您可以在此上传图片、附件，管理删除以前上传过的图片、附件；另外，也可以在发布文章的时候上传图片、附件。</td>
 					</tr>
 					<tr>
 						<td class="nowrap">调用管理</td>
-						<td>调用符合条件的信息功能</td>
-						<td>某些时候，网站的一些地方需要显示一些符合特定条件的文章、栏目、TAG（标签），如：文章排行榜、最新发布的文章、某几个栏目的最新文章等。</td>
+						<td class="nowrap">调用符合条件的信息功能</td>
+						<td>某些时候，网站的一些地方需要显示一些符合特定条件的文章、栏目、TAG，如：文章排行榜、最新发布的文章、某几个栏目的最新文章等。</td>
 					</tr>
 					<tr>
 						<td class="nowrap">管理员</td>
-						<td>网站管理员管理功能</td>
+						<td class="nowrap">网站管理员管理功能</td>
 						<td> </td>
 					</tr>
 					<tr>
 						<td class="nowrap">群组管理</td>
-						<td>网站管理员、用户的群组管理功能</td>
+						<td class="nowrap">网站管理员、用户的群组管理功能</td>
 						<td>群组是指网站管理员、用户按照特定的权限形成的组合，可以在此创建一些群组，预先为隶属于这个群组的管理员、用户设置一些权限，方便管理。</td>
 					</tr>
 					<tr>
 						<td class="nowrap">系统设置</td>
-						<td>系统设置功能</td>
+						<td class="nowrap">系统设置功能</td>
 						<td>您可以在此设置网站名称、时区、各类格式等。</td>
 					</tr>
 				</tbody>

@@ -6,7 +6,7 @@
 
 	<form name="admin_form" id="admin_form">
 
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="toGroup">
 		<input type="hidden" name="admin_id" value="{$tplData.adminRow.admin_id}">
 

@@ -68,6 +68,9 @@ class AJAX_UPGRADE {
 	 * @return void
 	 */
 	function ajax_base() {
+		$this->check_db();
+		$this->check_opt();
+
 		$_arr_optPost = $this->opt_post("base");
 
 		$this->obj_ajax->halt_alert("y030405");
@@ -81,6 +84,9 @@ class AJAX_UPGRADE {
 	 * @return void
 	 */
 	function ajax_visit() {
+		$this->check_db();
+		$this->check_opt();
+
 		$_arr_optPost = $this->opt_post("visit");
 
 		if ($_POST["opt"]["BG_VISIT_TYPE"] == "pstatic") {
@@ -121,6 +127,9 @@ class AJAX_UPGRADE {
 	 * @return void
 	 */
 	function ajax_upload() {
+		$this->check_db();
+		$this->check_opt();
+
 		$_arr_optPost = $this->opt_post("upload");
 
 		$this->obj_ajax->halt_alert("y030407");
@@ -134,6 +143,9 @@ class AJAX_UPGRADE {
 	 * @return void
 	 */
 	function ajax_sso() {
+		$this->check_db();
+		$this->check_opt();
+
 		$_arr_optPost = $this->opt_post("sso");
 
 		$this->obj_ajax->halt_alert("y030408");
@@ -141,6 +153,9 @@ class AJAX_UPGRADE {
 
 
 	function ajax_over() {
+		$this->check_db();
+		$this->check_opt();
+
 		$_str_content = "<?php" . PHP_EOL;
 		$_str_content .= "define(\"BG_INSTALL_VER\", \"" . PRD_CMS_VER . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_INSTALL_PUB\", " . PRD_CMS_PUB . ");" . PHP_EOL;
@@ -160,8 +175,6 @@ class AJAX_UPGRADE {
 	 * @return void
 	 */
 	private function opt_post($str_type) {
-		$this->check_db();
-
 		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 		$_mdl_opt    = new MODEL_OPT();
 
@@ -191,20 +204,6 @@ class AJAX_UPGRADE {
 	}
 
 
-	private function check_db() {
-		if (!fn_token("chk")) { //令牌
-			$this->obj_ajax->halt_alert("x030102");
-		}
-
-		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030404");
-		} else {
-			$GLOBALS["obj_db"]   = new CLASS_MYSQL(); //初始化基类
-			$this->obj_db        = $GLOBALS["obj_db"];
-		}
-	}
-
-
 	/**
 	 * table_admin function.
 	 *
@@ -222,16 +221,8 @@ class AJAX_UPGRADE {
 		}
 
 		if (!in_array("admin_nick", $_arr_col)) {
-			$_arr_alert["admin_nick"] = array("ADD", "varchar(30) NOT NULL COMMENT '昵称'");
+			$_arr_alert["admin_nick"] = array("ADD", "varchar(300) NOT NULL COMMENT '昵称'");
 		}
-
-		/*if (in_array("admin_nick_nick", $_arr_col)) {
-			$_arr_alert["admin_nick_nick"] = array("DROP");
-		}
-
-		if (in_array("admin_nick_nick", $_arr_col)) {
-			$_arr_alert["admin_nick_nick"] = array("CHANGE", "varchar(30) NOT NULL COMMENT '昵称'", "admin_nick_abc");
-		}*/
 
 		if ($_arr_alert) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "admin", $_arr_alert);
@@ -591,6 +582,38 @@ class AJAX_UPGRADE {
 		$_str_content .= "?>";
 
 		file_put_contents(BG_PATH_SSO . "config/opt_reg.inc.php", $_str_content);
+	}
+
+
+	private function check_db() {
+		if (!fn_token("chk")) { //令牌
+			$this->obj_ajax->halt_alert("x030102");
+		}
+
+		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
+			$this->obj_ajax->halt_alert("x030404");
+		} else {
+			$GLOBALS["obj_db"]   = new CLASS_MYSQL(); //初始化基类
+			$this->obj_db        = $GLOBALS["obj_db"];
+		}
+	}
+
+
+	private function check_opt() {
+		$_arr_tableSelect = array(
+			"table_name",
+		);
+
+		$_str_sqlWhere    = "table_schema='" . BG_DB_NAME . "'";
+		$_arr_tableRows   = $GLOBALS["obj_db"]->select_array("information_schema`.`tables", $_arr_tableSelect, $_str_sqlWhere, 100, 0);
+
+		foreach ($_arr_tableRows as $_key=>$_value) {
+			$_arr_chks[] = $_value["table_name"];
+		}
+
+		if (!in_array(BG_DB_TABLE . "opt", $_arr_chks)) {
+			$this->obj_ajax->halt_alert("x030412");
+		}
 	}
 }
 ?>

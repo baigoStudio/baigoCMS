@@ -72,7 +72,7 @@
 		<div class="pull-right">
 			{if $tplData.search.box == "recycle"}
 				<form name="article_empty" id="article_empty">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 					<input type="hidden" id="act_empty" name="act_post" value="empty">
 					<button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.empty}</button>
 				</form>
@@ -130,12 +130,10 @@
 		</form>
 	</div>
 
-	<div class="panel panel-default">
+	<form name="article_list" id="article_list" class="form-inline">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
-		<form name="article_list" id="article_list" class="form-inline">
-
-			<input type="hidden" name="token_session" value="{$common.token_session}">
-
+		<div class="panel panel-default">
 			<div class="table-responsive">
 				<table class="table table-striped table-hover">
 					<thead>
@@ -219,7 +217,7 @@
 								</td>
 								<td class="td_md">
 									{if $value.adminRow.admin_name}
-										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_note}[ {$value.adminRow.admin_note} ]{/if}</a>
+										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_nick}[ {$value.adminRow.admin_nick} ]{/if}</a>
 									{else}
 										{$lang.label.unknow}
 									{/if}
@@ -258,8 +256,9 @@
 					</tfoot>
 				</table>
 			</div>
-		</form>
-	</div>
+		</div>
+
+	</form>
 
 	<div class="text-right">
 		{include "include/page.tpl" cfg=$cfg}

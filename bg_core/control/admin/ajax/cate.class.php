@@ -19,8 +19,8 @@ class AJAX_CATE {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_cate       = new MODEL_CATE(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_cate       = new MODEL_CATE();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}

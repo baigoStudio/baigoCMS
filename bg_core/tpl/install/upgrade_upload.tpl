@@ -8,7 +8,7 @@
 {include "include/upgrade_head.tpl" cfg=$cfg}
 
 	<form name="install_form_upload" id="install_form_upload">
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="upload">
 
 		{include "include/install_form.tpl" cfg=$cfg}
@@ -27,7 +27,7 @@
 	<script type="text/javascript">
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=upgrade",
-		btn_text: "{$lang.btn.installNext}",
+		btn_text: "{$lang.btn.stepNext}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=sso"
 	};

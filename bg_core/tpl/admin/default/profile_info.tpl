@@ -1,6 +1,6 @@
 {* profile_form.tpl 管理员编辑界面 *}
 {function cate_list arr="" level=""}
-	<dl {if $level > 0}class="list_padding"{/if}>
+	<dl class="list_baigo {if $level > 0}list_padding{/if}">
 		{foreach $arr as $value}
 			<dt>{$value.cate_name}</dt>
 			<dd>
@@ -22,6 +22,8 @@
 
 {$cfg = [
 	title          => $lang.page.profile,
+	menu_active    => "profile",
+	sub_active     => "info",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile"
@@ -34,8 +36,7 @@
 	{include "include/admin_left.tpl" cfg=$cfg}
 
 	<form name="profile_form" id="profile_form" autocomplete="off">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="info">
 
 		<div class="row">
@@ -44,7 +45,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<label class="control-label">{$lang.label.username}</label>
-							<p class="form-control-static">{$tplData.adminLogged.admin_name}</p>
+							<input type="text" name="admin_name" id="admin_name" class="form-control" readonly value="{$tplData.userRow.user_name}">
 						</div>
 
 						<div class="form-group">
@@ -57,7 +58,7 @@
 						<div class="form-group">
 							<div id="group_admin_nick">
 								<label form="admin_nick" class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
-								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.adminLogged.admin_nick}" class="validate form-control">
+								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.userRow.user_nick}" class="validate form-control">
 							</div>
 						</div>
 
@@ -75,6 +76,7 @@
 
 			{include "include/profile_left.tpl" cfg=$cfg}
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}

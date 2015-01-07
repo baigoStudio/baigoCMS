@@ -19,7 +19,7 @@
 			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前网站 URL，末尾请勿加 <mark>/</mark>。</p>
 
 			<h4 class="text-info">每页显示数</h4>
-			<p>管理后台以及前台页面，在对文章、TAG等进行分页管理的时候，每一页所显示的数量，默认为 30.</p>
+			<p>管理后台以及前台页面，在对文章、TAG 等进行分页管理的时候，每一页所显示的数量，默认为 30.</p>
 
 			<h4 class="text-info">时区</h4>
 			<p>请根据当地实际情况填写，默认为 Etc/GMT+8，即北京时间。</p>
@@ -90,7 +90,7 @@
 			<p>此方式为 PHP 最常用的访问方式，使用查询串的方式访问网站，URL 的形式为 <span class="text-primary">http://www.domain.com/index.php?mod=article&act_get=show&article_id=123</span>；优点是效率较高，兼容性好；缺点是 URL 友好度较差，对于搜索引擎的收录有一定影响。</p>
 
 			<h4 class="text-info">伪静态</h4>
-			<p>此方式目前较为流行，使用友好的 URL 方式访问网站，URL 的形式为 <span class="text-primary">http://www.domain.com/article/123</span>，此方式需要服务器支持 URL 重写 (URL Rewriting)，具体请参考 <a href="http://zh.wikipedia.org/wiki/URL_Rewriting" target="_blank">维基百科</a>；优点是 URL 较为友好，有利于搜索引擎的收录；缺点是效率相对较低，兼容性差，且需要重新配置服务器；在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，是否支持 URL 重写，请咨询服务器提供商。Nginx 环境下，需下载相关的配置文件，重新配置服务器，<a href="http://www.baigo.net/download/baigoCMS_rewrite.zip">点此下载配置文件</a>；IIS 环境暂不支持伪静态模式。</p>
+			<p>此方式目前较为流行，使用友好的 URL 方式访问网站，URL 的形式为 <span class="text-primary">http://www.domain.com/article/123</span>，此方式需要服务器支持 URL 重写 (URL Rewriting)，具体请参考 <a href="http://zh.wikipedia.org/wiki/URL_Rewriting" target="_blank">维基百科</a>；优点是 URL 较为友好，有利于搜索引擎的收录；缺点是效率相对较低，兼容性差，且需要重新配置服务器；在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，是否支持 URL 重写，请咨询服务器提供商。Nginx 环境下，需下载相关的配置文件，重新配置服务器，<a href="http://www.baigo.net/Products/baigoCMS/download.php">点此下载配置文件</a>；IIS 环境暂不支持伪静态模式。</p>
 
 			<h4 class="text-info">纯静态</h4>
 			<p><mark>根据不同系统，有可能无此选项。</mark>此方式为效率最高的访问方式，利用静态页面生成模块，将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 <span class="text-primary">http://www.domain.com/article/123.html</span>，此方式需要额外安装静态页面生成模块；此方式的有点是效率最高，无数据库服务器压力，兼容性好，有利于搜索引擎的收录；缺点是占用硬盘空间相对较多，页面需要定时生成。</p>

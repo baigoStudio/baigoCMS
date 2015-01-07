@@ -1,7 +1,7 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
-	<dl {if $level > 0}class="list_padding"{/if}>
+	<dl class="list_baigo {if $level > 0}list_padding{/if}">
 		{foreach $arr as $value}
 			<dt>{$value.cate_name}</dt>
 			<dd>
@@ -58,7 +58,7 @@
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.nick}</label>
-						<p class="form-control-static static_input">{$tplData.adminRow.admin_nick}</p>
+						<p class="form-control-static static_input">{$tplData.userRow.user_nick}</p>
 					</div>
 
 					<div class="form-group">
@@ -101,19 +101,17 @@
 					</p>
 				</div>
 
-				<div class="form-group">
-					{if $tplData.adminRow.admin_allow_profile.info == "1"}
-						<div>
-							<span class="label label-danger">{$lang.label.profileInfo}</span>
-						</div>
-					{/if}
+				{if $tplData.adminRow.admin_allow_profile.info == "1"}
+					<div class="form-group">
+						<span class="label label-danger">{$lang.label.profileInfo}</span>
+					</div>
+				{/if}
 
-					{if $tplData.adminRow.admin_allow_profile.pass == "1"}
-						<div>
-							<span class="label label-danger">{$lang.label.profilePass}</span>
-						</div>
-					{/if}
-				</div>
+				{if $tplData.adminRow.admin_allow_profile.pass == "1"}
+					<div class="form-group">
+						<span class="label label-danger">{$lang.label.profilePass}</span>
+					</div>
+				{/if}
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.adminGroup}</label>

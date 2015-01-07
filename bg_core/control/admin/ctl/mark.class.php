@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "mark.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "mark.class.php");
 
 /*-------------允许类-------------*/
 class CONTROL_MARK {
@@ -23,8 +23,8 @@ class CONTROL_MARK {
 		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->mdl_mark       = new MODEL_MARK(); //设置上传信息对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->mdl_mark       = new MODEL_MARK();
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -61,6 +61,10 @@ class CONTROL_MARK {
 
 		if ($_num_markId > 0) {
 			$_arr_markRow = $this->mdl_mark->mdl_read($_num_markId);
+			if ($_arr_markRow != "y140102") {
+				return $$_arr_markRow;
+				exit;
+			}
 		}
 
 		$_arr_tpl = array(

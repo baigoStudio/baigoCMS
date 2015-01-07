@@ -38,7 +38,7 @@
 			<div class="well">
 				<form name="thumb_form" id="thumb_form">
 
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 					<input type="hidden" name="thumb_id" value="{$tplData.thumbRow.thumb_id}">
 					<input type="hidden" name="act_post" value="submit">
 					{if $tplData.thumbRow.thumb_id > 0}
@@ -78,10 +78,10 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="panel panel-default">
-				<form name="thumb_list" id="thumb_list" class="form-inline">
+			<form name="thumb_list" id="thumb_list" class="form-inline">
+				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+				<div class="panel panel-default">
 					<div class="table-responsive">
 						<table class="table table-striped table-hover">
 							<thead>
@@ -129,8 +129,9 @@
 							</tfoot>
 						</table>
 					</div>
-				</form>
-			</div>
+				</div>
+
+			</form>
 		</div>
 	</div>
 

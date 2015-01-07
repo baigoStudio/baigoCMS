@@ -9,17 +9,17 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-/*-------------文件操作类类-------------*/
+/*-------------文件夹操作类类-------------*/
 class CLASS_DIR {
 
 	public $dir_status; //返回操作状态(成功/失败)
 
 
-	/** 删除目录
+	/**
 	 * del_dir function.
 	 *
 	 * @access public
-	 * @param mixed $str_path 目录路径
+	 * @param mixed $str_path
 	 * @return void
 	 */
 	function del_dir($str_path) {
@@ -41,11 +41,11 @@ class CLASS_DIR {
 	}
 
 
-	/** 创建
+	/**
 	 * mk_dir function.
 	 *
 	 * @access public
-	 * @param mixed $str_path 目录路径
+	 * @param mixed $str_path
 	 * @return void
 	 */
 	function mk_dir($str_path) {
@@ -69,12 +69,12 @@ class CLASS_DIR {
 	}
 
 
-	/** 列出目录
+	/**
 	 * list_dir function.
 	 *
 	 * @access public
-	 * @param mixed $str_path 目录路径
-	 * @return 数组 子目录列表
+	 * @param mixed $str_path
+	 * @return void
 	 */
 	function list_dir($str_path) {
 

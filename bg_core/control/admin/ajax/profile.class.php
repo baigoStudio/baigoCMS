@@ -11,7 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_CLASS . "sso.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "sso.class.php");
 
 /*-------------UC 类-------------*/
 class AJAX_PROFILE {
@@ -23,8 +23,8 @@ class AJAX_PROFILE {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->obj_sso        = new CLASS_SSO(); //获取界面类型
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_sso        = new CLASS_SSO();
 		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
@@ -55,7 +55,7 @@ class AJAX_PROFILE {
 			$this->obj_ajax->halt_alert($_arr_ssoChk["str_alert"]);
 		}
 
-		$_arr_ssoEdit     = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], "", "", $_arr_adminProfile["admin_mail"], "", "user_id");
+		$_arr_ssoEdit     = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], "", "", $_arr_adminProfile["admin_mail"], $_arr_adminProfile["admin_nick"], "user_id");
 		$_arr_adminRow    = $this->mdl_admin->mdl_profile($this->adminLogged["admin_id"]);
 
 		if ($_arr_adminRow["str_alert"] == "y020103" || $_arr_ssoEdit["str_alert"] == "y010103") {
@@ -68,6 +68,12 @@ class AJAX_PROFILE {
 	}
 
 
+	/**
+	 * ajax_pass function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_pass() {
 		if ($this->adminLogged["admin_allow_profile"]["pass"] == 1) {
 			$this->obj_ajax->halt_alert("x020109");
@@ -91,6 +97,12 @@ class AJAX_PROFILE {
 	}
 
 
+	/**
+	 * input_pass function.
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function input_pass() {
 		if (!fn_token("chk")) { //令牌
 			return array(

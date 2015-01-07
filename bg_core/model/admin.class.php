@@ -24,6 +24,7 @@ class MODEL_ADMIN {
 			"admin_id"               => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"admin_name"             => "varchar(30) NOT NULL COMMENT '用户名'",
 			"admin_note"             => "varchar(30) NOT NULL COMMENT '备注'",
+			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
 			"admin_rand"             => "varchar(6) NOT NULL COMMENT '随机码'",
 			"admin_allow_cate"       => "varchar(1000) NOT NULL COMMENT '栏目权限'",
 			"admin_group_id"         => "int(11) NOT NULL COMMENT '从属用户组ID'",
@@ -32,7 +33,6 @@ class MODEL_ADMIN {
 			"admin_status"           => "varchar(10) NOT NULL COMMENT '状态'",
 			"admin_ip"               => "varchar(15) NOT NULL COMMENT 'IP'",
 			"admin_allow_profile"    => "varchar(1000) NOT NULL COMMENT '个人权限'",
-			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "admin", $_arr_adminCreate, "admin_id", "管理帐号");
@@ -129,10 +129,10 @@ class MODEL_ADMIN {
 
 		$_arr_adminData = array(
 			"admin_note"             => $this->adminSubmit["admin_note"],
+			"admin_nick"             => $this->adminSubmit["admin_nick"],
 			"admin_status"           => $this->adminSubmit["admin_status"],
 			"admin_allow_cate"       => $this->adminSubmit["admin_allow_cate"],
 			"admin_allow_profile"    => $this->adminSubmit["admin_allow_profile"],
-			"admin_nick"             => $this->adminSubmit["admin_nick"],
 		);
 
 		if ($_arr_adminRow["str_alert"] == "x020102") {
@@ -248,6 +248,7 @@ class MODEL_ADMIN {
 			"admin_id",
 			"admin_name",
 			"admin_note",
+			"admin_nick",
 			"admin_rand",
 			"admin_group_id",
 			"admin_status",
@@ -255,7 +256,6 @@ class MODEL_ADMIN {
 			"admin_ip",
 			"admin_allow_cate",
 			"admin_allow_profile",
-			"admin_nick",
 		);
 
 		$_arr_adminRows = $this->obj_db->select_array(BG_DB_TABLE . "admin", $_arr_adminSelect, "admin_id=" . $num_adminId, 1, 0); //检查本地表是否存在记录
@@ -297,15 +297,15 @@ class MODEL_ADMIN {
 			"admin_id",
 			"admin_name",
 			"admin_note",
+			"admin_nick",
 			"admin_group_id",
 			"admin_status",
-			"admin_nick",
 		);
 
 		$_str_sqlWhere = "admin_id > 0";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND admin_note LIKE '%" . $str_key . "%'";
+			$_str_sqlWhere .= " AND (admin_note LIKE '%" . $str_key . "%' OR admin_nick LIKE '%" . $str_key . "%')";
 		}
 
 		if ($str_status) {
@@ -338,7 +338,7 @@ class MODEL_ADMIN {
 		$_str_sqlWhere = "admin_id > 0";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND admin_note LIKE '%" . $str_key . "%'";
+			$_str_sqlWhere .= " AND (admin_note LIKE '%" . $str_key . "%' OR admin_nick LIKE '%" . $str_key . "%')";
 		}
 
 		if ($str_status) {

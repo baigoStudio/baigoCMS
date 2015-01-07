@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入后台用户类
+include_once(BG_PATH_MODEL . "thumb.class.php");
 
 /*-------------用户类-------------*/
 class AJAX_THUMB {
@@ -21,8 +21,8 @@ class AJAX_THUMB {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_thumb       = new MODEL_THUMB(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_thumb      = new MODEL_THUMB();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
@@ -74,6 +74,12 @@ class AJAX_THUMB {
 	}
 
 
+	/**
+	 * ajax_chk function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_chk() {
 		$_num_thumbId     = fn_getSafe($_GET["thumb_id"], "int", 0);
 		$_num_thumbWidth  = fn_getSafe($_GET["thumb_width"], "int", 0);
@@ -89,7 +95,7 @@ class AJAX_THUMB {
 			"re" => "ok"
 		);
 
-		echo json_encode($arr_re);
+		exit(json_encode($arr_re));
 	}
 }
 ?>

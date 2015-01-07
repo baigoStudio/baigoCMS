@@ -1,6 +1,8 @@
 {* profile_form.tpl 管理员编辑界面 *}
 {$cfg = [
 	title          => $lang.page.pass,
+	menu_active    => "profile",
+	sub_active     => "pass",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile"
@@ -14,8 +16,7 @@
 	{include "include/admin_left.tpl" cfg=$cfg}
 
 	<form name="profile_form" id="profile_form" autocomplete="off">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="pass">
 
 		<div class="row">
@@ -24,7 +25,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<label class="control-label">{$lang.label.username}</label>
-							<p class="form-control-static">{$tplData.adminLogged.admin_name}</p>
+							<input type="text" name="admin_name" id="admin_name" class="form-control" readonly value="{$tplData.userRow.user_name}">
 						</div>
 
 						<div class="form-group">
@@ -57,6 +58,7 @@
 
 			{include "include/profile_left.tpl" cfg=$cfg}
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
@@ -79,6 +81,7 @@
 			msg: { id: "msg_admin_pass_confirm", too_short: "{$alert.x020215}", not_match: "{$alert.x020211}" }
 		}
 	};
+
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=profile",
 		btn_text: "{$lang.btn.ok}",

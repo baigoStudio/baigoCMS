@@ -9,10 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入文件操作类
-include_once(BG_PATH_MODEL . "attach.class.php"); //载入上传模型
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
-include_once(BG_PATH_MODEL . "mime.class.php"); //载入上传模型
+include_once(BG_PATH_CLASS . "tpl.class.php");
+include_once(BG_PATH_MODEL . "attach.class.php");
+include_once(BG_PATH_MODEL . "thumb.class.php");
+include_once(BG_PATH_MODEL . "mime.class.php");
 
 /*-------------用户类-------------*/
 class CONTROL_ATTACH {
@@ -26,15 +26,15 @@ class CONTROL_ATTACH {
 	private $mdl_admin;
 
 	function __construct() { //构造函数
-		$this->obj_base           = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base           = $GLOBALS["obj_base"];
 		$this->config             = $this->obj_base->config;
 		$this->config["img_ext"]  = $GLOBALS["img_ext"];
 		$this->adminLogged        = $GLOBALS["adminLogged"];
+		$this->obj_tpl            = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->mdl_attach         = new MODEL_ATTACH(); //设置上传信息对象
-		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
-		$this->mdl_mime           = new MODEL_MIME(); //设置上传信息对象
-		$this->mdl_admin          = new MODEL_ADMIN(); //设置栏目对象
-		$this->obj_tpl            = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->mdl_thumb          = new MODEL_THUMB();
+		$this->mdl_mime           = new MODEL_MIME();
+		$this->mdl_admin          = new MODEL_ADMIN();
 		$this->setUpload();
 		$this->tplData = array(
 			"adminLogged"    => $this->adminLogged,
@@ -42,11 +42,13 @@ class CONTROL_ATTACH {
 		);
 	}
 
-	/*============编辑上传============
-	返回数组
-		attach_id 上传 ID
-		str_alert 提示信息
-	*/
+
+	/**
+	 * ctl_form function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_form() {
 		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"] != 1) {
 			return array(
@@ -82,9 +84,13 @@ class CONTROL_ATTACH {
 		);
 	}
 
-	/*============列出上传信息============
-	返回提示
-	*/
+
+	/**
+	 * ctl_list function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_list() {
 		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"] != 1) {
 			return array(
@@ -153,9 +159,13 @@ class CONTROL_ATTACH {
 		);
 	}
 
-	/*============设置上传参数============
-	无返回
-	*/
+
+	/**
+	 * setUpload function.
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function setUpload() {
 		$this->attachThumb = $this->mdl_thumb->mdl_list(100);
 

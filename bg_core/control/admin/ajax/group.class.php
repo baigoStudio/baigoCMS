@@ -19,8 +19,8 @@ class AJAX_GROUP {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_group      = new MODEL_GROUP(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_group      = new MODEL_GROUP();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
@@ -55,6 +55,12 @@ class AJAX_GROUP {
 	}
 
 
+	/**
+	 * ajax_status function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_status() {
 		if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
 			$this->obj_ajax->halt_alert("x040303");

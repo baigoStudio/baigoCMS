@@ -81,8 +81,7 @@
 	</div>
 
 	<form name="call_form" id="call_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
 		<input type="hidden" name="call_id" value="{$tplData.callRow.call_id}">
 
@@ -293,6 +292,7 @@
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
@@ -346,6 +346,7 @@
 			msg: { id: "msg_call_show_article", too_few: "{$alert.x170216}" }
 		}
 	};
+
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=call",
 		btn_text: "{$lang.btn.ok}",

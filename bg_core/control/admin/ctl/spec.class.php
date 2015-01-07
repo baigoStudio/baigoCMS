@@ -10,8 +10,8 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "spec.class.php"); //载入上传模型
-include_once(BG_PATH_MODEL . "cate.class.php"); //载入文章模型类
+include_once(BG_PATH_MODEL . "spec.class.php");
+include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
 
 /*-------------允许类-------------*/
@@ -22,19 +22,25 @@ class CONTROL_SPEC {
 	public $adminLogged;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->mdl_spec       = new MODEL_SPEC(); //设置上传信息对象
+		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
 		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
 	}
 
 
+	/**
+	 * ctl_select function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_select() {
 		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
 			return array(
@@ -53,7 +59,7 @@ class CONTROL_SPEC {
 		}
 
 		$_arr_specRow = $this->mdl_spec->mdl_read($_num_specId);
-		if ($_arr_specRow["str_alert"] != "y180102") { //UC 中不存在该用户
+		if ($_arr_specRow["str_alert"] != "y180102") {
 			return $_arr_specRow;
 			exit;
 		}
@@ -115,6 +121,12 @@ class CONTROL_SPEC {
 	}
 
 
+	/**
+	 * ctl_form function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_form() {
 		$_num_specId = fn_getSafe($_GET["spec_id"], "int", 0);
 
@@ -126,7 +138,7 @@ class CONTROL_SPEC {
 				exit;
 			}
 			$_arr_specRow = $this->mdl_spec->mdl_read($_num_specId);
-			if ($_arr_specRow["str_alert"] != "y180102") { //UC 中不存在该用户
+			if ($_arr_specRow["str_alert"] != "y180102") {
 				return $_arr_specRow;
 				exit;
 			}
@@ -143,7 +155,7 @@ class CONTROL_SPEC {
 		}
 
 		$_arr_tpl = array(
-			"specRow" => $_arr_specRow, //管理员信息
+			"specRow" => $_arr_specRow,
 		);
 
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);

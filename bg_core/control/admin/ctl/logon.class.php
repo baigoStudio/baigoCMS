@@ -25,17 +25,19 @@ class CONTROL_LOGON {
 
 
 	function __construct() { //构造函数
-		$this->obj_base   = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base   = $GLOBALS["obj_base"];
 		$this->config     = $this->obj_base->config;
 		$this->obj_sso    = new CLASS_SSO(); //SSO
 		$this->mdl_admin  = new MODEL_ADMIN(); //设置管理员对象
 	}
 
-	/*============登录============
-	返回数组
-		admin_id UC ID
-		str_alert 提示信息
-	*/
+
+	/**
+	 * ctl_login function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_login() {
 		$_arr_adminLogin = $this->input_login();
 		if ($_arr_adminLogin["str_alert"] != "ok") {
@@ -82,9 +84,12 @@ class CONTROL_LOGON {
 	}
 
 
-	/*============登录界面============
-	无返回
-	*/
+	/**
+	 * ctl_logon function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_logon() {
 		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$_str_forward     = fn_getSafe($_GET["forward"], "txt", "");
@@ -96,11 +101,16 @@ class CONTROL_LOGON {
 		);
 
 		$this->obj_tpl->tplDisplay("logon.tpl", $_arr_tplData);
+		//print_r($GLOBALS["ssid"]);
 	}
 
-	/*============登出============
-	无返回
-	*/
+
+	/**
+	 * ctl_logout function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ctl_logout() {
 		$_str_forward  = fn_getSafe($_GET["forward"], "txt", "");
 		if (!$_str_forward) {

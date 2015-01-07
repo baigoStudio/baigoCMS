@@ -10,8 +10,8 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_MODEL . "spec.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "article.class.php"); //载入后台用户类
+include_once(BG_PATH_MODEL . "spec.class.php");
+include_once(BG_PATH_MODEL . "article.class.php");
 
 /*-------------用户类-------------*/
 class AJAX_SPEC {
@@ -22,9 +22,9 @@ class AJAX_SPEC {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_spec       = new MODEL_SPEC(); //设置管理员对象
-		$this->mdl_article    = new MODEL_ARTICLE(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_spec       = new MODEL_SPEC();
+		$this->mdl_article    = new MODEL_ARTICLE();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
@@ -116,14 +116,18 @@ class AJAX_SPEC {
 	}
 
 
+	/**
+	 * ajax_list function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_list() {
-		$_act_get         = fn_getSafe($_GET["act_get"], "txt", "");
+		$_str_key         = fn_getSafe($_GET["key"], "txt", "");
 		$_num_perPage     = 10;
-
-		$_num_specCount   = $this->mdl_spec->mdl_count();
+		$_num_specCount   = $this->mdl_spec->mdl_count($_str_key);
 		$_arr_page        = fn_page($_num_specCount, $_num_perPage); //取得分页数据
-		//print_r($_arr_page);
-		$_arr_specRows    = $this->mdl_spec->mdl_list($_num_perPage, $_arr_page["except"]);
+		$_arr_specRows    = $this->mdl_spec->mdl_list($_num_perPage, $_arr_page["except"], $_str_key);
 
 		$_arr_tpl = array(
 			"pageRow"    => $_arr_page,

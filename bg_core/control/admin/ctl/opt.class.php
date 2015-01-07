@@ -10,8 +10,8 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "dir.class.php"); //载入模板类
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
+include_once(BG_PATH_CLASS . "tpl.class.php");
+include_once(BG_PATH_MODEL . "opt.class.php");
 
 /*-------------管理员控制器-------------*/
 class CONTROL_OPT {
@@ -24,12 +24,12 @@ class CONTROL_OPT {
 	private $tplData;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_dir        = new CLASS_DIR(); //初始化目录对象
-		$this->mdl_opt        = new MODEL_OPT(); //设置管理员模型
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->mdl_opt        = new MODEL_OPT();
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);

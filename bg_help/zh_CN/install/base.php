@@ -7,17 +7,17 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">填写说明</div>
 		<div class="panel-body">
-			<h4 class="text-info">名称</h4>
-			<p>请按照自己意愿填写，如：<mark>baigo 用户中心</mark></p>
+			<h4 class="text-info">网站名称</h4>
+			<p>请按照自己意愿填写，如：<mark>baigo Studio</mark></p>
 
-			<h4 class="text-info">域名</h4>
+			<h4 class="text-info">网站域名</h4>
 			<p>请根据实际情况填写，如：<mark>www.domain.com</mark>，默认为当前网站域名。</p>
 
-			<h4 class="text-info">首页 URL</h4>
+			<h4 class="text-info">网站 URL</h4>
 			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前网站 URL，末尾请勿加 <mark>/</mark>。</p>
 
 			<h4 class="text-info">每页显示数</h4>
-			<p>管理后台以及前台页面，在对文章、TAG等进行分页管理的时候，每一页所显示的数量，默认为 30。</p>
+			<p>管理后台以及前台页面，在对文章、TAG 等进行分页管理的时候，每一页所显示的数量，默认为 30。</p>
 
 			<h4 class="text-info">时区</h4>
 			<p>请根据当地实际情况填写，默认为 Etc/GMT+8，即北京时间。</p>

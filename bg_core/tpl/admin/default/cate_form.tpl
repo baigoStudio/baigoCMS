@@ -61,8 +61,7 @@
 	</div>
 
 	<form name="cate_form" id="cate_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" id="act_post" value="submit">
 		<input type="hidden" name="cate_id" value="{$tplData.cateRow.cate_id}">
 
@@ -87,7 +86,7 @@
 						<div class="form-group" id="cate_single">
 							<label class="control-label">
 								{$lang.label.cateContent}
-								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&target=editor&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 									<span class="glyphicon glyphicon-picture"></span>
 									{$lang.href.uploadList}
 								</a>
@@ -310,7 +309,6 @@
 		var obj_validate_form  = $("#cate_form").baigoValidator(opts_validator_form);
 		var obj_submit_form    = $("#cate_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
-			//editor.sync();
 			tinyMCE.triggerSave();
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
@@ -321,7 +319,7 @@
 			show_more();
 		});
 
-		$("input[name='cate_type']").change(function(){
+		$("input[name='cate_type']").click(function(){
 			var _cate_type = $(this).val();
 			cate_type(_cate_type);
 		});

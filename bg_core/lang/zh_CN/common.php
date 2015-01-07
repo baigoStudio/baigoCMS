@@ -72,8 +72,8 @@ return array(
 
 		"pageFirst"       => "首页", //首页
 		"pagePrevList"    => "上十页", //上十页
-		"pagePrev"        => "上一页", //上一页
-		"pageNext"        => "下一页", //下一页
+		"pagePrev"        => "上页", //上一页
+		"pageNext"        => "下页", //下一页
 		"pageNextList"    => "下十页", //下十页
 		"pageLast"        => "末页", //尾页
 
@@ -111,13 +111,13 @@ return array(
 		"admin"           => "管理员", //管理员
 		"adminGroup"      => "隶属群组", //管理组
 		"adminUnknow"     => "未知管理员，建议删除",
-		"profileAllow"    => "个人权限",
 		"nick"            => "昵称",
 
 		"spec"            => "专题",
 		"specName"        => "专题名称",
 		"specContent"     => "专题内容",
 
+		"profileAllow"    => "个人权限",
 		"profileInfo"     => "禁止修改个人信息",
 		"profilePass"     => "禁止修改密码",
 
@@ -193,7 +193,7 @@ return array(
 		"cateFtpUser"     => "FTP 用户名", //FTP 用户名
 		"cateFtpPass"     => "FTP 密码", //FTP 密码
 		"cateFtpPath"     => "FTP 远程路径", //FTP 远程路径
-		"cateAll"         => "全部栏目", //作为一级栏目
+		"cateAll"         => "所有栏目", //作为一级栏目
 
 		"callName"        => "调用名称", //调用类型
 		"callFilter"      => "显示符合以下条件的内容",
@@ -203,7 +203,7 @@ return array(
 		"callAmoutTop"    => "显示前",
 		"callAmoutExcept" => "排除前",
 		"callTrim"        => "显示字数",
-		"callMark"        => "标记（不选则显示全部）",
+		"callMark"        => "标记（不选则显示所有）",
 		"callCate"        => "栏目",
 		"callAttach"      => "是否带图片",
 		"callShow"        => "显示以下项目",
@@ -220,6 +220,7 @@ return array(
 		"attachThumb"     => "缩略图", //缩略图
 		"attachMime"      => "允许下列扩展名",
 		"uploadSucc"      => "上传成功",
+		"attachInfo"      => "详细信息",
 
 		"thumbWidth"      => "最大宽度", //缩略图宽度
 		"thumbHeight"     => "最大高度", //缩略图高度
@@ -256,15 +257,15 @@ return array(
 	),
 
 	"option" => array(
-		"allStatus"       => "全部状态", //全部
-		"allType"         => "全部类型", //全部
-		"allExt"          => "全部类型", //全部类型
-		"allGroup"        => "全部组", //全部组
-		"allCate"         => "全部栏目", //全部栏目
-		"allMark"         => "全部标记", //全部标记
+		"allStatus"       => "所有状态", //所有
+		"allType"         => "所有类型", //所有
+		"allExt"          => "所有类型", //所有类型
+		"allGroup"        => "所有组", //所有组
+		"allCate"         => "所有栏目", //所有栏目
+		"allMark"         => "所有标记", //所有标记
 
-		"allYear"         => "全部年份", //全部年份
-		"allMonth"        => "全部月份", //全部月份
+		"allYear"         => "所有年份", //所有年份
+		"allMonth"        => "所有月份", //所有月份
 
 		"pleaseSelect"    => "请选择", //请选择
 		"asParent"        => "作为一级栏目", //作为一级栏目
@@ -291,11 +292,11 @@ return array(
 	"text" => array(
 		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
 		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
-		"installAdmin"    => "本操作将向 SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有全部的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。",
-		"installSsoAdmin" => "本操作将同时为 CMS 与 SSO 创建管理员，拥有全部的管理权限。请牢记用户名与密码。",
-		"installAuth"     => "本操作将用您输入的 SSO 用户作为管理员，拥有全部的管理权限。您必须输入该用户的用户名和密码才能进行授权。",
+		"installAdmin"    => "本操作将向 SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。",
+		"installSsoAdmin" => "本操作将同时为 CMS 与 SSO 创建管理员，拥有所有的管理权限。请牢记用户名与密码。",
+		"installAuth"     => "本操作将用您输入的 SSO 用户作为管理员，拥有所有的管理权限。您必须输入该用户的用户名和密码才能进行授权。",
 		"x070405"         => "尚未设置允许上传的文件类型，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=mime&act_get=list\" target=\"_top\">点击立刻设置</>",
-		"x110401"         => "尚未创建栏目，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=cate&act_get=form\" target=\"_top\">点击立刻创建</>",
+		"x110401"         => "尚未创建栏目，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=cate&act_get=form\" target=\"_top\">点击立刻创建</a>",
 	),
 
 	"digit"    => array("日", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"),
@@ -312,6 +313,7 @@ return array(
 		"del"         => "永久删除", //删除
 		"complete"    => "完成",
 		"search"      => "搜索", //搜索
+		"searchSpec"  => "搜索专题",
 		"filter"      => "筛选", //筛选
 		"thumb"       => "缩略图",
 		"upload"      => "上传附件",
@@ -325,7 +327,7 @@ return array(
 		"belongAdd"   => "选择",
 		"belongDel"   => "移除",
 		"reloadSpec"  => "重载专题",
-		"installNext" => "下一步",
+		"stepNext"    => "下一步",
 	),
 
 	/*------确认框------*/

@@ -24,7 +24,7 @@ class CONTROL_THUMB {
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -59,6 +59,10 @@ class CONTROL_THUMB {
 
 		if ($_num_thumbId > 0) {
 			$_arr_thumbRow = $this->mdl_thumb->mdl_read($_num_thumbId);
+			if ($_arr_thumbRow != "y090102") {
+				return $_arr_thumbRow;
+				exit;
+			}
 		} else {
 			$_arr_thumbRow = array(
 				"thumb_type" => "ratio",

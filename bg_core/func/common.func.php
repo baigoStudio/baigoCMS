@@ -153,7 +153,7 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 				}
 
 				$_str_return = $_str_tokenSession;
-				setcookie("token_cookie_" . BG_SITE_SSIN, $_str_tokenCookie, time()+300);
+				setcookie("token_cookie_" . BG_SITE_SSIN, $_str_tokenCookie, time() + 300);
 			}
 		break;
 	}
@@ -165,8 +165,8 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 无返回
 */
 function fn_clearCookie() {
-	setcookie("cookie_ui", "", time()-3600);
-	setcookie("cookie_lang", "", time()-3600);
+	setcookie("cookie_ui", "", time() - 3600);
+	setcookie("cookie_lang", "", time() - 3600);
 }
 
 
@@ -474,7 +474,8 @@ function fn_getAttach($_str_content) {
 
 	$_pattern_1        = "/<img.*?src=[\"|']?__baigo__\/" . BG_NAME_ATTACH . "\/.*?[\"|']?\s.*?>/i";
 	$_pattern_2        = "/\sid=[\"|']?baigo_.*?[\"|']?\s/i";
-	$_str_attachTemp   = str_replace(BG_UPLOAD_URL, "__baigo__", $_str_content);
+	$_str_attachTemp   = html_entity_decode($_str_content, ENT_QUOTES, "UTF-8");
+	$_str_attachTemp   = str_replace(BG_UPLOAD_URL, "__baigo__", $_str_attachTemp);
 	$_str_attachTemp   = str_replace("\\", "", $_str_attachTemp);
 
 	//print_r($_pattern_1);

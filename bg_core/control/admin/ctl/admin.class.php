@@ -11,7 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_CLASS . "sso.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "sso.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目模型
 
 /*-------------管理员控制器-------------*/
@@ -28,7 +28,7 @@ class CONTROL_ADMIN {
 	private $tplData;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
@@ -123,7 +123,7 @@ class CONTROL_ADMIN {
 		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_ssoUser, //管理员信息
+			"userRow"    => $_arr_ssoUser,
 			"adminRow"   => $_arr_adminRow, //管理员信息
 			"cateRows"   => $_arr_cateRows, //栏目信息
 		);
@@ -154,12 +154,12 @@ class CONTROL_ADMIN {
 		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
 
 		$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
-		if ($_arr_ssoUser["str_alert"] != "y010102") { //UC 中不存在该用户
+		if ($_arr_ssoUser["str_alert"] != "y010102") {
 			return $_arr_ssoUser;
 			exit;
 		}
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
-		if ($_arr_adminRow["str_alert"] != "y020102") { //UC 中不存在该用户
+		if ($_arr_adminRow["str_alert"] != "y020102") {
 			return $_arr_adminRow;
 			exit;
 		}
@@ -168,7 +168,7 @@ class CONTROL_ADMIN {
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_ssoUser, //管理员信息
+			"userRow"    => $_arr_ssoUser,
 			"adminRow"   => $_arr_adminRow, //管理员信息
 			"groupRow"   => $_arr_groupRow,
 			"cateRows"   => $_arr_cateRows, //栏目信息

@@ -24,6 +24,12 @@
 
 label.control-label > span { color: #c30; margin-left: 10px; }
 
+table tr.cate_2 td { background: #eee; }
+table tr.cate_3 td { background: #ddd; }
+table tr.cate_4 td { background: #ccc; }
+table tr.cate_5 td { background: #bbb; }
+table tr.cate_6 td { background: #aaa; }
+
 .radio_baigo,
 .checkbox_baigo {
   display: block;
@@ -45,4 +51,8 @@ label.control-label > span { color: #c30; margin-left: 10px; }
   display: inline;
   font-weight: normal;
   cursor: pointer;
+}
+
+.list_baigo dd {
+	margin-bottom: 10px;
 }

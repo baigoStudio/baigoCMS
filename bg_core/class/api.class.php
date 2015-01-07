@@ -15,6 +15,7 @@ include_once(BG_PATH_FUNC . "baigocode.func.php"); //载入加密解密函数
 /*-------------API 接口类-------------*/
 class CLASS_API {
 
+
 	/**
 	 * app_chk function.
 	 *

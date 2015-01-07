@@ -7,29 +7,28 @@
 		{else}
 			{$_css_status = "danger"}
 		{/if}
-		<tr>
+		<tr class="cate_{$value.cate_level}">
 			<td class="td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
-			<td class="td_mn">{$value.cate_id}</td>
 			<td>
-				<div>
-					{if $value.cate_level > 1}
-						{for $_i=2 to $value.cate_level}
-							--
-						{/for}
-					{/if}
-					{if $value.cate_name}
-						{$value.cate_name}
-					{else}
-						{$lang.label.noname}
-					{/if}
-				</div>
-				<div>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
-					&nbsp;|&nbsp;
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
-					&nbsp;|&nbsp;
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" data-toggle="modal" data-target="#cate_modal">{$lang.href.order}</a>
-				</div>
+				{if $value.cate_level > 1}
+					{for $_i=2 to $value.cate_level}
+						--
+					{/for}
+				{/if}
+				{$value.cate_id}
+				/
+				{if $value.cate_name}
+					{$value.cate_name}
+				{else}
+					{$lang.label.noname}
+				{/if}
+			</td>
+			<td class="td_bg">
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
+				&nbsp;|&nbsp;
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
+				&nbsp;|&nbsp;
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" data-toggle="modal" data-target="#cate_modal">{$lang.href.order}</a>
 			</td>
 			<td class="td_bg">
 				{if $value.cate_alias}
@@ -107,12 +106,12 @@
 		<div class="clearfix"></div>
 	</div>
 
-	<div class="panel panel-default">
-		<form name="cate_list" id="cate_list" class="form-inline">
+	<form name="cate_list" id="cate_list" class="form-inline">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
-			<input type="hidden" name="token_session" value="{$common.token_session}">
+		<div class="panel panel-default">
 			<div class="table-responsive">
-				<table class="table table-striped table-hover">
+				<table class="table table-hover">
 					<thead>
 						<tr>
 							<th class="td_mn">
@@ -121,8 +120,12 @@
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
-							<th>{$lang.label.cateName}</th>
+							<th>
+								{$lang.label.id}
+								/
+								{$lang.label.cateName}
+							</th>
+							<th class="td_bg"> </th>
 							<th class="td_bg">{$lang.label.cateAlias}</th>
 							<th class="td_sm">{$lang.label.cateType}</th>
 							<th class="td_sm">{$lang.label.status}</th>
@@ -149,8 +152,9 @@
 					</tfoot>
 				</table>
 			</div>
-		</form>
-	</div>
+		</div>
+
+	</form>
 
 	<div class="text-right">
 		{include "include/page.tpl" cfg=$cfg}

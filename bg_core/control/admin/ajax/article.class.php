@@ -11,9 +11,9 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "cateBelong.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "tag.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "tagBelong.class.php"); //载入文章模型类
+include_once(BG_PATH_MODEL . "cateBelong.class.php");
+include_once(BG_PATH_MODEL . "tag.class.php");
+include_once(BG_PATH_MODEL . "tagBelong.class.php");
 
 /*-------------文章类-------------*/
 class AJAX_ARTICLE {
@@ -28,11 +28,11 @@ class AJAX_ARTICLE {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
+		$this->obj_ajax       = new CLASS_AJAX();
 		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
-		$this->mdl_cateBelong = new MODEL_CATE_BELONG(); //设置文章对象
-		$this->mdl_tag        = new MODEL_TAG(); //设置栏目对象
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG(); //设置栏目对象
+		$this->mdl_cateBelong = new MODEL_CATE_BELONG();
+		$this->mdl_tag        = new MODEL_TAG();
+		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
@@ -284,9 +284,13 @@ class AJAX_ARTICLE {
 		$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
 	}
 
-	/*============轻松回收站============
-	返回提示
-	*/
+
+	/**
+	 * ajax_empty function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_empty() {
 		$_arr_articleRow = $this->mdl_article->mdl_empty($this->adminLogged["admin_id"]);
 
@@ -294,6 +298,15 @@ class AJAX_ARTICLE {
 	}
 
 
+	/**
+	 * belong_submit function.
+	 *
+	 * @access private
+	 * @param mixed $_num_articleId
+	 * @param mixed $_arr_cateIds
+	 * @param mixed $_arr_tagIds
+	 * @return void
+	 */
 	private function belong_submit($_num_articleId, $_arr_cateIds, $_arr_tagIds) {
 		$_is_submit = false;
 		if (is_array($_arr_cateIds)) {

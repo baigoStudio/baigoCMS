@@ -314,16 +314,20 @@ class MODEL_ATTACH {
 
 
 	function mdl_url($num_attachId, $arr_thumbRows) {
-		$_arr_attachRow   = $this->mdl_read($num_attachId);
-		$str_attachUrl    = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "." . $_arr_attachRow["attach_ext"];
+		$_arr_attachRow = $this->mdl_read($num_attachId);
+		if ($_arr_attachRow["str_alert"] != "y070102") {
+			return $_arr_attachRow;
+			exit;
+		}
+		$str_attachUrl = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "." . $_arr_attachRow["attach_ext"];
 
 		foreach ($arr_thumbRows as $_key=>$_value) {
-			$_arr_attach["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
+			$_arr_attachRow["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
 		}
 
-		$_arr_attach["attach_url"] = $str_attachUrl;
+		$_arr_attachRow["attach_url"]    = $str_attachUrl;
 
-		return $_arr_attach;
+		return $_arr_attachRow;
 	}
 
 	/**
@@ -369,7 +373,7 @@ class MODEL_ATTACH {
 			$_arr_attach["attach_thumb"][$_key]["thumb_height"] = $_value["thumb_height"];
 			$_arr_attach["attach_thumb"][$_key]["thumb_type"] = $_value["thumb_type"];
 		}
-		
+
 		//print_r($_arr_attach);
 
 		$_arr_attach["attach_url"] = $str_attachUrl;

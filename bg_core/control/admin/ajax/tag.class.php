@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_MODEL . "tag.class.php"); //载入后台用户类
+include_once(BG_PATH_MODEL . "tag.class.php");
 
 /*-------------用户类-------------*/
 class AJAX_TAG {
@@ -21,13 +21,20 @@ class AJAX_TAG {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_tag        = new MODEL_TAG(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_tag        = new MODEL_TAG();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
 	}
 
+
+	/**
+	 * ajax_submit function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_submit() {
 		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
 			$this->obj_ajax->halt_alert("x130303");
@@ -41,6 +48,7 @@ class AJAX_TAG {
 
 		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
 	}
+
 
 	/**
 	 * ajax_status function.
@@ -68,6 +76,7 @@ class AJAX_TAG {
 
 		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
 	}
+
 
 	/**
 	 * ajax_del function.
@@ -109,7 +118,7 @@ class AJAX_TAG {
 			"re" => "ok"
 		);
 
-		echo json_encode($arr_re);
+		exit(json_encode($arr_re));
 	}
 
 
@@ -126,7 +135,7 @@ class AJAX_TAG {
 			$_arr_tagRow[] = $_value["tag_name"];
 		}
 
-		echo json_encode($_arr_tagRow);
+		exit(json_encode($_arr_tagRow));
 	}
 }
 ?>

@@ -11,7 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_CLASS . "sso.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "sso.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目模型
 
 /*-------------管理员控制器-------------*/
@@ -26,7 +26,7 @@ class CONTROL_PROFILE {
 	private $tplData;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
@@ -48,7 +48,7 @@ class CONTROL_PROFILE {
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_userRow, //栏目信息
+			"userRow"    => $_arr_userRow,
 			"cateRows"   => $_arr_cateRows, //栏目信息
 		);
 
@@ -67,7 +67,7 @@ class CONTROL_PROFILE {
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_userRow, //栏目信息
+			"userRow"    => $_arr_userRow,
 			"cateRows"   => $_arr_cateRows, //栏目信息
 		);
 

@@ -44,7 +44,9 @@
 			selector: "textarea.tinymce",
 			language: "{$config.lang}",
 			plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
-			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image"
+			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image",
+			convert_urls: false,
+			remove_script_host: false
 		});
 		</script>
 	{/if}

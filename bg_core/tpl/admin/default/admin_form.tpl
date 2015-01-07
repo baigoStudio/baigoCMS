@@ -1,7 +1,7 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
-	<dl {if $level > 0}class="list_padding"{/if}>
+	<dl class="list_baigo {if $level > 0}list_padding{/if}">
 		{foreach $arr as $value}
 			<dt>{$value.cate_name}</dt>
 
@@ -21,7 +21,7 @@
 				{/if}
 			</dd>
 		{/foreach}
-	</ul>
+	</dl>
 {/function}
 
 {if $tplData.adminRow.admin_id == 0}
@@ -67,8 +67,7 @@
 	</div>
 
 	<form name="admin_form" id="admin_form" autocomplete="off">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
 		<input type="hidden" name="admin_id" value="{$tplData.adminRow.admin_id}">
 
@@ -114,7 +113,7 @@
 						<div class="form-group">
 							<div id="group_admin_nick">
 								<label for="admin_nick" class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
-								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.adminRow.admin_nick}" class="validate form-control">
+								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.userRow.user_nick}" class="validate form-control">
 							</div>
 						</div>
 
@@ -180,6 +179,7 @@
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
@@ -219,6 +219,7 @@
 			msg: { id: "msg_admin_status", too_few: "{$alert.x020213}" }
 		}
 	};
+
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin",
 		btn_text: "{$lang.btn.ok}",

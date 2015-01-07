@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
+include_once(BG_PATH_MODEL . "opt.class.php");
 
 /*-------------管理员控制器-------------*/
 class AJAX_OPT {
@@ -22,7 +22,7 @@ class AJAX_OPT {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //已登录商家信息
 		$this->obj_ajax       = new CLASS_AJAX(); //初始化 AJAX 基对象
-		$this->mdl_opt        = new MODEL_OPT(); //设置管理组模型
+		$this->mdl_opt        = new MODEL_OPT();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}

@@ -15,9 +15,9 @@ if (BG_MODULE_FTP == true) {
 	include_once(BG_PATH_CLASS . "ftp.class.php"); //载入 FTP 类
 }
 include_once(BG_PATH_CLASS . "upload.class.php"); //载入上传类
-include_once(BG_PATH_MODEL . "attach.class.php"); //载入上传模型
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
-include_once(BG_PATH_MODEL . "mime.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "attach.class.php");
+include_once(BG_PATH_MODEL . "thumb.class.php");
+include_once(BG_PATH_MODEL . "mime.class.php");
 
 /*-------------用户类-------------*/
 class AJAX_ATTACH {
@@ -30,20 +30,22 @@ class AJAX_ATTACH {
 
 	function __construct() { //构造函数
 		$this->adminLogged        = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax           = new CLASS_AJAX(); //获取界面类型
-		$this->obj_upload         = new CLASS_UPLOAD(); //获取界面类型
-		$this->mdl_attach         = new MODEL_ATTACH(); //设置管理员对象
-		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
-		$this->mdl_mime           = new MODEL_MIME(); //设置上传信息对象
-		$this->mdl_admin          = new MODEL_ADMIN(); //设置上传信息对象
+		$this->obj_ajax           = new CLASS_AJAX();
+		$this->obj_upload         = new CLASS_UPLOAD();
+		$this->mdl_attach         = new MODEL_ATTACH();
+		$this->mdl_thumb          = new MODEL_THUMB();
+		$this->mdl_mime           = new MODEL_MIME();
+		$this->mdl_admin          = new MODEL_ADMIN();
 		$this->setUpload();
 	}
 
-	/*============添加允许类型============
-	返回数组
-		attach_id 上传 ID
-		str_alert 提示信息
-	*/
+
+	/**
+	 * ajax_submit function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_submit() {
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->show_err($this->adminLogged["str_alert"]);
@@ -91,9 +93,12 @@ class AJAX_ATTACH {
 	}
 
 
-	/*============删除允许类型============
-	返回提示信息
-	*/
+	/**
+	 * ajax_del function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_del() {
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->show_err($this->adminLogged["str_alert"]);
@@ -119,6 +124,12 @@ class AJAX_ATTACH {
 	}
 
 
+	/**
+	 * ajax_list function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	function ajax_list() {
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
@@ -164,6 +175,13 @@ class AJAX_ATTACH {
 	}
 
 
+	/**
+	 * show_err function.
+	 *
+	 * @access private
+	 * @param mixed $str_alert
+	 * @return void
+	 */
 	private function show_err($str_alert) {
 		$_arr_re = array(
 			"str_alert"  => $str_alert,
@@ -175,6 +193,13 @@ class AJAX_ATTACH {
 		exit(json_encode($_arr_re));
 	}
 
+
+	/**
+	 * setUpload function.
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function setUpload() {
 		$this->attachThumb    = $this->mdl_thumb->mdl_list(100);
 		$_arr_mimeRows        = $this->mdl_mime->mdl_list(100);

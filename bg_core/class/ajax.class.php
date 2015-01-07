@@ -21,11 +21,11 @@ class CLASS_AJAX {
 	}
 
 
-	/** 输出错误信息
+	/**
 	 * halt_alert function.
 	 *
 	 * @access public
-	 * @param mixed $str_alert 提示代码
+	 * @param mixed $str_alert
 	 * @return void
 	 */
 	function halt_alert($str_alert) {
@@ -37,12 +37,11 @@ class CLASS_AJAX {
 	}
 
 
-
-	/** 输出信息
+	/**
 	 * halt_re function.
 	 *
 	 * @access public
-	 * @param mixed $str_alert 提示代码
+	 * @param mixed $str_alert
 	 * @return void
 	 */
 	function halt_re($str_alert) {

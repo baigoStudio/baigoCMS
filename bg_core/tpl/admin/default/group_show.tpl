@@ -31,23 +31,21 @@
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.groupAllow}</label>
-						<div class="form-group">
-							<dl>
-								{foreach $adminMod as $key_m=>$value_m}
-									<dt>{$value_m.main.title}</dt>
-									<dd>
-										<ul class="list-inline">
-											{foreach $value_m.allow as $key_s=>$value_s}
-												<li>
-													<span class="glyphicon glyphicon-{if $tplData.groupRow.group_allow[$key_m][$key_s] == 1}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
-													{$value_s}
-												</li>
-											{/foreach}
-										</ul>
-									</dd>
-								{/foreach}
-							</dl>
-						</div>
+						<dl class="list_baigo">
+							{foreach $adminMod as $key_m=>$value_m}
+								<dt>{$value_m.main.title}</dt>
+								<dd>
+									<ul class="list-inline">
+										{foreach $value_m.allow as $key_s=>$value_s}
+											<li>
+												<span class="glyphicon glyphicon-{if $tplData.groupRow.group_allow[$key_m][$key_s] == 1}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+												{$value_s}
+											</li>
+										{/foreach}
+									</ul>
+								</dd>
+							{/foreach}
+						</dl>
 					</div>
 
 					<div class="form-group">

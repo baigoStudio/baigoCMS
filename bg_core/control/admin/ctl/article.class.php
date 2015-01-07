@@ -11,12 +11,12 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "cate.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "cateBelong.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "tag.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "tagBelong.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "mark.class.php"); //载入文章模型类
-include_once(BG_PATH_MODEL . "spec.class.php"); //载入文章模型类
+include_once(BG_PATH_MODEL . "cate.class.php");
+include_once(BG_PATH_MODEL . "cateBelong.class.php");
+include_once(BG_PATH_MODEL . "tag.class.php");
+include_once(BG_PATH_MODEL . "tagBelong.class.php");
+include_once(BG_PATH_MODEL . "mark.class.php");
+include_once(BG_PATH_MODEL . "spec.class.php");
 
 /*-------------文章控制器-------------*/
 class CONTROL_ARTICLE {
@@ -32,15 +32,15 @@ class CONTROL_ARTICLE {
 	private $mdl_admin;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
 		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
 		$this->mdl_cateBelong = new MODEL_CATE_BELONG(); //设置栏目从属对象
-		$this->mdl_tag        = new MODEL_TAG(); //设置栏目对象
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG(); //设置栏目从属对象
+		$this->mdl_tag        = new MODEL_TAG();
+		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_mark       = new MODEL_MARK(); //设置标记对象
 		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
@@ -107,7 +107,7 @@ class CONTROL_ARTICLE {
 		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 		$_arr_markRows = $this->mdl_mark->mdl_list(1000, 0);
 
-		if (!$_arr_cateRows) {
+		if (count($_arr_cateRows) < 1) {
 			return array(
 				"str_alert" => "x110401",
 			);
@@ -182,7 +182,7 @@ class CONTROL_ARTICLE {
 		$_arr_tpl = array(
 			"cateRows"   => $_arr_cateRows, //栏目列表
 			"markRow"    => $_arr_markRow, //标记列表
-			"articleRow" => $_arr_articleRow, //栏目信息
+			"articleRow" => $_arr_articleRow,
 			"tagRows"    => $_arr_tagRows,
 		);
 

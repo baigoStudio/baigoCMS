@@ -54,7 +54,7 @@
 		<div class="col-md-3">
 			<div class="well">
 				<form name="tag_form" id="tag_form">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 					<input type="hidden" name="tag_id" value="{$tplData.tagRow.tag_id}">
 					<input type="hidden" name="act_post" value="submit">
 					{if $tplData.tagRow.tag_id > 0}
@@ -87,9 +87,10 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="panel panel-default">
-				<form name="tag_list" id="tag_list" class="form-inline">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+			<form name="tag_list" id="tag_list" class="form-inline">
+				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+
+				<div class="panel panel-default">
 					<div class="table-responsive">
 						<table class="table table-striped table-hover">
 							<thead>
@@ -153,8 +154,9 @@
 							</tfoot>
 						</table>
 					</div>
-				</form>
-			</div>
+				</div>
+
+			</form>
 		</div>
 	</div>
 

@@ -24,10 +24,10 @@ class AJAX_ADMIN {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->obj_sso        = new CLASS_SSO(); //获取界面类型
-		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
-		$this->mdl_group      = new MODEL_GROUP(); //设置管理员对象
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_sso        = new CLASS_SSO();
+		$this->mdl_admin      = new MODEL_ADMIN();
+		$this->mdl_group      = new MODEL_GROUP();
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}

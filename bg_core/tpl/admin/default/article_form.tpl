@@ -9,6 +9,7 @@
 						{$value.cate_name}
 					</label>
 				</div>
+
 				{if $value.cate_childs}
 					{cate_list arr=$value.cate_childs level=$value.cate_level}
 				{/if}
@@ -63,7 +64,7 @@
 	</div>
 
 	<form name="article_form" id="article_form">
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" id="act_post" value="submit">
 		<input type="hidden" name="article_id" value="{$tplData.articleRow.article_id}">
 
@@ -81,7 +82,7 @@
 						<div class="form-group">
 							<label class="control-label">
 								{$lang.label.articleContent}
-								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&target=editor&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 									<span class="glyphicon glyphicon-picture"></span>
 									{$lang.href.uploadList}
 								</a>
@@ -115,7 +116,7 @@
 							<div class="form-group">
 								<label for="article_excerpt" class="control-label">
 									{$lang.label.articleExcerpt}
-									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&target=editor_excerpt&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
+									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 										<span class="glyphicon glyphicon-picture"></span>
 										{$lang.href.uploadList}
 									</a>
@@ -193,10 +194,8 @@
 						</div>
 					</div>
 
-					<div id="deadline_input">
-						<div class="form-group">
-							<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
-						</div>
+					<div id="deadline_input" class="form-group">
+						<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
 						<p class="help-block">{$lang.label.timeNote}</p>
 					</div>
 
@@ -209,11 +208,20 @@
 							{/if}
 							<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
 						</select>
-						<div id="spec_page"></div>
 					</div>
+
+					<div class="input-group">
+						<input type="text" name="key" id="key" class="form-control" placeholder="{$lang.label.key}">
+						<span class="input-group-btn">
+							<button type="button" id="search" class="btn btn-info">{$lang.btn.searchSpec}</button>
+						</span>
+					</div>
+
+					<div class="form-group" id="spec_page"></div>
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 	<div class="modal fade" id="attach_modal">
@@ -225,38 +233,34 @@
 {include "include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
-	function reload_spec(_page) {
+	function reload_spec(_key, _page) {
 		$("#spec_list").empty();
 		$("#spec_page").empty();
 
-		$.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec&act_get=list&page=" + _page, function(result){
+		$.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec&act_get=list&key=" + _key + "&page=" + _page, function(result){
 
-			_str_appent_page = "<ul class=\"pagination pagination-sm\">";
-				_str_appent_page += "<li";
+			_str_appent_page = "<ul class=\"pager\">";
+				_str_appent_page += "<li class=\"previous";
 				if (result.pageRow.page <= 1) {
-					_str_appent_page += " class=\"disabled\"";
+					_str_appent_page += " disabled";
 				}
-				_str_appent_page += ">";
+				_str_appent_page += "\">";
 					if (result.pageRow.page <= 1) {
-						_str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo;</span>";
+						_str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</span>";
 					} else {
-						_str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page - 1) + ");\" title=\"{$lang.href.pagePrev}\">&laquo;</a>";
+						_str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page - 1) + ");\" title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</a>";
 					}
 				_str_appent_page += "</li>";
 
-				_str_appent_page += "<li>";
-					_str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page) + ");\">{$lang.btn.reloadSpec}</a>";
-				_str_appent_page += "</li>";
-
-				_str_appent_page += "<li";
+				_str_appent_page += "<li class=\"next";
 				if (result.pageRow.page >= result.pageRow.total) {
-					_str_appent_page += " class=\"disabled\"";
+					_str_appent_page += " disabled";
 				}
-				_str_appent_page += ">";
+				_str_appent_page += "\">";
 					if (result.pageRow.page >= result.pageRow.total) {
-						_str_appent_page += "<span title=\"{$lang.href.pageNext}\">&raquo;</span>";
+						_str_appent_page += "<span title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</span>";
 					} else {
-						_str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page + 1) + ");\" title=\"{$lang.href.pageNext}\">&raquo;</a>";
+						_str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page + 1) + ");\" title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</a>";
 					}
 				_str_appent_page += "</li>";
 			_str_appent_page += "</ul>";
@@ -335,7 +339,7 @@
 	}
 
 	$(document).ready(function(){
-		reload_spec(1);
+		reload_spec("", 1);
 		show_deadline();
 		show_more();
 		$("#attach_modal").on("hidden.bs.modal", function() {
@@ -378,6 +382,10 @@
 		$("#tag_add").on("click", function (e) {
 			var _str_tag = $("#article_tag").val();
 			obj_tagMan.tagsManager("pushTag", _str_tag);
+		});
+		$("#search").click(function(){
+			var _key = $("#key").val();
+			reload_spec(_key, 1);
 		});
 	});
 	</script>

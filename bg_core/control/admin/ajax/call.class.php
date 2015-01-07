@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-include_once(BG_PATH_MODEL . "call.class.php"); //载入后台用户类
+include_once(BG_PATH_MODEL . "call.class.php");
 
 /*-------------用户类-------------*/
 class AJAX_CALL {
@@ -20,9 +20,9 @@ class AJAX_CALL {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
-		$this->mdl_call       = new MODEL_CALL(); //设置管理员对象
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
+		$this->obj_ajax       = new CLASS_AJAX();
+		$this->mdl_call       = new MODEL_CALL();
+		if ($this->adminLogged["str_alert"] != "y020102") {
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
 	}

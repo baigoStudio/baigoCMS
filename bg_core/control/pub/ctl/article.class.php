@@ -90,15 +90,11 @@ class CONTROL_ARTICLE {
 
 		}
 
-		if ($this->articleRow["article_attach_id"] > 0) {
-			$_arr_attachThumb                = $this->mdl_thumb->mdl_list(100);
-			$_arr_attachRow                  = $this->mdl_attach->mdl_read($this->articleRow["article_attach_id"]);
-			$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($_arr_attachRow["attach_id"], $_arr_attachThumb);
-		}
+		$_arr_attachThumb                = $this->mdl_thumb->mdl_list(100);
+		$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"], $_arr_attachThumb);
 
 		$_arr_tplData = array(
 			"tagRows"    => $_arr_tagBelongRows,
-			"attachRow"  => $_arr_attachRow,
 		);
 
 		$_arr_tpl = array_merge($this->tplData, $_arr_tplData);

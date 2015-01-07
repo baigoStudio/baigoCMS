@@ -23,8 +23,7 @@
 	</div>
 
 	<form name="opt_form" id="opt_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="base">
 
 		<div class="panel panel-default">
@@ -49,6 +48,7 @@
 
 			</div>
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}

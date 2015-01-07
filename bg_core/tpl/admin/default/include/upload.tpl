@@ -37,7 +37,7 @@
 						{ name: "act_post", value: "submit" }
 					],
 					dataType: "json",
-					url: "{$smarty.const.BG_URL_USER}ajax.php?mod=attach",
+					url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=attach",
 					add: function(e, data) {
 						var goUpload = true;
 						var obj_file = data.files[0];
@@ -73,9 +73,8 @@
 							_str_msg = upload_msg(obj_data.attach_name, "{$lang.label.uploadSucc}");
 							data.context.html(_str_msg);
 							data.context.attr("class", "alert alert-success  alert-dismissible");
-							{if $tplData.target}
-								insertAttach(obj_data.attach_url, obj_data.attach_name, obj_data.attach_id, obj_data.attach_type, obj_data.attach_ext);
-							{/if}
+
+							insertAttach(obj_data.attach_url, obj_data.attach_name, obj_data.attach_id, obj_data.attach_type, obj_data.attach_ext);
 						}
 						setTimeout("$('#attach_uploads').empty();", 5000);
 					},

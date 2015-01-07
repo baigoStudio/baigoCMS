@@ -163,7 +163,7 @@ class MODEL_MIME {
 	}
 
 	function mdl_count() {
-		$_num_count = $this->obj_db->count(BG_DB_TABLE . "admin"); //查询数据
+		$_num_count = $this->obj_db->count(BG_DB_TABLE . "mime"); //查询数据
 		return $_num_count;
 	}
 

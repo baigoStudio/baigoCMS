@@ -43,8 +43,7 @@
 	</div>
 
 	<form name="spec_form" id="spec_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
 		<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 
@@ -62,7 +61,7 @@
 						<div class="form-group">
 							<label class="control-label">
 								{$lang.label.specContent}
-								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&target=editor&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 									<span class="glyphicon glyphicon-picture"></span>
 									{$lang.href.uploadList}
 								</a>
@@ -97,6 +96,7 @@
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 	<div class="modal fade" id="attach_modal">

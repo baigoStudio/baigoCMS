@@ -42,8 +42,7 @@
 	</div>
 
 	<form name="group_form" id="group_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
 		<input type="hidden" name="group_id" value="{$tplData.groupRow.group_id}">
 
@@ -58,39 +57,37 @@
 							</div>
 						</div>
 
-						<div id="groupAdmin">
+						<div id="groupAdmin" class="form-group">
 							<label class="control-label">{$lang.label.groupAllow}<span id="msg_group_allow">*</span></label>
-							<div class="form-group">
-								<div class="checkbox_baigo">
-									<label for="chk_all">
-										<input type="checkbox" id="chk_all" class="first">
-										{$lang.label.all}
-									</label>
-								</div>
-								<dl>
-									{foreach $adminMod as $key_m=>$value_m}
-										<dt>{$value_m.main.title}</dt>
-										<dd>
-											<label for="allow_{$key_m}" class="checkbox-inline">
-												<input type="checkbox" id="allow_{$key_m}" class="chk_all">
-												{$lang.label.all}
+							<dl class="list_baigo">
+								<dd>
+									<div class="checkbox_baigo">
+										<label for="chk_all">
+											<input type="checkbox" id="chk_all" class="first">
+											{$lang.label.all}
+										</label>
+									</div>
+								</dd>
+								{foreach $adminMod as $key_m=>$value_m}
+									<dt>{$value_m.main.title}</dt>
+									<dd>
+										<label for="allow_{$key_m}" class="checkbox-inline">
+											<input type="checkbox" id="allow_{$key_m}" class="chk_all">
+											{$lang.label.all}
+										</label>
+										{foreach $value_m.allow as $key_s=>$value_s}
+											<label for="allow_{$key_m}_{$key_s}" class="checkbox-inline">
+												<input type="checkbox" name="group_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" {if $tplData.groupRow.group_allow[$key_m][$key_s] == 1}checked{/if} class="allow_{$key_m}" group="group_allow">
+												{$value_s}
 											</label>
-											{foreach $value_m.allow as $key_s=>$value_s}
-												<label for="allow_{$key_m}_{$key_s}" class="checkbox-inline">
-													<input type="checkbox" name="group_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" {if $tplData.groupRow.group_allow[$key_m][$key_s] == 1}checked{/if} class="allow_{$key_m}" group="group_allow">
-													{$value_s}
-												</label>
-											{/foreach}
-										</dd>
-									{/foreach}
-								</dl>
-							</div>
+										{/foreach}
+									</dd>
+								{/foreach}
+							</dl>
 						</div>
 
-						<div id="groupUser">
-							<div class="form-group">
-								<label class="control-label">{$lang.label.none}</label>
-							</div>
+						<div id="groupUser" class="form-group">
+							<label class="control-label">{$lang.label.none}</label>
 						</div>
 
 						<div class="form-group">
@@ -138,6 +135,7 @@
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
@@ -166,6 +164,7 @@
 			msg: { id: "msg_group_status", too_few: "{$alert.x040207}" }
 		}
 	};
+
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=group",
 		btn_text: "{$lang.btn.ok}",

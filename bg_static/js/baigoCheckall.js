@@ -1,5 +1,5 @@
 /*
-v0.0.9 jQuery baigoCheckall plugin 表单全选插件
+v0.1.0 jQuery baigoCheckall plugin 表单全选插件
 (c) 2014 baigo studio - http://www.baigo.net/jQueryPlugins/baigoCheckall/
 */
 
@@ -36,8 +36,14 @@ v0.0.9 jQuery baigoCheckall plugin 表单全选插件
 			var _checked     = $(thisForm).find("#" + _child).prop("checked"); //获取父对象的选中状态
 			if(_child_obj){ //如果有子对象
 				_child_obj.each(function(){ //遍历
+					var _disabled = $(this).attr("disabled");
+
 					if(_checked){ //根据父对象的选中状态，设置子对象的选中状态
-						$(this).prop("checked", "checked");
+						if (_disabled){
+							$(this).removeAttr("checked");
+						} else {
+							$(this).prop("checked", "checked");
+						}
 					} else {
 						$(this).removeAttr("checked");
 					}

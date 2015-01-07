@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "mime.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "mime.class.php");
 
 /*-------------允许类-------------*/
 class CONTROL_MIME {
@@ -20,12 +20,12 @@ class CONTROL_MIME {
 	public $adminLogged;
 
 	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
+		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->mdl_mime       = new MODEL_MIME(); //设置上传信息对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]);; //初始化视图对象
-		$this->mime           = include_once(BG_PATH_LANG . $this->config["lang"] . "/mime.php"); //载入类型文件
+		$this->mdl_mime       = new MODEL_MIME();
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$this->mime           = include_once(BG_PATH_LANG . $this->config["lang"] . "/mime.php");
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -65,6 +65,10 @@ class CONTROL_MIME {
 
 		if ($_num_mimeId > 0) {
 			$_arr_mimeRow = $this->mdl_mime->mdl_read($_num_mimeId);
+			if ($_arr_mimeRow != "y080102") {
+				return $_arr_mimeRow;
+				exit;
+			}
 		}
 
 		$_arr_tpl = array(

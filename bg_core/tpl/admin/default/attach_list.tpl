@@ -66,9 +66,10 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="panel panel-default">
-				<form name="attach_list" id="attach_list" class="form-inline">
-					<input type="hidden" name="token_session" value="{$common.token_session}">
+			<form name="attach_list" id="attach_list" class="form-inline">
+				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+
+				<div class="panel panel-default">
 					<div class="table-responsive">
 						<table class="table table-striped table-hover">
 							<thead>
@@ -81,7 +82,7 @@
 									</th>
 									<th class="td_mn">{$lang.label.id}</th>
 									<th class="td_sm">{$lang.label.attachThumb}</th>
-									<th>{$lang.label.attachName}</th>
+									<th>{$lang.label.attachInfo}</th>
 									<th class="td_md">{$lang.label.admin}</th>
 								</tr>
 							</thead>
@@ -129,7 +130,7 @@
 										</td>
 										<td class="td_md">
 											{if $value.adminRow.admin_name}
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&admin_id={$value.attach_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_note}[ {$value.adminRow.admin_note} ]{/if}</a>
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&admin_id={$value.attach_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_nick}[ {$value.adminRow.admin_nick} ]{/if}</a>
 											{else}
 												{$lang.label.unknow}
 											{/if}
@@ -148,8 +149,9 @@
 							</tfoot>
 						</table>
 					</div>
-				</form>
-			</div>
+				</div>
+
+			</form>
 		</div>
 	</div>
 

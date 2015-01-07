@@ -7,7 +7,7 @@
 {include "include/install_head.tpl" cfg=$cfg}
 
 	<form name="instal_form_ssoauto" id="instal_form_ssoauto">
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="ssoAuto">
 
 		<div class="alert alert-warning">
@@ -30,9 +30,9 @@
 	<script type="text/javascript">
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
-		btn_text: "{$lang.btn.installNext}",
+		btn_text: "{$lang.btn.stepNext}",
 		btn_close: "{$lang.btn.close}",
-		btn_url: "{$smarty.const.BG_URL_SSO}install/ctl.php?mod=install&act_get=auto&url={$tplData.url}&path={$tplData.path}"
+		btn_url: "{$smarty.const.BG_URL_SSO}install/ctl.php?mod=install&act_get=auto&url={$tplData.url}&path={$tplData.path}&target=cms"
 	};
 
 	$(document).ready(function(){

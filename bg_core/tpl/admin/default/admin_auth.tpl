@@ -1,10 +1,9 @@
 {* admin_auth.tpl 管理员编辑界面 *}
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
-	<dl {if $level > 0}class="list_padding"{/if}>
+	<dl class="list_baigo {if $level > 0}list_padding{/if}">
 		{foreach $arr as $value}
 			<dt>{$value.cate_name}</dt>
-
 			<dd>
 				<label for="cate_{$value.cate_id}" class="checkbox-inline">
 					<input type="checkbox" id="cate_{$value.cate_id}" class="chk_all">
@@ -21,7 +20,7 @@
 				{/if}
 			</dd>
 		{/foreach}
-	</ul>
+	</dl>
 {/function}
 
 {$cfg = [
@@ -59,8 +58,7 @@
 	</div>
 
 	<form name="admin_form" id="admin_form">
-
-		<input type="hidden" name="token_session" value="{$common.token_session}">
+		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="auth">
 
 		<div class="row">
@@ -136,6 +134,7 @@
 				</div>
 			</div>
 		</div>
+
 	</form>
 
 {include "include/admin_foot.tpl" cfg=$cfg}
@@ -164,6 +163,7 @@
 			msg: { id: "msg_admin_status", too_few: "{$alert.x020213}" }
 		}
 	};
+
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin",
 		btn_text: "{$lang.btn.ok}",
@@ -181,7 +181,6 @@
 		});
 		$("#admin_form").baigoCheckall();
 	})
-
 	</script>
 
 {include "include/html_foot.tpl" cfg=$cfg}
