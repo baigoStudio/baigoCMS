@@ -73,8 +73,9 @@
 							_str_msg = upload_msg(obj_data.attach_name, "{$lang.label.uploadSucc}");
 							data.context.html(_str_msg);
 							data.context.attr("class", "alert alert-success  alert-dismissible");
-
-							insertAttach(obj_data.attach_url, obj_data.attach_name, obj_data.attach_id, obj_data.attach_type, obj_data.attach_ext);
+							{if isset($cfg.js_insert)}
+								insertAttach(obj_data.attach_url, obj_data.attach_name, obj_data.attach_id, obj_data.attach_type, obj_data.attach_ext);
+							{/if}
 						}
 						setTimeout("$('#attach_uploads').empty();", 5000);
 					},

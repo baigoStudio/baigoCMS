@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/search.class.php"); //载入文章类
 
 $ctl_search = new CONTROL_SEARCH();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_searchRow = $ctl_search->ctl_show();
 	break;

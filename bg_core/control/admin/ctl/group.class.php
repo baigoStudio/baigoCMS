@@ -44,7 +44,7 @@ class CONTROL_GROUP {
 			exit;
 		}
 
-		$_num_groupId = fn_getSafe($_GET["group_id"], "int", 0);
+		$_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		if ($_num_groupId == 0) {
 			return array(
@@ -79,7 +79,7 @@ class CONTROL_GROUP {
 	 * @return void
 	 */
 	function ctl_form() {
-		$_num_groupId = fn_getSafe($_GET["group_id"], "int", 0);
+		$_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		if ($_num_groupId > 0) {
 			if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
@@ -101,6 +101,9 @@ class CONTROL_GROUP {
 				exit;
 			}
 			$_arr_groupRow = array(
+				"group_id"      => 0,
+				"group_name"    => "",
+				"group_note"    => "",
 				"group_type"    => "admin",
 				"group_status"  => "enable",
 			);
@@ -135,20 +138,22 @@ class CONTROL_GROUP {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_type    = fn_getSafe($_GET["type"], "txt", "");
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
 			"key"        => $_str_key,
 			"type"       => $_str_type,
+			"status"     => $_str_status,
 		);
 
-		$_num_groupCount  = $this->mdl_group->mdl_count($_str_key, $_str_status);
-		$_arr_page        = fn_page($_num_adminCount); //取得分页数据
+		$_num_groupCount  = $this->mdl_group->mdl_count($_str_key, $_str_type, $_str_status);
+		$_arr_page        = fn_page($_num_groupCount); //取得分页数据
 		$_str_query       = http_build_query($_arr_search);
-		$_arr_groupRows   = $this->mdl_group->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_type);
+		$_arr_groupRows   = $this->mdl_group->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_type, $_str_status);
 
 		$_arr_tpl = array(
 			"query"      => $_str_query,

@@ -57,15 +57,15 @@ class AJAX_ADMIN {
 				$this->obj_ajax->halt_alert($_arr_ssoGet["str_alert"]);
 			}
 
-			$_str_adminPass  = $_POST["admin_pass"];
-			$_arr_ssoEdit    = $this->obj_sso->sso_edit($_arr_adminSubmit["admin_name"], "", $_str_adminPass, $_arr_adminSubmit["admin_mail"]);
+			$_str_adminPass  = fn_post("admin_pass");
+			$_arr_ssoEdit    = $this->obj_sso->sso_edit($_arr_adminSubmit["admin_name"], "", $_str_adminPass, $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
 			$_num_adminId    = $_arr_adminSubmit["admin_id"];
 		} else {
 			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"] != 1) {
 				$this->obj_ajax->halt_alert("x020302");
 			}
 
-			$_arr_adminPass = validateStr($_POST["admin_pass"], 1, 0);
+			$_arr_adminPass = validateStr(fn_post("admin_pass"), 1, 0);
 			switch ($_arr_adminPass["status"]) {
 				case "too_short":
 					$this->obj_ajax->halt_alert("x020210");
@@ -75,7 +75,7 @@ class AJAX_ADMIN {
 					$_str_adminPass = $_arr_adminPass["str"];
 				break;
 			}
-			$_arr_ssoReg = $this->obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $_str_adminPass, $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_note"]);
+			$_arr_ssoReg = $this->obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $_str_adminPass, $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
 			if ($_arr_ssoReg["str_alert"] != "y010101") {
 				$this->obj_ajax->halt_alert($_arr_ssoReg["str_alert"]);
 			}
@@ -138,8 +138,8 @@ class AJAX_ADMIN {
 			$this->obj_ajax->halt_alert("x020305");
 		}
 
-		$_num_adminId = fn_getSafe($_POST["admin_id"], "int", 0);
-		$_num_groupId = fn_getSafe($_POST["group_id"], "int", 0);
+		$_num_adminId = fn_getSafe(fn_post("admin_id"), "int", 0);
+		$_num_groupId = fn_getSafe(fn_post("group_id"), "int", 0);
 
 		//检验用户是否存在
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
@@ -198,7 +198,7 @@ class AJAX_ADMIN {
 			$this->obj_ajax->halt_alert($_arr_adminIds["str_alert"]);
 		}
 
-		$_str_adminStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_adminStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_adminStatus) {
 			$this->obj_ajax->halt_alert("x020213");
 		}
@@ -215,7 +215,7 @@ class AJAX_ADMIN {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_adminName   = fn_getSafe($_GET["admin_name"], "txt", "");
+		$_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
 		$_arr_ssoChk      = $this->obj_sso->sso_chkname($_str_adminName);
 
 		if ($_arr_ssoChk["str_alert"] != "y010205") {
@@ -242,7 +242,7 @@ class AJAX_ADMIN {
 
 
 	function ajax_chkauth() {
-		$_str_adminName   = fn_getSafe($_GET["admin_name"], "txt", "");
+		$_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
 		$_arr_ssoGet      = $this->obj_sso->sso_get($_str_adminName, "user_name");
 
 		if ($_arr_ssoGet["str_alert"] != "y010102") {
@@ -274,8 +274,8 @@ class AJAX_ADMIN {
 	 * @return void
 	 */
 	function ajax_chkmail() {
-		$_str_adminMail   = fn_getSafe($_GET["admin_mail"], "txt", "");
-		$_num_adminId     = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_str_adminMail   = fn_getSafe(fn_get("admin_mail"), "txt", "");
+		$_num_adminId     = fn_getSafe(fn_get("admin_id"), "int", 0);
 		$_arr_ssoChk      = $this->obj_sso->sso_chkmail($_str_adminMail, $_num_adminId);
 		//print_r($_arr_ssoChk);
 

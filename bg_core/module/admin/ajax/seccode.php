@@ -16,7 +16,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/seccode.class.php"); //载入登录�
 $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化模板对象
 $ajax_seccode           = new AJAX_SECCODE();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "chk":
 		$ajax_seccode->ajax_check();
 	break;

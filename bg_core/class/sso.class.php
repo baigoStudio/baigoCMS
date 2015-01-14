@@ -45,13 +45,21 @@ class CLASS_SSO {
 	function sso_admin($str_adminName, $str_adminPass) {
 		$_arr_sso = array(
 			"act_post"   => "add",
-			"admin_name"  => $str_adminName,
-			"admin_pass"  => md5($str_adminPass),
+			"admin_name" => $str_adminName,
+			"admin_pass" => md5($str_adminPass),
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y020101" && $this->arr_result["str_alert"] != "y020103") {
 			return $this->arr_result;
@@ -86,7 +94,15 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010101") {
 			return $this->arr_result; //返回错误信息
@@ -118,7 +134,15 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true);
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010401") {
 			return $this->arr_result; //返回错误信息
@@ -150,7 +174,15 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true);
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010102") {
 			return $this->arr_result; //返回错误信息
@@ -180,6 +212,8 @@ class CLASS_SSO {
 	function sso_edit($str_userName, $str_userPass = "", $str_userPassNew = "", $str_userMail = "", $str_userNick = "", $str_userBy = "user_name", $str_checkPass = false) {
 		if ($str_userPassNew) {
 			$_str_userPassNew = md5($str_userPassNew);
+		} else {
+			$_str_userPassNew = "";
 		}
 
 		$_arr_sso = array(
@@ -196,7 +230,14 @@ class CLASS_SSO {
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
 
-		$this->arr_result = json_decode($_arr_get["ret"], true);
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010103") {
 			return $this->arr_result; //返回错误信息
@@ -225,14 +266,22 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true);
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010205") {
 			return $this->arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode();
+		//$this->sso_decode();
 		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
 
 		return $this->arr_decode;
@@ -256,14 +305,24 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
-		$this->arr_result = json_decode($_arr_get["ret"], true);
+
+		//print_r($_arr_get);
+
+		if (isset($_arr_get["ret"])) {
+			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
+		} else {
+			return array(
+				"str_alert" => "x030110"
+			);
+			exit;
+		}
 
 		if ($this->arr_result["str_alert"] != "y010211") {
 			return $this->arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode();
+		//$this->sso_decode();
 		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
 
 		return $this->arr_decode;

@@ -68,12 +68,14 @@ class MODEL_ARTICLE_PUB {
 			"article_content",
 			"article_top",
 			"article_spec_id",
+			"article_attach_id",
 		);
 
 		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
-		$_arr_articleRow = $_arr_articleRows[0];
 
-		if (!$_arr_articleRow) {
+		if (isset($_arr_articleRows[0])) {
+			$_arr_articleRow = $_arr_articleRows[0];
+		} else {
 			return array(
 				"str_alert" => "x120102",
 			);

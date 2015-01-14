@@ -11,12 +11,11 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //载入全局通用
 include_once(BG_PATH_INC . "is_admin.inc.php"); //载入后台通用
-
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/spec.class.php"); //载入模板类
 
 $ctl_spec = new CONTROL_SPEC(); //初始化设置对象
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "select":
 		$arr_specRow = $ctl_spec->ctl_select();
 		if ($arr_specRow["str_alert"] != "y180102") {

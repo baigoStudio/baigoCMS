@@ -41,7 +41,7 @@ class AJAX_CATE {
 			$this->obj_ajax->halt_alert("x030102");
 		}
 
-		$_num_cateId = fn_getSafe($_POST["cate_id"], "int", 0); //ID
+		$_num_cateId = fn_getSafe(fn_post("cate_id"), "int", 0); //ID
 
 		if ($_num_cateId == 0) {
 			$this->obj_ajax->halt_alert("x110217");
@@ -52,9 +52,9 @@ class AJAX_CATE {
 			$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
 		}
 
-		$_num_parentId    = fn_getSafe($_POST["cate_parent_id"], "int", 0);
-		$_str_orderType   = fn_getSafe($_POST["order_type"], "txt", "order_first");
-		$_num_targetId    = fn_getSafe($_POST["order_target"], "int", 0);
+		$_num_parentId    = fn_getSafe(fn_post("cate_parent_id"), "int", 0);
+		$_str_orderType   = fn_getSafe(fn_post("order_type"), "txt", "order_first");
+		$_num_targetId    = fn_getSafe(fn_post("order_target"), "int", 0);
 		$_arr_cateRow     = $this->mdl_cate->mdl_order($_str_orderType, $_num_cateId, $_num_targetId, $_num_parentId);
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
@@ -106,7 +106,7 @@ class AJAX_CATE {
 			$this->obj_ajax->halt_alert($this->cateIds["str_alert"]);
 		}
 
-		$_str_cateStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_cateStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_cateStatus) {
 			$this->obj_ajax->halt_alert("x110216");
 		}
@@ -146,9 +146,9 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_cateName        = fn_getSafe($_GET["cate_name"], "txt", "");
-		$_num_cateId          = fn_getSafe($_GET["cate_id"], "int", 0);
-		$_num_cateParentId    = fn_getSafe($_GET["cate_parent_id"], "int", 0);
+		$_str_cateName        = fn_getSafe(fn_get("cate_name"), "txt", "");
+		$_num_cateId          = fn_getSafe(fn_get("cate_id"), "int", 0);
+		$_num_cateParentId    = fn_getSafe(fn_get("cate_parent_id"), "int", 0);
 
 		$_arr_cateRow = $this->mdl_cate->mdl_read($_str_cateName, "cate_name", $_num_cateId, $_num_cateParentId);
 
@@ -171,10 +171,10 @@ class AJAX_CATE {
 	 * @return void
 	 */
 	function ajax_chkalias() {
-		$_str_cateAlias       = fn_getSafe($_GET["cate_alias"], "txt", "");
+		$_str_cateAlias       = fn_getSafe(fn_get("cate_alias"), "txt", "");
 		if ($_str_cateAlias) {
-			$_num_cateId          = fn_getSafe($_GET["cate_id"], "int", 0);
-			$_num_cateParentId    = fn_getSafe($_GET["cate_parent_id"], "int", 0);
+			$_num_cateId          = fn_getSafe(fn_get("cate_id"), "int", 0);
+			$_num_cateParentId    = fn_getSafe(fn_get("cate_parent_id"), "int", 0);
 
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_str_cateAlias, "cate_alias", $_num_cateId, $_num_cateParentId);
 

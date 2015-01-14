@@ -11,9 +11,10 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL_ADMIN . "ajax/thumb.class.php"); //载入登录控制器
+
 $ajax_thumb = new AJAX_THUMB();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "submit":
 		$ajax_thumb->ajax_submit();
 	break;
@@ -23,7 +24,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chk":
 				$ajax_thumb->ajax_chk();
 			break;

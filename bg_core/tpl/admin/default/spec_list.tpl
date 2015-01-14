@@ -141,27 +141,11 @@
 		}
 	};
 
-	var opts_validator_form = {
-		spec_name: {
-			length: { min: 1, max: 30 },
-			validate: { type: "ajax", format: "text" },
-			msg: { id: "msg_spec_name", too_short: "{$alert.x180201}", too_long: "{$alert.x180202}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec&act_get=chkname", key: "spec_name", type: "str", attach: "spec_id={$tplData.specRow.spec_id}" }
-		}
-	};
-
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
-		btn_text: "{$lang.btn.ok}",
-		btn_close: "{$lang.btn.close}",
-		btn_url: "{$cfg.str_url}"
-	};
-
-	var opts_submit_form = {
-		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -173,13 +157,6 @@
 		$("#go_submit").click(function(){
 			if (obj_validate_list.validateSubmit()) {
 				obj_submit_list.formSubmit();
-			}
-		});
-		var obj_validate_form = $("#spec_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#spec_form").baigoSubmit(opts_submit_form);
-		$("#spec_add").click(function(){
-			if (obj_validate_form.validateSubmit()) {
-				obj_submit_form.formSubmit();
 			}
 		});
 		$("#spec_list").baigoCheckall();

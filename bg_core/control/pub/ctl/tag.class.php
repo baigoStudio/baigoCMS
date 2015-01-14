@@ -38,7 +38,7 @@ class CONTROL_TAG {
 	 * @return void
 	 */
 	function ctl_show() {
-		$_str_tagName = fn_getSafe($_GET["tag_name"], "txt", "");
+		$_str_tagName = fn_getSafe(fn_get("tag_name"), "txt", "");
 
 		if (!$_str_tagName) {
 			return array(
@@ -131,7 +131,8 @@ class CONTROL_TAG {
 			break;
 
 			case "pstatic":
-				$_str_tagUrl = BG_URL_ROOT . "tag/";
+				$_str_tagUrl        = BG_URL_ROOT . "tag/";
+				$_str_pageAttach    = "";
 			break;
 
 			default:
@@ -153,7 +154,7 @@ class CONTROL_TAG {
 		} else {
 			$this->config["tpl"] = "default";
 		}
-		$_act_get = fn_getSafe($_GET["act_get"], "txt", "");
+		$_act_get = fn_getSafe($GLOBALS["act_get"], "txt", "");
 
 		$this->search = array(
 			"act_get"    => $_act_get,
@@ -162,6 +163,8 @@ class CONTROL_TAG {
 
 		if (BG_VISIT_TYPE == "static") {
 			$this->search["page_ext"] = "." . BG_VISIT_FILE;
+		} else {
+			$this->search["page_ext"] = "";
 		}
 
 		$this->cateRows = $this->mdl_cate->mdl_list(1000);

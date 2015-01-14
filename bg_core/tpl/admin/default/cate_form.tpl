@@ -104,7 +104,7 @@
 						{if $smarty.const.BG_MODULE_GEN &&$smarty.const.BG_MODULE_FTP}
 							<div class="form-group">
 								<label for="more_checkbox" class="checkbox-inline">
-									<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_serv}checked{/if}>
+									<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_host}checked{/if}>
 									{$lang.label.more}
 								</label>
 							</div>
@@ -116,8 +116,8 @@
 								</div>
 
 								<div class="form-group">
-									<label for="cate_ftp_serv" class="control-label">{$lang.label.cateFtpServ}<span id="msg_cate_ftp_serv"></span></label>
-									<input type="text" name="cate_ftp_serv" id="cate_ftp_serv" value="{$tplData.cateRow.cate_ftp_serv}" class="form-control">
+									<label for="cate_ftp_host" class="control-label">{$lang.label.cateFtpServ}<span id="msg_cate_ftp_host"></span></label>
+									<input type="text" name="cate_ftp_host" id="cate_ftp_host" value="{$tplData.cateRow.cate_ftp_host}" class="form-control">
 								</div>
 
 								<div class="form-group">

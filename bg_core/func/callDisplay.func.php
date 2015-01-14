@@ -13,26 +13,30 @@ function fn_callDisplay($arr_call) {
 	$_obj_call     = new CLASS_CALL_DISPLAY();
 	$_arr_callRow  = $_obj_call->display_init($arr_call["call_id"]); //读取调用信息
 
-	echo("<ul id=\"call_" . $_arr_callRow["call_id"] . "\" class=\"call " . $_arr_callRow["call_css"] . "\">" . PHP_EOL);
+	if ($_arr_callRow["str_alert"] == "y170102" && $_arr_callRow["call_status"] == "enable") {
 
-		switch ($_arr_callRow["call_type"]) {
-			//栏目列表
-			case "cate":
-				$_obj_call->display_cate();
-			break;
+		echo("<ul id=\"call_" . $_arr_callRow["call_id"] . "\" class=\"call " . $_arr_callRow["call_css"] . "\">" . PHP_EOL);
 
-			//TAG 列表
-			case "tag":
-				$_obj_call->display_tag();
-			break;
+			switch ($_arr_callRow["call_type"]) {
+				//栏目列表
+				case "cate":
+					$_obj_call->display_cate();
+				break;
 
-			//文章列表
-			default:
-				$_obj_call->display_article();
-			break;
-		}
+				//TAG 列表
+				case "tag":
+					$_obj_call->display_tag();
+				break;
 
-	echo("</ul>" . PHP_EOL);
+				//文章列表
+				default:
+					$_obj_call->display_article();
+				break;
+			}
+
+		echo("</ul>" . PHP_EOL);
+
+	}
 }
 
 class CLASS_CALL_DISPLAY {

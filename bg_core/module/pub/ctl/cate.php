@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/cate.class.php"); //载入文章类
 
 $ctl_cate = new CONTROL_CATE();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_cateRow = $ctl_cate->ctl_show();
 		if ($arr_cateRow["str_alert"] != "y110102") {

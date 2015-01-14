@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/admin.class.php"); //载入登录控�
 
 $ajax_admin = new AJAX_ADMIN();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "toGroup":
 		$ajax_admin->ajax_toGroup();
 	break;
@@ -37,7 +37,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chkname":
 				$ajax_admin->ajax_chkname();
 			break;

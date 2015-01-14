@@ -1,6 +1,6 @@
 {* tag_list.tpl TAG 列表 *}
 {$cfg = [
-	title      => $tplData.cateRow.cate_name,
+	title      => "TAG",
 	str_url    => "{$tplData.search.urlRow.tag_url}{$tplData.search.urlRow.page_attach}",
 	page_ext   => $tplData.search.page_ext
 ]}

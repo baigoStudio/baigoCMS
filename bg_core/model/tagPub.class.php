@@ -66,9 +66,10 @@ class MODEL_TAG_PUB {
 		}
 
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_tagRow  = $_arr_tagRows[0];
 
-		if (!$_arr_tagRow) {
+		if (isset($_arr_tagRows[0])) {
+			$_arr_tagRow  = $_arr_tagRows[0];
+		} else {
 			return array(
 				"str_alert" => "x130102", //不存在记录
 			);

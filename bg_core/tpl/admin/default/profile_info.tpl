@@ -7,7 +7,7 @@
 				<ul class="list-inline">
 					{foreach $lang.allow as $key_s=>$value_s}
 						<li>
-							<span class="glyphicon glyphicon-{if $tplData.adminLogged.admin_allow_cate[$value.cate_id][$key_s] == 1 || $tplData.adminLogged.groupRow.group_allow.article[$key_s]}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+							<span class="glyphicon glyphicon-{if $tplData.adminLogged.admin_allow_cate[$value.cate_id][$key_s] == 1 || isset($tplData.adminLogged.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
 							{$value_s}
 						</li>
 					{/foreach}

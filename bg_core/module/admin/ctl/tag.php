@@ -11,12 +11,11 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //载入全局通用
 include_once(BG_PATH_INC . "is_admin.inc.php"); //载入后台通用
-
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/tag.class.php"); //载入模板类
 
 $ctl_tag = new CONTROL_TAG(); //初始化设置对象
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_tagRow = $ctl_tag->ctl_list();
 		if ($arr_tagRow["str_alert"] != "y130301") {

@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/call.class.php"); //载入模板类
 
 $ajax_call = new AJAX_CALL();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "submit":
 		$ajax_call->ajax_submit();
 	break;
@@ -24,7 +24,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chkname":
 				$ajax_call->ajax_chkname();
 			break;

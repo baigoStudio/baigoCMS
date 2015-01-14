@@ -26,9 +26,11 @@
 				<span class="glyphicon glyphicon-tags"></span>
 				Tags:
 			</li>
-			{foreach $value.tagRows as $tag_value}
-				<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
-			{/foreach}
+			{if isset($value.tagRows)}
+				{foreach $value.tagRows as $tag_value}
+					<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
+				{/foreach}
+			{/if}
 		</ul>
 	{/foreach}
 

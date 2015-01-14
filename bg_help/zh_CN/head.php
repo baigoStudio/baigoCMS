@@ -20,10 +20,10 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li <?php if ($_str_mod == "install") { ?>class="active"<?php } ?>>
+							<li<?php if ($_str_mod == "install") { ?> class="active"<?php } ?>>
 								<a href="./?lang=zh_CN&mod=install">安装</a>
 							</li>
-							<li <?php if ($_str_mod == "upgrade") { ?>class="active"<?php } ?>>
+							<li<?php if ($_str_mod == "upgrade") { ?> class="active"<?php } ?>>
 								<a href="./?lang=zh_CN&mod=upgrade">升级</a>
 							</li>
 						</ul>

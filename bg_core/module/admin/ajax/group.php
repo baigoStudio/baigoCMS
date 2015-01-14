@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/group.class.php"); //载入模板类
 
 $ajax_group = new AJAX_GROUP();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "submit":
 		$ajax_group->ajax_submit();
 	break;
@@ -29,7 +29,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chkname":
 				$ajax_group->ajax_chkname();
 			break;

@@ -96,13 +96,13 @@ class CLASS_API {
 	 */
 	function app_get($str_method = "get", $chk_token = false) {
 		if ($str_method == "act_post") {
-			$num_appId       = $_POST["app_id"];
-			$str_appKey      = $_POST["app_key"];
-			$str_appToken    = $_POST["app_token"];
+			$num_appId       = fn_post("app_id");
+			$str_appKey      = fn_post("app_key");
+			$str_appToken    = fn_post("app_token");
 		} else {
-			$num_appId       = $_GET["app_id"];
-			$str_appKey      = $_GET["app_key"];
-			$str_appToken    = $_GET["app_token"];
+			$num_appId       = fn_get("app_id");
+			$str_appKey      = fn_get("app_key");
+			$str_appToken    = fn_get("app_token");
 		}
 
 		$_arr_appId = validateStr($num_appId, 1, 0, "str", "int");

@@ -45,27 +45,30 @@ class CONTROL_THUMB {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_thumbId = fn_getSafe($_GET["thumb_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_num_thumbId = fn_getSafe(fn_get("thumb_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
 		);
 
 		$_num_thumbCount  = $this->mdl_thumb->mdl_count();
-		$_arr_page        = fn_page($_num_adminCount); //取得分页数据
+		$_arr_page        = fn_page($_num_thumbCount); //取得分页数据
 		$_str_query       = http_build_query($_arr_search);
 		$_arr_thumbRows   = $this->mdl_thumb->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"]);
 
 		if ($_num_thumbId > 0) {
 			$_arr_thumbRow = $this->mdl_thumb->mdl_read($_num_thumbId);
-			if ($_arr_thumbRow != "y090102") {
+			if ($_arr_thumbRow["str_alert"] != "y090102") {
 				return $_arr_thumbRow;
 				exit;
 			}
 		} else {
 			$_arr_thumbRow = array(
-				"thumb_type" => "ratio",
+				"thumb_id"      => 0,
+				"thumb_type"    => "ratio",
+				"thumb_width"   => "",
+				"thumb_height"  => "",
 			);
 		}
 

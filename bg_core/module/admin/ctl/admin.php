@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/admin.class.php"); //载入用户类
 
 $ctl_admin = new CONTROL_ADMIN();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "toGroup":
 		$arr_adminRow = $ctl_admin->ctl_toGroup();
 		if ($arr_adminRow["str_alert"] != "y020302") {

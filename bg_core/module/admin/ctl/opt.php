@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/opt.class.php"); //载入栏目控制�
 
 $ctl_opt = new CONTROL_OPT(); //初始化设置对象
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "upload":
 		$arr_optRow = $ctl_opt->ctl_upload();
 		if ($arr_optRow["str_alert"] != "y060302") {

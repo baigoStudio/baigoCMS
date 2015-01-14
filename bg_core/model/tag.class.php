@@ -168,9 +168,10 @@ class MODEL_TAG {
 		}
 
 		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_tagRow  = $_arr_tagRows[0];
 
-		if (!$_arr_tagRow) {
+		if (isset($_arr_tagRows[0])) {
+			$_arr_tagRow  = $_arr_tagRows[0];
+		} else {
 			return array(
 				"str_alert" => "x130102", //不存在记录
 			);
@@ -306,7 +307,7 @@ class MODEL_TAG {
 			exit;
 		}
 
-		$this->tagSubmit["tag_id"] = fn_getSafe($_POST["tag_id"], "int", 0);
+		$this->tagSubmit["tag_id"] = fn_getSafe(fn_post("tag_id"), "int", 0);
 
 		if ($this->tagSubmit["tag_id"] > 0) {
 			$_arr_tagRow = $this->mdl_read($this->tagSubmit["tag_id"]);
@@ -316,7 +317,7 @@ class MODEL_TAG {
 			}
 		}
 
-		$_arr_tagName = validateStr($_POST["tag_name"], 1, 30);
+		$_arr_tagName = validateStr(fn_post("tag_name"), 1, 30);
 		switch ($_arr_tagName["status"]) {
 			case "too_short":
 				return array(
@@ -345,7 +346,7 @@ class MODEL_TAG {
 			exit;
 		}
 
-		$_arr_tagStatus = validateStr($_POST["tag_status"], 1, 0);
+		$_arr_tagStatus = validateStr(fn_post("tag_status"), 1, 0);
 		switch ($_arr_tagStatus["status"]) {
 			case "too_short":
 				return array(
@@ -378,7 +379,7 @@ class MODEL_TAG {
 			exit;
 		}
 
-		$_arr_tagIds = $_POST["tag_id"];
+		$_arr_tagIds = fn_post("tag_id");
 
 		if ($_arr_tagIds) {
 			foreach ($_arr_tagIds as $_key=>$_value) {
@@ -406,7 +407,8 @@ class MODEL_TAG {
 			break;
 
 			case "pstatic":
-				$_str_tagUrl = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
+				$_str_tagUrl        = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
+				$_str_pageAttach    = "";
 			break;
 
 			default:

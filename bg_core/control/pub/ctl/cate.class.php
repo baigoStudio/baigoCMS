@@ -115,8 +115,8 @@ class CONTROL_CATE {
 	 * @return void
 	 */
 	private function cate_init() {
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_cateId  = fn_getSafe($_GET["cate_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_num_cateId  = fn_getSafe(fn_get("cate_id"), "int", 0);
 
 		$this->search = array(
 			"act_get"    => $_act_get,
@@ -125,6 +125,8 @@ class CONTROL_CATE {
 
 		if (BG_VISIT_TYPE == "static") {
 			$this->search["page_ext"] = "." . BG_VISIT_FILE;
+		} else {
+			$this->search["page_ext"] = "";
 		}
 
 		if(defined("BG_SITE_TPL")) {

@@ -143,9 +143,10 @@ class MODEL_SPEC {
 		}
 
 		$_arr_specRows = $this->obj_db->select_array(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_specRow = $_arr_specRows[0];
 
-		if (!$_arr_specRow) {
+		if (isset($_arr_specRows[0])) {
+			$_arr_specRow = $_arr_specRows[0];
+		} else {
 			return array(
 				"str_alert" => "x180102", //不存在记录
 			);
@@ -209,7 +210,7 @@ class MODEL_SPEC {
 		}
 
 		$_arr_specRows = $this->obj_db->select_array(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere . " ORDER BY spec_id DESC", $num_no, $num_except);
-		
+
 		foreach ($_arr_specRows as $_key=>$_value) {
 			$_arr_specRows[$_key]["urlRow"] = $this->url_process($_value);
 		}
@@ -272,7 +273,7 @@ class MODEL_SPEC {
 			exit;
 		}
 
-		$this->specSubmit["spec_id"] = fn_getSafe($_POST["spec_id"], "int", 0);
+		$this->specSubmit["spec_id"] = fn_getSafe(fn_post("spec_id"), "int", 0);
 
 		if ($this->specSubmit["spec_id"] > 0) {
 			$_arr_specRow = $this->mdl_read($this->specSubmit["spec_id"]);
@@ -282,7 +283,7 @@ class MODEL_SPEC {
 			}
 		}
 
-		$_arr_specName = validateStr($_POST["spec_name"], 1, 300);
+		$_arr_specName = validateStr(fn_post("spec_name"), 1, 300);
 		switch ($_arr_specName["status"]) {
 			case "too_short":
 				return array(
@@ -303,7 +304,7 @@ class MODEL_SPEC {
 			break;
 		}
 
-		$_arr_specStatus = validateStr($_POST["spec_status"], 1, 0);
+		$_arr_specStatus = validateStr(fn_post("spec_status"), 1, 0);
 		switch ($_arr_specStatus["status"]) {
 			case "too_short":
 				return array(
@@ -317,7 +318,7 @@ class MODEL_SPEC {
 			break;
 		}
 
-		$_arr_specContent = validateStr($_POST["spec_content"], 0, 3000);
+		$_arr_specContent = validateStr(fn_post("spec_content"), 0, 3000);
 		switch ($_arr_specContent["status"]) {
 			case "too_long":
 				return array(
@@ -351,7 +352,7 @@ class MODEL_SPEC {
 			exit;
 		}
 
-		$_arr_specIds = $_POST["spec_id"];
+		$_arr_specIds = fn_post("spec_id");
 
 		if ($_arr_specIds) {
 			foreach ($_arr_specIds as $_key=>$_value) {
@@ -379,7 +380,8 @@ class MODEL_SPEC {
 			break;
 
 			case "pstatic":
-				$_str_specUrl = BG_URL_ROOT . "spec/" . $_arr_specRow["spec_id"] . "/";
+				$_str_specUrl       = BG_URL_ROOT . "spec/" . $_arr_specRow["spec_id"] . "/";
+				$_str_pageAttach    = "";
 			break;
 
 			default:

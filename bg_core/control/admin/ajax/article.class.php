@@ -151,7 +151,7 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
 		}
 
-		$_str_articleStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_articleStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_articleStatus) {
 			$this->obj_ajax->halt_alert("x120208");
 		}
@@ -194,7 +194,7 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
 		}
 
-		$_str_articleStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_articleStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_articleStatus) {
 			$this->obj_ajax->halt_alert("x120208");
 		}
@@ -229,7 +229,7 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
 		}
 
-		$_str_articleBox = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_articleBox = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_articleBox) {
 			$this->obj_ajax->halt_alert("x120208");
 		}

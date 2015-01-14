@@ -64,7 +64,7 @@ class AJAX_SPEC {
 			$this->obj_ajax->halt_alert($_arr_specIds["str_alert"]);
 		}
 
-		$_str_specStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_specStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_specStatus) {
 			$this->obj_ajax->halt_alert("x020213");
 		}
@@ -85,8 +85,8 @@ class AJAX_SPEC {
 			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
 		}
 
-		$_str_act     = fn_getSafe($_POST["act_post"], "txt", "");
-		$_nun_specId  = fn_getSafe($_POST["spec_id"], "int", 0);
+		$_str_act     = fn_getSafe($GLOBALS["act_post"], "txt", "");
+		$_nun_specId  = fn_getSafe(fn_post("spec_id"), "int", 0);
 
 		$_arr_articleRow = $this->mdl_article->mdl_toSpec($_str_act, $_nun_specId);
 
@@ -123,7 +123,7 @@ class AJAX_SPEC {
 	 * @return void
 	 */
 	function ajax_list() {
-		$_str_key         = fn_getSafe($_GET["key"], "txt", "");
+		$_str_key         = fn_getSafe(fn_get("key"), "txt", "");
 		$_num_perPage     = 10;
 		$_num_specCount   = $this->mdl_spec->mdl_count($_str_key);
 		$_arr_page        = fn_page($_num_specCount, $_num_perPage); //取得分页数据

@@ -1,6 +1,6 @@
 {* alert.tpl 提示信息 *}
 {$cfg = [
-	title  => $tplData.cateRow.cate_name
+	title  => "提示信息"
 ]}
 
 {include "include/pub_head.tpl" cfg=$cfg}

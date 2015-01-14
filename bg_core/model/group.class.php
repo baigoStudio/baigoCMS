@@ -148,16 +148,22 @@ class MODEL_GROUP {
 		}
 
 		$_arr_groupRows = $this->obj_db->select_array(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_groupRow = $_arr_groupRows[0];
 
-		if (!$_arr_groupRow) {
+		if (isset($_arr_groupRows[0])) {
+			$_arr_groupRow = $_arr_groupRows[0];
+		} else {
 			return array(
 				"str_alert" => "x040102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_groupRow["group_allow"] = json_decode($_arr_groupRow["group_allow"], true); //json解码
+		if (isset($_arr_groupRow["group_allow"])) {
+			$_arr_groupRow["group_allow"] = json_decode($_arr_groupRow["group_allow"], true); //json解码
+		} else {
+			$_arr_groupRow["group_allow"] = array();
+		}
+
 		$_arr_groupRow["str_alert"]   = "y040102";
 
 		return $_arr_groupRow;
@@ -293,7 +299,7 @@ class MODEL_GROUP {
 			exit;
 		}
 
-		$this->groupSubmit["group_id"] = fn_getSafe($_POST["group_id"], "int", 0);
+		$this->groupSubmit["group_id"] = fn_getSafe(fn_post("group_id"), "int", 0);
 
 		if ($this->groupSubmit["group_id"]) {
 			$_arr_groupRow = $this->mdl_read($this->groupSubmit["group_id"]);
@@ -302,7 +308,7 @@ class MODEL_GROUP {
 			}
 		}
 
-		$_arr_groupName = validateStr($_POST["group_name"], 1, 30);
+		$_arr_groupName = validateStr(fn_post("group_name"), 1, 30);
 		switch ($_arr_groupName["status"]) {
 			case "too_short":
 				return array(
@@ -324,7 +330,7 @@ class MODEL_GROUP {
 
 		}
 
-		$_arr_groupNote = validateStr($_POST["group_note"], 0, 30);
+		$_arr_groupNote = validateStr(fn_post("group_note"), 0, 30);
 		switch ($_arr_groupNote["status"]) {
 			case "too_long":
 				return array(
@@ -338,7 +344,7 @@ class MODEL_GROUP {
 			break;
 		}
 
-		$_arr_groupType = validateStr($_POST["group_type"], 1, 0);
+		$_arr_groupType = validateStr(fn_post("group_type"), 1, 0);
 		switch ($_arr_groupType["status"]) {
 			case "too_short":
 				return array(
@@ -352,7 +358,7 @@ class MODEL_GROUP {
 			break;
 		}
 
-		$_arr_groupStatus = validateStr($_POST["group_status"], 1, 0);
+		$_arr_groupStatus = validateStr(fn_post("group_status"), 1, 0);
 		switch ($_arr_groupStatus["status"]) {
 			case "too_short":
 				return array(
@@ -366,7 +372,7 @@ class MODEL_GROUP {
 			break;
 		}
 
-		$this->groupSubmit["group_allow"] = json_encode($_POST["group_allow"]);
+		$this->groupSubmit["group_allow"] = json_encode(fn_post("group_allow"));
 		$this->groupSubmit["str_alert"]   = "ok";
 
 		return $this->groupSubmit;
@@ -387,7 +393,7 @@ class MODEL_GROUP {
 			exit;
 		}
 
-		$_arr_groupIds = $_POST["group_id"];
+		$_arr_groupIds = fn_post("group_id");
 
 		if ($_arr_groupIds) {
 			foreach ($_arr_groupIds as $_key=>$_value) {

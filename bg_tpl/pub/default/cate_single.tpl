@@ -1,7 +1,7 @@
 {* cate_single.tpl 单页栏目 *}
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
-	str_url    => "{$tplData.cateRow.urlRow.cate_url}"
+	str_url    => "{$tplData.cateRow.urlRow.cate_url}{$tplData.cateRow.urlRow.page_attach}"
 ]}
 
 {include "include/pub_head.tpl" cfg=$cfg}

@@ -67,7 +67,7 @@ class AJAX_TAG {
 			$this->obj_ajax->halt_alert($_arr_tagIds["str_alert"]);
 		}
 
-		$_str_tagStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_tagStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_tagStatus) {
 			$this->obj_ajax->halt_alert("x130204");
 		}
@@ -107,8 +107,8 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_tagName = fn_getSafe($_GET["tag_name"], "txt", "");
-		$_num_tagId   = fn_getSafe($_GET["tag_id"], "int", 0);
+		$_str_tagName = fn_getSafe(fn_get("tag_name"), "txt", "");
+		$_num_tagId   = fn_getSafe(fn_get("tag_id"), "int", 0);
 		$_arr_tagRow  = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
 		if ($_arr_tagRow["str_alert"] == "y130102") {
 			$this->obj_ajax->halt_re("x130203");
@@ -129,7 +129,7 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_list() {
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_arr_tagRows = $this->mdl_tag->mdl_list(1000, 0, $_str_key, "show");
 		foreach ($_arr_tagRows as $_value) {
 			$_arr_tagRow[] = $_value["tag_name"];

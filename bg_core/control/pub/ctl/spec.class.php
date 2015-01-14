@@ -41,8 +41,8 @@ class CONTROL_SPEC {
 	 * @return void
 	 */
 	function ctl_show() {
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_specId  = fn_getSafe($_GET["spec_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_num_specId  = fn_getSafe(fn_get("spec_id"), "int", 0);
 
 		if ($_num_specId == 0) {
 			return array(
@@ -132,7 +132,8 @@ class CONTROL_SPEC {
 			break;
 
 			case "pstatic":
-				$_str_specUrl = BG_URL_ROOT . "spec/";
+				$_str_specUrl       = BG_URL_ROOT . "spec/";
+				$_str_pageAttach    = "";
 			break;
 
 			default:
@@ -154,7 +155,7 @@ class CONTROL_SPEC {
 		} else {
 			$this->config["tpl"] = "default";
 		}
-		$_act_get = fn_getSafe($_GET["act_get"], "txt", "");
+		$_act_get = fn_getSafe($GLOBALS["act_get"], "txt", "");
 
 		$_arr_urlRow = $this->url_process();
 
@@ -165,6 +166,8 @@ class CONTROL_SPEC {
 
 		if (BG_VISIT_TYPE == "static") {
 			$this->search["page_ext"] = "." . BG_VISIT_FILE;
+		} else {
+			$this->search["page_ext"] = "";
 		}
 
 		$this->cateRows = $this->mdl_cate->mdl_list(1000);

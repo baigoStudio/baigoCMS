@@ -13,7 +13,7 @@ include_once(BG_PATH_INC . "common_pub.inc.php"); //载入后台通用
 include_once(BG_PATH_CONTROL_PUB . "ctl/spec.class.php"); //载入文章类
 
 $ctl_spec = new CONTROL_SPEC();
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_specRow = $ctl_spec->ctl_show();
 		if ($arr_specRow["str_alert"] != "y180102") {

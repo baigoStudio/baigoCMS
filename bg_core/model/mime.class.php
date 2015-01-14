@@ -130,9 +130,10 @@ class MODEL_MIME {
 		}
 
 		$_arr_mimeRows = $this->obj_db->select_array(BG_DB_TABLE . "mime",  $_arr_mimeSelect, $_str_sqlWhere, 1, 0); //查询数据
-		$_arr_mimeRow = $_arr_mimeRows[0];
 
-		if (!$_arr_mimeRow) {
+		if (isset($_arr_mimeRows[0])) {
+			$_arr_mimeRow = $_arr_mimeRows[0];
+		} else {
 			return array(
 				"str_alert" => "x080102", //不存在记录
 			);
@@ -199,7 +200,7 @@ class MODEL_MIME {
 			exit;
 		}
 
-		$this->mimeSubmit["mime_id"] = fn_getSafe($_POST["mime_id"], "int", 0);
+		$this->mimeSubmit["mime_id"] = fn_getSafe(fn_post("mime_id"), "int", 0);
 
 		if ($this->mimeSubmit["mime_id"] > 0) {
 			$_arr_mimeRow = $this->mdl_read($this->mimeSubmit["mime_id"]);
@@ -209,7 +210,7 @@ class MODEL_MIME {
 			}
 		}
 
-		$_arr_mimeName = validateStr($_POST["mime_name"], 1, 300);
+		$_arr_mimeName = validateStr(fn_post("mime_name"), 1, 300);
 		switch ($_arr_mimeName["status"]) {
 			case "too_short":
 				return array(
@@ -238,7 +239,7 @@ class MODEL_MIME {
 			exit;
 		}
 
-		$_arr_mimeExt = validateStr($_POST["mime_ext"], 1, 10);
+		$_arr_mimeExt = validateStr(fn_post("mime_ext"), 1, 10);
 		switch ($_arr_mimeExt["status"]) {
 			case "too_short":
 				return array(
@@ -260,7 +261,7 @@ class MODEL_MIME {
 
 		}
 
-		$_arr_mimeNote = validateStr($_POST["mime_note"], 0, 300);
+		$_arr_mimeNote = validateStr(fn_post("mime_note"), 0, 300);
 		switch ($_arr_mimeNote["status"]) {
 			case "too_long":
 				return array(
@@ -294,7 +295,7 @@ class MODEL_MIME {
 			exit;
 		}
 
-		$_arr_mimeIds = $_POST["mime_id"];
+		$_arr_mimeIds = fn_post("mime_id");
 
 		if ($_arr_mimeIds) {
 			foreach ($_arr_mimeIds as $_key=>$_value) {

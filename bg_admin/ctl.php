@@ -7,9 +7,9 @@ include_once("../bg_config/config.inc.php"); //载入配置
 
 $arr_mod = array("article", "tag", "mark", "spec", "cate", "attach", "mime", "thumb", "call", "gen", "user", "admin", "group", "opt", "alert", "profile", "logon", "seccode");
 
-$mod = $_GET["mod"];
-
-if (!$mod) {
+if (isset($_GET["mod"])) {
+	$mod = $_GET["mod"];
+} else {
 	$mod = $arr_mod[0];
 }
 

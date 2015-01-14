@@ -114,8 +114,8 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	private function article_init() {
-		$_act_get         = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_articleId   = fn_getSafe($_GET["article_id"], "int", 0);
+		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_num_articleId   = fn_getSafe(fn_get("article_id"), "int", 0);
 
 		$this->searchRow = array(
 			"act_get"    => $_act_get,

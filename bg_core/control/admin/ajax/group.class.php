@@ -71,7 +71,7 @@ class AJAX_GROUP {
 			$this->obj_ajax->halt_alert($_arr_groupIds["str_alert"]);
 		}
 
-		$_str_groupStatus = fn_getSafe($_POST["act_post"], "txt", "");
+		$_str_groupStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
 		if (!$_str_groupStatus) {
 			$this->obj_ajax->halt_alert("x040207");
 		}
@@ -111,8 +111,8 @@ class AJAX_GROUP {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_groupName   = fn_getSafe($_GET["group_name"], "txt", "");
-		$_num_groupId     = fn_getSafe($_GET["group_id"], "int", 0);
+		$_str_groupName   = fn_getSafe(fn_get("group_name"), "txt", "");
+		$_num_groupId     = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		$_arr_groupRow = $this->mdl_group->mdl_read($_str_groupName, "group_name", $_num_groupId);
 

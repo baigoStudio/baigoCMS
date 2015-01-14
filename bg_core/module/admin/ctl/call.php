@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/call.class.php"); //载入模板类
 
 $ctl_call = new CONTROL_CALL();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_callRow = $ctl_call->ctl_show();
 		if ($arr_callRow["str_alert"] != "y170102") {

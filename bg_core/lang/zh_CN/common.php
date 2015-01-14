@@ -27,6 +27,8 @@ return array(
 		"show"            => "查看",
 		"profile"         => "管理员个人信息",
 		"pass"            => "修改密码",
+		"search"          => "搜索", //搜索
+		"spec"            => "专题",
 
 		"upgrade"         => "baigo CMS 升级程序",
 		"upgradeTable"    => "升级数据表",

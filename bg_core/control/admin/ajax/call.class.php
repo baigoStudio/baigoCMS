@@ -85,8 +85,8 @@ class AJAX_CALL {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_callName   = fn_getSafe($_GET["call_name"], "txt", "");
-		$_num_callId     = fn_getSafe($_GET["call_id"], "int", 0);
+		$_str_callName   = fn_getSafe(fn_get("call_name"), "txt", "");
+		$_num_callId     = fn_getSafe(fn_get("call_id"), "int", 0);
 
 		$_arr_callRow = $this->mdl_call->mdl_read($_str_callName, "call_name", $_num_callId);
 

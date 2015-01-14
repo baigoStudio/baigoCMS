@@ -45,9 +45,9 @@ class CONTROL_MARK {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_num_markId  = fn_getSafe($_GET["mark_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_num_markId  = fn_getSafe(fn_get("mark_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
@@ -61,10 +61,15 @@ class CONTROL_MARK {
 
 		if ($_num_markId > 0) {
 			$_arr_markRow = $this->mdl_mark->mdl_read($_num_markId);
-			if ($_arr_markRow != "y140102") {
-				return $$_arr_markRow;
+			if ($_arr_markRow["str_alert"] != "y140102") {
+				return $_arr_markRow;
 				exit;
 			}
+		} else {
+			$_arr_markRow = array(
+				"mark_id"   => 0,
+				"mark_name" => "",
+			);
 		}
 
 		$_arr_tpl = array(

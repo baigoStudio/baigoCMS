@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/cate.class.php"); //载入登录控�
 
 $ajax_cate = new AJAX_CATE();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "order":
 		$ajax_cate->ajax_order();
 	break;
@@ -33,7 +33,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chkname":
 				$ajax_cate->ajax_chkname();
 			break;

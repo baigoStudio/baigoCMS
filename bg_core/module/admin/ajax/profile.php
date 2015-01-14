@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/profile.class.php"); //载入登录�
 
 $ajax_profile = new AJAX_PROFILE();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "pass":
 		$ajax_profile->ajax_pass();
 	break;

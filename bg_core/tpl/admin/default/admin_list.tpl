@@ -116,7 +116,7 @@
 								</td>
 								<td class="td_md">{$value.admin_note}</td>
 								<td class="td_md">
-									{if $value.groupRow.group_name}
+									{if isset($value.groupRow.group_name)}
 										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list&group_id={$value.admin_group_id}">{$value.groupRow.group_name}</a>
 									{else}
 										{$lang.label.none}
@@ -131,7 +131,7 @@
 					<tfoot>
 						<tr>
 							<td colspan="2"><span id="msg_admin_id"></span></td>
-							<td colspan="3">
+							<td colspan="4">
 								<select name="act_post" id="act_post" class="validate form-control input-sm">
 									<option value="">{$lang.option.batch}</option>
 									{foreach $status.admin as $key=>$value}

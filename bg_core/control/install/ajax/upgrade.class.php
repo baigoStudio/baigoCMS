@@ -89,7 +89,9 @@ class AJAX_UPGRADE {
 
 		$_arr_optPost = $this->opt_post("visit");
 
-		if ($_POST["opt"]["BG_VISIT_TYPE"] == "pstatic") {
+		$_arr_post = fn_post("opt");
+
+		if ($_arr_post["BG_VISIT_TYPE"] == "pstatic") {
 
 			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
 			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
@@ -178,7 +180,7 @@ class AJAX_UPGRADE {
 		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 		$_mdl_opt    = new MODEL_OPT();
 
-		$_arr_opt = $_POST["opt"];
+		$_arr_opt = fn_post("opt");
 
 		$_str_content = "<?php" . PHP_EOL;
 		foreach ($_arr_opt as $_key=>$_value) {
@@ -224,7 +226,7 @@ class AJAX_UPGRADE {
 			$_arr_alert["admin_nick"] = array("ADD", "varchar(300) NOT NULL COMMENT '昵称'");
 		}
 
-		if ($_arr_alert) {
+		if (isset($_arr_alert)) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "admin", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x020106");
@@ -257,7 +259,7 @@ class AJAX_UPGRADE {
 			$_arr_alert["article_spec_id"] = array("ADD", "int(11) NOT NULL COMMENT '专题ID'");
 		}
 
-		if ($_arr_alert) {
+		if (isset($_arr_alert)) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x120106");
@@ -282,7 +284,7 @@ class AJAX_UPGRADE {
 			$_arr_alert["call_upfile"] = array("CHANGE", "varchar(20) NOT NULL COMMENT '含有附件'", "call_attach");
 		}
 
-		if ($_arr_alert) {
+		if (isset($_arr_alert)) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "call", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x170106");
@@ -352,7 +354,7 @@ class AJAX_UPGRADE {
 			$_arr_alert["group_status"] = array("ADD", "varchar(20) NOT NULL COMMENT '状态'");
 		}
 
-		if ($_arr_alert) {
+		if (isset($_arr_alert)) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "group", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x040106");
@@ -501,9 +503,11 @@ class AJAX_UPGRADE {
 		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "upfile'";
 
 		$_arr_tableRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_tableSelect, $_str_sqlWhere, 100, 0, "", true);
-		$_arr_tableRow = $_arr_tableRows[0];
+		if (isset($_arr_tableRows[0])) {
+			$_arr_tableRow  = $_arr_tableRows[0];
+		}
 
-		if ($_arr_tableRow["table_name"]) {
+		if (isset($_arr_tableRow["table_name"])) {
 			$_arr_tableRows = $this->obj_db->alert_table(BG_DB_TABLE . "upfile", false, BG_DB_TABLE . "attach");
 		}
 
@@ -533,7 +537,7 @@ class AJAX_UPGRADE {
 			$_arr_alert["upfile_admin_id"] = array("CHANGE", "int(50) NOT NULL COMMENT '上传用户 ID'", "attach_admin_id");
 		}
 
-		if ($_arr_alert) {
+		if (isset($_arr_alert)) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "attach", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x070106");

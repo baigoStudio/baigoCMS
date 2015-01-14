@@ -114,10 +114,12 @@ class MODEL_THUMB {
 		);
 
 		$_str_sqlWhere    = "thumb_id=" . $num_thumbId;
-		$_arr_thumbRows   = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
-		$_arr_thumbRow    = $_arr_thumbRows[0];
 
-		if (!$_arr_thumbRow) { //用户名不存在则返回错误
+		$_arr_thumbRows   = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
+
+		if (isset($_arr_thumbRows[0])) { //用户名不存在则返回错误
+			$_arr_thumbRow    = $_arr_thumbRows[0];
+		} else {
 			return array(
 				"str_alert" => "x090102", //不存在记录
 			);
@@ -167,9 +169,10 @@ class MODEL_THUMB {
 		}
 
 		$_arr_thumbRows = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
-		$_arr_thumbRow = $_arr_thumbRows[0];
 
-		if (!$_arr_thumbRow) { //用户名不存在则返回错误
+		if (isset($_arr_thumbRows[0])) { //用户名不存在则返回错误
+			$_arr_thumbRow = $_arr_thumbRows[0];
+		} else {
 			return array(
 				"str_alert" => "x090102", //不存在记录
 			);
@@ -252,7 +255,7 @@ class MODEL_THUMB {
 			exit;
 		}
 
-		$this->thumbSubmit["thumb_id"] = fn_getSafe($_POST["thumb_id"], "int", 0);
+		$this->thumbSubmit["thumb_id"] = fn_getSafe(fn_post("thumb_id"), "int", 0);
 
 		if ($this->thumbSubmit["thumb_id"] > 0) {
 			$_arr_thumbRow = $this->mdl_read($this->thumbSubmit["thumb_id"]);
@@ -262,7 +265,7 @@ class MODEL_THUMB {
 			}
 		}
 
-		$_arr_thumbWidth = validateStr($_POST["thumb_width"], 1, 0);
+		$_arr_thumbWidth = validateStr(fn_post("thumb_width"), 1, 0);
 		switch ($_arr_thumbWidth["status"]) {
 			case "too_short":
 				return array(
@@ -284,7 +287,7 @@ class MODEL_THUMB {
 
 		}
 
-		$_arr_thumbHeight = validateStr($_POST["thumb_height"], 1, 0);
+		$_arr_thumbHeight = validateStr(fn_post("thumb_height"), 1, 0);
 		switch ($_arr_thumbHeight["status"]) {
 			case "too_short":
 				return array(
@@ -306,7 +309,7 @@ class MODEL_THUMB {
 
 		}
 
-		$_arr_thumbType = validateStr($_POST["thumb_type"], 1, 0);
+		$_arr_thumbType = validateStr(fn_post("thumb_type"), 1, 0);
 		switch ($_arr_thumbType["status"]) {
 			case "too_short":
 				return array(
@@ -348,7 +351,7 @@ class MODEL_THUMB {
 			exit;
 		}
 
-		$_arr_thumbIds = $_POST["thumb_id"];
+		$_arr_thumbIds = fn_post("thumb_id");
 
 		if ($_arr_thumbIds) {
 			foreach ($_arr_thumbIds as $_key=>$_value) {

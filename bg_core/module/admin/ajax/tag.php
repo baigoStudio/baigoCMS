@@ -11,9 +11,10 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL_ADMIN . "ajax/tag.class.php"); //载入登录控制器
+
 $ajax_tag = new AJAX_TAG();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "submit":
 		$ajax_tag->ajax_submit();
 	break;
@@ -28,7 +29,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "chkname":
 				$ajax_tag->ajax_chkname();
 			break;

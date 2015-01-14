@@ -42,7 +42,7 @@ class CLASS_TPL {
 	 * @return void
 	 */
 	function tplDisplay($str_tpl, $arr_tplData = "") {
-		$this->obj_smarty->assign("common", $this->common);
+		$this->obj_smarty->assign("lang", $this->lang);
 		$this->obj_smarty->assign("alert", $this->alert);
 		$this->obj_smarty->assign("config", $this->config);
 		$this->obj_smarty->assign("tplData", $arr_tplData);

@@ -50,7 +50,7 @@ class AJAX_PROFILE {
 		}
 
 		//检验MAIL是否重复
-		$_arr_ssoChk = $this->obj_sso->sso_chkmail($_arr_adminProfile["admin_mail"], $_arr_adminProfile["admin_id"]);
+		$_arr_ssoChk = $this->obj_sso->sso_chkmail($_arr_adminProfile["admin_mail"], $this->adminLogged["admin_id"]);
 		if ($_arr_ssoChk["str_alert"] != "y010211") {
 			$this->obj_ajax->halt_alert($_arr_ssoChk["str_alert"]);
 		}
@@ -111,7 +111,7 @@ class AJAX_PROFILE {
 			exit;
 		}
 
-		$_arr_adminPassOld = validateStr($_POST["admin_pass"], 1, 0);
+		$_arr_adminPassOld = validateStr(fn_post("admin_pass"), 1, 0);
 		switch ($_arr_adminPassOld["status"]) {
 			case "too_short":
 				return array(
@@ -125,7 +125,7 @@ class AJAX_PROFILE {
 			break;
 		}
 
-		$_arr_adminPassNew = validateStr($_POST["admin_pass_new"], 1, 0);
+		$_arr_adminPassNew = validateStr(fn_post("admin_pass_new"), 1, 0);
 		switch ($_arr_adminPassNew["status"]) {
 			case "too_short":
 				return array(
@@ -139,7 +139,7 @@ class AJAX_PROFILE {
 			break;
 		}
 
-		$_arr_adminPassConfirm = validateStr($_POST["admin_pass_confirm"], 1, 0);
+		$_arr_adminPassConfirm = validateStr(fn_post("admin_pass_confirm"), 1, 0);
 		switch ($_arr_adminPassConfirm["status"]) {
 			case "too_short":
 				return array(

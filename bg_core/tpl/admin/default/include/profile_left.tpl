@@ -33,7 +33,7 @@
 			<div class="form-group">
 				<label class="control-label">{$lang.label.adminGroup}</label>
 				<p class="form-control-static">
-					{if $tplData.adminLogged.groupRow.group_name}
+					{if isset($tplData.adminLogged.groupRow.group_name)}
 						{$tplData.adminLogged.groupRow.group_name} | <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=show&group_id={$tplData.adminLogged.admin_group_id}">{$lang.href.show}</a>
 					{else}
 						{$lang.label.none}

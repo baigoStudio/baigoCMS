@@ -38,6 +38,8 @@ class CONTROL_UPGRADE {
 			exit;
 		}
 
+		$_arr_tplData = array();
+
 		$this->obj_tpl->tplDisplay("upgrade_dbtable.tpl", $_arr_tplData);
 
 		return array(
@@ -218,6 +220,8 @@ class CONTROL_UPGRADE {
 			);
 			exit;
 		}
+
+		$_arr_tplData = array();
 
 		$this->obj_tpl->tplDisplay("upgrade_over.tpl", $_arr_tplData);
 

@@ -1,6 +1,6 @@
 {* index.tpl 首页 *}
 {$cfg = [
-
+	title => "首页"
 ]}
 
 {include "include/pub_head.tpl" cfg=$cfg}

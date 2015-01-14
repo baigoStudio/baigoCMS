@@ -38,12 +38,12 @@ class AJAX_INSTALL {
 			$this->obj_ajax->halt_alert("x030102");
 		}
 
-		$_str_dbHost      = fn_getSafe($_POST["db_host"], "txt", "localhost");
-		$_str_dbName      = fn_getSafe($_POST["db_name"], "txt", "baigo_cms");
-		$_str_dbUser      = fn_getSafe($_POST["db_user"], "txt", "baigo_cms");
-		$_str_dbPass      = fn_getSafe($_POST["db_pass"], "txt", "");
-		$_str_dbCharset   = fn_getSafe($_POST["db_charset"], "txt", "utf8");
-		$_str_dbTable     = fn_getSafe($_POST["db_table"], "txt", "bg_");
+		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
+		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
+		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
+		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
+		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "bg_");
 
 		$_str_content = "<?php" . PHP_EOL;
 			$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
@@ -118,7 +118,9 @@ class AJAX_INSTALL {
 
 		$_arr_optPost = $this->opt_post("visit");
 
-		if ($_POST["opt"]["BG_VISIT_TYPE"] == "pstatic") {
+		$_arr_opt = fn_post("opt");
+
+		if ($_arr_opt["BG_VISIT_TYPE"] == "pstatic") {
 
 			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
 			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
@@ -340,7 +342,7 @@ class AJAX_INSTALL {
 		$_mdl_admin       = new MODEL_ADMIN(); //设置管理组模型
 		$this->obj_sso    = new CLASS_SSO();
 
-		$_str_adminName   = fn_getSafe($_GET["admin_name"], "txt", "");
+		$_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
 		$_arr_ssoGet      = $this->obj_sso->sso_get($_str_adminName, "user_name");
 
 		if ($_arr_ssoGet["str_alert"] != "y010102") {
@@ -376,7 +378,7 @@ class AJAX_INSTALL {
 		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 		$_mdl_opt    = new MODEL_OPT();
 
-		$_arr_opt = $_POST["opt"];
+		$_arr_opt = fn_post("opt");
 
 		$_str_content = "<?php" . PHP_EOL;
 		foreach ($_arr_opt as $_key=>$_value) {
@@ -792,7 +794,7 @@ class AJAX_INSTALL {
 
 
 	private function input_admin() {
-		$_arr_adminPass = validateStr($_POST["admin_pass"], 1, 0);
+		$_arr_adminPass = validateStr(fn_post("admin_pass"), 1, 0);
 		switch ($_arr_adminPass["status"]) {
 			case "too_short":
 				return array(
@@ -806,7 +808,7 @@ class AJAX_INSTALL {
 			break;
 		}
 
-		$_arr_adminPassConfirm = validateStr($_POST["admin_pass_confirm"], 1, 0);
+		$_arr_adminPassConfirm = validateStr(fn_post("admin_pass_confirm"), 1, 0);
 		switch ($_arr_adminPassConfirm["status"]) {
 			case "too_short":
 				return array(
@@ -834,7 +836,7 @@ class AJAX_INSTALL {
 
 
 	private function input_auth() {
-		$_arr_adminPass = validateStr($_POST["admin_pass"], 1, 0);
+		$_arr_adminPass = validateStr(fn_post("admin_pass"), 1, 0);
 		switch ($_arr_adminPass["status"]) {
 			case "too_short":
 				return array(

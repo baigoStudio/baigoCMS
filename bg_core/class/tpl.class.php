@@ -54,7 +54,7 @@ class CLASS_TPL {
 	 */
 	function tplDisplay($str_tpl, $arr_tplData = "") {
 		$this->common["token_session"]    = fn_token(); //生成口令
-		$this->common["token_cookie"]     = $_COOKIE["token_cookie_" . BG_SITE_SSIN]; //输出cookie口令（特殊用途，用于上传）
+		$this->common["token_cookie"]     = fn_cookie("token_cookie_" . BG_SITE_SSIN); //输出cookie口令（特殊用途，用于上传）
 		$this->common["ssid"]             = session_id(); //会话ID（特殊用途，用于上传）
 
 		if (!BG_MODULE_GEN) {

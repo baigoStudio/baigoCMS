@@ -1,7 +1,8 @@
 {* search_show.tpl 搜索显示 *}
 {$cfg = [
-	title      => $tplData.cateRow.cate_name,
-	str_url    => "{$tplData.search.urlRow.search_url}{$tplData.search.urlRow.page_attach}"
+	title      => $lang.page.search,
+	str_url    => "{$tplData.search.urlRow.search_url}{$tplData.search.urlRow.page_attach}",
+	page_ext   => $tplData.search.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 
@@ -31,9 +32,11 @@
 				<span class="glyphicon glyphicon-tags"></span>
 				Tags:
 			</li>
-			{foreach $value.tagRows as $tag_value}
-				<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
-			{/foreach}
+			{if isset($value.tagRows)}
+				{foreach $value.tagRows as $tag_value}
+					<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
+				{/foreach}
+			{/if}
 		</ul>
 	{/foreach}
 
@@ -42,5 +45,4 @@
 	{/if}
 
 {include "include/pub_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl"}

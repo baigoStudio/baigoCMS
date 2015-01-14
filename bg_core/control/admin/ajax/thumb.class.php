@@ -81,10 +81,10 @@ class AJAX_THUMB {
 	 * @return void
 	 */
 	function ajax_chk() {
-		$_num_thumbId     = fn_getSafe($_GET["thumb_id"], "int", 0);
-		$_num_thumbWidth  = fn_getSafe($_GET["thumb_width"], "int", 0);
-		$_num_thumbHeight = fn_getSafe($_GET["thumb_height"], "int", 0);
-		$_str_thumbType   = fn_getSafe($_GET["thumb_type"], "txt", "");
+		$_num_thumbId     = fn_getSafe(fn_get("thumb_id"), "int", 0);
+		$_num_thumbWidth  = fn_getSafe(fn_get("thumb_width"), "int", 0);
+		$_num_thumbHeight = fn_getSafe(fn_get("thumb_height"), "int", 0);
+		$_str_thumbType   = fn_getSafe(fn_get("thumb_type"), "txt", "");
 
 		$_arr_tagRow  = $this->mdl_thumb->mdl_check($_num_thumbWidth, $_num_thumbHeight, $_str_thumbType);
 		if ($_arr_tagRow["str_alert"] == "y130102") {

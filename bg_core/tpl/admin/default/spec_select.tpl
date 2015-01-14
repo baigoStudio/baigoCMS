@@ -137,7 +137,7 @@
 											<div>
 												<span class="label label-{$_css_status}">{$_str_status}</span>
 											</div>
-											<div>{$lang.label.add} {$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+											<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
 										</td>
 									</tr>
 								{/foreach}
@@ -242,13 +242,15 @@
 											{/if}
 										</td>
 										<td>
-											{$value.specRow.spec_name}
+											{if isset($value.specRow.spec_name)}
+												{$value.specRow.spec_name}
+											{/if}
 										</td>
 										<td class="td_md">
 											<div>
 												<span class="label label-{$_css_status}">{$_str_status}</span>
 											</div>
-											<div>{$lang.label.add} {$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+											<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
 										</td>
 									</tr>
 								{/foreach}

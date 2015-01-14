@@ -45,10 +45,10 @@ class CONTROL_TAG {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_status  = fn_getSafe($_GET["status"], "txt", "");
-		$_num_tagId   = fn_getSafe($_GET["tag_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
+		$_num_tagId   = fn_getSafe(fn_get("tag_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
@@ -63,13 +63,15 @@ class CONTROL_TAG {
 
 		if ($_num_tagId > 0) {
 			$_arr_tagRow = $this->mdl_tag->mdl_read($_num_tagId);
-			if ($_arr_tagRow != "y130102") {
-				return $$$_arr_tagRow;
+			if ($_arr_tagRow["str_alert"] != "y130102") {
+				return $_arr_tagRow;
 				exit;
 			}
 		} else {
 			$_arr_tagRow = array(
-				"tag_status" => "show"
+				"tag_id"        => 0,
+				"tag_name"      => "",
+				"tag_status"    => "show",
 			);
 		}
 

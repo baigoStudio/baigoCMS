@@ -139,11 +139,11 @@ class AJAX_ATTACH {
 			$this->obj_ajax->halt_alert("x070301");
 		}
 
-		$_act_get         = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_year        = fn_getSafe($_GET["year"], "txt", "");
-		$_str_month       = fn_getSafe($_GET["month"], "txt", "");
-		$_str_ext         = fn_getSafe($_GET["ext"], "txt", "");
-		$_num_adminId     = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_year        = fn_getSafe(fn_get("year"), "txt", "");
+		$_str_month       = fn_getSafe(fn_get("month"), "txt", "");
+		$_str_ext         = fn_getSafe(fn_get("ext"), "txt", "");
+		$_num_adminId     = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_num_perPage     = 8;
 		$_num_attachCount = $this->mdl_attach->mdl_count($_str_year, $_str_month, $_str_ext, $_num_adminId);

@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/seccode.class.php"); //载入登录控
 
 $ctl_seccode = new CONTROL_SECCODE();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "make":
 		$ctl_seccode->ctl_make();
 	break;

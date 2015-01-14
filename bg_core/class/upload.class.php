@@ -98,7 +98,7 @@ class CLASS_UPLOAD {
 	 */
 	function upload_pre() {
 		$this->attachFiles = $_FILES["attach_files"];
-		
+
 		switch ($this->attachFiles["error"]) { //返回错误
 			case 1:
 				return array(

@@ -170,23 +170,35 @@ class MODEL_CALL {
 		}
 
 		$_arr_callRows = $this->obj_db->select_array(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_callRow = $_arr_callRows[0];
 
-		if (!$_arr_callRow) {
+		if (isset($_arr_callRows[0])) {
+			$_arr_callRow = $_arr_callRows[0];
+		} else {
 			return array(
 				"str_alert" => "x170102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_callRow["call_amount"]      = json_decode($_arr_callRow["call_amount"], true); //json解码
-		$_arr_callRow["call_show"]        = json_decode($_arr_callRow["call_show"], true); //json解码
-		if ($_arr_callRow["call_cate_ids"] && $_arr_callRow["call_cate_ids"] != "null") {
+		if (isset($_arr_callRow["call_amount"])) {
+			$_arr_callRow["call_amount"]      = json_decode($_arr_callRow["call_amount"], true); //json解码
+		} else {
+			$_arr_callRow["call_amount"]      = array();
+		}
+
+		if (isset($_arr_callRow["call_show"])) {
+			$_arr_callRow["call_show"]        = json_decode($_arr_callRow["call_show"], true); //json解码
+		} else {
+			$_arr_callRow["call_show"]        = array();
+		}
+
+		if (isset($_arr_callRow["call_cate_ids"])) {
 			$_arr_callRow["call_cate_ids"] = json_decode($_arr_callRow["call_cate_ids"], true); //json解码
 		} else {
 			$_arr_callRow["call_cate_ids"] = array();
 		}
-		if ($_arr_callRow["call_mark_ids"] && $_arr_callRow["call_mark_ids"] != "null") {
+
+		if (isset($_arr_callRow["call_mark_ids"])) {
 			$_arr_callRow["call_mark_ids"] = json_decode($_arr_callRow["call_mark_ids"], true); //json解码
 		} else {
 			$_arr_callRow["call_mark_ids"] = array();
@@ -229,7 +241,7 @@ class MODEL_CALL {
 		$_str_sqlWhere = "call_id > 0";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%' OR call_show LIKE '%" . $str_key . "%'";
+			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%'";
 		}
 
 		if ($str_type) {
@@ -259,7 +271,7 @@ class MODEL_CALL {
 		$_str_sqlWhere = "call_id > 0";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%' OR call_show LIKE '%" . $str_key . "%'";
+			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%'";
 		}
 
 		if ($str_type) {
@@ -310,7 +322,7 @@ class MODEL_CALL {
 			exit;
 		}
 
-		$this->callSubmit["call_id"] = fn_getSafe($_POST["call_id"], "int", 0);
+		$this->callSubmit["call_id"] = fn_getSafe(fn_post("call_id"), "int", 0);
 
 		if ($this->callSubmit["call_id"] > 0) {
 			$_arr_callRow = $this->mdl_read($this->callSubmit["call_id"]);
@@ -320,7 +332,7 @@ class MODEL_CALL {
 			}
 		}
 
-		$_arr_callName = validateStr($_POST["call_name"], 1, 300);
+		$_arr_callName = validateStr(fn_post("call_name"), 1, 300);
 		switch ($_arr_callName["status"]) {
 			case "too_short":
 				return array(
@@ -342,7 +354,7 @@ class MODEL_CALL {
 
 		}
 
-		$_arr_callType = validateStr($_POST["call_type"], 1, 0);
+		$_arr_callType = validateStr(fn_post("call_type"), 1, 0);
 		switch ($_arr_callType["status"]) {
 			case "too_short":
 				return array(
@@ -356,7 +368,7 @@ class MODEL_CALL {
 			break;
 		}
 
-		$_arr_callStatus = validateStr($_POST["call_status"], 1, 0);
+		$_arr_callStatus = validateStr(fn_post("call_status"), 1, 0);
 		switch ($_arr_callStatus["status"]) {
 			case "too_short":
 				return array(
@@ -370,7 +382,7 @@ class MODEL_CALL {
 			break;
 		}
 
-		$_arr_callTrim = validateStr($_POST["call_trim"], 1, 0);
+		$_arr_callTrim = validateStr(fn_post("call_trim"), 1, 0);
 		switch ($_arr_callTrim["status"]) {
 			case "too_short":
 				return array(
@@ -391,7 +403,7 @@ class MODEL_CALL {
 			break;
 		}
 
-		$_arr_callCss = validateStr($_POST["call_css"], 0, 300);
+		$_arr_callCss = validateStr(fn_post("call_css"), 0, 300);
 		switch ($_arr_callCss["status"]) {
 			case "too_long":
 				return array(
@@ -405,14 +417,14 @@ class MODEL_CALL {
 			break;
 		}
 
-		$this->callSubmit["call_file"]        = fn_getSafe($_POST["call_file"], "txt", "");
-		$this->callSubmit["call_attach"]      = fn_getSafe($_POST["call_attach"], "txt", "");
-		$this->callSubmit["call_cate_id"]     = fn_getSafe($_POST["call_cate_id"], "int", 0);
+		$this->callSubmit["call_file"]        = fn_getSafe(fn_post("call_file"), "txt", "");
+		$this->callSubmit["call_attach"]      = fn_getSafe(fn_post("call_attach"), "txt", "");
+		$this->callSubmit["call_cate_id"]     = fn_getSafe(fn_post("call_cate_id"), "int", 0);
 
-		$this->callSubmit["call_cate_ids"]    = json_encode($_POST["call_cate_ids"]);
-		$this->callSubmit["call_mark_ids"]    = json_encode($_POST["call_mark_ids"]);
-		$this->callSubmit["call_show"]        = json_encode($_POST["call_show"]);
-		$this->callSubmit["call_amount"]      = json_encode($_POST["call_amount"]);
+		$this->callSubmit["call_cate_ids"]    = json_encode(fn_post("call_cate_ids"));
+		$this->callSubmit["call_mark_ids"]    = json_encode(fn_post("call_mark_ids"));
+		$this->callSubmit["call_show"]        = json_encode(fn_post("call_show"));
+		$this->callSubmit["call_amount"]      = json_encode(fn_post("call_amount"));
 
 		$this->callSubmit["str_alert"]        = "ok";
 
@@ -434,7 +446,7 @@ class MODEL_CALL {
 			exit;
 		}
 
-		$_arr_callIds = $_POST["call_id"];
+		$_arr_callIds = fn_post("call_id");
 
 		if ($_arr_callIds) {
 			foreach ($_arr_callIds as $_key=>$_value) {

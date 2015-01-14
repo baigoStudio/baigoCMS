@@ -1,20 +1,13 @@
 <?php
 /*-----------------------------------------------------------------
-
 ！！！！警告！！！！
 以下为系统文件，请勿修改
-
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
-
-/*if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
-	header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=display&alert=x030403");
-	exit;
-}*/
 
 if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
 	include_once(BG_PATH_CONFIG . "is_install.php");
@@ -34,7 +27,7 @@ include_once(BG_PATH_CONTROL_INSTALL . "ctl/install.class.php"); //载入栏目�
 $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ctl_install            = new CONTROL_INSTALL(); //初始化商家
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "auth":
 		$arr_installRow = $ctl_install->ctl_auth();
 		if ($arr_installRow["str_alert"] != "y030404") {

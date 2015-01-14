@@ -230,16 +230,14 @@ class MODEL_ARTICLE {
 		);
 
 		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
-		$_arr_articleRow = $_arr_articleRows[0];
 
-		if (!$_arr_articleRow) {
+		if (isset($_arr_articleRows[0])) {
+			$_arr_articleRow = $_arr_articleRows[0];
+		} else {
 			return array(
 				"str_alert" => "x120102",
 			);
 		}
-
-		/*print_r($_arr_userRow);
-		exit;*/
 
 		$_arr_articleRow["str_alert"] = "y120102";
 
@@ -258,18 +256,19 @@ class MODEL_ARTICLE {
 	 */
 	function mdl_top($num_top, $arr_cateIds = false) {
 
-		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
-
 		$_arr_articleUpdate = array(
 			"article_top" => $num_top,
 		);
 
+		$_str_articleId   = implode(",", $this->articleIds["article_ids"]);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
 		if ($arr_cateIds) {
 			$_str_cateIds    = implode(",", $arr_cateIds);
-			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere   .= " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
-		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, $_str_sqlWhere); //删除数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -295,22 +294,24 @@ class MODEL_ARTICLE {
 	 */
 	function mdl_status($str_status, $arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
 
 		$_arr_articleUpdate = array(
 			"article_status" => $str_status,
 		);
 
+		$_str_articleId   = implode(",", $this->articleIds["article_ids"]);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
 		if ($arr_cateIds) {
 			$_str_cateIds    = implode(",", $arr_cateIds);
-			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere  .= " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
 		if ($num_adminId > 0) {
 			$_str_sqlWhere .= " AND article_admin_id=" . $num_adminId;
 		}
 
-		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, $_str_sqlWhere); //删除数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -327,8 +328,6 @@ class MODEL_ARTICLE {
 
 	function mdl_toSpec($str_act, $num_specId = 0) {
 
-		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
-
 		if ($str_act != "to") {
 			$num_specId = 0;
 		}
@@ -337,7 +336,10 @@ class MODEL_ARTICLE {
 			"article_spec_id" => $num_specId,
 		);
 
-		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+		$_str_articleId   = implode(",", $this->articleIds["article_ids"]);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, $_str_sqlWhere); //删除数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -363,22 +365,23 @@ class MODEL_ARTICLE {
 	 */
 	function mdl_box($str_box, $arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
-
 		$_arr_articleUpdate = array(
 			"article_box"        => $str_box,
 		);
 
+		$_str_articleId   = implode(",", $this->articleIds["article_ids"]);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
 		if ($arr_cateIds) {
 			$_str_cateIds    = implode(",", $arr_cateIds);
-			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere  .= " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
 		if ($num_adminId > 0) {
 			$_str_sqlWhere .= " AND article_admin_id=" . $num_adminId;
 		}
 
-		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, $_str_sqlWhere); //删除数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -403,18 +406,19 @@ class MODEL_ARTICLE {
 	 */
 	function mdl_del($arr_cateIds = false, $num_adminId = 0) {
 
-		$_str_articleId = implode(",", $this->articleIds["article_ids"]);
+		$_str_articleId   = implode(",", $this->articleIds["article_ids"]);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
 
 		if ($arr_cateIds) {
 			$_str_cateIds    = implode(",", $arr_cateIds);
-			$_str_sqlWhere   = " AND article_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere   .= " AND article_cate_id IN (" . $_str_cateIds . ")";
 		}
 
 		if ($num_adminId > 0) {
 			$_str_sqlWhere .= " AND article_admin_id=" . $num_adminId;
 		}
 
-		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "article", "article_id IN (" . $_str_articleId . ")" . $_str_sqlWhere); //删除数据
+		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "article", $_str_sqlWhere); //删除数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -465,13 +469,15 @@ class MODEL_ARTICLE {
 	 * @return void
 	 */
 	function mdl_unknowCate($arr_articleId) {
-		$_str_articleId = implode(",", $arr_articleId);
 
 		$_arr_articleData = array(
 			"article_cate_id" => -1,
 		);
 
-		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article",  $_arr_articleData, "article_id IN (" . $_str_articleId . ")"); //更新数据
+		$_str_articleId   = implode(",", $arr_articleId);
+		$_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article",  $_arr_articleData, $_str_sqlWhere); //更新数据
 
 		//如车影响行数小于0则返回错误
 		if ($_num_mysql > 0) {
@@ -573,7 +579,7 @@ class MODEL_ARTICLE {
 			exit;
 		}
 
-		$this->articleSubmit["article_id"] = fn_getSafe($_POST["article_id"], "int", 0);
+		$this->articleSubmit["article_id"] = fn_getSafe(fn_post("article_id"), "int", 0);
 
 		if ($this->articleSubmit["article_id"] > 0) {
 			$_arr_articleRow = $this->mdl_read($this->articleSubmit["article_id"]);
@@ -583,7 +589,7 @@ class MODEL_ARTICLE {
 			}
 		}
 
-		$_arr_articleTitle = validateStr($_POST["article_title"], 1, 300);
+		$_arr_articleTitle = validateStr(fn_post("article_title"), 1, 300);
 		switch ($_arr_articleTitle["status"]) {
 			case "too_short":
 				return array(
@@ -605,7 +611,7 @@ class MODEL_ARTICLE {
 
 		}
 
-		$_arr_articleLink = validateStr($_POST["article_link"], 0, 900, "str", "url");
+		$_arr_articleLink = validateStr(fn_post("article_link"), 0, 900, "str", "url");
 		switch ($_arr_articleLink["status"]) {
 			case "too_long":
 				return array(
@@ -626,7 +632,7 @@ class MODEL_ARTICLE {
 			break;
 		}
 
-		$_arr_articleExcerpt = validateStr($_POST["article_excerpt"], 0, 900);
+		$_arr_articleExcerpt = validateStr(fn_post("article_excerpt"), 0, 900);
 		switch ($_arr_articleExcerpt["status"]) {
 			case "too_long":
 				return array(
@@ -640,7 +646,7 @@ class MODEL_ARTICLE {
 			break;
 		}
 
-		$_arr_articleStatus = validateStr($_POST["article_status"], 1, 0);
+		$_arr_articleStatus = validateStr(fn_post("article_status"), 1, 0);
 		switch ($_arr_articleStatus["status"]) {
 			case "too_short":
 				return array(
@@ -655,7 +661,7 @@ class MODEL_ARTICLE {
 
 		}
 
-		$_arr_articleBox = validateStr($_POST["article_box"], 1, 0);
+		$_arr_articleBox = validateStr(fn_post("article_box"), 1, 0);
 		switch ($_arr_articleBox["status"]) {
 			case "too_short":
 				return array(
@@ -671,7 +677,7 @@ class MODEL_ARTICLE {
 		}
 
 
-		$_arr_articleTimePub = validateStr($_POST["article_time_pub"], 1, 0, "str", "datetime");
+		$_arr_articleTimePub = validateStr(fn_post("article_time_pub"), 1, 0, "str", "datetime");
 		switch ($_arr_articleTimePub["status"]) {
 			case "too_short":
 				return array(
@@ -692,7 +698,7 @@ class MODEL_ARTICLE {
 			break;
 		}
 
-		$_arr_cateIds = $_POST["cate_ids"];
+		$_arr_cateIds = fn_post("cate_ids");
 		if (!$_arr_cateIds) {
 			return array(
 				"str_alert" => "x120207",
@@ -705,16 +711,16 @@ class MODEL_ARTICLE {
 		}
 
 		$this->articleSubmit["article_cate_id"]   = $this->articleSubmit["cate_ids"][0];
-		$this->articleSubmit["article_content"]   = $_POST["article_content"];
+		$this->articleSubmit["article_content"]   = fn_post("article_content");
 
 		if (!$this->articleSubmit["article_excerpt"] || $this->articleSubmit["article_excerpt"] == "<br>") {
 			$this->articleSubmit["article_excerpt"] = substr($this->articleSubmit["article_content"], 0, 900);
 		}
 
 		$this->articleSubmit["article_attach_id"] = fn_getAttach($this->articleSubmit["article_content"]);
-		$this->articleSubmit["article_mark_id"]   = fn_getSafe($_POST["article_mark_id"], "int", 0);
-		$this->articleSubmit["article_spec_id"]   = fn_getSafe($_POST["article_spec_id"], "int", 0);
-		$this->articleSubmit["article_tags"]      = fn_getSafe($_POST["hidden-article_tag"], "txt", "");
+		$this->articleSubmit["article_mark_id"]   = fn_getSafe(fn_post("article_mark_id"), "int", 0);
+		$this->articleSubmit["article_spec_id"]   = fn_getSafe(fn_post("article_spec_id"), "int", 0);
+		$this->articleSubmit["article_tags"]      = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");
 		$this->articleSubmit["str_alert"]         = "ok";
 
 		return $this->articleSubmit;
@@ -735,7 +741,7 @@ class MODEL_ARTICLE {
 			exit;
 		}
 
-		$_arr_articleIds = $_POST["article_id"];
+		$_arr_articleIds = fn_post("article_id");
 
 		if ($_arr_articleIds) {
 			foreach ($_arr_articleIds as $_key=>$_value) {

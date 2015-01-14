@@ -57,7 +57,6 @@ class CONTROL_ATTACH {
 			exit;
 		}
 
-
 		if (!is_array($this->mimeRow)) {
 			return array(
 				"str_alert" => "x070405",
@@ -66,10 +65,9 @@ class CONTROL_ATTACH {
 		}
 
 		$_arr_yearRows    = $this->mdl_attach->mdl_year(100);
-		$_arr_extRows     = $this->mdl_attach->mdl_ext(100);
+		$_arr_extRows     = $this->mdl_attach->mdl_ext();
 
 		$_arr_tpl = array(
-			"search"     => $_arr_search,
 			"yearRows"   => $_arr_yearRows,
 			"extRows"    => $_arr_extRows,
 			"mimeRow"    => $this->mimeRow
@@ -106,11 +104,11 @@ class CONTROL_ATTACH {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_year    = fn_getSafe($_GET["year"], "txt", "");
-		$_str_month   = fn_getSafe($_GET["month"], "txt", "");
-		$_str_ext     = fn_getSafe($_GET["ext"], "txt", "");
-		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_year    = fn_getSafe(fn_get("year"), "txt", "");
+		$_str_month   = fn_getSafe(fn_get("month"), "txt", "");
+		$_str_ext     = fn_getSafe(fn_get("ext"), "txt", "");
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
@@ -124,7 +122,7 @@ class CONTROL_ATTACH {
 		$_arr_page        = fn_page($_num_attachCount);
 		$_str_query       = http_build_query($_arr_search);
 		$_arr_pathRows    = $this->mdl_attach->mdl_year(100);
-		$_arr_extRows     = $this->mdl_attach->mdl_ext(100);
+		$_arr_extRows     = $this->mdl_attach->mdl_ext();
 		$_arr_attachRows  = $this->mdl_attach->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_year, $_str_month, $_str_ext, $_num_adminId);
 
 		foreach ($_arr_attachRows as $_key=>$_value) {

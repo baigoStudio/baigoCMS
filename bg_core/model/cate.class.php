@@ -13,6 +13,7 @@ if(!defined("IN_BAIGO")) {
 class MODEL_CATE {
 
 	private $obj_db;
+	private $cateIds;
 
 	function __construct() { //构造函数
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
@@ -144,15 +145,17 @@ class MODEL_CATE {
 			);
 
 			$_arr_lastRows  = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, "cate_id > 0 ORDER BY cate_id DESC", 1, 0); //读取倒数第一排序号
-			$_arr_lastRow   = $_arr_lastRows[0];
+			if (isset($_arr_lastRows[0])) {
+				$_arr_lastRow   = $_arr_lastRows[0];
 
-			$_arr_updateData = array(
-				"cate_order" => $_arr_row["cate_id"] + 1,
-			);
+				$_arr_updateData = array(
+					"cate_order" => $_arr_row["cate_id"] + 1,
+				);
 
-			$_str_sqlWhere = "cate_id=" . $_arr_row["cate_id"];
+				$_str_sqlWhere = "cate_id=" . $_arr_row["cate_id"];
 
-			$this->obj_db->update(BG_DB_TABLE . "cate", $_arr_updateData, $_str_sqlWhere, true); //所有小于本条大于目标记录的数据排序号加1
+				$this->obj_db->update(BG_DB_TABLE . "cate", $_arr_updateData, $_str_sqlWhere, true); //所有小于本条大于目标记录的数据排序号加1
+			}
 		}
 		//end
 
@@ -168,14 +171,23 @@ class MODEL_CATE {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_firstRows = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere . " ORDER BY cate_order ASC", 1, 0); //读取第一排序号
-				$_arr_firstRow  = $_arr_firstRows[0];
+				if (isset($_arr_firstRows[0])) {
+					$_arr_firstRow  = $_arr_firstRows[0];
+				}
 
 				$_str_sqlWhere  = "cate_id=" . $num_doId;
 				if ($num_parentId > 0) {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_doRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere, 1, 0); //读取本条排序号
-				$_arr_doRow     = $_arr_doRows[0];
+				if (isset($_arr_doRows[0])) {
+					$_arr_doRow     = $_arr_doRows[0];
+				} else {
+					return array(
+						"str_alert" => "x110217",
+					);
+					exit;
+				}
 
 				$_arr_targetData = array(
 					"cate_order" => "cate_order+1",
@@ -202,14 +214,23 @@ class MODEL_CATE {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_lastRows  = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere . " ORDER BY cate_order DESC", 1, 0); //读取倒数第一排序号
-				$_arr_lastRow   = $_arr_lastRows[0];
+				if (isset($_arr_lastRows[0])) {
+					$_arr_lastRow   = $_arr_lastRows[0];
+				}
 
 				$_str_sqlWhere  = "cate_id=" . $num_doId;
 				if ($num_parentId > 0) {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_doRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere, 1, 0); //读取本条排序号
-				$_arr_doRow     = $_arr_doRows[0];
+				if (isset($_arr_doRows[0])) {
+					$_arr_doRow     = $_arr_doRows[0];
+				} else {
+					return array(
+						"str_alert" => "x110217",
+					);
+					exit;
+				}
 
 				$_arr_targetData = array(
 					"cate_order" => "cate_order-1",
@@ -236,16 +257,32 @@ class MODEL_CATE {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_targetRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere, 1, 0); //读取目标记录排序号
-				$_arr_targetRow     = $_arr_targetRows[0];
+				if (isset($_arr_targetRows[0])) {
+					$_arr_targetRow     = $_arr_targetRows[0];
+				} else {
+					return array(
+						"str_alert" => "x110220",
+					);
+					exit;
+				}
 
 				$_str_sqlWhere      = "cate_id=" . $num_doId;
 				if ($num_parentId > 0) {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
 				$_arr_doRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, $_str_sqlWhere, 1, 0); //读取本条排序号
-				$_arr_doRow     = $_arr_doRows[0];
+				if (isset($_arr_doRows[0])) {
+					$_arr_doRow     = $_arr_doRows[0];
+				} else {
+					return array(
+						"str_alert" => "x110217",
+					);
+					exit;
+				}
 
-				if ($_arr_targetRow["hall_order"] > $_arr_doRow["hall_order"]) { //往下移
+				//print_r($_arr_doRow);
+
+				if ($_arr_targetRow["cate_order"] > $_arr_doRow["cate_order"]) { //往下移
 					$_arr_targetData = array(
 						"cate_order" => "cate_order-1",
 					);
@@ -334,9 +371,10 @@ class MODEL_CATE {
 		}
 
 		$_arr_cateRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_cateRow     = $_arr_cateRows[0];
 
-		if (!$_arr_cateRow) {
+		if (isset($_arr_cateRows[0])) {
+			$_arr_cateRow     = $_arr_cateRows[0];
+		} else {
 			return array(
 				"str_alert" => "x110102", //不存在记录
 			);
@@ -509,7 +547,7 @@ class MODEL_CATE {
 			exit;
 		}
 
-		$this->cateSubmit["cate_id"] = fn_getSafe($_POST["cate_id"], "int", 0);
+		$this->cateSubmit["cate_id"] = fn_getSafe(fn_post("cate_id"), "int", 0);
 
 		if ($this->cateSubmit["cate_id"] > 0) {
 			$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_id"]);
@@ -519,7 +557,7 @@ class MODEL_CATE {
 			}
 		}
 
-		$_arr_cateName = validateStr($_POST["cate_name"], 1, 300);
+		$_arr_cateName = validateStr(fn_post("cate_name"), 1, 300);
 		switch ($_arr_cateName["status"]) {
 			case "too_short":
 				return array(
@@ -541,6 +579,20 @@ class MODEL_CATE {
 
 		}
 
+		$_arr_cateParentId = validateStr(fn_post("cate_parent_id"), 1, 0);
+		switch ($_arr_cateParentId["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x110213",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->cateSubmit["cate_parent_id"] = $_arr_cateParentId["str"];
+			break;
+		}
+
 		$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_name"], "cate_name", $this->cateSubmit["cate_id"], $this->cateSubmit["cate_parent_id"]);
 
 		if ($_arr_cateRow["str_alert"] == "y110102") {
@@ -550,7 +602,7 @@ class MODEL_CATE {
 			exit;
 		}
 
-		$_arr_cateAlias = validateStr($_POST["cate_alias"], 0, 300, "str", "alphabetDigit");
+		$_arr_cateAlias = validateStr(fn_post("cate_alias"), 0, 300, "str", "alphabetDigit");
 		switch ($_arr_cateAlias["status"]) {
 			case "too_long":
 				return array(
@@ -581,7 +633,7 @@ class MODEL_CATE {
 			}
 		}
 
-		$_arr_cateLink = validateStr($_POST["cate_link"], 0, 3000, "str", "url");
+		$_arr_cateLink = validateStr(fn_post("cate_link"), 0, 3000, "str", "url");
 		switch ($_arr_cateLink["status"]) {
 			case "too_long":
 				return array(
@@ -602,22 +654,7 @@ class MODEL_CATE {
 			break;
 		}
 
-		$_arr_cateParentId = validateStr($_POST["cate_parent_id"], 1, 0);
-		switch ($_arr_cateParentId["status"]) {
-			case "too_short":
-				return array(
-					"str_alert" => "x110213",
-				);
-				exit;
-			break;
-
-			case "ok":
-				$this->cateSubmit["cate_parent_id"] = $_arr_cateParentId["str"];
-			break;
-
-		}
-
-		$_arr_cateTpl = validateStr($_POST["cate_tpl"], 1, 0);
+		$_arr_cateTpl = validateStr(fn_post("cate_tpl"), 1, 0);
 		switch ($_arr_cateTpl["status"]) {
 			case "too_short":
 				return array(
@@ -632,7 +669,7 @@ class MODEL_CATE {
 
 		}
 
-		$_arr_cateType = validateStr($_POST["cate_type"], 1, 0);
+		$_arr_cateType = validateStr(fn_post("cate_type"), 1, 0);
 		switch ($_arr_cateType["status"]) {
 			case "too_short":
 				return array(
@@ -647,7 +684,7 @@ class MODEL_CATE {
 
 		}
 
-		$_arr_cateStatus = validateStr($_POST["cate_status"], 1, 0);
+		$_arr_cateStatus = validateStr(fn_post("cate_status"), 1, 0);
 		switch ($_arr_cateStatus["status"]) {
 			case "too_short":
 				return array(
@@ -662,7 +699,7 @@ class MODEL_CATE {
 
 		}
 
-		$_arr_cateDomain = validateStr($_POST["cate_domain"], 0, 3000, "str", "url");
+		$_arr_cateDomain = validateStr(fn_post("cate_domain"), 0, 3000, "str", "url");
 		switch ($_arr_cateDomain["status"]) {
 			case "too_long":
 				return array(
@@ -683,13 +720,13 @@ class MODEL_CATE {
 			break;
 		}
 
-		$this->cateSubmit["cate_content"]     = $_POST["cate_content"];
+		$this->cateSubmit["cate_content"]     = fn_post("cate_content");
 
-		$this->cateSubmit["cate_ftp_host"]    = fn_getSafe($_POST["cate_ftp_host"], "txt", "");
-		$this->cateSubmit["cate_ftp_port"]    = fn_getSafe($_POST["cate_ftp_port"], "txt", "");
-		$this->cateSubmit["cate_ftp_user"]    = fn_getSafe($_POST["cate_ftp_user"], "txt", "");
-		$this->cateSubmit["cate_ftp_pass"]    = fn_getSafe($_POST["cate_ftp_pass"], "txt", "");
-		$this->cateSubmit["cate_ftp_path"]    = fn_getSafe($_POST["cate_ftp_path"], "txt", "");
+		$this->cateSubmit["cate_ftp_host"]    = fn_getSafe(fn_post("cate_ftp_host"), "txt", "");
+		$this->cateSubmit["cate_ftp_port"]    = fn_getSafe(fn_post("cate_ftp_port"), "txt", "");
+		$this->cateSubmit["cate_ftp_user"]    = fn_getSafe(fn_post("cate_ftp_user"), "txt", "");
+		$this->cateSubmit["cate_ftp_pass"]    = fn_getSafe(fn_post("cate_ftp_pass"), "txt", "");
+		$this->cateSubmit["cate_ftp_path"]    = fn_getSafe(fn_post("cate_ftp_path"), "txt", "");
 
 		$this->cateSubmit["str_alert"] = "ok";
 
@@ -711,7 +748,7 @@ class MODEL_CATE {
 			exit;
 		}
 
-		$_arr_cateIds = $_POST["cate_id"];
+		$_arr_cateIds = fn_post("cate_id");
 
 		if ($_arr_cateIds) {
 			foreach ($_arr_cateIds as $_key=>$_value) {
@@ -784,6 +821,8 @@ class MODEL_CATE {
 
 
 	private function url_process($_arr_cateRow) {
+		$_str_cateUrlParent = "";
+
 		if ($_arr_cateRow["cate_link"]) {
 			$_str_cateUrl = $_arr_cateRow["cate_link"];
 		} else {
@@ -815,7 +854,8 @@ class MODEL_CATE {
 						}
 					}
 
-					$_str_cateUrl = BG_URL_ROOT . "cate/" . $_str_cateUrlParent . $_arr_cateRow["cate_id"] . "/";
+					$_str_cateUrl      = BG_URL_ROOT . "cate/" . $_str_cateUrlParent . $_arr_cateRow["cate_id"] . "/";
+					$_str_pageAttach   = "";
 				break;
 
 				default:

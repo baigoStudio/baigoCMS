@@ -1,4 +1,7 @@
 {*attach_form.php 上传界面*}
+{$cfg = [
+	js_insert => "true"
+]}
 <div class="modal-header">
 	<ul class="nav nav-pills pull-left">
 		<li class="active">

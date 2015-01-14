@@ -57,7 +57,7 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	function ctl_form() {
-		$_num_articleId = fn_getSafe($_GET["article_id"], "int", 0);
+		$_num_articleId = fn_getSafe(fn_get("article_id"), "int", 0);
 
 		if ($_num_articleId > 0) {
 			$_arr_articleRow = $this->mdl_article->mdl_read($_num_articleId); //读取文章
@@ -72,34 +72,42 @@ class CONTROL_ARTICLE {
 				);
 				exit;
 			}
+
 			$_arr_cateBelongRows = $this->mdl_cateBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
 			foreach ($_arr_cateBelongRows as $_value) {
 				$_arr_articleRow["cate_ids"][] = $_value["belong_cate_id"];
 			}
-			$_arr_articleRow["cate_ids"][] = $_arr_articleRow["article_cate_id"];
 
-			$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
-			//print_r($_arr_tagBelongRows);
+			$_arr_articleRow["cate_ids"][]   = $_arr_articleRow["article_cate_id"];
+			$_arr_tagBelongRows              = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
+
 			foreach ($_arr_tagBelongRows as $_value) {
-				$_arr_tagRow = $this->mdl_tag->mdl_read($_value["belong_tag_id"]);
-				//print_r($_arr_tagRow);
-				$_arr_articleRow["article_tags"][] = $_arr_tagRow["tag_name"];
+				$_arr_tagRow                        = $this->mdl_tag->mdl_read($_value["belong_tag_id"]);
+				$_arr_articleRow["article_tags"][]  = $_arr_tagRow["tag_name"];
 			}
 			$_arr_articleRow["article_tags"] = json_encode($_arr_articleRow["article_tags"]);
 
 			$_arr_specRow = $this->mdl_spec->mdl_read($_arr_articleRow["article_spec_id"]);
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1) {
+			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"]) && $this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1) {
 				$_str_status = "pub";
 			} else {
 				$_str_status = "wait";
 			}
 			$_arr_articleRow = array(
+				"article_id"        => 0,
+				"article_title"     => "",
+				"article_content"   => "",
+				"article_link"      => "",
+				"article_excerpt"   => "",
+
 				"article_status"    => $_str_status,
 				"article_box"       => "normal",
 				"article_time_pub"  => time(),
 				"cate_ids"          => array(),
+				"article_tags"      => array(),
 			);
+			$_arr_specRow = array();
 		}
 
 		//print_r($_arr_articleRow);
@@ -142,7 +150,7 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	function ctl_show() {
-		$_num_articleId = fn_getSafe($_GET["article_id"], "int", 0);
+		$_num_articleId = fn_getSafe(fn_get("article_id"), "int", 0);
 		if ($_num_articleId == 0) {
 			return array(
 				"str_alert" => "x120212"
@@ -167,11 +175,11 @@ class CONTROL_ARTICLE {
 		foreach ($_arr_belongRow as $_value) {
 			$_arr_articleRow["cate_ids"][] = $_value["belong_cate_id"];
 		}
-		$_arr_articleRow["cate_ids"][] = $_arr_articleRow["article_cate_id"];
+		$_arr_articleRow["cate_ids"][]    = $_arr_articleRow["article_cate_id"];
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRow = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
-		$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
+		$_arr_cateRows                    = $this->mdl_cate->mdl_list(1000, 0, "show");
+		$_arr_markRow                     = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
+		$_arr_tagBelongRows               = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
 
 		foreach ($_arr_tagBelongRows as $_value) {
 			$_arr_tagRows[] = $this->mdl_tag->mdl_read($_value["belong_tag_id"]);
@@ -203,15 +211,15 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	function ctl_list() {
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_year    = fn_getSafe($_GET["year"], "txt", "");
-		$_str_month   = fn_getSafe($_GET["month"], "txt", "");
-		$_str_status  = fn_getSafe($_GET["status"], "txt", "");
-		$_str_box     = fn_getSafe($_GET["box"], "txt", "");
-		$_num_cateId  = fn_getSafe($_GET["cate_id"], "int", 0);
-		$_num_markId  = fn_getSafe($_GET["mark_id"], "int", 0);
-		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_year    = fn_getSafe(fn_get("year"), "txt", "");
+		$_str_month   = fn_getSafe(fn_get("month"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
+		$_str_box     = fn_getSafe(fn_get("box"), "txt", "");
+		$_num_cateId  = fn_getSafe(fn_get("cate_id"), "int", 0);
+		$_num_markId  = fn_getSafe(fn_get("mark_id"), "int", 0);
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
@@ -233,7 +241,7 @@ class CONTROL_ARTICLE {
 		}
 
 		if ($_arr_search["admin_id"] == 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["del"] == 1) {
+			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["del"]) && $this->adminLogged["groupRow"]["group_allow"]["article"]["del"] == 1) {
 				$_num_adminId = 0;
 			} else {
 				$_num_adminId = $this->adminLogged["admin_id"];
@@ -268,7 +276,7 @@ class CONTROL_ARTICLE {
 			$_arr_articleRows[$_key]["adminRow"] = $this->mdl_admin->mdl_read($_value["article_admin_id"]);
 		}
 
-		if ($_arr_unknowCate) {
+		if (isset($_arr_unknowCate)) {
 			$this->mdl_article->mdl_unknowCate($_arr_unknowCate);
 		}
 

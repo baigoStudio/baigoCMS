@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/index.class.php"); //载入文章类
 
 $ctl_index = new CONTROL_INDEX();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	default:
 		$ctl_index->ctl_index();
 	break;

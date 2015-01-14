@@ -11,11 +11,12 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //载入全局通用
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/alert.class.php"); //载入模板类
+
 $ctl_alert = new CONTROL_ALERT(); //设置模板对象
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "display":
-		$ctl_alert->ctl_alert();
+		$ctl_alert->ctl_display();
 	break;
 }
 ?>

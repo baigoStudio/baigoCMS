@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/article.class.php"); //载入文章�
 
 $ajax_article = new AJAX_ARTICLE();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "submit":
 		$ajax_article->ajax_submit();
 	break;

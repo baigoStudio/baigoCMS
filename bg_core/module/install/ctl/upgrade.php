@@ -1,9 +1,7 @@
 <?php
 /*-----------------------------------------------------------------
-
 ！！！！警告！！！！
 以下为系统文件，请勿修改
-
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
@@ -27,7 +25,7 @@ include_once(BG_PATH_CONTROL_INSTALL . "ctl/upgrade.class.php"); //载入栏目�
 $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ctl_upgrade            = new CONTROL_UPGRADE(); //初始化商家
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "sso":
 		$arr_upgradeRow = $ctl_upgrade->ctl_sso();
 		if ($arr_upgradeRow["str_alert"] != "y030404") {

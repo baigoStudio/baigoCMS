@@ -56,7 +56,7 @@ class CONTROL_ADMIN {
 			exit;
 		}
 
-		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 		$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
 		if ($_arr_ssoUser["str_alert"] != "y010102") { //SSO 中不存在该用户
 			return $_arr_ssoUser;
@@ -93,7 +93,7 @@ class CONTROL_ADMIN {
 	 * @return void
 	 */
 	function ctl_form() {
-		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		if ($_num_adminId > 0) {
 			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"] != 1) {
@@ -117,7 +117,15 @@ class CONTROL_ADMIN {
 					"str_alert" => "x020302",
 				);
 			}
-			$_arr_adminRow["admin_status"] = "enable";
+			$_arr_adminRow = array(
+				"admin_id"      => 0,
+				"admin_note"    => "",
+				"admin_status"  => "enable",
+			);
+			$_arr_ssoUser = array(
+				"user_mail" => "",
+				"user_nick" => "",
+			);
 		}
 
 		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0);
@@ -151,7 +159,7 @@ class CONTROL_ADMIN {
 			);
 		}
 
-		$_num_adminId = fn_getSafe($_GET["admin_id"], "int", 0);
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
 		if ($_arr_ssoUser["str_alert"] != "y010102") {
@@ -232,10 +240,10 @@ class CONTROL_ADMIN {
 
 		//print_r($this->adminLogged);
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_status  = fn_getSafe($_GET["status"], "txt", "");
-		$_num_groupId = fn_getSafe($_GET["group_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
+		$_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,

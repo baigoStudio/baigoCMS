@@ -137,9 +137,10 @@ class MODEL_MARK {
 		}
 
 		$_arr_markRows = $this->obj_db->select_array(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_markRow = $_arr_markRows[0];
 
-		if (!$_arr_markRow) {
+		if (isset($_arr_markRows[0])) {
+			$_arr_markRow = $_arr_markRows[0];
+		} else {
 			return array(
 				"str_alert" => "x140102", //不存在记录
 			);
@@ -229,7 +230,7 @@ class MODEL_MARK {
 			exit;
 		}
 
-		$this->markSubmit["mark_id"] = fn_getSafe($_POST["mark_id"], "int", 0);
+		$this->markSubmit["mark_id"] = fn_getSafe(fn_post("mark_id"), "int", 0);
 
 		if ($this->markSubmit["mark_id"] > 0) {
 			$_arr_markRow = $this->mdl_read($this->markSubmit["mark_id"]);
@@ -239,7 +240,7 @@ class MODEL_MARK {
 			}
 		}
 
-		$_arr_markName = validateStr($_POST["mark_name"], 1, 30);
+		$_arr_markName = validateStr(fn_post("mark_name"), 1, 30);
 		switch ($_arr_markName["status"]) {
 			case "too_short":
 				return array(
@@ -288,7 +289,7 @@ class MODEL_MARK {
 			exit;
 		}
 
-		$_arr_markIds = $_POST["mark_id"];
+		$_arr_markIds = fn_post("mark_id");
 
 		if ($_arr_markIds) {
 			foreach ($_arr_markIds as $_key=>$_value) {

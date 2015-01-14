@@ -50,7 +50,7 @@ class CONTROL_CALL {
 			exit;
 		}
 
-		$_num_callId = fn_getSafe($_GET["call_id"], "int", 0);
+		$_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
 
 		if ($_num_callId == 0) {
 			return array(
@@ -85,7 +85,7 @@ class CONTROL_CALL {
 	 * @return void
 	 */
 	function ctl_form() {
-		$_num_callId = fn_getSafe($_GET["call_id"], "int", 0);
+		$_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
 
 		if ($_num_callId > 0) {
 			if ($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"] != 1) {
@@ -107,17 +107,21 @@ class CONTROL_CALL {
 				exit;
 			}
 			$_arr_callRow = array(
-				"call_file" => array(
-					"auto" => "auto",
-					"ext"  => "html",
+				"call_id"       => 0,
+				"call_name"     => "",
+				"call_file"     => array(
+					"auto"         => "auto",
+					"ext"          => "html",
 				),
-				"call_amount" => array(
-					"top"      => 10,
-					"except"   => 0,
+				"call_amount"   => array(
+					"top"          => 10,
+					"except"       => 0,
 				),
 				"call_trim"     => 100,
 				"call_cate_ids" => array(),
 				"call_mark_ids" => array(),
+				"call_type"   => "",
+				"call_css"   => "",
 				"call_status"   => "enable",
 			);
 		}
@@ -157,20 +161,22 @@ class CONTROL_CALL {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_type    = fn_getSafe($_GET["type"], "txt", "");
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
 			"key"        => $_str_key,
 			"type"       => $_str_type,
+			"status"     => $_str_status,
 		);
 
-		$_num_callCount   = $this->mdl_call->mdl_count($_str_key, $_str_status);
-		$_arr_page        = fn_page($_num_adminCount); //取得分页数据
+		$_num_callCount   = $this->mdl_call->mdl_count($_str_key, $_str_type, $_str_status);
+		$_arr_page        = fn_page($_num_callCount); //取得分页数据
 		$_str_query       = http_build_query($_arr_search);
-		$_arr_callRows    = $this->mdl_call->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_type);
+		$_arr_callRows    = $this->mdl_call->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_type, $_str_status);
 
 		$_arr_tpl = array(
 			"query"      => $_str_query,

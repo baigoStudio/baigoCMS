@@ -42,6 +42,12 @@
 						<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
 					{/foreach}
 				</select>
+				<select name="status" class="form-control input-sm">
+					<option value="">{$lang.option.allStatus}</option>
+					{foreach $status.call as $key=>$value}
+						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+					{/foreach}
+				</select>
 				<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
 				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
 			</form>
@@ -66,10 +72,16 @@
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.callName}</th>
 							<th class="td_sm">{$lang.label.callType}</th>
+							<th class="td_sm">{$lang.label.status}</th>
 						</tr>
 					</thead>
 					<tbody>
 						{foreach $tplData.callRows as $value}
+							{if $value.call_status == "enable"}
+								{$_css_status = "success"}
+							{else}
+								{$_css_status = "danger"}
+							{/if}
 							<tr>
 								<td class="td_mn"><input type="checkbox" name="call_id[]" value="{$value.call_id}" id="call_id_{$value.call_id}" class="chk_all validate" group="call_id"></td>
 								<td class="td_mn">{$value.call_id}</td>
@@ -78,13 +90,16 @@
 									<div><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=form&call_id={$value.call_id}">{$lang.href.edit}</a></div>
 								</td>
 								<td class="td_sm">{$type.call[$value.call_type]}</td>
+								<td class="td_sm">
+									<span class="label label-{$_css_status}">{$status.call[$value.call_status]}</span>
+								</td>
 							</tr>
 						{/foreach}
 					</tbody>
 					<tfoot>
 						<tr>
 							<td colspan="2"><span id="msg_call_id"></span></td>
-							<td colspan="2">
+							<td colspan="3">
 								<input type="hidden" id="act_post" name="act_post" value="del">
 								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
 							</td>

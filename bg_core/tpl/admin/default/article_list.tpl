@@ -202,7 +202,7 @@
 										{/if}
 									</div>
 									<div>
-										{if $value.markRow.mark_name}
+										{if isset($value.markRow.mark_name)}
 											<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&mark_id={$value.article_mark_id}">{$value.markRow.mark_name}</a>
 										{else}
 											{$lang.label.none}
@@ -213,10 +213,10 @@
 									<div>
 										<span class="label label-{$_css_status}">{$_str_status}</span>
 									</div>
-									<div>{$lang.label.add} {$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+									<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
 								</td>
 								<td class="td_md">
-									{if $value.adminRow.admin_name}
+									{if isset($value.adminRow.admin_name)}
 										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_nick}[ {$value.adminRow.admin_nick} ]{/if}</a>
 									{else}
 										{$lang.label.unknow}

@@ -81,8 +81,8 @@ class AJAX_MARK {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_markName    = fn_getSafe($_GET["mark_name"], "txt", "");
-		$_num_markId      = fn_getSafe($_GET["mark_id"], "int", 0);
+		$_str_markName    = fn_getSafe(fn_get("mark_name"), "txt", "");
+		$_num_markId      = fn_getSafe(fn_get("mark_id"), "int", 0);
 		$_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, "mark_name", $_num_markId);
 		if ($_arr_markRow["str_alert"] == "y140102") {
 			$this->obj_ajax->halt_re("x140203");

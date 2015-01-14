@@ -82,8 +82,8 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_chkname() {
-		$_str_mimeName    = fn_getSafe($_GET["mime_name"], "txt", "");
-		$_num_mimeId      = fn_getSafe($_GET["mime_id"], "int", 0);
+		$_str_mimeName    = fn_getSafe(fn_get("mime_name"), "txt", "");
+		$_num_mimeId      = fn_getSafe(fn_get("mime_id"), "int", 0);
 		$_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
 		if ($_arr_mimeRow["str_alert"] == "y080102") {
 			$this->obj_ajax->halt_re("x080206");

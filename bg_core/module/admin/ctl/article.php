@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/article.class.php"); //载入文章类
 
 $ctl_article = new CONTROL_ARTICLE();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_articleRow = $ctl_article->ctl_show();
 		if ($arr_articleRow["str_alert"] != "y120102") {

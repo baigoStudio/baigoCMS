@@ -22,7 +22,6 @@ class CONTROL_CATE {
 
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->config         = $this->obj_base->config;
 		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->obj_dir        = new CLASS_DIR();
@@ -48,7 +47,7 @@ class CONTROL_CATE {
 			exit;
 		}
 
-		$_num_cateId = fn_getSafe($_GET["cate_id"], "int", 0);
+		$_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
 
 		if ($_num_cateId == 0) {
 			return array(
@@ -83,7 +82,7 @@ class CONTROL_CATE {
 	 * @return void
 	 */
 	function ctl_form() {
-		$_num_cateId = fn_getSafe($_GET["cate_id"], "int", 0);
+		$_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
 
 		if ($_num_cateId > 0) {
 			if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
@@ -105,9 +104,21 @@ class CONTROL_CATE {
 				exit;
 			}
 			$_arr_cateRow = array(
+				"cate_id"           => 0,
+				"cate_name"         => "",
+				"cate_alias"        => "",
+				"cate_content"      => "",
+				"cate_link"         => "",
+				"cate_link"         => "",
 				"cate_type"         => "normal",
 				"cate_status"       => "show",
 				"cate_parent_id"    => -1,
+				"cate_domain"       => "",
+				"cate_ftp_host"     => "",
+				"cate_ftp_port"     => "",
+				"cate_ftp_user"     => "",
+				"cate_ftp_pass"     => "",
+				"cate_ftp_path"     => "",
 			);
 		}
 
@@ -145,10 +156,10 @@ class CONTROL_CATE {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key     = fn_getSafe($_GET["key"], "txt", "");
-		$_str_type    = fn_getSafe($_GET["type"], "txt", "");
-		$_str_status  = fn_getSafe($_GET["status"], "txt", "");
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
+		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,

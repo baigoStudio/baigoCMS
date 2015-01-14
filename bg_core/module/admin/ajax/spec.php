@@ -11,9 +11,10 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL_ADMIN . "ajax/spec.class.php"); //载入登录控制器
+
 $ajax_spec = new AJAX_SPEC();
 
-switch ($act_post) {
+switch ($GLOBALS["act_post"]) {
 	case "show":
 	case "hide":
 		$ajax_spec->ajax_status();
@@ -33,7 +34,7 @@ switch ($act_post) {
 	break;
 
 	default:
-		switch ($act_get) {
+		switch ($GLOBALS["act_get"]) {
 			case "list":
 				$ajax_spec->ajax_list();
 			break;

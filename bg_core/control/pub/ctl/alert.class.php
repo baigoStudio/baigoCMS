@@ -28,8 +28,8 @@ class CONTROL_ALERT {
 	/*============登录界面============
 	无返回
 	*/
-	function ctl_alert() {
-		$_str_alert       = fn_getSafe($_GET["alert"], "txt", "");
+	function ctl_display() {
+		$_str_alert       = fn_getSafe(fn_get("alert"), "txt", "");
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$arr_data = array(

@@ -75,7 +75,9 @@ class AJAX_OPT {
 
 		$this->opt_post("visit");
 
-		if ($_POST["opt"]["BG_VISIT_TYPE"] == "pstatic") {
+		$_arr_post = fn_post("opt");
+
+		if ($_arr_post["BG_VISIT_TYPE"] == "pstatic") {
 
 			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
 			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
@@ -132,12 +134,12 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060306");
 		}
 
-		$_str_dbHost      = fn_getSafe($_POST["db_host"], "txt", "localhost");
-		$_str_dbName      = fn_getSafe($_POST["db_name"], "txt", "sso");
-		$_str_dbUser      = fn_getSafe($_POST["db_user"], "txt", "sso");
-		$_str_dbPass      = fn_getSafe($_POST["db_pass"], "txt", "");
-		$_str_dbCharset   = fn_getSafe($_POST["db_charset"], "txt", "utf8");
-		$_str_dbTable     = fn_getSafe($_POST["db_table"], "txt", "sso_");
+		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
+		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "sso");
+		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "sso");
+		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
+		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "sso_");
 
 		$_str_content = "<?php" . PHP_EOL;
 			$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
@@ -165,7 +167,7 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x030102");
 		}
 
-		$_arr_opt = $_POST["opt"];
+		$_arr_opt = fn_post("opt");
 
 		$_str_content = "<?php" . PHP_EOL;
 		foreach ($_arr_opt as $_key=>$_value) {

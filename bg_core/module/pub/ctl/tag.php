@@ -14,7 +14,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/tag.class.php"); //载入文章类
 
 $ctl_tag = new CONTROL_TAG();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_tagRow = $ctl_tag->ctl_show();
 		if ($arr_tagRow["str_alert"] != "y130102") {

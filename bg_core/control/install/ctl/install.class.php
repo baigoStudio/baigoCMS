@@ -31,7 +31,9 @@ class CONTROL_INSTALL {
 	 * @return void
 	 */
 	function ctl_dbconfig() {
-		$this->obj_tpl->tplDisplay("install_dbconfig.tpl", $this->tplData);
+		$_arr_tplData = array();
+
+		$this->obj_tpl->tplDisplay("install_dbconfig.tpl", $_arr_tplData);
 
 		return array(
 			"str_alert" => "y030403",
@@ -52,6 +54,8 @@ class CONTROL_INSTALL {
 			);
 			exit;
 		}
+
+		$_arr_tplData = array();
 
 		$this->obj_tpl->tplDisplay("install_dbtable.tpl", $_arr_tplData);
 
@@ -316,6 +320,8 @@ class CONTROL_INSTALL {
 			exit;
 		}
 
+		$_arr_tplData = array();
+
 		$this->obj_tpl->tplDisplay("install_admin.tpl", $_arr_tplData);
 
 		return array(
@@ -339,6 +345,8 @@ class CONTROL_INSTALL {
 			exit;
 		}
 
+		$_arr_tplData = array();
+
 		$this->obj_tpl->tplDisplay("install_auth.tpl", $_arr_tplData);
 
 		return array(
@@ -361,6 +369,8 @@ class CONTROL_INSTALL {
 			);
 			exit;
 		}
+
+		$_arr_tplData = array();
 
 		$this->obj_tpl->tplDisplay("install_over.tpl", $_arr_tplData);
 

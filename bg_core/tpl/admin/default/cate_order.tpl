@@ -54,20 +54,20 @@ var opts_validator_order = {
 	order_type: {
 		length: { min: 1, max: 0 },
 		validate: { type: "radio",  },
-		msg: { id: "msg_order_type", too_few: "{$alert.x110212}" }
+		msg: { id: "msg_order_type", too_few: "{$alert.x110219}" }
 	}
 };
 
 var opts_submit_order = {
 	ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
 	btn_text: "{$lang.btn.ok}",
-	btn_url: "{$cfg.str_url}",
+	btn_url: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate",
 	btn_close: "{$lang.btn.close}"
 };
 
 $(document).ready(function(){
 	var obj_validate_order = $("#cate_order").baigoValidator(opts_validator_order);
-	var obj_submit_order = $("#cate_order").baigoSubmit(opts_submit_order);
+	var obj_submit_order   = $("#cate_order").baigoSubmit(opts_submit_order);
 	$("#go_order").click(function(){
 		if (obj_validate_order.validateSubmit()) {
 			obj_submit_order.formSubmit();

@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/profile.class.php"); //载入用户类
 
 $ctl_profile = new CONTROL_PROFILE();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "pass":
 		$arr_profileRow = $ctl_profile->ctl_pass();
 		if ($arr_profileRow["str_alert"] != "y020109") {

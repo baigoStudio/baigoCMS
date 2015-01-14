@@ -11,11 +11,11 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_INC . "common_admin.inc.php"); //载入全局通用
 include_once(BG_PATH_INC . "is_admin.inc.php"); //载入后台通用
-
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/cate.class.php"); //载入设置类
+
 $ctl_cate = new CONTROL_CATE(); //初始化设置对象
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "order":
 		$arr_cateRow = $ctl_cate->ctl_order();
 		if ($arr_cateRow["str_alert"] != "y110102") {

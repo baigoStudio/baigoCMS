@@ -15,7 +15,8 @@ class MODEL_ADMIN {
 	private $obj_db;
 
 	function __construct() { //构造函数
-		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
+		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
+		//$this->obj_reqest = new CLASS_REQUEST(); //设置数据库对象
 	}
 
 
@@ -259,20 +260,36 @@ class MODEL_ADMIN {
 		);
 
 		$_arr_adminRows = $this->obj_db->select_array(BG_DB_TABLE . "admin", $_arr_adminSelect, "admin_id=" . $num_adminId, 1, 0); //检查本地表是否存在记录
-		$_arr_adminRow = $_arr_adminRows[0];
 
-		/*print_r($_arr_adminRow);
-		exit;*/
-
-		if (!$_arr_adminRow) { //用户名不存在则返回错误
+		if (isset($_arr_adminRows[0])) { //用户名不存在则返回错误
+			$_arr_adminRow = $_arr_adminRows[0];
+		} else {
 			return array(
 				"str_alert" => "x020102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_adminRow["admin_allow_cate"]    = json_decode($_arr_adminRow["admin_allow_cate"], true); //json解码
-		$_arr_adminRow["admin_allow_profile"] = json_decode($_arr_adminRow["admin_allow_profile"], true); //json解码
+		if (isset($_arr_adminRow["admin_allow_cate"])) {
+			$_arr_adminRow["admin_allow_cate"]    = json_decode($_arr_adminRow["admin_allow_cate"], true); //json解码
+		} else {
+			$_arr_adminRow["admin_allow_cate"]    = array();
+		}
+
+		if (isset($_arr_adminRow["admin_allow_profile"])) {
+			$_arr_adminRow["admin_allow_profile"] = json_decode($_arr_adminRow["admin_allow_profile"], true); //json解码
+		} else {
+			$_arr_adminRow["admin_allow_profile"] = array();
+		}
+
+		if (!isset($_arr_adminRow["admin_allow_profile"]["info"])) {
+			$_arr_adminRow["admin_allow"]["info"] = 0;
+		}
+
+		if (!isset($_arr_adminRow["admin_allow_profile"]["pass"])) {
+			$_arr_adminRow["admin_allow"]["pass"] = 0;
+		}
+
 		$_arr_adminRow["str_alert"]           = "y020102";
 
 		return $_arr_adminRow;
@@ -390,7 +407,8 @@ class MODEL_ADMIN {
 			exit;
 		}
 
-		$_arr_adminNick = validateStr($_POST["admin_nick"], 0, 30);
+
+		$_arr_adminNick = validateStr(fn_post("admin_nick"), 0, 30);
 		switch ($_arr_adminNick["status"]) {
 			case "too_long":
 				return array(
@@ -404,7 +422,7 @@ class MODEL_ADMIN {
 			break;
 		}
 
-		$_arr_adminMail = validateStr($_POST["admin_mail"], 0, 900, "str", "email");
+		$_arr_adminMail = validateStr(fn_post("admin_mail"), 0, 900, "str", "email");
 		switch ($_arr_adminMail["status"]) {
 			case "too_long":
 				return array(
@@ -445,7 +463,7 @@ class MODEL_ADMIN {
 			exit;
 		}
 
-		$this->adminSubmit["admin_id"] = fn_getSafe($_POST["admin_id"], "int", 0);
+		$this->adminSubmit["admin_id"] = fn_getSafe(fn_post("admin_id"), "int", 0);
 
 		if ($this->adminSubmit["admin_id"] > 0) {
 			$_arr_adminRow = $this->mdl_read($this->adminSubmit["admin_id"]);
@@ -455,7 +473,7 @@ class MODEL_ADMIN {
 			}
 		}
 
-		$_arr_adminName = validateStr($_POST["admin_name"], 1, 30, "str", "strDigit");
+		$_arr_adminName = validateStr(fn_post("admin_name"), 1, 30, "str", "strDigit");
 		switch ($_arr_adminName["status"]) {
 			case "too_short":
 				return array(
@@ -483,7 +501,7 @@ class MODEL_ADMIN {
 			break;
 		}
 
-		$_arr_adminMail = validateStr($_POST["admin_mail"], 0, 900, "str", "email");
+		$_arr_adminMail = validateStr(fn_post("admin_mail"), 0, 900, "str", "email");
 		switch ($_arr_adminMail["status"]) {
 			case "too_long":
 				return array(
@@ -505,7 +523,7 @@ class MODEL_ADMIN {
 
 		}
 
-		$_arr_adminNick = validateStr($_POST["admin_nick"], 0, 30);
+		$_arr_adminNick = validateStr(fn_post("admin_nick"), 0, 30);
 		switch ($_arr_adminNick["status"]) {
 			case "too_long":
 				return array(
@@ -519,7 +537,7 @@ class MODEL_ADMIN {
 			break;
 		}
 
-		$_arr_adminNote = validateStr($_POST["admin_note"], 0, 30);
+		$_arr_adminNote = validateStr(fn_post("admin_note"), 0, 30);
 		switch ($_arr_adminNote["status"]) {
 			case "too_long":
 				return array(
@@ -533,7 +551,7 @@ class MODEL_ADMIN {
 			break;
 		}
 
-		$_arr_adminStatus = validateStr($_POST["admin_status"], 1, 0);
+		$_arr_adminStatus = validateStr(fn_post("admin_status"), 1, 0);
 		switch ($_arr_adminStatus["status"]) {
 			case "too_short":
 				return array(
@@ -548,8 +566,8 @@ class MODEL_ADMIN {
 
 		}
 
-		$this->adminSubmit["admin_allow_cate"]    = json_encode($_POST["admin_allow_cate"]);
-		$this->adminSubmit["admin_allow_profile"] = json_encode($_POST["admin_allow_profile"]);
+		$this->adminSubmit["admin_allow_cate"]    = json_encode(fn_post("admin_allow_cate"));
+		$this->adminSubmit["admin_allow_profile"] = json_encode(fn_post("admin_allow_profile"));
 		$this->adminSubmit["str_alert"]           = "ok";
 
 		return $this->adminSubmit;
@@ -570,7 +588,7 @@ class MODEL_ADMIN {
 			exit;
 		}
 
-		$_arr_adminIds = $_POST["admin_id"];
+		$_arr_adminIds = fn_post("admin_id");
 
 		if ($_arr_adminIds) {
 			foreach ($_arr_adminIds as $_key=>$_value) {

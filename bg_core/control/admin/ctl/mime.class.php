@@ -46,8 +46,8 @@ class CONTROL_MIME {
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($_GET["act_get"], "txt", "");
-		$_num_mimeId  = fn_getSafe($_GET["mime_id"], "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_num_mimeId  = fn_getSafe(fn_get("mime_id"), "int", 0);
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
@@ -65,10 +65,17 @@ class CONTROL_MIME {
 
 		if ($_num_mimeId > 0) {
 			$_arr_mimeRow = $this->mdl_mime->mdl_read($_num_mimeId);
-			if ($_arr_mimeRow != "y080102") {
+			if ($_arr_mimeRow["str_alert"] != "y080102") {
 				return $_arr_mimeRow;
 				exit;
 			}
+		} else {
+			$_arr_mimeRow = array(
+				"mime_id"   => 0,
+				"mime_name" => "",
+				"mime_ext"  => "",
+				"mime_note" => "",
+			);
 		}
 
 		$_arr_tpl = array(

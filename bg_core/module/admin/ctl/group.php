@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_ADMIN . "ctl/group.class.php"); //载入模板类
 
 $ctl_group = new CONTROL_GROUP();
 
-switch ($act_get) {
+switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_groupRow = $ctl_group->ctl_show();
 		if ($arr_groupRow["str_alert"] != "y040102") {

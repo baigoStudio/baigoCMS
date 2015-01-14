@@ -145,9 +145,10 @@ class MODEL_ATTACH {
 		);
 
 		$_arr_attachRows  = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, "attach_id=" . $num_attachId, 1, 0); //检查本地表是否存在记录
-		$_arr_attachRow   = $_arr_attachRows[0];
 
-		if (!$_arr_attachRow) {
+		if (isset($_arr_attachRows[0])) {
+			$_arr_attachRow   = $_arr_attachRows[0];
+		} else {
 			return array(
 				"str_alert" => "x070102", //不存在记录
 			);
@@ -215,8 +216,8 @@ class MODEL_ATTACH {
 	 * @return void
 	 */
 	function mdl_del($num_adminId = 0) {
-		$_str_attachId = implode(",", $this->attachIds["attach_ids"]);
 
+		$_str_attachId = implode(",", $this->attachIds["attach_ids"]);
 		$_str_sqlWhere = "attach_id IN (" . $_str_attachId . ")";
 
 		if ($num_adminId > 0) {
@@ -344,7 +345,7 @@ class MODEL_ATTACH {
 			exit;
 		}
 
-		$_arr_attachIds = $_POST["attach_id"];
+		$_arr_attachIds = fn_post("attach_id");
 
 		if ($_arr_attachIds) {
 			foreach ($_arr_attachIds as $_key=>$_value) {

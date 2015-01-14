@@ -92,8 +92,8 @@ class CONTROL_LOGON {
 	 */
 	function ctl_logon() {
 		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
-		$_str_forward     = fn_getSafe($_GET["forward"], "txt", "");
-		$_str_alert       = fn_getSafe($_GET["alert"], "txt", "");
+		$_str_forward     = fn_getSafe(fn_get("forward"), "txt", "");
+		$_str_alert       = fn_getSafe(fn_get("alert"), "txt", "");
 
 		$_arr_tplData = array(
 			"forward"    => $_str_forward,
@@ -112,7 +112,7 @@ class CONTROL_LOGON {
 	 * @return void
 	 */
 	function ctl_logout() {
-		$_str_forward  = fn_getSafe($_GET["forward"], "txt", "");
+		$_str_forward  = fn_getSafe(fn_get("forward"), "txt", "");
 		if (!$_str_forward) {
 			$_str_forward = base64_encode(BG_URL_ADMIN . "ctl.php");
 		}
@@ -131,7 +131,7 @@ class CONTROL_LOGON {
 	 * @return void
 	 */
 	private function input_login() {
-		$_arr_adminLogin["forward"] = fn_getSafe($_POST["forward"], "txt", "");
+		$_arr_adminLogin["forward"] = fn_getSafe(fn_post("forward"), "txt", "");
 		if (!$_arr_adminLogin["forward"]) {
 			$_arr_adminLogin["forward"] = base64_encode(BG_URL_ADMIN . "ctl.php");
 		}
@@ -152,7 +152,7 @@ class CONTROL_LOGON {
 			exit;
 		}
 
-		$_arr_adminName = validateStr($_POST["admin_name"], 1, 30, "str", "strDigit");
+		$_arr_adminName = validateStr(fn_post("admin_name"), 1, 30, "str", "strDigit");
 		switch ($_arr_adminName["status"]) {
 			case "too_short":
 				return array(
@@ -184,7 +184,7 @@ class CONTROL_LOGON {
 
 		}
 
-		$_arr_adminPass = validateStr($_POST["admin_pass"], 1, 0);
+		$_arr_adminPass = validateStr(fn_post("admin_pass"), 1, 0);
 		switch ($_arr_adminPass["status"]) {
 			case "too_short":
 				return array(
@@ -201,7 +201,7 @@ class CONTROL_LOGON {
 		}
 
 		$_arr_adminLogin["str_alert"] = "ok";
-		$_arr_adminLogin["view"]      = fn_getSafe($_POST["view"], "txt", "");
+		$_arr_adminLogin["view"]      = fn_getSafe(fn_post("view"), "txt", "");
 
 		return $_arr_adminLogin;
 	}

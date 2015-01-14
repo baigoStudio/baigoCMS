@@ -38,6 +38,10 @@ class CONTROL_SEARCH {
 	 * @return void
 	 */
 	function ctl_show() {
+		$_str_query       = "";
+		$_arr_page        = array();
+		$_arr_articleRows = array();
+
 		if ($this->search["key"]) {
 			$_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search["key"]);
 			$_arr_page            = fn_page($_num_articleCount); //取得分页数据
@@ -85,6 +89,7 @@ class CONTROL_SEARCH {
 
 			case "pstatic":
 				$_str_searchUrl     = BG_URL_ROOT . "search/";
+				$_str_pageAttach    = "";
 			break;
 
 			default:
@@ -106,8 +111,8 @@ class CONTROL_SEARCH {
 		} else {
 			$this->config["tpl"] = "default";
 		}
-		$_act_get = fn_getSafe($_GET["act_get"], "txt", "");
-		$_str_key = fn_getSafe($_GET["key"], "txt", "");
+		$_act_get = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key = fn_getSafe(fn_get("key"), "txt", "");
 
 		$this->search = array(
 			"act_get"    => $_act_get,
