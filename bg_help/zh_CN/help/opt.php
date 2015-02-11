@@ -3,7 +3,7 @@
 		点左侧菜单系统设置，进入如下界面，可以对系统进行设置。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/opt_base.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/opt_base.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -46,7 +46,7 @@
 		点左侧子菜单数据库设置，进入如下界面，可以对数据库进行设置。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/opt_db.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/opt_db.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -80,7 +80,7 @@
 		点左侧子菜单访问方式，进入如下界面，可以对访问方式进行设置。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/opt_visit.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/opt_visit.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -106,7 +106,7 @@
 	<h3>上传设置</h3>
 
 	<p>
-		<img src="./zh_CN/help/image/opt_upload.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/opt_upload.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -193,7 +193,7 @@
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/opt_sso.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/opt_sso.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">

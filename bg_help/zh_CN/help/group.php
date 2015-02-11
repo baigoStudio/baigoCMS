@@ -3,7 +3,7 @@
 		点左侧菜单群组管理，进入如下界面，可以对群组进行编辑、删除等操作。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/group_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/group_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>
@@ -14,7 +14,7 @@
 		点左侧子菜单的创建群组或者点击群组列表的编辑菜单，进入如下界面，在此，您可以对群组进行各项操作。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/group_form.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/group_form.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">

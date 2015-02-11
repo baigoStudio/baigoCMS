@@ -143,11 +143,11 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>lang</td>
+						<td class="nowrap">lang</td>
 						<td>通用信息，包含系统中常用的语言内容。</td>
 					</tr>
 					<tr>
-						<td>alert</td>
+						<td class="nowrap">alert</td>
 						<td>提示信息</td>
 					</tr>
 				</tbody>

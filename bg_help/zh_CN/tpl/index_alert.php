@@ -2,7 +2,7 @@
 	<h3>主页</h3>
 	<p>文件名：<span class="text-primary">index.tpl</span></p>
 	<p>
-		主页是一个网站的起点。是用户打开浏览器时默认打开的一个网页。它主要起这引导用户浏览所需要的资源的作用。
+		主页是一个网站的起点。是用户打开浏览器时默认打开的一个网页。它主要起着引导用户浏览所需资源的作用。
 	</p>
 	<div class="panel panel-default">
 		<div class="table-responsive">
@@ -16,7 +16,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>cateRows</td>
+						<td class="nowrap">cateRows</td>
 						<td>栏目列表</td>
 						<td>多维数组，网站所有栏目的结构信息。</td>
 					</tr>
@@ -44,17 +44,17 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>cateRows</td>
+						<td class="nowrap">cateRows</td>
 						<td>栏目列表</td>
 						<td>多维数组，网站所有栏目的结构信息。</td>
 					</tr>
 					<tr>
-						<td>alert</td>
+						<td class="nowrap">alert</td>
 						<td>提示代码</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td>status</td>
+						<td class="nowrap">status</td>
 						<td>状态</td>
 						<td>x 为出错信息，y 为成功信息。</td>
 					</tr>

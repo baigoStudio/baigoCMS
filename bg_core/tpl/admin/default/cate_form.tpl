@@ -13,7 +13,6 @@
 		{if $value.cate_childs}
 			{cate_list arr=$value.cate_childs}
 		{/if}
-
 	{/foreach}
 {/function}
 
@@ -183,20 +182,24 @@
 					<label class="control-label">{$lang.label.cateType}<span id="msg_cate_type">*</span></label>
 					<div class="form-group">
 						{foreach $type.cate as $key=>$value}
-							<label for="cate_type_{$key}" class="radio-inline">
-								<input type="radio" name="cate_type" id="cate_type_{$key}" value="{$key}" class="validate" {if $tplData.cateRow.cate_type == $key}checked{/if} group="cate_type">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="cate_type_{$key}">
+									<input type="radio" name="cate_type" id="cate_type_{$key}" value="{$key}" class="validate" {if $tplData.cateRow.cate_type == $key}checked{/if} group="cate_type">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 
 					<label class="control-label">{$lang.label.cateStatus}<span id="msg_cate_status">*</span></label>
 					<div class="form-group">
 						{foreach $status.cate as $key=>$value}
-							<label for="cate_status_{$key}" class="radio-inline">
-								<input type="radio" name="cate_status" id="cate_status_{$key}" value="{$key}" class="validate" {if $tplData.cateRow.cate_status == $key}checked{/if} group="cate_status">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="cate_status_{$key}">
+									<input type="radio" name="cate_status" id="cate_status_{$key}" value="{$key}" class="validate" {if $tplData.cateRow.cate_status == $key}checked{/if} group="cate_status">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 				</div>

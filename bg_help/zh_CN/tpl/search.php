@@ -15,27 +15,27 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>articleRows</td>
+						<td class="nowrap">articleRows</td>
 						<td>文章列表</td>
 						<td>所有隶属于此搜索的文章。</td>
 					</tr>
 					<tr>
-						<td>search</td>
+						<td class="nowrap">search</td>
 						<td>搜索数组</td>
-						<td>显示栏目所需要的搜索参数。</td>
+						<td>显示文章列表所需要的搜索参数。</td>
 					</tr>
 					<tr>
-						<td>query</td>
+						<td class="nowrap">query</td>
 						<td>查询串</td>
 						<td>此数组将上一项的数组序列化为查询串。</td>
 					</tr>
 					<tr>
-						<td>pageRow</td>
+						<td class="nowrap">pageRow</td>
 						<td>分页参数</td>
 						<td>详情请参照 <a href="??lang=zh_CN&mod=help&act=page">分页参数</a></td>
 					</tr>
 					<tr>
-						<td>cateRows</td>
+						<td class="nowrap">cateRows</td>
 						<td>栏目列表</td>
 						<td>多维数组，网站所有栏目的结构信息。</td>
 					</tr>

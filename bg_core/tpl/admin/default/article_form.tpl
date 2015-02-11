@@ -1,17 +1,34 @@
 {* article_form.tpl 文章编辑 *}
-{function cate_list arr="" level=""}
+{function cate_select arr="" level=""}
+	{foreach $arr as $value}
+		<option {if $value.cate_id == $tplData.articleRow.article_cate_id}selected{/if} value="{$value.cate_id}">
+			{if $value.cate_level > 1}
+				{for $_i=2 to $value.cate_level}
+					&nbsp;&nbsp;&nbsp;&nbsp;
+				{/for}
+			{/if}
+			{$value.cate_name}
+		</option>
+
+		{if $value.cate_childs}
+			{cate_select arr=$value.cate_childs level=$value.cate_level}
+		{/if}
+	{/foreach}
+{/function}
+
+{function cate_checkbox arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
 		{foreach $arr as $value}
 			<li>
 				<div class="checkbox_baigo">
 					<label for="cate_ids_{$value.cate_id}">
-						<input type="checkbox" {if $value.cate_id|in_array:$tplData.articleRow.cate_ids}checked{/if} value="{$value.cate_id}" name="cate_ids[]" id="cate_ids_{$value.cate_id}" class="validate" group="cate_ids">
+						<input type="checkbox" {if $value.cate_id|in_array:$tplData.articleRow.cate_ids}checked{/if} value="{$value.cate_id}" name="cate_ids[]" id="cate_ids_{$value.cate_id}">
 						{$value.cate_name}
 					</label>
 				</div>
 
 				{if $value.cate_childs}
-					{cate_list arr=$value.cate_childs level=$value.cate_level}
+					{cate_checkbox arr=$value.cate_childs level=$value.cate_level}
 				{/if}
 			</li>
 		{/foreach}
@@ -141,37 +158,51 @@
 						</div>
 					{/if}
 
-					<label class="control-label">{$lang.label.articleCate}<span id="msg_cate_ids">*</span></label>
 					<div class="form-group">
-						{cate_list arr=$tplData.cateRows}
+						<label class="control-label">{$lang.label.articleCate}<span id="msg_article_cate_id">*</span></label>
+						<select name="article_cate_id" id="article_cate_id" class="validate form-control">
+							<option value="">{$lang.option.pleaseSelect}</option>
+							{cate_select arr=$tplData.cateRows}
+						</select>
+					</div>
+
+					<label class="control-label">{$lang.label.articleBelong}<span id="msg_cate_ids"></span></label>
+					<div class="form-group">
+						{cate_checkbox arr=$tplData.cateRows}
 					</div>
 
 					<label class="control-label">{$lang.label.status}<span id="msg_article_status">*</span></label>
 					<div class="form-group">
 						{foreach $status.article as $key=>$value}
-							<label for="article_status_{$key}" class="radio-inline">
-								<input type="radio" name="article_status" id="article_status_{$key}" {if $tplData.articleRow.article_status == $key}checked{/if} value="{$key}" class="validate" group="article_status" {if $tplData.adminLogged.groupRow.group_allow.article.approve != 1}disabled{/if}>
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="article_status_{$key}">
+									<input type="radio" name="article_status" id="article_status_{$key}" {if $tplData.articleRow.article_status == $key}checked{/if} value="{$key}" class="validate" group="article_status" {if $tplData.adminLogged.groupRow.group_allow.article.approve != 1}disabled{/if}>
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 
 					<label class="control-label">{$lang.label.box}<span id="msg_article_box">*</span></label>
 					<div class="form-group">
-						<label for="article_box_normal" class="radio-inline">
-							<input type="radio" name="article_box" id="article_box_normal" {if $tplData.articleRow.article_box == "normal"}checked{/if} value="normal" class="validate" group="article_box">
-							{$lang.label.normal}
-						</label>
-
-						<label for="article_box_draft" class="radio-inline">
-							<input type="radio" name="article_box" id="article_box_draft" {if $tplData.articleRow.article_box == "draft"}checked{/if} value="draft" class="validate" group="article_box">
-							{$lang.label.draft}
-						</label>
-
-						<label for="article_box_recycle" class="radio-inline">
-							<input type="radio" name="article_box" id="article_box_recycle" {if $tplData.articleRow.article_box == "recycle"}checked{/if} value="recycle" class="validate" group="article_box">
-							{$lang.label.recycle}
-						</label>
+						<div class="radio_baigo">
+							<label for="article_box_normal">
+								<input type="radio" name="article_box" id="article_box_normal" {if $tplData.articleRow.article_box == "normal"}checked{/if} value="normal" class="validate" group="article_box">
+								{$lang.label.normal}
+							</label>
+						</div>
+						<div class="radio_baigo">
+							<label for="article_box_draft">
+								<input type="radio" name="article_box" id="article_box_draft" {if $tplData.articleRow.article_box == "draft"}checked{/if} value="draft" class="validate" group="article_box">
+								{$lang.label.draft}
+							</label>
+						</div>
+						<div class="radio_baigo">
+							<label for="article_box_recycle">
+								<input type="radio" name="article_box" id="article_box_recycle" {if $tplData.articleRow.article_box == "recycle"}checked{/if} value="recycle" class="validate" group="article_box">
+								{$lang.label.recycle}
+							</label>
+						</div>
 					</div>
 
 					<div class="form-group">
@@ -293,10 +324,10 @@
 			validate: { type: "str", format: "text" },
 			msg: { id: "msg_article_excerpt", too_long: "{$alert.x120206}" }
 		},
-		cate_ids: {
+		article_cate_id: {
 			length: { min: 1, max: 0 },
-			validate: { type: "checkbox" },
-			msg: { id: "msg_cate_ids", too_few: "{$alert.x120207}" }
+			validate: { type: "select" },
+			msg: { id: "msg_article_cate_id", too_few: "{$alert.x120207}" }
 		},
 		article_status: {
 			length: { min: 1, max: 0 },

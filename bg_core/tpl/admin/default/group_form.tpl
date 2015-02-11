@@ -116,20 +116,24 @@
 					<label class="control-label">{$lang.label.groupType}<span id="msg_group_type">*</span></label>
 					<div class="form-group">
 						{foreach $type.group as $key=>$value}
-							<label for="group_type_{$key}" class="radio-inline">
-								<input type="radio" name="group_type" id="group_type_{$key}" {if $tplData.groupRow.group_type == $key}checked{/if} value="{$key}" class="validate" group="group_type">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="group_type_{$key}">
+									<input type="radio" name="group_type" id="group_type_{$key}" {if $tplData.groupRow.group_type == $key}checked{/if} value="{$key}" class="validate" group="group_type">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 
 					<label class="control-label">{$lang.label.status}<span id="msg_group_status">*</span></label>
 					<div class="form-group">
 						{foreach $status.group as $key=>$value}
-							<label for="group_status_{$key}" class="radio-inline">
-								<input type="radio" name="group_status" id="group_status_{$key}" {if $tplData.groupRow.group_status == $key}checked{/if} value="{$key}" class="validate" group="group_status">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="group_status_{$key}">
+									<input type="radio" name="group_status" id="group_status_{$key}" {if $tplData.groupRow.group_status == $key}checked{/if} value="{$key}" class="validate" group="group_status">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 				</div>

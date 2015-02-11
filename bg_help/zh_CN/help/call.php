@@ -3,7 +3,7 @@
 		点左侧菜单调用管理，进入如下界面，可以对调用进行编辑、删除等操作。调用主要用于模板开发。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/call_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/call_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>

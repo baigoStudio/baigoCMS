@@ -259,7 +259,6 @@ class CONTROL_ARTICLE {
 
 		$_arr_articleCount["all"]     = $this->mdl_article->mdl_count();
 		$_arr_articleCount["draft"]   = $this->mdl_article->mdl_count("", "", "", "", "draft", false, 0, $this->adminLogged["admin_id"]);
-
 		$_arr_articleCount["recycle"] = $this->mdl_article->mdl_count("", "", "", "", "recycle", false, 0, $this->adminLogged["admin_id"]);
 
 		$_arr_articleYear             = $this->mdl_article->mdl_year();

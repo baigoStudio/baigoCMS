@@ -122,10 +122,12 @@
 							<label class="control-label">{$lang.label.callMark}<span id="msg_call_mark_ids"></span></label>
 							<div class="form-group">
 								{foreach $tplData.markRows as $key=>$value}
-									<label for="call_mark_ids_{$value.mark_id}" class="checkbox-inline">
-										<input type="checkbox" {if $value.mark_id|in_array:$tplData.callRow.call_mark_ids}checked{/if} value="{$value.mark_id}" name="call_mark_ids[]" id="call_mark_ids_{$value.mark_id}">
-										{$value.mark_name}
-									</label>
+									<div class="checkbox_baigo">
+										<label for="call_mark_ids_{$value.mark_id}">
+											<input type="checkbox" {if $value.mark_id|in_array:$tplData.callRow.call_mark_ids}checked{/if} value="{$value.mark_id}" name="call_mark_ids[]" id="call_mark_ids_{$value.mark_id}">
+											{$value.mark_name}
+										</label>
+									</div>
 								{/foreach}
 							</div>
 
@@ -133,25 +135,30 @@
 
 							<label class="control-label">{$lang.label.showBase}<span id="msg_call_show_article">*</span></label>
 							<div class="form-group">
-								<label for="call_show_cate" class="checkbox-inline">
-									<input type="checkbox" name="call_show[cate]" {if $tplData.callRow.call_show.cate == "show"}checked{/if} id="call_show_cate" value="show" group="call_show_article" class="validate">
-									{$lang.label.cateName}
-								</label>
-
-								<label for="call_show_title" class="checkbox-inline">
-									<input type="checkbox" name="call_show[title]" {if $tplData.callRow.call_show.title == "show"}checked{/if} id="call_show_title" value="show" group="call_show_article" class="validate">
-									{$lang.label.articleTitle}
-								</label>
-
-								<label for="call_show_excerpt" class="checkbox-inline">
-									<input type="checkbox" name="call_show[excerpt]" {if $tplData.callRow.call_show.excerpt == "show"}checked{/if} id="call_show_excerpt" value="show" group="call_show_article" class="validate">
-									{$lang.label.articleExcerpt}
-								</label>
-
-								<label for="call_show_tag" class="checkbox-inline">
-									<input type="checkbox" name="call_show[tag]" {if $tplData.callRow.call_show.tag == "show"}checked{/if} id="call_show_tag" value="show" group="call_show_article" class="validate">
-									{$lang.label.articleTag}
-								</label>
+								<div class="checkbox_baigo">
+									<label for="call_show_cate">
+										<input type="checkbox" name="call_show[cate]" {if $tplData.callRow.call_show.cate == "show"}checked{/if} id="call_show_cate" value="show" group="call_show_article" class="validate">
+										{$lang.label.cateName}
+									</label>
+								</div>
+								<div class="checkbox_baigo">
+									<label for="call_show_title">
+										<input type="checkbox" name="call_show[title]" {if $tplData.callRow.call_show.title == "show"}checked{/if} id="call_show_title" value="show" group="call_show_article" class="validate">
+										{$lang.label.articleTitle}
+									</label>
+								</div>
+								<div class="checkbox_baigo">
+									<label for="call_show_excerpt">
+										<input type="checkbox" name="call_show[excerpt]" {if $tplData.callRow.call_show.excerpt == "show"}checked{/if} id="call_show_excerpt" value="show" group="call_show_article" class="validate">
+										{$lang.label.articleExcerpt}
+									</label>
+								</div>
+								<div class="checkbox_baigo">
+									<label for="call_show_tag">
+										<input type="checkbox" name="call_show[tag]" {if $tplData.callRow.call_show.tag == "show"}checked{/if} id="call_show_tag" value="show" group="call_show_article" class="validate">
+										{$lang.label.articleTag}
+									</label>
+								</div>
 							</div>
 
 							<div class="form-group">
@@ -261,10 +268,12 @@
 					<label class="control-label">{$lang.label.status}<span id="msg_call_status">*</span></label>
 					<div class="form-group">
 						{foreach $status.call as $key=>$value}
-							<label for="call_status_{$key}" class="radio-inline">
-								<input type="radio" name="call_status" id="call_status_{$key}" value="{$key}" class="validate" {if $tplData.callRow.call_status == $key}checked{/if} group="call_status">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="call_status_{$key}">
+									<input type="radio" name="call_status" id="call_status_{$key}" value="{$key}" class="validate" {if $tplData.callRow.call_status == $key}checked{/if} group="call_status">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 

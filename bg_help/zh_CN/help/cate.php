@@ -4,7 +4,7 @@
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/cate_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/cate_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>
@@ -89,5 +89,5 @@
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/cate_order.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/cate_order.jpg" class="img-responsive thumbnail">
 	</p>

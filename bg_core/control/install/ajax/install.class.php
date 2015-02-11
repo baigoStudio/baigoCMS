@@ -524,6 +524,7 @@ class AJAX_INSTALL {
 				"edit"          => 1,
 				"del"           => 1,
 				"approve"       => 1,
+				"spec"          => 1,
 				"tag"           => 1,
 				"mark"          => 1,
 			),

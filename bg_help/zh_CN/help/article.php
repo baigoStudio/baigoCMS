@@ -1,10 +1,10 @@
 	<h3>所有文章</h3>
 	<p>
-		点左侧菜单文章管理，可以对文章进行编辑、删除、改变状态等操作。文章是指网站发布的每一条具体内容，比如新闻、公告等，您也可以将文章视为信息、产品等。
+		点左侧菜单文章管理，可以对文章进行编辑、删除、改变状态等操作。文章是指网站发布的每一条具体内容，比如新闻、公告等，您也可以将文章视为信息、产品等。草稿箱与回收站均为本人所有，任何人均无法查看（包括最高权限的管理员），回收站可直接清空（仅清空本人存储与回收站的文章）。
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/article_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/article_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>
@@ -16,7 +16,7 @@
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/article_form.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/article_form.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -53,7 +53,7 @@
 			<p>可根据用户设定的时间，定时发布文章。</p>
 
 			<h4 class="text-info">保存至</h4>
-			<p>可选正常、草稿或回收站。</p>
+			<p>可选正常、草稿箱或回收站。草稿箱与回收站均为本人所有，任何人均无法查看（包括最高权限的管理员），回收站可直接清空（仅清空本人存储与回收站的文章）。</p>
 
 			<h4 class="text-info">标记</h4>
 			<p>网站为了区分文章的类别所采用的标记，主要用于调用，详见 <a href="?lang=zh_CN&mod=help&act=call">调用管理</a>。</p>

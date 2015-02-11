@@ -15,27 +15,27 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>page</td>
+						<td class="nowrap">page</td>
 						<td>当前页码</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td>p</td>
+						<td class="nowrap">p</td>
 						<td>分组数</td>
 						<td>页数过多时，需要将分页按钮分成若干组，系统默认是 10 页一组。</td>
 					</tr>
 					<tr>
-						<td>begin</td>
+						<td class="nowrap">begin</td>
 						<td>分组起始页码</td>
 						<td>每一个分组的开始页码。</td>
 					</tr>
 					<tr>
-						<td>end</td>
+						<td class="nowrap">end</td>
 						<td>分组结束页码</td>
 						<td>每一个分组的结束页码。</td>
 					</tr>
 					<tr>
-						<td>total</td>
+						<td class="nowrap">total</td>
 						<td>总页数</td>
 						<td> </td>
 					</tr>

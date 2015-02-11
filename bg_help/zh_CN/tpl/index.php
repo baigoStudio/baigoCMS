@@ -1,9 +1,6 @@
 	<h3>模板概述</h3>
 	<p>
-		baigo CMS 采用 Smarty 作为模板引擎，关于模板的详情请参照 Smarty 官方网站 <a href="http://www.smarty.net" target="_blank">http://www.smarty.net</a>。前台模板位于 <mark>./bg_tpl/pub</mark> 目录下，一套模板单独一个文件夹，如默认模板 <mark>./bg_tpl/pub/default</mark>，一下教程全部以此为基础。注：模板目录必须使用 <mark>英文</mark> 与 <mark>数字</mark>，不能使用中文、符号等。
-	</p>
-	<p>
-		除通用资源外，模板的其他资源均位于 <code>{$tplData}</code> 数组。
+		baigo CMS 采用 Smarty 作为模板引擎，关于模板的详情请参照 Smarty 官方网站 <a href="http://www.smarty.net" target="_blank">http://www.smarty.net</a>。前台模板位于 <mark>./bg_tpl/pub</mark> 目录下，一套模板单独一个文件夹，如默认模板 <mark>./bg_tpl/pub/default</mark>，以下教程全部以此为基础。注：模板目录必须使用 <mark>英文</mark> 与 <mark>数字</mark>，不能使用中文、符号等。
 	</p>
 
 	<div class="panel panel-default">

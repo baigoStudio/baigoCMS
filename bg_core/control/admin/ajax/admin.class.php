@@ -152,6 +152,8 @@ class AJAX_ADMIN {
 			if ($_arr_groupRow["str_alert"] != "y040102") {
 				$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
 			}
+		} else {
+			$_num_groupId = 0;
 		}
 
 		$_arr_adminRow = $this->mdl_admin->mdl_toGroup($_num_adminId, $_num_groupId);

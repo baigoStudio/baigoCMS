@@ -32,12 +32,13 @@ class MODEL_ARTICLE_PUB {
 			"article_status"      => BG_DB_TABLE . "article",
 			"article_box"         => BG_DB_TABLE . "article",
 			"article_top"         => BG_DB_TABLE . "article",
+			"article_cate_id"     => BG_DB_TABLE . "article",
 			"belong_cate_id"      => BG_DB_TABLE . "cate_belong",
 		);
 
-		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "article` ON (`" . BG_DB_TABLE . "cate_belong`.`belong_article_id`=`" . BG_DB_TABLE . "article`.`article_id`)";
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "cate_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "cate_belong`.`belong_article_id`)";
 
-		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "article_view", $_arr_articleCreat, BG_DB_TABLE . "cate_belong", $_str_sqlJoin);
+		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "article_view", $_arr_articleCreat, BG_DB_TABLE . "article", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
 			$_str_alert = "y120108"; //更新成功
@@ -108,7 +109,6 @@ class MODEL_ARTICLE_PUB {
 	 */
 	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $_str_callAttach = "", $_str_callType = "") {
 		$_arr_articleSelect = array(
-			"belong_cate_id",
 			"article_id",
 			"article_title",
 			"article_excerpt",
@@ -116,6 +116,8 @@ class MODEL_ARTICLE_PUB {
 			"article_time_pub",
 			"article_attach_id",
 			"article_spec_id",
+			"article_cate_id",
+			"belong_cate_id",
 		);
 
 		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
@@ -134,7 +136,7 @@ class MODEL_ARTICLE_PUB {
 
 		if ($arr_cateIds) {
 			$_str_cateIds = implode(",", $arr_cateIds);
-			$_str_sqlWhere .= " AND belong_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere .= " AND (belong_cate_id IN (" . $_str_cateIds . ") OR article_cate_id IN (" . $_str_cateIds . "))";
 		}
 
 		if ($arr_markIds) {
@@ -161,12 +163,14 @@ class MODEL_ARTICLE_PUB {
 		}
 
 		if (!$_str_callType || $_str_callType == "article") {
-			$_str_sqlWhere .= " ORDER BY article_top DESC, article_id DESC";
+			$_str_sqlWhere .= " GROUP BY article_id ORDER BY article_top DESC, article_id DESC";
 		} else {
-			$_str_sqlWhere .= " ORDER BY article_" . $_str_callType . " DESC, article_id DESC";
+			$_str_sqlWhere .= " GROUP BY article_id ORDER BY article_" . $_str_callType . " DESC, article_id DESC";
 		}
 
-		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article_view", $_arr_articleSelect, $_str_sqlWhere, $num_no, $num_except);
+		//print_r($_str_sqlWhere);
+
+		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article_view", $_arr_articleSelect, $_str_sqlWhere, $num_no, $num_except, array("article_id"));
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_articleRows[$_key]["article_url"] = $this->url_process($_value);
@@ -189,7 +193,8 @@ class MODEL_ARTICLE_PUB {
 	 * @param string $_str_callType (default: "")
 	 * @return void
 	 */
-	function mdl_count($str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $_str_callAttach = "", $_str_callType = "") {
+	function mdl_count($str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $_str_callAttach = "", $_str_callType = "") {
+
 		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
 		if ($str_key) {
@@ -206,12 +211,16 @@ class MODEL_ARTICLE_PUB {
 
 		if ($arr_cateIds) {
 			$_str_cateIds = implode(",", $arr_cateIds);
-			$_str_sqlWhere .= " AND belong_cate_id IN (" . $_str_cateIds . ")";
+			$_str_sqlWhere .= " AND (belong_cate_id IN (" . $_str_cateIds . ") OR article_cate_id IN (" . $_str_cateIds . "))";
 		}
 
 		if ($arr_markIds) {
 			$_str_markIds = implode(",", $arr_markIds);
 			$_str_sqlWhere .= " AND article_mark_id IN (" . $_str_markIds . ")";
+		}
+
+		if ($num_specId > 0) {
+			$_str_sqlWhere .= " AND article_spec_id=" . $num_specId;
 		}
 
 		switch ($_str_callAttach) {
@@ -222,11 +231,15 @@ class MODEL_ARTICLE_PUB {
 			case "none":
 				$_str_sqlWhere .= " AND article_attach_id=0";
 			break;
+
+			default:
+
+			break;
 		}
 
-		//$_str_sqlOn = " ON " . BG_DB_TABLE . "cate_belong.belong_article_id=article_id LEFT JOIN " . BG_DB_TABLE . "tag_belong ON " . BG_DB_TABLE . "cate_belong.belong_article_id=" . BG_DB_TABLE . "tag_belong.belong_article_id";
+		$_str_sqlWhere       .= " GROUP BY article_id";
 
-		$_num_articleCount = $this->obj_db->count(BG_DB_TABLE . "article_view", $_str_sqlWhere); //查询数据
+		$_num_articleCount    = $this->obj_db->count(BG_DB_TABLE . "article_view", $_str_sqlWhere); //查询数据
 
 		return $_num_articleCount;
 	}

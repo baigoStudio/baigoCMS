@@ -90,7 +90,6 @@ class MODEL_ARTICLE {
 		);
 
 		if ($this->articleSubmit["article_id"] == 0) {
-
 			$_arr_articleData["article_admin_id"]    = $num_adminId;
 			$_arr_articleData["article_time"]        = time();
 
@@ -104,7 +103,6 @@ class MODEL_ARTICLE {
 				);
 				exit;
 			}
-
 		} else {
 			$_num_articleId  = $this->articleSubmit["article_id"];
 			$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
@@ -698,19 +696,31 @@ class MODEL_ARTICLE {
 			break;
 		}
 
+
+		$_arr_articleCateId = validateStr(fn_post("article_cate_id"), 1, 0);
+		switch ($_arr_articleCateId["status"]) {
+			case "too_short":
+				return array(
+					"str_alert" => "x120207",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articleSubmit["article_cate_id"] = $_arr_articleCateId["str"];
+			break;
+		}
+
+		//$this->articleSubmit["cate_ids"][] = $this->articleSubmit["article_cate_id"];
+
 		$_arr_cateIds = fn_post("cate_ids");
-		if (!$_arr_cateIds) {
-			return array(
-				"str_alert" => "x120207",
-			);
-			exit;
+		if (isset($_arr_cateIds) && is_array($_arr_cateIds)) {
+			foreach ($_arr_cateIds as $_value) {
+				$this->articleSubmit["cate_ids"][] = fn_getSafe($_value, "int", 0);
+			}
 		}
 
-		foreach ($_arr_cateIds as $_value) {
-			$this->articleSubmit["cate_ids"][] = fn_getSafe($_value, "int", 0);
-		}
-
-		$this->articleSubmit["article_cate_id"]   = $this->articleSubmit["cate_ids"][0];
+		$this->articleSubmit["cate_ids"]          = array_unique($this->articleSubmit["cate_ids"]);
 		$this->articleSubmit["article_content"]   = fn_post("article_content");
 
 		if (!$this->articleSubmit["article_excerpt"] || $this->articleSubmit["article_excerpt"] == "<br>") {

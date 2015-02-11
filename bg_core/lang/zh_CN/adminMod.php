@@ -88,7 +88,7 @@ return array(
 		),
 		"sub" => array(
 			"list" => array(
-				"title"     => "所有文件",
+				"title"     => "所有附件",
 				"mod"       => "attach",
 				"act_get"   => "list",
 			),

@@ -172,7 +172,7 @@ return array(
 		"articleContent"  => "文章内容", //文章标题
 		"articleLink"     => "跳转至", //跳转至
 		"articleLinkNote" => "必须以 http:// 开始", //跳转至
-		"articleCate"     => "从属栏目", //从属栏目
+		"articleCate"     => "隶属于栏目", //隶属栏目
 		"articleBelong"   => "附加至栏目", //附加栏目
 		"articleMark"     => "标记", //标记
 		"articleTag"      => "TAG", //TAG
@@ -315,7 +315,7 @@ return array(
 		"del"         => "永久删除", //删除
 		"complete"    => "完成",
 		"search"      => "搜索", //搜索
-		"searchSpec"  => "搜索专题",
+		"searchSpec"  => "搜索",
 		"filter"      => "筛选", //筛选
 		"thumb"       => "缩略图",
 		"upload"      => "上传附件",

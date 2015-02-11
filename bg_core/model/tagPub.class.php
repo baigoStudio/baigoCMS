@@ -28,9 +28,9 @@ class MODEL_TAG_PUB {
 			"belong_tag_id"      => BG_DB_TABLE . "tag_belong",
 		);
 
-		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "article` ON (`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`=`" . BG_DB_TABLE . "article`.`article_id`)";
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "tag_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`)";
 
-		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_tagCreat, BG_DB_TABLE . "tag_belong", $_str_sqlJoin);
+		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_tagCreat, BG_DB_TABLE . "article", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
 			$_str_alert = "y130108"; //更新成功
@@ -92,23 +92,23 @@ class MODEL_TAG_PUB {
 	 */
 	function mdl_list($num_no, $num_except = 0, $arr_tagIds = false) {
 		$_arr_tagSelect = array(
-			"belong_tag_id",
 			"article_id",
 			"article_title",
 			"article_excerpt",
 			"article_link",
 			"article_time_pub",
 			"article_attach_id",
+			"belong_tag_id",
 		);
 
 		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
 		if ($arr_tagIds) {
-			$_str_tagIds = implode(",", $arr_tagIds);
-			$_str_sqlWhere .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
+			$_str_tagIds     = implode(",", $arr_tagIds);
+			$_str_sqlWhere  .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
 		}
 
-		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_view",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY article_id DESC", $num_no, $num_except);
+		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_view",  $_arr_tagSelect, $_str_sqlWhere . " GROUP BY article_id ORDER BY article_id DESC", $num_no, $num_except, array("article_id"));
 
 		foreach ($_arr_tagRows as $_key=>$_value) {
 			$_arr_tagRows[$_key]["article_url"] = $this->url_process($_value);
@@ -130,8 +130,8 @@ class MODEL_TAG_PUB {
 		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
 		if ($arr_tagIds) {
-			$_str_tagIds = implode(",", $arr_tagIds);
-			$_str_sqlWhere .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
+			$_str_tagIds     = implode(",", $arr_tagIds);
+			$_str_sqlWhere  .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
 		}
 
 		$_num_tagCount = $this->obj_db->count(BG_DB_TABLE . "tag_view", $_str_sqlWhere); //查询数据

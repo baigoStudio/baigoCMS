@@ -3,7 +3,7 @@
 		点左侧子菜单专题，进入如下界面，可以对专题进行编辑、删除、改变状态等操作。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/spec_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/spec_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>
@@ -14,7 +14,7 @@
 		点创建或在专题列表点击编辑菜单，进入如下界面。在此，您可以对专题进行各项操作。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/spec_form.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/spec_form.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<div class="panel panel-default">
@@ -35,5 +35,5 @@
 		在专题列表点选择文章，进入如下界面。在此，您可以选择隶属于该专题的文章。左侧为已选择的文章，右侧为待选文章。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/spec_select.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/spec_select.jpg" class="img-responsive thumbnail">
 	</p>

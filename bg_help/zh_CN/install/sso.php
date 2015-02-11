@@ -38,5 +38,5 @@
 		<img src="./zh_CN/install/image/ssoAuto_2.jpg" class="img-responsive">
 	</p>
 	<p>
-		点击提交，提交成功后点击下一步。自动部署成功后，安装程序会直接跳转到创建管理员界面，详情请查看 <a href="?lang=zh_CN&index=install&mod=admin#sso">创建管理员</a>。
+		点击提交，提交成功后点击下一步。自动部署成功后，安装程序会直接跳转到创建管理员界面，详情请查看 <a href="?lang=zh_CN&mod=install&act=admin#sso">创建管理员</a>。
 	</p>

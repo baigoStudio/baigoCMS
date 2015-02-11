@@ -87,10 +87,12 @@
 					<label class="control-label">{$lang.label.status}<span id="msg_spec_status">*</span></label>
 					<div class="form-group">
 						{foreach $status.spec as $key=>$value}
-							<label for="spec_status_{$key}" class="radio-inline">
-								<input type="radio" name="spec_status" id="spec_status_{$key}" {if $tplData.specRow.spec_status == $key}checked{/if} value="{$key}" class="validate" group="spec_status">
-								{$value}
-							</label>
+							<div class="radio_baigo">
+								<label for="spec_status_{$key}">
+									<input type="radio" name="spec_status" id="spec_status_{$key}" {if $tplData.specRow.spec_status == $key}checked{/if} value="{$key}" class="validate" group="spec_status">
+									{$value}
+								</label>
+							</div>
 						{/foreach}
 					</div>
 				</div>

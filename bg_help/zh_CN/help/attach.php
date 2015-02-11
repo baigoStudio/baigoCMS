@@ -1,10 +1,10 @@
-	<h3>所有文件</h3>
+	<h3>所有附件</h3>
 	<p>
 		点左侧菜单附件管理，进入如下界面，可以对已上传的文件进行删除操作。点击上传按钮，可以上传文件。上传受上传设置和附件类型的限制，详见 <a href="?lang=zh_CN&mod=help&act=opt#upload">上传设置</a>、<a href="#mime">附件类型</a>。
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/attach_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/attach_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<hr>
@@ -16,7 +16,7 @@
 	</p>
 
 	<p>
-		<img src="./zh_CN/help/image/mime_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/mime_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<p>左侧表单可以创建允许上传的文件类型。表单下方的选框是常用的 MIME 类型，选择自动填写表单。</p>
@@ -25,7 +25,7 @@
 		<div class="panel-heading">填写说明</div>
 		<div class="panel-body">
 			<h4 class="text-info">允许上传的 MIME</h4>
-			<p>允许上传的 MIME 类型。MIME 全称：多用途互联网邮件扩展（MIME，Multipurpose Internet Mail Extensions）是一个互联网标准，它扩展了电子邮件标准，详见 <a href="http://zh.wikipedia.org/wiki/MIME" target="_blank">维基百科</a></p>
+			<p>允许上传的 MIME 类型。MIME 全称：多用途互联网邮件扩展（MIME，Multipurpose Internet Mail Extensions）是一个互联网标准，它扩展了电子邮件标准。详见 <a href="http://zh.wikipedia.org/wiki/MIME" target="_blank">维基百科</a></p>
 
 			<h4 class="text-info">扩展名</h4>
 			<p>与 MIME 类型相对应的扩展名。</p>
@@ -43,7 +43,7 @@
 		点左侧子菜单缩略图，进入如下界面，可以对系统自动生成的缩略图进行删除操作，100 X 100 为系统默认缩略图，无法删除，调用键名主要用于模板开发。
 	</p>
 	<p>
-		<img src="./zh_CN/help/image/thumb_list.jpg" class="img-responsive img-rounded img_border">
+		<img src="./zh_CN/help/image/thumb_list.jpg" class="img-responsive thumbnail">
 	</p>
 
 	<p>左侧表单可以创建自动生成的缩略图的尺寸。</p>
