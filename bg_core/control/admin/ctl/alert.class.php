@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 
 /*-------------提示信息控制器-------------*/
 class CONTROL_ALERT {
@@ -44,4 +44,3 @@ class CONTROL_ALERT {
 	}
 
 }
-?>

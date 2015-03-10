@@ -19,14 +19,14 @@ class MODEL_GROUP {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_groupCreat = array(
-			"group_id"       => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"group_id"       => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"group_name"     => "varchar(30) NOT NULL COMMENT '组名'",
 			"group_note"     => "varchar(30) NOT NULL COMMENT '备注'",
 			"group_allow"    => "varchar(1000) NOT NULL COMMENT '权限'",
-			"group_type"     => "varchar(20) NOT NULL COMMENT '类型'",
-			"group_status"   => "varchar(20) NOT NULL COMMENT '状态'",
+			"group_type"     => "enum('admin','admin') NOT NULL COMMENT '类型'",
+			"group_status"   => "enum('enable','disable') NOT NULL COMMENT '状态'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "group", $_arr_groupCreat, "group_id", "群组");
@@ -44,16 +44,10 @@ class MODEL_GROUP {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "group'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "group");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -213,7 +207,7 @@ class MODEL_GROUP {
 			"group_status",
 		);
 
-		$_str_sqlWhere = "group_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND group_name LIKE '%" . $str_key . "%' OR group_note LIKE '%" . $str_key . "%'";
@@ -243,7 +237,7 @@ class MODEL_GROUP {
 	 * @return void
 	 */
 	function mdl_count($str_key = "", $str_type = "", $str_status = "") {
-		$_str_sqlWhere = "group_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND group_name LIKE '%" . $str_key . "%' OR group_note LIKE '%" . $str_key . "%'";
@@ -413,4 +407,3 @@ class MODEL_GROUP {
 	}
 
 }
-?>

@@ -42,4 +42,3 @@ class CONTROL_ALERT {
 	}
 
 }
-?>

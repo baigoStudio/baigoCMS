@@ -1,5 +1,5 @@
 {$cfg = [
-	title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.tag.title}",
+	title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.spec.title}",
 	menu_active    => "article",
 	sub_active     => "spec",
 	baigoCheckall  => "true",
@@ -13,7 +13,7 @@
 {include "include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
-	<li>{$adminMod.article.sub.tag.title}</li>
+	<li>{$adminMod.article.sub.spec.title}</li>
 
 	{include "include/admin_left.tpl" cfg=$cfg}
 
@@ -34,7 +34,7 @@
 				</li>
 			{/if}
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=spec#form" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=spec#form" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>

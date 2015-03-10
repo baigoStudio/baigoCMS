@@ -49,7 +49,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=admin#auth" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=admin#auth" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>

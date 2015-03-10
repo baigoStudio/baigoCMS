@@ -11,6 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
+include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "cateBelong.class.php");
 include_once(BG_PATH_MODEL . "tag.class.php");
 include_once(BG_PATH_MODEL . "tagBelong.class.php");
@@ -23,6 +24,7 @@ class AJAX_ARTICLE {
 	private $adminLogged;
 	private $obj_tpl;
 	private $mdl_article;
+	private $mdl_cate;
 	private $mdl_cateBelong;
 	private $allowCateIds;
 
@@ -30,6 +32,7 @@ class AJAX_ARTICLE {
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
 		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
+		$this->mdl_cate       = new MODEL_CATE();
 		$this->mdl_cateBelong = new MODEL_CATE_BELONG();
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
@@ -72,6 +75,16 @@ class AJAX_ARTICLE {
 		if ($_arr_articleSubmit["str_alert"] != "ok") {
 			$this->obj_ajax->halt_alert($_arr_articleSubmit["str_alert"]);
 		}
+		
+		foreach ($_arr_articleSubmit["cate_ids"] as $_value) {
+			$_arr_cateRow = $this->mdl_cate->mdl_read($_value);
+			if ($_arr_cateRow["str_alert"] != "y110102") {
+				$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+			}
+			if ($_arr_cateRow["cate_type"] != "normal") {
+				$this->obj_ajax->halt_alert("x110222");
+			}
+		}
 
 		if ($_arr_articleSubmit["article_id"] > 0) {
 			//判断权限
@@ -109,13 +122,13 @@ class AJAX_ARTICLE {
 			$_value = trim($_value);
 			$_arr_tagRow = $this->mdl_tag->mdl_read($_value, "tag_name");
 			if ($_arr_tagRow["str_alert"] == "y130102") {
-				$_arr_tagIds[] = $_arr_tagRow["tag_id"];
+				$_arr_tagIds[]      = $_arr_tagRow["tag_id"];
 				//统计 tag 文章数
-				$_num_articleCount = $this->mdl_tagBelong->mdl_count($_arr_tagRow["tag_id"]);
+				$_num_articleCount  = $this->mdl_tagBelong->mdl_count($_arr_tagRow["tag_id"]);
 				$this->mdl_tag->mdl_countDo($_arr_tagRow["tag_id"], $_num_articleCount); //更新
 			} else {
-				$_arr_tagRow = $this->mdl_tag->mdl_submit($_value, "show");
-				$_arr_tagIds[] = $_arr_tagRow["tag_id"];
+				$_arr_tagRow    = $this->mdl_tag->mdl_submit($_value, "show");
+				$_arr_tagIds[]  = $_arr_tagRow["tag_id"];
 			}
 		}
 
@@ -330,4 +343,3 @@ class AJAX_ARTICLE {
 		return $_is_submit;
 	}
 }
-?>

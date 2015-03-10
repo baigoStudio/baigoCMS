@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_CLASS . "sso.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目模型
 
@@ -45,7 +45,7 @@ class CONTROL_PROFILE {
 	 */
 	function ctl_info() {
 		$_arr_userRow     = $this->obj_sso->sso_get($this->adminLogged["admin_id"]);
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
 			"userRow"    => $_arr_userRow,
@@ -64,7 +64,7 @@ class CONTROL_PROFILE {
 
 	function ctl_pass() {
 		$_arr_userRow     = $this->obj_sso->sso_get($this->adminLogged["admin_id"]);
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
 			"userRow"    => $_arr_userRow,
@@ -80,4 +80,3 @@ class CONTROL_PROFILE {
 		);
 	}
 }
-?>

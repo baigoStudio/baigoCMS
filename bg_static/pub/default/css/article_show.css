@@ -1,0 +1,8 @@
+@import "common.css";
+
+.page_body > .cate_nav { margin-bottom: 20px; }
+.page_body > .cate_title { font-size: 16px; margin-bottom: 10px; }
+
+.page_body > .article_title { font-size: 16px; margin-bottom: 10px; }
+.page_body > .article_time { margin-bottom: 10px; }
+.page_body > .article_content { font-size: 14px; margin-bottom: 10px; background: #fff; padding: 20px; }

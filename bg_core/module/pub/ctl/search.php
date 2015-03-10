@@ -19,4 +19,3 @@ switch ($GLOBALS["act_get"]) {
 		$arr_searchRow = $ctl_search->ctl_show();
 	break;
 }
-?>

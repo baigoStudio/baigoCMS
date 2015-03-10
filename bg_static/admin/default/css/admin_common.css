@@ -20,15 +20,37 @@
 .static_label { color: #999; font-weight: normal; }
 .static_input { font-size: 20px; }
 
-.list_padding { margin: 0 25px; }
+.list_padding { margin-left: 15px; }
+
+.list_menu {
+  padding-left: 0;
+  margin: 3px 0 0 -3px;
+  list-style: none;
+}
+
+.list_menu > li {
+  display: inline-block;
+  padding: 0 3px;
+}
+
+.list_menu > li + li:before {
+  padding-right: 4px;
+  color: #999;
+  content: "|";
+}
 
 label.control-label > span { color: #c30; margin-left: 10px; }
 
-table tr.cate_2 td { background: #eee; }
-table tr.cate_3 td { background: #ddd; }
-table tr.cate_4 td { background: #ccc; }
-table tr.cate_5 td { background: #bbb; }
-table tr.cate_6 td { background: #aaa; }
+table td.cate_3 { padding-left: 23px!important; }
+table td.cate_4 { padding-left: 38px!important; }
+table td.cate_5 { padding-left: 53px!important; }
+table td.cate_6 { padding-left: 68px!important; }
+
+select option.cate_2 { padding-left: 15px; }
+select option.cate_3 { padding-left: 30px; }
+select option.cate_4 { padding-left: 45px; }
+select option.cate_5 { padding-left: 60px; }
+select option.cate_6 { padding-left: 75px; }
 
 .radio_baigo,
 .checkbox_baigo {

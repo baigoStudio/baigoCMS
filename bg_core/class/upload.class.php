@@ -9,6 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
+if(!defined("BG_UPLOAD_URL")) {
+	define("BG_UPLOAD_URL", "");
+}
+
 /*-------------上传类-------------*/
 class CLASS_UPLOAD {
 
@@ -454,4 +458,3 @@ class CLASS_UPLOAD {
 		}
 	}
 }
-?>

@@ -15,8 +15,7 @@ class CONTROL_TAG {
 	private $obj_tpl;
 	private $search;
 	private $mdl_tag;
-	private $mdl_tagPub;
-	private $mdl_tagBelong;
+	private $mdl_articlePub;
 	private $mdl_attach;
 
 	function __construct() { //构造函数
@@ -24,8 +23,7 @@ class CONTROL_TAG {
 		$this->tag_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_tagPub     = new MODEL_TAG_PUB();
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
+		$this->mdl_articlePub = new MODEL_ARTICLE_PUB();
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
@@ -48,6 +46,7 @@ class CONTROL_TAG {
 		}
 
 		$_arr_tagRow = $this->mdl_tag->mdl_read($_str_tagName, "tag_name");
+
 		if ($_arr_tagRow["str_alert"] != "y130102") {
 			return $_arr_tagRow;
 			exit;
@@ -63,23 +62,22 @@ class CONTROL_TAG {
 
 		$this->search["tag_name"] = $_str_tagName;
 
-		$_num_articleCount    = $this->mdl_tagPub->mdl_count($_arr_tagIds);
-		$_arr_page            = fn_page($_num_articleCount); //取得分页数据
+		$_num_articleCount    = $this->mdl_articlePub->mdl_count("", "", "", false, false, false, $_arr_tagIds);
+		$_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
 		$_str_query           = http_build_query($this->search);
-		$_arr_articleRows     = $this->mdl_tagPub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $_arr_tagIds);
+		$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", false, false, false, $_arr_tagIds);
 		$_arr_attachThumb     = $this->mdl_thumb->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
-			$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_value["article_id"]);
-			foreach ($_arr_tagBelongRows as $_key_tag=>$_value_tag) {
-				$_arr_tagRow = $this->mdl_tag->mdl_read($_value_tag["belong_tag_id"]);
-				if ($_arr_tagRow["tag_status"] == "show") {
-					$_arr_articleRows[$_key]["tagRows"][$_key_tag] = $_arr_tagRow;
-				}
-			}
+			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
-			$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
+			if ($_value["article_attach_id"] > 0) {
+				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
+			}
 		}
+
+		//统计 tag 文章数
+		$this->mdl_tag->mdl_countDo($_arr_tagRow["tag_id"], $_num_articleCount); //更新
 
 		$_arr_tplData = array(
 			"query"          => $_str_query,
@@ -104,12 +102,18 @@ class CONTROL_TAG {
 	 * @access public
 	 * @return void
 	 */
-	function ctl_list() {
+	/*function ctl_list() {
 		$_num_perPage     = 90;
 		$_num_tagCount    = $this->mdl_tag->mdl_count("", "show");
 		$_arr_page        = fn_page($_num_tagCount, $_num_perPage); //取得分页数据
 		$_str_query       = http_build_query($this->search);
 		$_arr_tagRows     = $this->mdl_tag->mdl_list($_num_perPage, $_arr_page["except"], "", "show");
+
+
+		foreach ($_arr_tagRows as $_value) {
+			$_num_articleCount = $this->mdl_articlePub->mdl_count("", "", "", false, false, false, array($_value["tag_id"]));
+			$this->mdl_tag->mdl_countDo($_value["tag_id"], $_num_articleCount); //更新
+		}
 
 		$_arr_tplData = array(
 			"query"      => $_str_query,
@@ -120,10 +124,10 @@ class CONTROL_TAG {
 		);
 
 		$this->obj_tpl->tplDisplay("tag_list.tpl", $_arr_tplData);
-	}
+	}*/
 
 
-	private function url_process() {
+	/*private function url_process() {
 		switch (BG_VISIT_TYPE) {
 			case "static":
 				$_str_tagUrl        = BG_URL_ROOT . "tag/";
@@ -145,8 +149,7 @@ class CONTROL_TAG {
 			"tag_url"        => $_str_tagUrl,
 			"page_attach"    => $_str_pageAttach,
 		);
-	}
-
+	}*/
 
 	private function tag_init() {
 		if(defined("BG_SITE_TPL")) {
@@ -158,7 +161,7 @@ class CONTROL_TAG {
 
 		$this->search = array(
 			"act_get"    => $_act_get,
-			"urlRow"     => $this->url_process(),
+			//"urlRow"     => $this->url_process(),
 		);
 
 		if (BG_VISIT_TYPE == "static") {
@@ -170,4 +173,3 @@ class CONTROL_TAG {
 		$this->cateRows = $this->mdl_cate->mdl_list(1000);
 	}
 }
-?>

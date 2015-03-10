@@ -16,10 +16,11 @@ if (isset($_GET["ssid"])) {
 session_start(); //开启session
 $GLOBALS["ssid"] = session_id();
 
-//error_reporting(E_ALL);
-error_reporting(E_ALL & ~E_NOTICE);
-
-header("Content-Type: text/html; charset=utf-8");
+if (defined("BG_SYS_DEBUG") && BG_SYS_DEBUG == true) {
+	error_reporting(E_ALL);
+} else {
+	error_reporting(E_ALL & ~E_NOTICE);
+}
 
 include_once(BG_PATH_FUNC . "common.func.php"); //载入通用函数
 include_once(BG_PATH_FUNC . "validate.func.php"); //载入表单验证函数
@@ -31,4 +32,3 @@ $GLOBALS["view"]        = fn_getSafe(fn_request("view"), "txt", ""); //查询串
 if ($GLOBALS["view"]) {
 	$_url_attach = "&view=" . $GLOBALS["view"];
 }
-?>

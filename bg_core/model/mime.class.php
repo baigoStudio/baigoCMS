@@ -19,12 +19,12 @@ class MODEL_MIME {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_mimeCreat = array(
-			"mime_id"    => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"mime_id"    => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"mime_name"  => "varchar(300) NOT NULL COMMENT 'MIME'",
 			"mime_note"  => "varchar(300) NOT NULL COMMENT '备注'",
-			"mime_ext"   => "varchar(10) NOT NULL COMMENT '扩展名'",
+			"mime_ext"   => "char(4) NOT NULL COMMENT '扩展名'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "mime", $_arr_mimeCreat, "mime_id", "MIME");
@@ -42,16 +42,10 @@ class MODEL_MIME {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "mime'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "mime");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -158,7 +152,7 @@ class MODEL_MIME {
 			"mime_note",
 		);
 
-		$_arr_mimeRows = $this->obj_db->select_array(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "mime_id > 0 ORDER BY mime_id DESC", $num_no, $num_except); //查询数据
+		$_arr_mimeRows = $this->obj_db->select_array(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "1=1 ORDER BY mime_id DESC", $num_no, $num_except); //查询数据
 
 		return $_arr_mimeRows;
 	}
@@ -315,4 +309,3 @@ class MODEL_MIME {
 	}
 
 }
-?>

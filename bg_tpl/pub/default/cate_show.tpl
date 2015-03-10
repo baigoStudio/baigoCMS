@@ -37,5 +37,4 @@
 	{include "include/page.tpl" cfg=$cfg}
 
 {include "include/pub_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl"}

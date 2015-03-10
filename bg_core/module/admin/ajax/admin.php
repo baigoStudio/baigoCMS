@@ -52,4 +52,3 @@ switch ($GLOBALS["act_post"]) {
 		}
 	break;
 }
-?>

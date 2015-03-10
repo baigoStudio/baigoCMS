@@ -96,4 +96,3 @@ class AJAX_MIME {
 		exit(json_encode($arr_re));
 	}
 }
-?>

@@ -190,4 +190,3 @@ class AJAX_CATE {
 		exit(json_encode($arr_re));
 	}
 }
-?>

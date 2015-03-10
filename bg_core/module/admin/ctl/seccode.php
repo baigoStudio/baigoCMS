@@ -19,4 +19,3 @@ switch ($GLOBALS["act_get"]) {
 		$ctl_seccode->ctl_make();
 	break;
 }
-?>

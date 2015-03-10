@@ -20,7 +20,6 @@ class CONTROL_CATE {
 	private $obj_tpl;
 	private $mdl_cate;
 	private $mdl_tag;
-	private $mdl_tagBelong;
 	private $mdl_article;
 	private $mdl_attach;
 
@@ -29,7 +28,6 @@ class CONTROL_CATE {
 		$this->cate_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
 		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
@@ -63,22 +61,28 @@ class CONTROL_CATE {
 		}
 
 		$_num_articleCount            = $this->mdl_articlePub->mdl_count("", "", "", $this->cateIds);
-		$_arr_page                    = fn_page($_num_articleCount); //取得分页数据
+		$_arr_page                    = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
 		$_str_query                   = http_build_query($this->search);
 		$_arr_articleRows             = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", $this->cateIds);
 		$_arr_attachThumb             = $this->mdl_thumb->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
-			$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($_value["article_id"]);
+			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
-			foreach ($_arr_tagBelongRows as $_key_tag=>$_value_tag) {
-				$_arr_tagRow = $this->mdl_tag->mdl_read($_value_tag["belong_tag_id"]);
-				if ($_arr_tagRow["tag_status"] == "show") {
-					$_arr_articleRows[$_key]["tagRows"][$_key_tag] = $_arr_tagRow;
+			if ($_value["article_attach_id"] > 0) {
+				$_arr_articleRows[$_key]["attachRow"]    = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
+			}
+
+			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
+
+			if (is_array($_arr_cateRow["cate_trees"])) {
+				foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+					$_arr_cate                                         = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
+					$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
 				}
 			}
 
-			$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
+			$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
 		}
 
 		$_arr_tplData = array(
@@ -136,11 +140,13 @@ class CONTROL_CATE {
 		}
 
 		if ($_num_cateId > 0) {
-			$this->cateRow = $this->mdl_cate->mdl_read($_num_cateId);
+			$this->cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
+
 			if ($this->cateRow["str_alert"] == "y110102") {
-				$this->cateIds       = $this->mdl_cate->mdl_cateIds($_num_cateId);
-				$this->cateIds[]     = $_num_cateId;
-				$_str_cateTpl        = $this->tpl_process($_num_cateId);
+				$this->cateIds      = $this->mdl_cate->mdl_cateIds($_num_cateId);
+				$this->cateIds[]    = $_num_cateId;
+				$this->cateIds      = array_unique($this->cateIds);
+				$_str_cateTpl       = $this->tpl_process($_num_cateId);
 				if ($_str_cateTpl == "inherit") {
 					$this->config["tpl"] = $_str_tpl;
 				} else {
@@ -152,7 +158,7 @@ class CONTROL_CATE {
 
 				if (is_array($this->cateRow["cate_trees"])) {
 					foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
-						$_arr_cateRow = $this->mdl_cate->mdl_read($_value["cate_id"]);
+						$_arr_cateRow                                 = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
 						$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
 					}
 				}
@@ -182,7 +188,7 @@ class CONTROL_CATE {
 	 * @return void
 	 */
 	private function tpl_process($num_cateId) {
-		$_arr_cateRow = $this->mdl_cate->mdl_read($num_cateId);
+		$_arr_cateRow = $this->mdl_cate->mdl_readPub($num_cateId);
 		$_str_cateTpl = $_arr_cateRow["cate_tpl"];
 
 		if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
@@ -192,4 +198,3 @@ class CONTROL_CATE {
 		return $_str_cateTpl;
 	}
 }
-?>

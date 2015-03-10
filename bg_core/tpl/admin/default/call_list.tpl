@@ -25,7 +25,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=call" target="_blank">
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=call" target="_blank">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						{$lang.href.help}
 					</a>
@@ -36,26 +36,36 @@
 			<form name="call_search" id="call_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 				<input type="hidden" name="mod" value="call">
 				<input type="hidden" name="act_get" value="list">
-				<select name="type" class="form-control input-sm">
-					<option value="">{$lang.option.allType}</option>
-					{foreach $type.call as $key=>$value}
-						<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
-					{/foreach}
-				</select>
-				<select name="status" class="form-control input-sm">
-					<option value="">{$lang.option.allStatus}</option>
-					{foreach $status.call as $key=>$value}
-						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
-					{/foreach}
-				</select>
-				<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+				<div class="form-group">
+					<select name="type" class="form-control input-sm">
+						<option value="">{$lang.option.allType}</option>
+						{foreach $type.call as $key=>$value}
+							<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="status" class="form-control input-sm">
+						<option value="">{$lang.option.allStatus}</option>
+						{foreach $status.call as $key=>$value}
+							<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</div>
 			</form>
 		</div>
 		<div class="clearfix"></div>
 	</div>
 
-	<form name="call_list" id="call_list" class="form-inline">
+	<form name="call_list" id="call_list">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 		<div class="panel panel-default">
@@ -71,8 +81,7 @@
 							</th>
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.callName}</th>
-							<th class="td_sm">{$lang.label.callType}</th>
-							<th class="td_sm">{$lang.label.status}</th>
+							<th class="td_sm">{$lang.label.status} / {$lang.label.type}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -86,12 +95,20 @@
 								<td class="td_mn"><input type="checkbox" name="call_id[]" value="{$value.call_id}" id="call_id_{$value.call_id}" class="chk_all validate" group="call_id"></td>
 								<td class="td_mn">{$value.call_id}</td>
 								<td>
-									<div class="title">{$value.call_name}</div>
-									<div><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=form&call_id={$value.call_id}">{$lang.href.edit}</a></div>
+									<ul class="list-unstyled">
+										<li>{$value.call_name}</li>
+										<li>
+											<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=form&call_id={$value.call_id}">{$lang.href.edit}</a>
+										</li>
+									</ul>
 								</td>
-								<td class="td_sm">{$type.call[$value.call_type]}</td>
 								<td class="td_sm">
-									<span class="label label-{$_css_status}">{$status.call[$value.call_status]}</span>
+									<ul class="list-unstyled">
+										<li>
+											<span class="label label-{$_css_status}">{$status.call[$value.call_status]}</span>
+										</li>
+										<li>{$type.call[$value.call_type]}</li>
+									</ul>
 								</td>
 							</tr>
 						{/foreach}
@@ -99,7 +116,7 @@
 					<tfoot>
 						<tr>
 							<td colspan="2"><span id="msg_call_id"></span></td>
-							<td colspan="3">
+							<td colspan="2">
 								<input type="hidden" id="act_post" name="act_post" value="del">
 								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
 							</td>

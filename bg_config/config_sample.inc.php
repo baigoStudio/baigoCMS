@@ -5,6 +5,7 @@
 -----------------------------------------------------------------*/
 
 define("IN_BAIGO", true); //程序是否合法被包含
+define("BG_SYS_DEBUG", false); //数据库调试模式
 define("BG_DB_DEBUG", false); //数据库调试模式
 
 define("PRD_SSO_URL", "http://www.baigo.net/Products/baigoSSO/"); //sso 官网
@@ -20,6 +21,7 @@ define("BG_DEFAULT_LANG", "zh_CN"); //默认语言
 define("BG_DEFAULT_UI", "default"); //默认界面
 define("BG_DEFAULT_SESSION", 1200); //默认会话过期时间，秒
 define("BG_DEFAULT_PERPAGE", 30); //默认会话过期时间，秒
+define("BG_DEFAULT_TOKEN", 604800); //默认口令过期时间，秒
 
 /*-------------------------目录名称-------------------------*/
 define("BG_NAME_CONFIG", "bg_config"); //配置文件
@@ -27,7 +29,8 @@ define("BG_NAME_CONFIG", "bg_config"); //配置文件
 define("BG_NAME_HTML", "bg_html"); //生成文件目录
 define("BG_NAME_INCLUDE", "include"); //静态模式时引用存放目录
 
-define("BG_NAME_HELP", "bg_help"); //帮助目录
+define("BG_NAME_BGHELP", "bg_help"); //帮助目录
+define("BG_NAME_HELP", "help"); //帮助目录
 define("BG_NAME_ARTICLE", "article"); //静态模式时文章存放目录
 define("BG_NAME_ATTACH", "bg_attach"); //附件目录
 define("BG_NAME_SSO", "bg_sso"); //sso 目录
@@ -44,6 +47,8 @@ define("BG_NAME_IMAGE", "image"); //图片
 define("BG_NAME_BGADMIN", "bg_admin"); //管理目录名(入口)
 define("BG_NAME_ADMIN", "admin"); //管理目录名(模型、控制器、模块等)
 define("BG_NAME_PUB", "pub"); //前台目录名(模型、控制器、模块等)
+define("BG_NAME_BGAPI", "bg_api"); //后台
+define("BG_NAME_API", "api"); //后台
 
 define("BG_NAME_BGINSTALL", "bg_install"); //安装目录名(入口)
 define("BG_NAME_INSTALL", "install"); //安装目录名(模型、控制器、模块等)
@@ -81,15 +86,20 @@ define("BG_PATH_MODULE", BG_PATH_CORE . BG_NAME_MODULE . "/"); //模块文件
 define("BG_PATH_MODULE_ADMIN", BG_PATH_MODULE . BG_NAME_ADMIN ."/"); //后台模块文件
 define("BG_PATH_MODULE_INSTALL", BG_PATH_MODULE . BG_NAME_INSTALL ."/"); //安装模块文件
 define("BG_PATH_MODULE_PUB", BG_PATH_MODULE . BG_NAME_PUB . "/"); //前台模块文件
+define("BG_PATH_MODULE_API", BG_PATH_MODULE . BG_NAME_API . "/"); //模块文件
+define("BG_PATH_MODULE_HELP", BG_PATH_MODULE . BG_NAME_HELP . "/"); //模块文件
 
 define("BG_PATH_CONTROL", BG_PATH_CORE . BG_NAME_CONTROL . "/"); //控制器
 define("BG_PATH_CONTROL_ADMIN", BG_PATH_CONTROL . BG_NAME_ADMIN . "/"); //后台控制器
 define("BG_PATH_CONTROL_INSTALL", BG_PATH_CONTROL . BG_NAME_INSTALL . "/"); //安装控制器
 define("BG_PATH_CONTROL_PUB", BG_PATH_CONTROL . BG_NAME_PUB . "/"); //前台控制器
+define("BG_PATH_CONTROL_API", BG_PATH_CONTROL . BG_NAME_API . "/"); //控制
+define("BG_PATH_CONTROL_HELP", BG_PATH_CONTROL . BG_NAME_HELP . "/"); //控制
 
 define("BG_PATH_SYSTPL", BG_PATH_CORE . BG_NAME_TPL . "/"); //系统模板
 define("BG_PATH_SYSTPL_ADMIN", BG_PATH_SYSTPL . BG_NAME_ADMIN . "/"); //后台模板
 define("BG_PATH_SYSTPL_INSTALL", BG_PATH_SYSTPL . BG_NAME_INSTALL . "/"); //安装模板
+define("BG_PATH_SYSTPL_HELP", BG_PATH_SYSTPL . BG_NAME_HELP . "/"); //安装模板
 
 define("BG_PATH_CLASS", BG_PATH_CORE . BG_NAME_CLASS . "/"); //类目录
 define("BG_PATH_FONT", BG_PATH_CORE . BG_NAME_FONT . "/"); //字体
@@ -102,12 +112,13 @@ define("BG_PATH_SMARTY", BG_PATH_CORE . BG_NAME_SMARTY . "/"); //Smarty 目录
 /*-------------------------URL-------------------------*/
 define("BG_URL_ROOT", str_ireplace(str_ireplace("\\", "/", $_SERVER["DOCUMENT_ROOT"]), "", str_ireplace("\\", "/", BG_PATH_ROOT))); //根目录
 
-define("BG_URL_HELP", BG_URL_ROOT . BG_NAME_HELP . "/"); //帮助
+define("BG_URL_HELP", BG_URL_ROOT . BG_NAME_BGHELP . "/"); //帮助
 define("BG_URL_ARTICLE", BG_URL_ROOT . BG_NAME_ARTICLE . "/"); //静态模式时文章存放目录
 define("BG_URL_ATTACH", BG_URL_ROOT . BG_NAME_ATTACH . "/"); //附件文件目录
 define("BG_URL_SSO", BG_URL_ROOT . BG_NAME_SSO . "/"); //sso 目录
 
 define("BG_URL_PUB", BG_URL_ROOT); //前台
+define("BG_URL_API", BG_URL_ROOT . BG_NAME_BGAPI . "/"); //API 目录
 define("BG_URL_ADMIN", BG_URL_ROOT . BG_NAME_BGADMIN . "/"); //后台
 define("BG_URL_INSTALL", BG_URL_ROOT . BG_NAME_BGINSTALL . "/"); //安装
 
@@ -116,6 +127,7 @@ define("BG_URL_STATIC", BG_URL_ROOT . BG_NAME_STATIC . "/"); //静态文件目�
 define("BG_URL_STATIC_ADMIN", BG_URL_STATIC . BG_NAME_ADMIN . "/"); //后台静态文件目录
 define("BG_URL_STATIC_INSTALL", BG_URL_STATIC . BG_NAME_INSTALL . "/"); //安装静态文件目录
 define("BG_URL_STATIC_PUB", BG_URL_STATIC . BG_NAME_PUB . "/"); //前台静态文件目录
+define("BG_URL_STATIC_HELP", BG_URL_STATIC . BG_NAME_HELP . "/"); //前台静态文件目录
 
 define("BG_URL_IMAGE", BG_URL_STATIC . BG_NAME_IMAGE . "/"); //图片
 define("BG_URL_JS", BG_URL_STATIC . BG_NAME_JS . "/"); //JS
@@ -133,4 +145,3 @@ include_once(BG_PATH_CONFIG . "opt_upload.inc.php"); //上传
 include_once(BG_PATH_CONFIG . "opt_visit.inc.php"); //URL
 
 $GLOBALS["img_ext"] = array("jpg", "jpe", "jpeg", "gif", "png", "bmp");
-?>

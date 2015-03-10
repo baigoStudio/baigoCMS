@@ -31,7 +31,7 @@ return array(
 		"spec"            => "专题",
 
 		"upgrade"         => "baigo CMS 升级程序",
-		"upgradeTable"    => "升级数据表",
+		"upgradeTable"    => "升级数据库",
 		"upgradeOver"     => "完成升级",
 
 		"install"         => "baigo CMS 安装程序",
@@ -100,7 +100,7 @@ return array(
 		"seccode"         => "验证码", //验证码
 		"all"             => "全部",
 		"key"             => "关键词", //关键词
-		"alert"           => "提示代码", //提示信息
+		"alert"           => "返回代码", //提示信息
 		"noname"          => "未命名", //未命名
 		"unknow"          => "未知", //未知
 		"normal"          => "正常", //草稿
@@ -109,6 +109,19 @@ return array(
 		"box"             => "保存至",
 		"status"          => "状态", //状态
 		"none"            => "无",
+		"type"            => "类型", //栏目类型
+
+		"appName"         => "应用名称",
+		"appId"           => "APP ID",
+		"appKey"          => "APP KEY",
+		"appKeyNote"      => "如果 APP KEY 泄露，可以通过重置更换，原 APP KEY 将作废。",
+		"appNotice"       => "通知接口 URL",
+		"appAllow"        => "权限", //系统权限
+		"apiUrl"          => "API 接口 URL",
+
+		"ipAllow"         => "允许通信 IP",
+		"ipBad"           => "禁止通信 IP",
+		"ipNote"          => "每行一个 IP，可使用通配符 <strong>*</strong> （如 192.168.1.*）",
 
 		"admin"           => "管理员", //管理员
 		"adminGroup"      => "隶属群组", //管理组
@@ -140,7 +153,7 @@ return array(
 		"loading"         => "正在载入……",
 		"uploading"       => "正在上传",
 
-		"upgradeTable"    => "即将升级数据表",
+		"upgradeTable"    => "即将升级数据库",
 		"upgradeOver"     => "还差最后一步，完成升级",
 
 		"installOver"     => "还差最后一步，完成安装",
@@ -181,6 +194,7 @@ return array(
 		"articleCount"    => "文章数",
 		"articleSpec"     => "专题",
 
+		"cate"            => "栏目", //栏目
 		"cateAllow"       => "栏目管理权限", //栏目权限
 		"cateName"        => "栏目名称", //栏目名称
 		"cateAlias"       => "别名（用于 URL）", //别名
@@ -207,6 +221,7 @@ return array(
 		"callTrim"        => "显示字数",
 		"callMark"        => "标记（不选则显示所有）",
 		"callCate"        => "栏目",
+		"callSpec"        => "专题",
 		"callAttach"      => "是否带图片",
 		"callShow"        => "显示以下项目",
 		"callShowImg"     => "图片",
@@ -292,8 +307,8 @@ return array(
 
 	/*------长篇文字------*/
 	"text" => array(
-		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
-		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请参考 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
+		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
+		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
 		"installAdmin"    => "本操作将向 SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。",
 		"installSsoAdmin" => "本操作将同时为 CMS 与 SSO 创建管理员，拥有所有的管理权限。请牢记用户名与密码。",
 		"installAuth"     => "本操作将用您输入的 SSO 用户作为管理员，拥有所有的管理权限。您必须输入该用户的用户名和密码才能进行授权。",
@@ -330,12 +345,14 @@ return array(
 		"belongDel"   => "移除",
 		"reloadSpec"  => "重载专题",
 		"stepNext"    => "下一步",
+		"resetKey"    => "重置 APP KEY",
 	),
 
 	/*------确认框------*/
 	"confirm" => array(
-		"del"     => "确认永久删除吗？此操作不可恢复！", //确认清空回收站
-		"empty"   => "确认清空回收站吗？此操作不可恢复！", //确认清空回收站
+		"del"         => "确认永久删除吗？此操作不可恢复！", //确认清空回收站
+		"empty"       => "确认清空回收站吗？此操作不可恢复！", //确认清空回收站
+		"resetKey"    => "确认重置吗？此操作不可恢复！",
 	),
 
 	/*------图片说明------*/
@@ -343,4 +360,3 @@ return array(
 		"seccode" => "看不清", //验证码
 	),
 );
-?>

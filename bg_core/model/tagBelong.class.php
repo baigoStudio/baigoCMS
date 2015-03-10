@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-/*-------------用户类-------------*/
+/*-------------TAG 归属类-------------*/
 class MODEL_TAG_BELONG {
 
 	private $obj_db;
@@ -19,11 +19,11 @@ class MODEL_TAG_BELONG {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_belongCreat = array(
-			"belong_id"          => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"belong_tag_id"      => "int(11) NOT NULL COMMENT '标签 ID'",
-			"belong_article_id"  => "int(11) NOT NULL COMMENT '文章 ID'",
+			"belong_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"belong_tag_id"      => "int NOT NULL COMMENT '标签 ID'",
+			"belong_article_id"  => "int NOT NULL COMMENT '文章 ID'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "tag_belong", $_arr_belongCreat, "belong_id", "标签从属");
@@ -40,17 +40,82 @@ class MODEL_TAG_BELONG {
 	}
 
 
-	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
+	function mdl_create_index() {
+		$_str_alert = "y160109"; //更新成功
+		$_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . "tag_belong");
+
+		$is_exists        = false;
+		foreach ($_arr_indexRow as $_key=>$_value) {
+			if (in_array("search_article", $_value)) {
+				$is_exists = true;
+				break;
+			}
+		}
+
+		$_arr_tagBelongIndex = array(
+			"belong_article_id",
 		);
 
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "tag_belong'";
+		$_num_mysql = $this->obj_db->create_index("search_article", BG_DB_TABLE . "tag_belong", $_arr_tagBelongIndex, "BTREE", $is_exists);
 
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		if ($_num_mysql <= 0) {
+			$_str_alert = "x160109"; //更新成功
+		}
+
+		$is_exists        = false;
+		foreach ($_arr_indexRow as $_key=>$_value) {
+			if (in_array("search_tag", $_value)) {
+				$is_exists = true;
+				break;
+			}
+		}
+
+		$_arr_tagBelongIndex = array(
+			"belong_tag_id",
+		);
+
+		$_num_mysql = $this->obj_db->create_index("search_tag", BG_DB_TABLE . "tag_belong", $_arr_tagBelongIndex, "BTREE", $is_exists);
+
+		if ($_num_mysql <= 0) {
+			$_str_alert = "x160109"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_create_view() {
+		$_arr_viewCreat = array(
+			"tag_id"             => BG_DB_TABLE . "tag",
+			"tag_name"           => BG_DB_TABLE . "tag",
+			"tag_status"         => BG_DB_TABLE . "tag",
+			"tag_article_count"  => BG_DB_TABLE . "tag",
+			"belong_article_id"  => BG_DB_TABLE . "tag_belong",
+		);
+
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "tag_belong` ON (`" . BG_DB_TABLE . "tag`.`tag_id`=`" . BG_DB_TABLE . "tag_belong`.`belong_tag_id`)";
+
+		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_viewCreat, BG_DB_TABLE . "tag", $_str_sqlJoin);
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y160108"; //更新成功
+		} else {
+			$_str_alert = "x160108"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "tag_belong");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -115,7 +180,7 @@ class MODEL_TAG_BELONG {
 			"belong_tag_id",
 		);
 
-		$_str_sqlWhere = "belong_id>0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_articleId > 0) {
 			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
@@ -143,33 +208,6 @@ class MODEL_TAG_BELONG {
 
 
 	/**
-	 * mdl_list function.
-	 *
-	 * @access public
-	 * @param string $str_status (default: "")
-	 * @param string $str_type (default: "")
-	 * @param int $num_parentId (default: 0)
-	 * @return void
-	 */
-	function mdl_list($num_articleId = 0, $str_status = "") {
-		$_arr_belongSelect = array(
-			"belong_tag_id",
-			"belong_article_id",
-		);
-
-		$_str_sqlWhere = "belong_id>0";
-
-		if ($num_articleId > 0) {
-			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
-		}
-
-		$_arr_belongRows = $this->obj_db->select_array(BG_DB_TABLE . "tag_belong",  $_arr_belongSelect, $_str_sqlWhere . " ORDER BY belong_id DESC", 1000, 0);
-
-		return $_arr_belongRows;
-	}
-
-
-	/**
 	 * mdl_count function.
 	 *
 	 * @access public
@@ -179,7 +217,7 @@ class MODEL_TAG_BELONG {
 	 */
 	function mdl_count($num_tagId = 0, $num_articleId = 0) {
 
-		$_str_sqlWhere = "belong_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_tagId > 0) {
 			$_str_sqlWhere .= " AND belong_tag_id=" . $num_tagId;
@@ -205,7 +243,7 @@ class MODEL_TAG_BELONG {
 	 */
 	function mdl_del($num_tagId = 0, $num_articleId = 0, $arr_tagIds = false, $arr_articleIds = false, $arr_notTagIds = false, $arr_notArticleIds = false) {
 
-		$_str_sqlWhere = "belong_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_tagId > 0) {
 			$_str_sqlWhere .= " AND belong_tag_id=" . $num_tagId;
@@ -248,4 +286,3 @@ class MODEL_TAG_BELONG {
 		); //成功
 	}
 }
-?>

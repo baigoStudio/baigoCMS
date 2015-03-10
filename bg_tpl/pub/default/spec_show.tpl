@@ -12,6 +12,8 @@
 		<li>{$tplData.specRow.spec_name}</li>
 	</ol>
 
+	{$tplData.specRow|@debug_print_var}
+
 	{foreach $tplData.articleRows as $value}
 		<h3><a href="{$value.article_url}" target="_blank">{$value.article_title}</a></h3>
 		<p>{$value.article_time_pub|date_format:$smarty.const.BG_SITE_DATE}</p>

@@ -33,6 +33,11 @@
 		</a>
 	</div>
 
-{include "include/pub_foot.tpl" cfg=$cfg}
+	{call_display call_id=7}
 
+	{foreach $callRows.7 as $_key=>$_value}
+		<p>{$_key}</p>
+	{/foreach}
+
+{include "include/pub_foot.tpl" cfg=$cfg}
 {include "include/html_foot.tpl"}

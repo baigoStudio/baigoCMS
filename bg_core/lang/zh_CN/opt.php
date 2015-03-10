@@ -110,7 +110,7 @@ return array(
 			"format"     => "int",
 			"min"        => 1,
 			"default"    => 200,
-			"note"       => "单位请参考下一项",
+			"note"       => "单位请查看下一项",
 		),
 		"BG_UPLOAD_UNIT" => array(
 			"label"      => "允许上传单位",
@@ -247,4 +247,4 @@ return array(
 		),
 	),
 );
-?>
+

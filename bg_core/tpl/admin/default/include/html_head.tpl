@@ -9,7 +9,7 @@
 
 	<!--jQuery 库-->
 	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
-	<link href="{$smarty.const.BG_URL_STATIC_ADMIN}default/css/admin_common.css" type="text/css" rel="stylesheet">
+	<link href="{$smarty.const.BG_URL_STATIC_ADMIN}{$config.ui}/css/admin_common.css" type="text/css" rel="stylesheet">
 	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 
 	{if isset($cfg.tagmanager)}
@@ -44,7 +44,7 @@
 			selector: "textarea.tinymce",
 			language: "{$config.lang}",
 			plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
-			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image",
+			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image | code",
 			convert_urls: false,
 			remove_script_host: false
 		});

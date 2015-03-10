@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/tag.class.php"); //载入文章类
 $ctl_tag = new CONTROL_TAG();
 
 switch ($GLOBALS["act_get"]) {
-	case "show":
+	default:
 		$arr_tagRow = $ctl_tag->ctl_show();
 		if ($arr_tagRow["str_alert"] != "y130102") {
 			header("Location: " . BG_URL_ROOT . "index.php?mod=alert&act_get=display&alert=" . $arr_tagRow["str_alert"]);
@@ -23,8 +23,7 @@ switch ($GLOBALS["act_get"]) {
 		}
 	break;
 
-	default:
+	/*default:
 		$arr_tagRow = $ctl_tag->ctl_list();
-	break;
+	break;*/
 }
-?>

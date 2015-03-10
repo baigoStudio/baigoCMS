@@ -87,10 +87,17 @@ class AJAX_OPT {
 				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
 				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
 				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2&page=$3 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list [L]" . PHP_EOL;
+				/*$_str_content .= "RewriteRule ^tag/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^tag/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list&page=$1 [L]" . PHP_EOL;*/
 				$_str_content .= "RewriteRule ^tag/(.*)/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1 [L]" . PHP_EOL;
 				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list&page=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^spec/([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1&page=$2 [L]" . PHP_EOL;
 				$_str_content .= "RewriteRule ^search/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^search/(.*)/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1 [L]" . PHP_EOL;
+				$_str_content .= "RewriteRule ^search/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1&page=$2 [L]" . PHP_EOL;
 			$_str_content .= "</IfModule>" . PHP_EOL;
 			$_str_content .= "# END baigo CMS" . PHP_EOL;
 
@@ -142,13 +149,12 @@ class AJAX_OPT {
 		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "sso_");
 
 		$_str_content = "<?php" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
-			$_str_content .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
-		$_str_content .= "?>";
+		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
 
 		file_put_contents(BG_PATH_CONFIG . "config_db.inc.php", $_str_content);
 
@@ -185,11 +191,8 @@ class AJAX_OPT {
 			$_str_content .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
 		}
 
-		$_str_content .= "?>";
-
 		$_str_content = str_replace("||", "", $_str_content);
 
 		file_put_contents(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_content);
 	}
 }
-?>

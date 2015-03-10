@@ -7,39 +7,50 @@
 		{else}
 			{$_css_status = "danger"}
 		{/if}
-		<tr class="cate_{$value.cate_level}">
+		<tr>
 			<td class="td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
+			<td>{$value.cate_id}</td>
+			<td class="cate_{$value.cate_level}">
+				<ul class="list-unstyled">
+					<li>
+						{if $value.cate_level > 1}
+							| -
+						{/if}
+						{if $value.cate_name}
+							{$value.cate_name}
+						{else}
+							{$lang.label.noname}
+						{/if}
+					</li>
+					<li>
+						<ul class="list_menu">
+							<li>
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
+							</li>
+							<li>
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
+							</li>
+							<li>
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" data-toggle="modal" data-target="#cate_modal">{$lang.href.order}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</td>
 			<td>
-				{if $value.cate_level > 1}
-					{for $_i=2 to $value.cate_level}
-						--
-					{/for}
-				{/if}
-				{$value.cate_id}
-				/
-				{if $value.cate_name}
-					{$value.cate_name}
-				{else}
-					{$lang.label.noname}
-				{/if}
-			</td>
-			<td class="td_bg">
-				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
-				&nbsp;|&nbsp;
-				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
-				&nbsp;|&nbsp;
-				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=order&cate_id={$value.cate_id}&view=iframe" data-toggle="modal" data-target="#cate_modal">{$lang.href.order}</a>
-			</td>
-			<td class="td_bg">
 				{if $value.cate_alias}
 					{$value.cate_alias}
 				{else}
 					{$value.cate_id}
 				{/if}
 			</td>
-			<td class="td_sm">{$type.cate[$value.cate_type]}</td>
 			<td class="td_sm">
-				<span class="label label-{$_css_status}">{$status.cate[$value.cate_status]}</span>
+				<ul class="list-unstyled">
+					<li>
+						<span class="label label-{$_css_status}">{$status.cate[$value.cate_status]}</span>
+					</li>
+					<li>{$type.cate[$value.cate_type]}</li>
+				</ul>
 			</td>
 		</tr>
 
@@ -76,7 +87,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=cate" target="_blank">
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=cate" target="_blank">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						{$lang.href.help}
 					</a>
@@ -87,20 +98,30 @@
 			<form name="cate_search" id="cate_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 				<input type="hidden" name="mod" value="cate">
 				<input type="hidden" name="act_get" value="list">
-				<select name="type" class="form-control input-sm">
-					<option value="">{$lang.option.allType}</option>
-					{foreach $type.cate as $key=>$value}
-						<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
-					{/foreach}
-				</select>
-				<select name="status" class="form-control input-sm">
-					<option value="">{$lang.option.allStatus}</option>
-					{foreach $status.cate as $key=>$value}
-						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
-					{/foreach}
-				</select>
-				<input type="test" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+				<div class="form-group">
+					<select name="type" class="form-control input-sm">
+						<option value="">{$lang.option.allType}</option>
+						{foreach $type.cate as $key=>$value}
+							<option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="status" class="form-control input-sm">
+						<option value="">{$lang.option.allStatus}</option>
+						{foreach $status.cate as $key=>$value}
+							<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</div>
 			</form>
 		</div>
 		<div class="clearfix"></div>
@@ -120,15 +141,10 @@
 									{$lang.label.all}
 								</label>
 							</th>
-							<th>
-								{$lang.label.id}
-								/
-								{$lang.label.cateName}
-							</th>
-							<th class="td_bg"> </th>
-							<th class="td_bg">{$lang.label.cateAlias}</th>
-							<th class="td_sm">{$lang.label.cateType}</th>
-							<th class="td_sm">{$lang.label.status}</th>
+							<th class="td_mn">{$lang.label.id}</th>
+							<th>{$lang.label.cateName}</th>
+							<th>{$lang.label.cateAlias}</th>
+							<th class="td_sm">{$lang.label.status} / {$lang.label.type}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -138,15 +154,21 @@
 						<tr>
 							<td colspan="2"><span id="msg_cate_id"></span></td>
 							<td colspan="4">
-								<select name="act_post" id="act_post" class="validate form-control input-sm">
-									<option value="">{$lang.option.batch}</option>
-									{foreach $status.cate as $key=>$value}
-										<option value="{$key}">{$value}</option>
-									{/foreach}
-									<option value="del">{$lang.option.del}</option>
-								</select>
-								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
-								<span id="msg_act_post"></span>
+								<div class="form-group">
+									<select name="act_post" id="act_post" class="validate form-control input-sm">
+										<option value="">{$lang.option.batch}</option>
+										{foreach $status.cate as $key=>$value}
+											<option value="{$key}">{$value}</option>
+										{/foreach}
+										<option value="del">{$lang.option.del}</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
+								</div>
+								<div class="form-group">
+									<span id="msg_act_post"></span>
+								</div>
 							</td>
 						</tr>
 					</tfoot>

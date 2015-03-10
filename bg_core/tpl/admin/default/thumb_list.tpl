@@ -25,7 +25,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=attach#thumb" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=attach#thumb" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
@@ -78,7 +78,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<form name="thumb_list" id="thumb_list" class="form-inline">
+			<form name="thumb_list" id="thumb_list">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -104,14 +104,16 @@
 										<td class="td_mn"><input type="checkbox" name="thumb_id[]" value="{$value.thumb_id}" id="thumb_id_{$value.thumb_id}" group="thumb_id" class="chk_all validate"></td>
 										<td class="td_mn">{$value.thumb_id}</td>
 										<td>
-											<div>{$value.thumb_width} X {$value.thumb_height}</div>
-											<div>
-												{if $value.thumb_id > 0}
-													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=thumb&act_get=list&thumb_id={$value.thumb_id}">{$lang.href.edit}</a>
-												{else}
-													{$lang.href.edit}
-												{/if}
-											</div>
+											<ul class="list-unstyled">
+												<li>{$value.thumb_width} X {$value.thumb_height}</li>
+												<li>
+													{if $value.thumb_id > 0}
+														<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=thumb&act_get=list&thumb_id={$value.thumb_id}">{$lang.href.edit}</a>
+													{else}
+														{$lang.href.edit}
+													{/if}
+												</li>
+											</ul>
 										</td>
 										<td class="td_bg">thumb_{$value.thumb_width}_{$value.thumb_height}_{$value.thumb_type}</td>
 										<td class="td_sm">{$type.thumb[$value.thumb_type]}</td>

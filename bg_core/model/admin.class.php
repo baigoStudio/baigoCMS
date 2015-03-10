@@ -16,23 +16,22 @@ class MODEL_ADMIN {
 
 	function __construct() { //构造函数
 		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
-		//$this->obj_reqest = new CLASS_REQUEST(); //设置数据库对象
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_adminCreate = array(
-			"admin_id"               => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"admin_id"               => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"admin_name"             => "varchar(30) NOT NULL COMMENT '用户名'",
 			"admin_note"             => "varchar(30) NOT NULL COMMENT '备注'",
 			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
-			"admin_rand"             => "varchar(6) NOT NULL COMMENT '随机码'",
+			"admin_rand"             => "char(6) NOT NULL COMMENT '随机码'",
 			"admin_allow_cate"       => "varchar(1000) NOT NULL COMMENT '栏目权限'",
-			"admin_group_id"         => "int(11) NOT NULL COMMENT '从属用户组ID'",
-			"admin_time"             => "int(11) NOT NULL COMMENT '登录时间'",
-			"admin_time_login"       => "int(11) NOT NULL COMMENT '最后登录'",
-			"admin_status"           => "varchar(10) NOT NULL COMMENT '状态'",
-			"admin_ip"               => "varchar(15) NOT NULL COMMENT 'IP'",
+			"admin_group_id"         => "smallint NOT NULL COMMENT '从属用户组ID'",
+			"admin_time"             => "int NOT NULL COMMENT '登录时间'",
+			"admin_time_login"       => "int NOT NULL COMMENT '最后登录'",
+			"admin_status"           => "enum('enable','disable') NOT NULL COMMENT '状态'",
+			"admin_ip"               => "char(15) NOT NULL COMMENT 'IP'",
 			"admin_allow_profile"    => "varchar(1000) NOT NULL COMMENT '个人权限'",
 		);
 
@@ -51,16 +50,10 @@ class MODEL_ADMIN {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "admin'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "admin");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -319,7 +312,7 @@ class MODEL_ADMIN {
 			"admin_status",
 		);
 
-		$_str_sqlWhere = "admin_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND (admin_note LIKE '%" . $str_key . "%' OR admin_nick LIKE '%" . $str_key . "%')";
@@ -352,7 +345,7 @@ class MODEL_ADMIN {
 	 * @return void
 	 */
 	function mdl_count($str_key = "", $str_status = "", $num_groupId = 0) {
-		$_str_sqlWhere = "admin_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND (admin_note LIKE '%" . $str_key . "%' OR admin_nick LIKE '%" . $str_key . "%')";
@@ -607,4 +600,3 @@ class MODEL_ADMIN {
 		return $this->adminIds;
 	}
 }
-?>

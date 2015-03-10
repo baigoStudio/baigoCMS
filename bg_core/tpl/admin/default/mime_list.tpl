@@ -25,7 +25,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=attach#mime" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=attach#mime" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
@@ -81,7 +81,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<form name="mime_list" id="mime_list" class="form-inline">
+			<form name="mime_list" id="mime_list">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -97,8 +97,7 @@
 									</th>
 									<th class="td_mn">{$lang.label.id}</th>
 									<th>{$lang.label.mimeName}</th>
-									<th class="td_sm">{$lang.label.ext}</th>
-									<th class="td_sm">{$lang.label.note}</th>
+									<th class="td_md">{$lang.label.ext} / {$lang.label.note}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -107,20 +106,26 @@
 										<td class="td_mn"><input type="checkbox" name="mime_id[]" value="{$value.mime_id}" id="mime_id_{$value.mime_id}" class="chk_all validate" group="mime_id"></td>
 										<td class="td_mn">{$value.mime_id}</td>
 										<td>
-											<div>{$value.mime_name}</div>
-											<div>
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=list&mime_id={$value.mime_id}">{$lang.href.edit}</a>
-											</div>
+											<ul class="list-unstyled">
+												<li>{$value.mime_name}</li>
+												<li>
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=list&mime_id={$value.mime_id}">{$lang.href.edit}</a>
+												</li>
+											</ul>
 										</td>
-										<td class="td_sm">{$value.mime_ext}</td>
-										<td class="td_sm">{$value.mime_note}</td>
+										<td class="td_md">
+											<ul class="list-unstyled">
+												<li>{$value.mime_ext}</li>
+												<li>{$value.mime_note}</li>
+											</ul>
+										</td>
 									</tr>
 								{/foreach}
 							</tbody>
 							<tfoot>
 								<tr>
 									<td colspan="2"><span id="msg_mime_id"></span></td>
-									<td colspan="3">
+									<td colspan="2">
 										<input type="hidden" name="act_post" id="act_post" value="del">
 										<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
 									</td>

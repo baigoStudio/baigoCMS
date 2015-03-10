@@ -19,11 +19,11 @@ class MODEL_CATE_BELONG {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_belongCreat = array(
-			"belong_id"          => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"belong_cate_id"     => "int(11) NOT NULL COMMENT '栏目 ID'",
-			"belong_article_id"  => "int(11) NOT NULL COMMENT '文章 ID'",
+			"belong_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"belong_cate_id"     => "smallint NOT NULL COMMENT '栏目 ID'",
+			"belong_article_id"  => "int NOT NULL COMMENT '文章 ID'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "cate_belong", $_arr_belongCreat, "belong_id", "栏目从属");
@@ -40,17 +40,40 @@ class MODEL_CATE_BELONG {
 	}
 
 
-	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
+	function mdl_create_index() {
+		$_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . "cate_belong");
+		$is_exists        = false;
+
+		foreach ($_arr_indexRow as $_key=>$_value) {
+			if (in_array("search", $_value)) {
+				$is_exists = true;
+				break;
+			}
+		}
+
+		$_arr_tagBelongIndex = array(
+			"belong_article_id",
 		);
 
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "cate_belong'";
+		$_num_mysql = $this->obj_db->create_index("search", BG_DB_TABLE . "cate_belong", $_arr_tagBelongIndex, "BTREE", $is_exists);
 
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		if ($_num_mysql > 0) {
+			$_str_alert = "y150109"; //更新成功
+		} else {
+			$_str_alert = "x150109"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "cate_belong");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -115,7 +138,7 @@ class MODEL_CATE_BELONG {
 			"belong_cate_id",
 		);
 
-		$_str_sqlWhere = "belong_id>0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_articleId > 0) {
 			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
@@ -148,7 +171,7 @@ class MODEL_CATE_BELONG {
 			"belong_article_id",
 		);
 
-		$_str_sqlWhere = "belong_id>0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_articleId > 0) {
 			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
@@ -170,7 +193,7 @@ class MODEL_CATE_BELONG {
 	 */
 	function mdl_count($num_cateId = 0, $num_articleId = 0) {
 
-		$_str_sqlWhere = "belong_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_cateId > 0) {
 			$_str_sqlWhere .= " AND belong_cate_id=" . $num_cateId;
@@ -199,7 +222,7 @@ class MODEL_CATE_BELONG {
 	 */
 	function mdl_del($num_cateId = 0, $num_articleId = 0, $arr_cateIds = false, $arr_articleIds = false, $arr_notCateIds = false, $arr_notArticleIds = false) {
 
-		$_str_sqlWhere = "belong_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_cateId > 0) {
 			$_str_sqlWhere .= " AND belong_cate_id=" . $num_cateId;
@@ -245,4 +268,3 @@ class MODEL_CATE_BELONG {
 		); //成功
 	}
 }
-?>

@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
 
 /*-------------缩略图类-------------*/
@@ -89,4 +89,3 @@ class CONTROL_THUMB {
 		);
 	}
 }
-?>

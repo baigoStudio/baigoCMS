@@ -113,4 +113,3 @@ return array(
 		"note"    => "GZ 压缩包",
 	),
 );
-?>

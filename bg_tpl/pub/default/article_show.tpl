@@ -7,11 +7,10 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{$smarty.const.BG_URL_ROOT}">首页</a></li>
-		{foreach $tplData.cateRow.cate_trees as $value}
+		{foreach $tplData.articleRow.cateRow.cate_trees as $value}
 			<li><a href="{$value.urlRow.cate_url}">{$value.cate_name}</a></li>
 		{/foreach}
 	</ol>
-
 
 	<h3>{$tplData.articleRow.article_title}</h3>
 	<p>{$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</p>
@@ -26,11 +25,10 @@
 			Tags:
 		</li>
 
-		{foreach $tplData.tagRows as $tag_value}
+		{foreach $tplData.articleRow.tagRows as $tag_value}
 			<li><a href="{$tag_value.urlRow.tag_url}">{$tag_value.tag_name}</a></li>
 		{/foreach}
 	</ul>
 
 {include "include/pub_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl"}

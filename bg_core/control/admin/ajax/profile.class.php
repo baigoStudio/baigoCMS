@@ -165,4 +165,3 @@ class AJAX_PROFILE {
 		return $_arr_adminPass;
 	}
 }
-?>

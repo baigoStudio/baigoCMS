@@ -10,7 +10,7 @@
 	<!--jQuery 库-->
 	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
 	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-	<link href="{$smarty.const.BG_URL_STATIC_PUB}default/css/common.css" type="text/css" rel="stylesheet">
+	<link href="{$smarty.const.BG_URL_STATIC_PUB}{$config.ui}/css/common.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>

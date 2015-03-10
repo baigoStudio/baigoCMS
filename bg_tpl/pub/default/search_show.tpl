@@ -1,7 +1,7 @@
 {* search_show.tpl 搜索显示 *}
 {$cfg = [
 	title      => $lang.page.search,
-	str_url    => "{$tplData.search.urlRow.search_url}{$tplData.search.urlRow.page_attach}",
+	str_url    => "{$tplData.search.urlRow.search_url}{$tplData.search.key}{$tplData.search.urlRow.page_attach}",
 	page_ext   => $tplData.search.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
@@ -16,11 +16,9 @@
 		{/if}
 	</ol>
 
-	<form name="search" action="{$smarty.const.BG_URL_ROOT}index.php" method="get" class="form-inline">
-		<input type="hidden" name="mod" value="search">
-		<input type="hidden" name="act_get" value="show">
-		<input type="text" name="key" value="{$tplData.search.key}" class="form-control">
-		<button type="submit" class="btn btn-primary">搜索</button>
+	<form name="search" class="form-inline">
+		<input type="text" name="key" id="key" value="{$tplData.search.key}" class="form-control">
+		<button type="button" id="search_go" class="btn btn-primary">搜索</button>
 	</form>
 
 	{foreach $tplData.articleRows as $value}
@@ -45,4 +43,12 @@
 	{/if}
 
 {include "include/pub_foot.tpl" cfg=$cfg}
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#search_go").click(function(){
+			var _key = $("#key").val();
+			window.location.href = "{$tplData.search.urlRow.search_url}" + _key + "/";
+		});
+	})
+	</script>
 {include "include/html_foot.tpl"}

@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "dir.class.php"); //载入模板类
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 
 class CONTROL_INSTALL {
@@ -129,7 +129,7 @@ class CONTROL_INSTALL {
 		}
 
 
-		if(!BG_MODULE_GEN) {
+		if(BG_MODULE_GEN == false) {
 			unset($this->obj_tpl->opt["visit"]["BG_VISIT_TYPE"]["option"]["static"], $this->obj_tpl->opt["visit"]["BG_VISIT_FILE"]);
 		}
 
@@ -170,8 +170,8 @@ class CONTROL_INSTALL {
 		}
 
 
-		if(!BG_MODULE_FTP) {
-			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"]);
+		if(BG_MODULE_FTP == false) {
+			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_URL"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"]);
 		}
 
 		foreach ($this->obj_tpl->opt["upload"] as $_key=>$_value) {
@@ -384,7 +384,16 @@ class CONTROL_INSTALL {
 		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
 			return false;
 		} else {
-			$GLOBALS["obj_db"]   = new CLASS_MYSQL(); //设置数据库对象
+			$_cfg_host = array(
+				"host"      => BG_DB_HOST,
+				"name"      => BG_DB_NAME,
+				"user"      => BG_DB_USER,
+				"pass"      => BG_DB_PASS,
+				"charset"   => BG_DB_CHARSET,
+				"debug"     => BG_DB_DEBUG,
+			);
+			$GLOBALS["obj_db"]   = new CLASS_MYSQL($_cfg_host); //设置数据库对象
+			$this->obj_db        = $GLOBALS["obj_db"];
 			$this->mdl_opt       = new MODEL_OPT(); //设置管理员模型
 			return true;
 		}
@@ -392,22 +401,16 @@ class CONTROL_INSTALL {
 
 
 	private function check_opt() {
-		$_arr_tableSelect = array(
-			"table_name",
-		);
-
-		$_str_sqlWhere    = "table_schema='" . BG_DB_NAME . "'";
-		$_arr_tableRows   = $GLOBALS["obj_db"]->select_array("information_schema`.`tables", $_arr_tableSelect, $_str_sqlWhere, 100, 0);
+		$_arr_tableRows = $this->obj_db->show_tables();
 
 		foreach ($_arr_tableRows as $_key=>$_value) {
-			$_arr_chks[] = $_value["table_name"];
+			$_arr_tables[] = $_value["Tables_in_" . BG_DB_NAME];
 		}
 
-		if (!in_array(BG_DB_TABLE . "opt", $_arr_chks)) {
+		if (!in_array(BG_DB_TABLE . "opt", $_arr_tables)) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 }
-?>

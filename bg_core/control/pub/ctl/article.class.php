@@ -19,16 +19,14 @@ class CONTROL_ARTICLE {
 	private $mdl_cate;
 	private $mdl_articlePub;
 	private $mdl_tag;
-	private $mdl_tagBelong;
 	private $mdl_attach;
 
 	function __construct() { //构造函数
 		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
 		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
+		$this->mdl_tag        = new MODEL_TAG();
 		$this->article_init();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
-		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
@@ -41,7 +39,7 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	function ctl_show() {
-		if ($this->searchRow["article_id"] == 0) {
+		if ($this->search["article_id"] == 0) {
 			return array(
 				"str_alert" => "x120212",
 			);
@@ -81,25 +79,18 @@ class CONTROL_ARTICLE {
 			exit;
 		}
 
-		$_arr_tagBelongRows = $this->mdl_tagBelong->mdl_list($this->articleRow["article_id"]);
-		foreach ($_arr_tagBelongRows as $_key_tag=>$_value_tag) {
-			$_arr_tagRow = $this->mdl_tag->mdl_read($_value_tag["belong_tag_id"]);
-			if ($_arr_tagRow["tag_status"] == "show") {
-				$_arr_tagBelongRows[$_key_tag] = $_arr_tagRow;
-			}
-
+		if ($this->articleRow["article_attach_id"] > 0) {
+			$_arr_attachThumb                = $this->mdl_thumb->mdl_list(100);
+			$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"], $_arr_attachThumb);
 		}
 
-		$_arr_attachThumb                = $this->mdl_thumb->mdl_list(100);
-		$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"], $_arr_attachThumb);
+		//print_r(date("W", strtotime("2014-12-01")));
 
-		$_arr_tplData = array(
-			"tagRows"    => $_arr_tagBelongRows,
-		);
+		$this->mdl_articlePub->mdl_hits($this->articleRow["article_id"]);
 
-		$_arr_tpl = array_merge($this->tplData, $_arr_tplData);
+		//$_arr_tpl = array_merge($this->tplData, $_arr_tplData);
 
-		$this->obj_tpl->tplDisplay("article_show.tpl", $_arr_tpl);
+		$this->obj_tpl->tplDisplay("article_show.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y120102",
@@ -117,7 +108,7 @@ class CONTROL_ARTICLE {
 		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_num_articleId   = fn_getSafe(fn_get("article_id"), "int", 0);
 
-		$this->searchRow = array(
+		$this->search = array(
 			"act_get"    => $_act_get,
 			"article_id" => $_num_articleId,
 		);
@@ -131,7 +122,7 @@ class CONTROL_ARTICLE {
 		if ($_num_articleId > 0) {
 			$this->articleRow = $this->mdl_articlePub->mdl_read($_num_articleId);
 			if ($this->articleRow["str_alert"] == "y120102") {
-				$this->cateRow               = $this->mdl_cate->mdl_read($this->articleRow["article_cate_id"]);
+				$this->cateRow               = $this->mdl_cate->mdl_readPub($this->articleRow["article_cate_id"]);
 				if ($this->cateRow["str_alert"] == "y110102") {
 					$_str_cateTpl        = $this->tpl_process($this->articleRow["article_cate_id"]);
 					if ($_str_cateTpl == "inherit") {
@@ -145,7 +136,7 @@ class CONTROL_ARTICLE {
 
 					if (is_array($this->cateRow["cate_trees"])) {
 						foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
-							$_arr_cateRow = $this->mdl_cate->mdl_read($_value["cate_id"]);
+							$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
 							$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
 						}
 					}
@@ -159,11 +150,14 @@ class CONTROL_ARTICLE {
 			$this->config["tpl"] = $_str_tpl;
 		}
 
+		$this->articleRow["cateRow"] = $this->cateRow;
+
+		$this->articleRow["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $this->articleRow["article_id"]);
+
 		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
 
 		$this->tplData = array(
 			"cateRows"   => $_arr_cateRows,
-			"cateRow"    => $this->cateRow,
 			"articleRow" => $this->articleRow,
 		);
 	}
@@ -177,7 +171,7 @@ class CONTROL_ARTICLE {
 	 * @return void
 	 */
 	private function tpl_process($num_cateId) {
-		$_arr_cateRow = $this->mdl_cate->mdl_read($num_cateId);
+		$_arr_cateRow = $this->mdl_cate->mdl_readPub($num_cateId);
 		$_str_cateTpl = $_arr_cateRow["cate_tpl"];
 
 		if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
@@ -187,4 +181,3 @@ class CONTROL_ARTICLE {
 		return $_str_cateTpl;
 	}
 }
-?>

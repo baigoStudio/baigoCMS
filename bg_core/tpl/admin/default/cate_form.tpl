@@ -1,10 +1,10 @@
 {*cate_form.php 栏目编辑界面*}
 {function cate_list arr=""}
 	{foreach $arr as $value}
-		<option value="{$value.cate_id}" {if $tplData.cateRow.cate_parent_id == $value.cate_id}selected{/if}>
+		<option value="{$value.cate_id}" {if $tplData.cateRow.cate_parent_id == $value.cate_id}selected{/if} {if $tplData.cateRow.cate_id == $value.cate_id}disabled{/if}>
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;
 				{/for}
 			{/if}
 			{$value.cate_name}
@@ -51,7 +51,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=cate#form" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=cate#form" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
@@ -100,7 +100,7 @@
 							</div>
 						</div>
 
-						{if $smarty.const.BG_MODULE_GEN &&$smarty.const.BG_MODULE_FTP}
+						{if $smarty.const.BG_MODULE_GEN == true && $smarty.const.BG_MODULE_FTP == true}
 							<div class="form-group">
 								<label for="more_checkbox" class="checkbox-inline">
 									<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_host}checked{/if}>

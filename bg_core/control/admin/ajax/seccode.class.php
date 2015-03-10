@@ -14,7 +14,7 @@ class AJAX_SECCODE {
 	function __construct() { //构造函数
 		$this->obj_base   = $GLOBALS["obj_base"]; //获取界面类型
 		$this->config     = $this->obj_base->config;
-		$this->alert      = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入提示代码
+		$this->alert      = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入返回代码
 	}
 
 
@@ -40,4 +40,3 @@ class AJAX_SECCODE {
 		exit(json_encode($arr_re));
 	}
 }
-?>

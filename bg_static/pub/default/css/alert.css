@@ -1,0 +1,10 @@
+@import "common.css";
+
+	/*表单样式*/
+	.page_body > h1 { padding-bottom: 15px; }
+		.page_body > h1 > img { vertical-align: middle; margin-right: 5px; }
+
+	.page_body > h2 { padding-bottom: 15px; }
+		.page_body > h2 > a { font-size: 16px; }
+
+	.page_body > h3 { padding-bottom: 15px; font-size: 12px; }

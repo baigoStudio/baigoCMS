@@ -3,7 +3,7 @@
 		<option {if $tplData.search.cate_id == $value.cate_id}selected{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;
 				{/for}
 			{/if}
 			{$value.cate_name}
@@ -49,16 +49,15 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=spec#select" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=spec#select" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
 			</li>
+			<li>
+				<button type="button" class="btn btn-warning btn-sm">{$lang.label.specName} <strong>{$tplData.specRow.spec_name}</strong></button>
+			</li>
 		</ul>
-	</div>
-
-	<div class="form-group">
-		<p>{$lang.label.specName} <strong>{$tplData.specRow.spec_name}</strong></p>
 	</div>
 
 	<div class="row">
@@ -66,20 +65,23 @@
 		<div class="col-md-6">
 
 			<div class="well">
-				<form name="belong_search" id="belong_search" class="form-inline" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get">
+				<label class="control-label">{$lang.label.belongArticle}</label>
+				<form name="belong_search" id="belong_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 					<input type="hidden" name="mod" value="spec">
 					<input type="hidden" name="act_get" value="select">
 					<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
-					<div class="pull-left">{$lang.label.belongArticle}</div>
-					<div class="pull-right">
+					<div class="form-group">
 						<input type="text" name="key_belong" class="form-control input-sm" value="{$tplData.search.key_belong}" placeholder="{$lang.label.key}">
-						<button class="btn btn-default btn-sm" type="submit">{$lang.btn.filter}</button>
 					</div>
-					<div class="clearfix"></div>
+					<div class="form-group">
+						<button class="btn btn-default btn-sm" type="submit">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</div>
 				</form>
 			</div>
 
-			<form name="belong_form" id="belong_form" class="form-inline">
+			<form name="belong_form" id="belong_form">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -134,10 +136,12 @@
 											{/if}
 										</td>
 										<td class="td_md">
-											<div>
-												<span class="label label-{$_css_status}">{$_str_status}</span>
-											</div>
-											<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+											<ul class="list-unstyled">
+												<li>
+													<span class="label label-{$_css_status}">{$_str_status}</span>
+												</li>
+												<li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
+											</ul>
 										</td>
 									</tr>
 								{/foreach}
@@ -161,31 +165,38 @@
 		<div class="col-md-6">
 
 			<div class="well">
-				<form name="select_search" id="select_search" class="form-inline" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get">
+				<label class="control-label">{$lang.label.selectArticle}</label>
+				<form name="select_search" id="select_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 					<input type="hidden" name="mod" value="spec">
 					<input type="hidden" name="act_get" value="select">
 					<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
-					<div class="pull-left">{$lang.label.selectArticle}</div>
-					<div class="pull-right">
+					<div class="form-group">
 						<select name="cate_id" class="form-control input-sm">
 							<option value="">{$lang.option.allCate}</option>
 							{cate_list arr=$tplData.cateRows}
 							<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknow}</option>
 						</select>
+					</div>
+					<div class="form-group">
 						<select name="status" class="form-control input-sm">
 							<option value="">{$lang.option.allStatus}</option>
 							{foreach $status.article as $key=>$value}
 								<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
 							{/foreach}
 						</select>
-						<input type="text" name="key_select" class="form-control input-sm" value="{$tplData.search.key_select}" placeholder="{$lang.label.key}">
-						<button class="btn btn-default btn-sm" type="submit">{$lang.btn.filter}</button>
 					</div>
-					<div class="clearfix"></div>
+					<div class="form-group">
+						<input type="text" name="key_select" class="form-control input-sm" value="{$tplData.search.key_select}" placeholder="{$lang.label.key}">
+					</div>
+					<div class="form-group">
+						<button class="btn btn-default btn-sm" type="submit">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</div>
 				</form>
 			</div>
 
-			<form name="select_form" id="select_form" class="form-inline">
+			<form name="select_form" id="select_form">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 				<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 
@@ -201,8 +212,7 @@
 										</label>
 									</th>
 									<th class="td_mn">{$lang.label.id}</th>
-									<th>{$lang.label.articleTitle}</th>
-									<th>{$lang.label.articleSpec}</th>
+									<th>{$lang.label.articleTitle} / {$lang.label.articleSpec}</th>
 									<th class="td_md">{$lang.label.status}</th>
 								</tr>
 							</thead>
@@ -235,22 +245,30 @@
 										<td class="td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="select_id_{$value.article_id}" group="select_id" class="select_all validate"></td>
 										<td class="td_mn">{$value.article_id}</td>
 										<td>
-											{if $value.article_title}
-												{$value.article_title}
-											{else}
-												{$lang.label.noname}
-											{/if}
-										</td>
-										<td>
-											{if isset($value.specRow.spec_name)}
-												{$value.specRow.spec_name}
-											{/if}
+											<ul class="list-unstyled">
+												<li>
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=show&article_id={$value.article_id}">
+														{if $value.article_title}
+															{$value.article_title}
+														{else}
+															{$lang.label.noname}
+														{/if}
+													</a>
+												</li>
+												<li>
+													{if isset($value.specRow.spec_name)}
+														<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=select&spec_id={$value.specRow.spec_id}">{$value.specRow.spec_name}</a>
+													{/if}
+												</li>
+											</ul>
 										</td>
 										<td class="td_md">
-											<div>
-												<span class="label label-{$_css_status}">{$_str_status}</span>
-											</div>
-											<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+											<ul class="list-unstyled">
+												<li>
+													<span class="label label-{$_css_status}">{$_str_status}</span>
+												</li>
+												<li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
+											</ul>
 										</td>
 									</tr>
 								{/foreach}
@@ -258,7 +276,7 @@
 							<tfoot>
 								<tr>
 									<td colspan="2"><span id="msg_select_id"></span></td>
-									<td colspan="3">
+									<td colspan="2">
 										<input type="hidden" name="act_post" value="to">
 										<button type="button" id="go_add" class="btn btn-primary btn-sm">{$lang.btn.belongAdd}</button>
 									</td>

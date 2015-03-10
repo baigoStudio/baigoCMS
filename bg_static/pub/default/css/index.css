@@ -1,0 +1,5 @@
+@import "common.css";
+
+.body_products { width: 700px; }
+	.body_products > #products_cms_1 > a { width: 700px; height: 0px; padding-top: 700px; display: block; background: url(../image/products_cms_1.jpg); overflow: hidden; }
+	.body_products > #products_cms_2 > a { width: 700px; height: 0px; padding-top: 700px; display: block; background: url(../image/products_cms_2.jpg); overflow: hidden; }

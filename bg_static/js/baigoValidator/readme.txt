@@ -54,7 +54,7 @@ License: http://www.opensource.org/licenses/mit-license.php
 				ajax: {url: "http://www.baigo.net/ajax/", key: "user_name", "type" : "str"}
 			}
 		}
-		具体请参考 3
+		具体请查看 3
 
 	2.4 定义需要验证的字段 id 或 group，此处需与 3.1 中的定义一致，如
 		<input type="text" id="name">

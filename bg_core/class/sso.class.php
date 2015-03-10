@@ -328,4 +328,3 @@ class CLASS_SSO {
 		return $this->arr_decode;
 	}
 }
-?>

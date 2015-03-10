@@ -8,7 +8,7 @@
 
 	<ol class="breadcrumb">
 		<li><a href="{$smarty.const.BG_URL_ROOT}">首页</a></li>
-		<li><a href="{$tplData.search.urlRow.tag_url}">TAG</a></li>
+		<li>TAG</li>
 		<li>{$tplData.tagRow.tag_name}</li>
 	</ol>
 
@@ -34,7 +34,5 @@
 
 	{include "include/page.tpl" cfg=$cfg}
 
-
 {include "include/pub_foot.tpl" cfg=$cfg}
-
 {include "include/html_foot.tpl"}

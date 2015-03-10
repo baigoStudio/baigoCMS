@@ -51,4 +51,3 @@ class CLASS_AJAX {
 		exit(json_encode($arr_re));
 	}
 }
-?>

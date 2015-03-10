@@ -3,15 +3,17 @@
 ！！！！警告！！！！
 以下为系统文件，请勿修改
 -----------------------------------------------------------------*/
-if (!file_exists("../bg_config/config.inc.php")) {
-	if (!file_exists("../bg_config/config_sample.inc.php")) {
+$base = $_SERVER["DOCUMENT_ROOT"] . str_replace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
+
+if (!file_exists($base . "bg_config/config.inc.php")) {
+	if (!file_exists($base . "bg_config/config_sample.inc.php")) {
 		header("Location: noconfig.html");
 		exit;
 	}
-	copy("../bg_config/config_sample.inc.php", "../bg_config/config.inc.php");
+	copy($base . "bg_config/config_sample.inc.php", $base . "bg_config/config.inc.php");
 }
 
-include_once("../bg_config/config.inc.php"); //载入配置
+include_once($base . "bg_config/config.inc.php"); //载入配置
 
 $arr_mod = array("install", "upgrade", "alert");
 
@@ -26,4 +28,3 @@ if (!in_array($mod, $arr_mod)) {
 }
 
 include_once(BG_PATH_MODULE_INSTALL . "ctl/" . $mod . ".php");
-?>

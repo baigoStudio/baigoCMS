@@ -14,30 +14,40 @@
 	<form name="attach_search" id="attach_search" class="form-inline pull-right hidden-xs">
 		<input type="hidden" name="mod" value="attach">
 		<input type="hidden" name="act_get" value="list">
-		<select name="year" id="search_year" class="form-control input-sm">
-			<option value="">{$lang.option.allYear}</option>
-			{foreach $tplData.yearRows as $value}
-				<option {if $tplData.search.year == $value.attach_year}selected{/if} value="{$value.attach_year}">{$value.attach_year}</option>
-			{/foreach}
-		</select>
-		<select name="month" id="search_month" class="form-control input-sm">
-			<option value="">{$lang.option.allMonth}</option>
-			{for $_i = 1 to 12}
-				{if $_i < 10}
-					{$_str_month = "0{$_i}"}
-				{else}
-					{$_str_month = $_i}
-				{/if}
-				<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
-			{/for}
-		</select>
-		<select name="ext" id="search_ext" class="form-control input-sm">
-			<option value="">{$lang.option.allExt}</option>
-			{foreach $tplData.extRows as $value}
-				<option {if $tplData.search.ext == $value.attach_ext}selected{/if} value="{$value.attach_ext}">{$value.attach_ext}</option>
-			{/foreach}
-		</select>
-		<button class="btn btn-default btn-sm" type="button" id="search_btn">{$lang.btn.filter}</button>
+		<div class="form-group">
+			<select name="year" id="search_year" class="form-control input-sm">
+				<option value="">{$lang.option.allYear}</option>
+				{foreach $tplData.yearRows as $value}
+					<option {if $tplData.search.year == $value.attach_year}selected{/if} value="{$value.attach_year}">{$value.attach_year}</option>
+				{/foreach}
+			</select>
+		</div>
+		<div class="form-group">
+			<select name="month" id="search_month" class="form-control input-sm">
+				<option value="">{$lang.option.allMonth}</option>
+				{for $_i = 1 to 12}
+					{if $_i < 10}
+						{$_str_month = "0{$_i}"}
+					{else}
+						{$_str_month = $_i}
+					{/if}
+					<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
+				{/for}
+			</select>
+		</div>
+		<div class="form-group">
+			<select name="ext" id="search_ext" class="form-control input-sm">
+				<option value="">{$lang.option.allExt}</option>
+				{foreach $tplData.extRows as $value}
+					<option {if $tplData.search.ext == $value.attach_ext}selected{/if} value="{$value.attach_ext}">{$value.attach_ext}</option>
+				{/foreach}
+			</select>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-default btn-sm" type="button" id="search_btn">
+				<span class="glyphicon glyphicon-search"></span>
+			</button>
+		</div>
 	</form>
 	<div class="clearfix"></div>
 </div>

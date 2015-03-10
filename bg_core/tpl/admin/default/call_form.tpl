@@ -72,7 +72,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=call#form" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=call#form" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
@@ -109,12 +109,35 @@
 								</div>
 								{cate_checkbox arr=$tplData.cateRows}
 							</div>
+							
+							<label class="control-label">{$lang.label.articleSpec}</label>
+
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
+									</span>
+								</div>
+							</div>
+	
+							<div class="form-group">
+								<select name="call_spec_id" class="form-control">
+									<option value="">{$lang.option.noSpec}</option>
+									{if $tplData.specRow.spec_name}
+										<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
+									{/if}
+									<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
+								</select>
+							</div>
+							<div class="form-group" id="spec_page"></div>
+
 
 							<div class="form-group">
 								<label for="call_attach" class="control-label">{$lang.label.callAttach}</label>
 								<select id="call_attach" name="call_attach" class="form-control">
 									{foreach $type.callAttach as $key=>$value}
-										<option {if $tplData.callRow.call_attach == $key}checked{/if} value="{$key}">{$value}</option>
+										<option {if $tplData.callRow.call_attach == $key}selected{/if} value="{$key}">{$value}</option>
 									{/foreach}
 								</select>
 							</div>
@@ -130,86 +153,6 @@
 									</div>
 								{/foreach}
 							</div>
-
-							<div class="alert alert-success">{$lang.label.callShow}</div>
-
-							<label class="control-label">{$lang.label.showBase}<span id="msg_call_show_article">*</span></label>
-							<div class="form-group">
-								<div class="checkbox_baigo">
-									<label for="call_show_cate">
-										<input type="checkbox" name="call_show[cate]" {if $tplData.callRow.call_show.cate == "show"}checked{/if} id="call_show_cate" value="show" group="call_show_article" class="validate">
-										{$lang.label.cateName}
-									</label>
-								</div>
-								<div class="checkbox_baigo">
-									<label for="call_show_title">
-										<input type="checkbox" name="call_show[title]" {if $tplData.callRow.call_show.title == "show"}checked{/if} id="call_show_title" value="show" group="call_show_article" class="validate">
-										{$lang.label.articleTitle}
-									</label>
-								</div>
-								<div class="checkbox_baigo">
-									<label for="call_show_excerpt">
-										<input type="checkbox" name="call_show[excerpt]" {if $tplData.callRow.call_show.excerpt == "show"}checked{/if} id="call_show_excerpt" value="show" group="call_show_article" class="validate">
-										{$lang.label.articleExcerpt}
-									</label>
-								</div>
-								<div class="checkbox_baigo">
-									<label for="call_show_tag">
-										<input type="checkbox" name="call_show[tag]" {if $tplData.callRow.call_show.tag == "show"}checked{/if} id="call_show_tag" value="show" group="call_show_article" class="validate">
-										{$lang.label.articleTag}
-									</label>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="call_show_img" class="control-label">{$lang.label.callShowImg}</label>
-								<select id="call_show_img" name="call_show[img]" class="form-control">
-									<option {if $tplData.callRow.call_show.img == "none"}checked{/if} value="none">{$lang.option.noImg}</option>
-									<option {if $tplData.callRow.call_show.img == "original"}checked{/if} value="original">{$lang.option.original}</option>
-
-									{foreach $tplData.thumbRows as $key=>$value}
-										<option {if $tplData.callRow.call_show.img == "{$value.thumb_width}_{$value.thumb_height}_{$value.thumb_type}"}checked{/if} value="{$value.thumb_width}_{$value.thumb_height}_{$value.thumb_type}">
-										{$value.thumb_width}x{$value.thumb_height} {$type.thumb[$value.thumb_type]}
-										</option>
-									{/foreach}
-								</select>
-							</div>
-
-							<div class="form-group">
-								<label for="call_show_time" class="control-label">{$lang.label.datetime}</label>
-								<select id="call_show_time" name="call_show[time]" class="form-control">
-									<option {if $tplData.callRow.call_show.time == "none"}checked{/if} value="none">{$lang.option.noTime}</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}checked{/if} value="{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}">
-										{$smarty.now|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}checked{/if} value="{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}">
-										{$smarty.now|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}checked{/if} value="{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}">
-										{$smarty.now|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_DATESHORT}"}checked{/if} value="{$smarty.const.BG_SITE_DATESHORT}">
-										{$smarty.now|date_format:$smarty.const.BG_SITE_DATESHORT}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_DATE}"}checked{/if} value="{$smarty.const.BG_SITE_DATE}">
-										{$smarty.now|date_format:$smarty.const.BG_SITE_DATE}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_TIMESHORT}"}checked{/if} value="{$smarty.const.BG_SITE_TIMESHORT}">
-										{$smarty.now|date_format:$smarty.const.BG_SITE_TIMESHORT}
-									</option>
-
-									<option {if $tplData.callRow.call_show.time == "{$smarty.const.BG_SITE_TIME}"}checked{/if} value="{$smarty.const.BG_SITE_TIME}">
-										{$smarty.now|date_format:$smarty.const.BG_SITE_TIME}
-									</option>
-								</select>
-							</div>
-
 						</div>
 
 						<div id="call_cate">
@@ -253,7 +196,7 @@
 						</select>
 					</div>
 
-					{if $smarty.const.BG_MODULE_GEN}
+					{if $smarty.const.BG_MODULE_GEN == false}
 						<div class="form-group">
 							<label for="call_file" class="control-label">{$lang.label.callFile}<span id="msg_call_file">*</span></label>
 							<select name="call_file" id="call_file" class="validate form-control">
@@ -294,10 +237,10 @@
 						<input type="text" name="call_trim" id="call_trim" value="{$tplData.callRow.call_trim}" class="validate form-control">
 					</div>
 
-					<div class="form-group">
+					{*<div class="form-group">
 						<label for="call_css" class="control-label">{$lang.label.callCss}<span id="msg_call_css"></span></label>
 						<input type="text" name="call_css" id="call_css" value="{$tplData.callRow.call_css}" class="validate form-control">
-					</div>
+					</div>*}
 				</div>
 			</div>
 		</div>
@@ -307,6 +250,50 @@
 {include "include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
+	function reload_spec(_key, _page) {
+		$("#spec_list").empty();
+		$("#spec_page").empty();
+
+		$.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec&act_get=list&key=" + _key + "&page=" + _page, function(result){
+
+			_str_appent_page = "<ul class=\"pager\">";
+				_str_appent_page += "<li class=\"previous";
+				if (result.pageRow.page <= 1) {
+					_str_appent_page += " disabled";
+				}
+				_str_appent_page += "\">";
+					if (result.pageRow.page <= 1) {
+						_str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</span>";
+					} else {
+						_str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page - 1) + ");\" title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</a>";
+					}
+				_str_appent_page += "</li>";
+
+				_str_appent_page += "<li class=\"next";
+				if (result.pageRow.page >= result.pageRow.total) {
+					_str_appent_page += " disabled";
+				}
+				_str_appent_page += "\">";
+					if (result.pageRow.page >= result.pageRow.total) {
+						_str_appent_page += "<span title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</span>";
+					} else {
+						_str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page + 1) + ");\" title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</a>";
+					}
+				_str_appent_page += "</li>";
+			_str_appent_page += "</ul>";
+
+			$("#spec_page").append(_str_appent_page);
+
+			$.each(result.specRows, function(i_spec, field_spec){
+				_str_appent_spec = "<option value=\"" + field_spec.spec_id + "\">" +
+					field_spec.spec_name;
+				"</option>";
+
+				$("#spec_list").append(_str_appent_spec);
+			});
+		});
+	}
+	
 	var opts_validator_form = {
 		call_name: {
 			length: { min: 1, max: 300 },
@@ -370,7 +357,9 @@
 				$("#call_cate").show();
 			break;
 
-			case "tag":
+			case "spec":
+			case "tag_list":
+			case "tag_rank":
 				$("#call_article").hide();
 				$("#call_cate").hide();
 			break;
@@ -383,6 +372,8 @@
 	}
 
 	$(document).ready(function(){
+		call_type("{$tplData.callRow.call_type}");
+		reload_spec("", 1);
 		var obj_validate_form = $("#call_form").baigoValidator(opts_validator_form);
 		var obj_submit_form = $("#call_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
@@ -393,14 +384,16 @@
 
 		$("#call_form").baigoCheckall();
 
-		call_type("{$tplData.callRow.call_type}");
-
 		$("#call_type").change(function(){
 			var _call_type = $(this).val();
 			call_type(_call_type);
 		});
 
 		$("#call_form").baigoCheckall();
+		$("#spec_search").click(function(){
+			var _key = $("#spec_key").val();
+			reload_spec(_key, 1);
+		});
 	});
 	</script>
 

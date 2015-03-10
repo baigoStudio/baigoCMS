@@ -18,4 +18,3 @@ if (!in_array($mod, $arr_mod)) {
 }
 
 include_once(BG_PATH_MODULE_PUB . "ctl/" . $mod . ".php");
-?>

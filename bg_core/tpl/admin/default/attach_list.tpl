@@ -19,7 +19,7 @@
 
 	<div class="form-group">
 		<div class="pull-left">
-			<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=attach" target="_blank">
+			<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=attach" target="_blank">
 				<span class="glyphicon glyphicon-question-sign"></span>
 				{$lang.href.help}
 			</a>
@@ -28,31 +28,40 @@
 			<form name="attach_search" id="attach_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 				<input type="hidden" name="mod" value="attach">
 				<input type="hidden" name="act_get" value="list">
-
-				<select name="year" class="form-control input-sm">
-					<option value="">{$lang.option.allYear}</option>
-					{foreach $tplData.pathRows as $value}
-						<option {if $tplData.search.year == $value.attach_year}selected{/if} value="{$value.attach_year}">{$value.attach_year}</option>
-					{/foreach}
-				</select>
-				<select name="month" class="form-control input-sm">
-					<option value="">{$lang.option.allMonth}</option>
-					{for $_i = 1 to 12}
-						{if $_i < 10}
-							{$_str_month = "0{$_i}"}
-						{else}
-							{$_str_month = $_i}
-						{/if}
-						<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
-					{/for}
-				</select>
-				<select name="ext" class="form-control input-sm">
-					<option value="">{$lang.option.allExt}</option>
-					{foreach $tplData.extRows as $value}
-						<option {if $tplData.search.ext == $value.attach_ext}selected{/if} value="{$value.attach_ext}">{$value.attach_ext}</option>
-					{/foreach}
-				</select>
-				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+					<div class="form-group">
+						<select name="year" class="form-control input-sm">
+							<option value="">{$lang.option.allYear}</option>
+							{foreach $tplData.pathRows as $value}
+								<option {if $tplData.search.year == $value.attach_year}selected{/if} value="{$value.attach_year}">{$value.attach_year}</option>
+							{/foreach}
+						</select>
+					</div>
+					<div class="form-group">
+						<select name="month" class="form-control input-sm">
+							<option value="">{$lang.option.allMonth}</option>
+							{for $_i = 1 to 12}
+								{if $_i < 10}
+									{$_str_month = "0{$_i}"}
+								{else}
+									{$_str_month = $_i}
+								{/if}
+								<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
+							{/for}
+						</select>
+					</div>
+					<div class="form-group">
+						<select name="ext" class="form-control input-sm">
+							<option value="">{$lang.option.allExt}</option>
+							{foreach $tplData.extRows as $value}
+								<option {if $tplData.search.ext == $value.attach_ext}selected{/if} value="{$value.attach_ext}">{$value.attach_ext}</option>
+							{/foreach}
+						</select>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-default btn-sm">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</div>
 			</form>
 		</div>
 		<div class="clearfix"></div>
@@ -66,7 +75,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<form name="attach_list" id="attach_list" class="form-inline">
+			<form name="attach_list" id="attach_list">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -93,44 +102,46 @@
 										<td class="td_mn">{$value.attach_id}</td>
 										<td class="td_sm">
 											{if $value.attach_type == "image"}
-												<a href="{$value.attach_url}" target="_blank"><img src="{$value.attach_thumb.0.thumb_url}" alt="{$value.attach_name}"></a>
+												<a href="{$value.attach_url}" target="_blank"><img src="{$value.attach_thumb.0.thumb_url}" alt="{$value.attach_name}" width="100"></a>
 											{else}
-												<a href="{$value.attach_url}" target="_blank"><img src="{$smarty.const.BG_URL_IMAGE}file_{$value.attach_ext}.png" alt="{$value.attach_name}"></a>
+												<a href="{$value.attach_url}" target="_blank"><img src="{$smarty.const.BG_URL_IMAGE}file_{$value.attach_ext}.png" alt="{$value.attach_name}" width="50"></a>
 											{/if}
 										</td>
 										<td>
-											<div><a href="{$value.attach_url}" target="_blank">{$value.attach_name}</a></div>
-											{if $value.attach_size > 1024}
-												{$_num_attachSize = $value.attach_size / 1024}
-												{$_str_attachUnit = "KB"}
-											{else if $value.attach_size > 1024 * 1024}
-												{$_num_attachSize = $value.attach_size / 1024 / 1024}
-												{$_str_attachUnit = "MB"}
-											{else if $value.attach_size > 1024 * 1024 * 1024}
-												{$_num_attachSize = $value.attach_size / 1024 / 1024 / 1024}
-												{$_str_attachUnit = "GB"}
-											{/if}
-											<div>{$_num_attachSize|string_format:"%.2f"} {$_str_attachUnit}</div>
-											<div>{$value.attach_time|date_format:$smarty.const.BG_SITE_DATE}</div>
-											<div>
-												{if $value.attach_type == "image"}
-													<div class="dropdown">
-														<button class="btn btn-default dropdown-toggle btn-sm" type="button" id="attach_{$value.attach_id}" data-toggle="dropdown">
-															{$lang.btn.thumb}
-															<span class="caret"></span>
-														</button>
-														<ul class="dropdown-menu">
-															{foreach $value.attach_thumb as $value_thumb}
-																<li><a href="{$value_thumb.thumb_url}" target="_blank">{$value_thumb.thumb_width}x{$value_thumb.thumb_height} {$type.thumb[$value_thumb.thumb_type]}</a></li>
-															{/foreach}
-														</ul>
-													</div>
+											<ul class="list-unstyled">
+												<li><a href="{$value.attach_url}" target="_blank">{$value.attach_name}</a></li>
+												{if $value.attach_size > 1024}
+													{$_num_attachSize = $value.attach_size / 1024}
+													{$_str_attachUnit = "KB"}
+												{else if $value.attach_size > 1024 * 1024}
+													{$_num_attachSize = $value.attach_size / 1024 / 1024}
+													{$_str_attachUnit = "MB"}
+												{else if $value.attach_size > 1024 * 1024 * 1024}
+													{$_num_attachSize = $value.attach_size / 1024 / 1024 / 1024}
+													{$_str_attachUnit = "GB"}
 												{/if}
-											</div>
+												<li>{$_num_attachSize|string_format:"%.2f"} {$_str_attachUnit}</li>
+												<li>{$value.attach_time|date_format:$smarty.const.BG_SITE_DATE}</li>
+												<li>
+													{if $value.attach_type == "image"}
+														<div class="dropdown">
+															<button class="btn btn-default dropdown-toggle btn-sm" type="button" id="attach_{$value.attach_id}" data-toggle="dropdown">
+																{$lang.btn.thumb}
+																<span class="caret"></span>
+															</button>
+															<ul class="dropdown-menu">
+																{foreach $value.attach_thumb as $value_thumb}
+																	<li><a href="{$value_thumb.thumb_url}" target="_blank">{$value_thumb.thumb_width}x{$value_thumb.thumb_height} {$type.thumb[$value_thumb.thumb_type]}</a></li>
+																{/foreach}
+															</ul>
+														</div>
+													{/if}
+												</li>
+											</ul>
 										</td>
 										<td class="td_md">
 											{if $value.adminRow.admin_name}
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&admin_id={$value.attach_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_nick}[ {$value.adminRow.admin_nick} ]{/if}</a>
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&admin_id={$value.attach_admin_id}">{$value.adminRow.admin_name}</a>
 											{else}
 												{$lang.label.unknow}
 											{/if}

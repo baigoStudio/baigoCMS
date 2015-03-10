@@ -4,7 +4,7 @@
 		<option {if $tplData.search.cate_id == $value.cate_id}selected{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;
 				{/for}
 			{/if}
 			{$value.cate_name}
@@ -62,7 +62,7 @@
 					</li>
 				{/if}
 				<li>
-					<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=article" target="_blank">
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=article" target="_blank">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						{$lang.href.help}
 					</a>
@@ -85,48 +85,58 @@
 		<form name="article_search" id="article_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 			<input type="hidden" name="mod" value="article">
 			<input type="hidden" name="act_get" value="list">
-
-			<select name="cate_id" class="form-control input-sm">
-				<option value="">{$lang.option.allCate}</option>
-				{cate_list arr=$tplData.cateRows}
-				<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknow}</option>
-			</select>
-
-			<select name="year" class="form-control input-sm">
-				<option value="">{$lang.option.allYear}</option>
-				{foreach $tplData.articleYear as $value}
-					<option {if $tplData.search.year == $value.article_year}selected{/if} value="{$value.article_year}">{$value.article_year}</option>
-				{/foreach}
-			</select>
-
-			<select name="month" class="form-control input-sm">
-				<option value="">{$lang.option.allMonth}</option>
-				{for $_i = 1 to 12}
-					{if $_i<10}
-						{$_str_month=0|cat:$_i|truncate:2}
-					{else}
-						{$_str_month=$_i}
-					{/if}
-					<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
-				{/for}
-			</select>
-
-			<select name="mark_id" class="form-control input-sm">
-				<option value="">{$lang.option.allMark}</option>
-				{foreach $tplData.markRows as $value}
-					<option {if $tplData.search.mark_id == $value.mark_id}selected{/if} value="{$value.mark_id}">{$value.mark_name}</option>
-				{/foreach}
-			</select>
-
-			<select name="status" class="form-control input-sm">
-				<option value="">{$lang.option.allStatus}</option>
-				{foreach $status.article as $key=>$value}
-					<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
-				{/foreach}
-			</select>
-
-			<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-			<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+			<div class="form-group">
+				<select name="cate_id" class="form-control input-sm">
+					<option value="">{$lang.option.allCate}</option>
+					{cate_list arr=$tplData.cateRows}
+					<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknow}</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="year" class="form-control input-sm">
+					<option value="">{$lang.option.allYear}</option>
+					{foreach $tplData.articleYear as $value}
+						<option {if $tplData.search.year == $value.article_year}selected{/if} value="{$value.article_year}">{$value.article_year}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="month" class="form-control input-sm">
+					<option value="">{$lang.option.allMonth}</option>
+					{for $_i = 1 to 12}
+						{if $_i<10}
+							{$_str_month=0|cat:$_i|truncate:2}
+						{else}
+							{$_str_month=$_i}
+						{/if}
+						<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
+					{/for}
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="mark_id" class="form-control input-sm">
+					<option value="">{$lang.option.allMark}</option>
+					{foreach $tplData.markRows as $value}
+						<option {if $tplData.search.mark_id == $value.mark_id}selected{/if} value="{$value.mark_id}">{$value.mark_name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="status" class="form-control input-sm">
+					<option value="">{$lang.option.allStatus}</option>
+					{foreach $status.article as $key=>$value}
+						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-default btn-sm">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</div>
 		</form>
 	</div>
 
@@ -146,9 +156,9 @@
 							</th>
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.articleTitle}</th>
-							<th class="td_md">{$lang.label.articleCate} / {$lang.label.articleMark}</th>
-							<th class="td_md">{$lang.label.status}</th>
+							<th class="td_md">{$lang.label.cate} / {$lang.label.articleMark}</th>
 							<th class="td_md">{$lang.label.admin}</th>
+							<th class="td_sm">{$lang.label.status}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -180,47 +190,58 @@
 								<td class="td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="article_id_{$value.article_id}" group="article_id" class="chk_all validate"></td>
 								<td class="td_mn">{$value.article_id}</td>
 								<td>
-									<div>
-										{if $value.article_title}
-											{$value.article_title}
-										{else}
-											{$lang.label.noname}
-										{/if}
-									</div>
-									<div>
-										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=show&article_id={$value.article_id}">{$lang.href.show}</a>
-										&nbsp;|&nbsp;
-										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$value.article_id}">{$lang.href.edit}</a>
-									</div>
+									<ul class="list-unstyled">
+										<li>
+											{if $value.article_title}
+												{$value.article_title}
+											{else}
+												{$lang.label.noname}
+											{/if}
+										</li>
+										<li>
+											<ul class="list_menu">
+												<li>
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=show&article_id={$value.article_id}">{$lang.href.show}</a>
+												</li>
+												<li>
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$value.article_id}">{$lang.href.edit}</a>
+												</li>
+											</ul>
+										</li>
+									</ul>
 								</td>
 								<td class="td_md">
-									<div>
-										{if $value.cateRow.cate_name}
-											<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.article_cate_id}">{$value.cateRow.cate_name}</a>
-										{else}
-											{$lang.label.unknow}
-										{/if}
-									</div>
-									<div>
-										{if isset($value.markRow.mark_name)}
-											<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&mark_id={$value.article_mark_id}">{$value.markRow.mark_name}</a>
-										{else}
-											{$lang.label.none}
-										{/if}
-									</div>
-								</td>
-								<td class="td_md">
-									<div>
-										<span class="label label-{$_css_status}">{$_str_status}</span>
-									</div>
-									<div>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}</div>
+									<ul class="list-unstyled">
+										<li>
+											{if isset($value.cateRow.cate_name)}
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.article_cate_id}">{$value.cateRow.cate_name}</a>
+											{else}
+												{$lang.label.unknow}
+											{/if}
+										</li>
+										<li>
+											{if isset($value.markRow.mark_name)}
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&mark_id={$value.article_mark_id}">{$value.markRow.mark_name}</a>
+											{else}
+												{$lang.label.none}
+											{/if}
+										</li>
+									</ul>
 								</td>
 								<td class="td_md">
 									{if isset($value.adminRow.admin_name)}
-										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name} {if $value.adminRow.admin_nick}[ {$value.adminRow.admin_nick} ]{/if}</a>
+										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name}</a>
 									{else}
 										{$lang.label.unknow}
 									{/if}
+								</td>
+								<td class="td_sm">
+									<ul class="list-unstyled">
+										<li>
+											<span class="label label-{$_css_status}">{$_str_status}</span>
+										</li>
+										<li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
+									</ul>
 								</td>
 							</tr>
 						{/foreach}
@@ -229,28 +250,34 @@
 						<tr>
 							<td colspan="2"><span id="msg_article_id"></span></td>
 							<td colspan="4">
-								<select name="act_post" id="act_post" class="validate form-control input-sm">
-									<option value="">{$lang.option.batch}</option>
-									{if $tplData.search.box == "recycle"}
-										<option value="normal">{$lang.option.revert}</option>
-										<option value="draft">{$lang.option.draft}</option>
-										<option value="del">{$lang.option.del}</option>
-									{else if $tplData.search.box == "draft"}
-										<option value="normal">{$lang.option.revert}</option>
-										<option value="recycle">{$lang.option.recycle}</option>
-									{else}
-										{foreach $status.article as $key=>$value}
-											<option value="{$key}">{$value}</option>
-										{/foreach}
-										<option value="top">{$lang.option.top}</option>
-										<option value="untop">{$lang.option.untop}</option>
-										<option value="normal">{$lang.option.revert}</option>
-										<option value="draft">{$lang.option.draft}</option>
-										<option value="recycle">{$lang.option.recycle}</option>
-									{/if}
-								</select>
-								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
-								<span id="msg_act_post"></span>
+								<div class="form-group">
+									<select name="act_post" id="act_post" class="validate form-control input-sm">
+										<option value="">{$lang.option.batch}</option>
+										{if $tplData.search.box == "recycle"}
+											<option value="normal">{$lang.option.revert}</option>
+											<option value="draft">{$lang.option.draft}</option>
+											<option value="del">{$lang.option.del}</option>
+										{else if $tplData.search.box == "draft"}
+											<option value="normal">{$lang.option.revert}</option>
+											<option value="recycle">{$lang.option.recycle}</option>
+										{else}
+											{foreach $status.article as $key=>$value}
+												<option value="{$key}">{$value}</option>
+											{/foreach}
+											<option value="top">{$lang.option.top}</option>
+											<option value="untop">{$lang.option.untop}</option>
+											<option value="normal">{$lang.option.revert}</option>
+											<option value="draft">{$lang.option.draft}</option>
+											<option value="recycle">{$lang.option.recycle}</option>
+										{/if}
+									</select>
+								</div>
+								<div class="form-group">
+									<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
+								</div>
+								<div class="form-group">
+									<span id="msg_act_post"></span>
+								</div>
 							</td>
 						</tr>
 					</tfoot>

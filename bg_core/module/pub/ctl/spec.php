@@ -26,4 +26,3 @@ switch ($GLOBALS["act_get"]) {
 		$arr_specRow = $ctl_spec->ctl_list();
 	break;
 }
-?>

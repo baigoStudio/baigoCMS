@@ -55,4 +55,3 @@ function fn_http($str_url, $arr_data, $str_method = "get") {
 
 	return $_arr_return;
 }
-?>

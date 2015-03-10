@@ -31,4 +31,3 @@ return array(
 			<li>重新运行 <a href=\"" . BG_URL_INSTALL . "ctl.php?mod=install&act_get=ssoauto\">" . BG_URL_INSTALL . "ctl.php?mod=install&act_get=ssoauto</a></li>
 		</ol>",
 );
-?>

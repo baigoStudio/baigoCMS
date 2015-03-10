@@ -67,12 +67,12 @@
 			<div class="well">
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.id}</label>
-					<p class="form-control-static static_input">{$tplData.groupRow.group_id}</p>
+					<p class="form-control-static">{$tplData.groupRow.group_id}</p>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.groupType}</label>
-					<p class="form-control-static static_input">{$type.group[$tplData.groupRow.group_type]}</p>
+					<p class="form-control-static">{$type.group[$tplData.groupRow.group_type]}</p>
 				</div>
 
 				<div class="form-group">

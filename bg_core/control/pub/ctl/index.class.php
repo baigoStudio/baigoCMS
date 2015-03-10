@@ -42,4 +42,3 @@ class CONTROL_INDEX {
 		$this->obj_tpl->tplDisplay("index.tpl", $_arr_tplData);
 	}
 }
-?>

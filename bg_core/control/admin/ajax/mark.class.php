@@ -95,4 +95,3 @@ class AJAX_MARK {
 		exit(json_encode($arr_re));
 	}
 }
-?>

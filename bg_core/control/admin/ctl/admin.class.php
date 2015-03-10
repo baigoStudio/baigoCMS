@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_CLASS . "sso.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目模型
 
@@ -128,7 +128,7 @@ class CONTROL_ADMIN {
 			);
 		}
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
 			"userRow"    => $_arr_ssoUser,
@@ -173,7 +173,7 @@ class CONTROL_ADMIN {
 		}
 
 		$_arr_groupRow    = $this->mdl_group->mdl_read($_arr_adminRow["admin_group_id"]);
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
 			"userRow"    => $_arr_ssoUser,
@@ -207,7 +207,7 @@ class CONTROL_ADMIN {
 		}
 		$_arr_adminRow["admin_status"] = "enable";
 
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
 			"adminRow"   => $_arr_adminRow, //管理员信息
@@ -287,4 +287,3 @@ class CONTROL_ADMIN {
 		);
 	}
 }
-?>

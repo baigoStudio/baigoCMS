@@ -21,4 +21,3 @@ if ($GLOBALS["adminLogged"]["str_alert"] != "y020102") {
 	header("Location: " . $_str_url . $_url_attach);
 	exit;
 }
-?>

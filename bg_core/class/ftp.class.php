@@ -115,4 +115,3 @@ class CLASS_FTP {
 		ftp_close($this->ftp_conn);
 	}
 }
-?>

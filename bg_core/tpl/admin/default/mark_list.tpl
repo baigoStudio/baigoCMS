@@ -26,7 +26,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=tag_mark#mark" target="_blank">
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=tag#mark" target="_blank">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						{$lang.href.help}
 					</a>
@@ -37,8 +37,14 @@
 			<form name="mark_search" id="mark_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 				<input type="hidden" name="mod" value="mark">
 				<input type="hidden" name="act_get" value="list">
-				<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				<button type="submit" class="btn btn-default btn-sm">{$lang.btn.filter}</button>
+				<div class="form-group">
+					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</div>
 			</form>
 		</div>
 		<div class="clearfix"></div>
@@ -72,7 +78,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<form name="mark_list" id="mark_list" class="form-inline">
+			<form name="mark_list" id="mark_list">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -96,16 +102,18 @@
 										<td class="td_mn"><input type="checkbox" name="mark_id[]" value="{$value.mark_id}" id="mark_id_{$value.mark_id}" group="mark_id" class="chk_all validate"></td>
 										<td class="td_mn">{$value.mark_id}</td>
 										<td>
-											<div>
-												{if $value.mark_name}
-													{$value.mark_name}
-												{else}
-													{$lang.label.noname}
-												{/if}
-											</div>
-											<div>
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mark&act_get=list&mark_id={$value.mark_id}">{$lang.href.edit}</a>
-											</div>
+											<ul class="list-unstyled">
+												<li>
+													{if $value.mark_name}
+														{$value.mark_name}
+													{else}
+														{$lang.label.noname}
+													{/if}
+												</li>
+												<li>
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mark&act_get=list&mark_id={$value.mark_id}">{$lang.href.edit}</a>
+												</li>
+											</ul>
 										</td>
 									</tr>
 								{/foreach}

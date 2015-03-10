@@ -101,4 +101,3 @@ class AJAX_CALL {
 		exit(json_encode($arr_re));
 	}
 }
-?>

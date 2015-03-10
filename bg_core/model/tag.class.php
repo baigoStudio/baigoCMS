@@ -19,12 +19,12 @@ class MODEL_TAG {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_tagCreat = array(
-			"tag_id"             => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"tag_id"             => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"tag_name"           => "varchar(30) NOT NULL COMMENT '标题'",
-			"tag_status"         => "varchar(20) NOT NULL COMMENT '状态'",
-			"tag_article_count"  => "int(11) NOT NULL COMMENT '标签统计'",
+			"tag_status"         => "enum('show','hide') NOT NULL COMMENT '状态'",
+			"tag_article_count"  => "smallint NOT NULL COMMENT '文章数'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "tag", $_arr_tagCreat, "tag_id", "标签");
@@ -41,17 +41,41 @@ class MODEL_TAG {
 	}
 
 
-	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
+	function mdl_create_index() {
+		$_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . "tag");
+		$is_exists        = false;
+
+		foreach ($_arr_indexRow as $_key=>$_value) {
+			if (in_array("search", $_value)) {
+				$is_exists = true;
+				break;
+			}
+		}
+
+		$_arr_tagIndex = array(
+			"tag_article_count",
+			"tag_id",
 		);
 
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "tag'";
+		$_num_mysql = $this->obj_db->create_index("search", BG_DB_TABLE . "tag", $_arr_tagIndex, "BTREE", $is_exists);
 
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		if ($_num_mysql > 0) {
+			$_str_alert = "y130109"; //更新成功
+		} else {
+			$_str_alert = "x130109"; //更新成功
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "tag");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -131,7 +155,6 @@ class MODEL_TAG {
 		}
 
 		return array(
-			"tag_id"     => $_num_tagId,
 			"str_alert"  => $_str_alert,
 		);
 	}
@@ -152,6 +175,7 @@ class MODEL_TAG {
 			"tag_id",
 			"tag_name",
 			"tag_status",
+			"tag_article_count",
 		);
 
 		switch ($str_readBy) {
@@ -194,7 +218,7 @@ class MODEL_TAG {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_status = "") {
+	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_status = "", $str_type = "tag_list", $num_articleId = 0) {
 		$_arr_tagSelect = array(
 			"tag_id",
 			"tag_name",
@@ -202,7 +226,7 @@ class MODEL_TAG {
 			"tag_status",
 		);
 
-		$_str_sqlWhere = "tag_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND tag_name LIKE '%" . $str_key . "%'";
@@ -212,7 +236,35 @@ class MODEL_TAG {
 			$_str_sqlWhere .= " AND tag_status='" . $str_status . "'";
 		}
 
-		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere . " ORDER BY tag_id DESC", $num_no, $num_except);
+		if ($num_articleId > 0) {
+			$_view_name = "tag_view";
+			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
+			switch ($str_type) {
+				case "tag_rank":
+					$_str_sqlWhere .= " GROUP BY tag_article_count, tag_id";
+				break;
+
+				default:
+					$_str_sqlWhere .= " GROUP BY tag_id";
+				break;
+			}
+			$_arr_distinct = array("tag_id");
+		} else {
+			$_view_name      = "tag";
+			$_arr_distinct   = false;
+		}
+
+		switch ($str_type) {
+			case "tag_rank":
+				$_str_sqlWhere .= " ORDER BY tag_article_count DESC, tag_id DESC";
+			break;
+
+			default:
+				$_str_sqlWhere .= " ORDER BY tag_id DESC";
+			break;
+		}
+
+		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $num_no, $num_except, $_arr_distinct);
 
 		foreach ($_arr_tagRows as $_key=>$_value) {
 			$_arr_tagRows[$_key]["urlRow"] = $this->url_process($_value);
@@ -280,7 +332,7 @@ class MODEL_TAG {
 
 	function mdl_count($str_key = "", $str_status = "") {
 
-		$_str_sqlWhere = "tag_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND tag_name LIKE '%" . $str_key . "%'";
@@ -423,4 +475,3 @@ class MODEL_TAG {
 		);
 	}
 }
-?>

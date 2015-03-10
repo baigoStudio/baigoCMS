@@ -42,4 +42,3 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_article->ajax_del();
 	break;
 }
-?>

@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php");
+include_once(BG_PATH_CLASS . "tpl_admin.class.php");
 include_once(BG_PATH_MODEL . "attach.class.php");
 include_once(BG_PATH_MODEL . "thumb.class.php");
 include_once(BG_PATH_MODEL . "mime.class.php");
@@ -191,4 +191,3 @@ class CONTROL_ATTACH {
 		}
 	}
 }
-?>

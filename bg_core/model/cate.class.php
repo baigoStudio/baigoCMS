@@ -20,24 +20,24 @@ class MODEL_CATE {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_cateCreat = array(
-			"cate_id"        => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"cate_id"        => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"cate_name"      => "varchar(300) NOT NULL COMMENT '站点名称'",
 			"cate_domain"    => "varchar(3000) NOT NULL COMMENT '绑定域名'",
-			"cate_type"      => "varchar(50) NOT NULL COMMENT '类型'",
+			"cate_type"      => "enum('normal','single','link') NOT NULL COMMENT '类型'",
 			"cate_tpl"       => "varchar(1000) NOT NULL COMMENT '模板'",
 			"cate_content"   => "text NOT NULL COMMENT '栏目内容'",
 			"cate_link"      => "varchar(3000) NOT NULL COMMENT '链接地址'",
-			"cate_parent_id" => "int(11) NOT NULL COMMENT '父栏目'",
+			"cate_parent_id" => "smallint NOT NULL COMMENT '父栏目'",
 			"cate_alias"     => "varchar(300) NOT NULL COMMENT '别名'",
 			"cate_ftp_host"  => "varchar(3000) NOT NULL COMMENT '站点FTP服务器'",
-			"cate_ftp_port"  => "varchar(5) NOT NULL COMMENT 'FTP端口'",
+			"cate_ftp_port"  => "char(5) NOT NULL COMMENT 'FTP端口'",
 			"cate_ftp_user"  => "varchar(300) NOT NULL COMMENT '站点FTP用户名'",
 			"cate_ftp_pass"  => "varchar(300) NOT NULL COMMENT '站点FTP密码'",
 			"cate_ftp_path"  => "varchar(3000) NOT NULL COMMENT '站点FTP目录'",
-			"cate_status"    => "varchar(20) NOT NULL COMMENT '状态'",
-			"cate_order"     => "int(11) NOT NULL COMMENT '排序'",
+			"cate_status"    => "enum('show','hide') NOT NULL COMMENT '状态'",
+			"cate_order"     => "smallint NOT NULL COMMENT '排序'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "cate", $_arr_cateCreat, "cate_id", "栏目");
@@ -54,17 +54,40 @@ class MODEL_CATE {
 	}
 
 
-	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
+	function mdl_create_index() {
+		$_str_alert = "y110109";
+		$_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . "cate");
+
+		$is_exists        = false;
+		foreach ($_arr_indexRow as $_key=>$_value) {
+			if (in_array("order", $_value)) {
+				$is_exists = true;
+				break;
+			}
+		}
+
+		$_arr_cateIndex = array(
+			"cate_order",
+			"cate_id",
 		);
 
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "cate'";
+		$_num_mysql = $this->obj_db->create_index("order", BG_DB_TABLE . "cate", $_arr_cateIndex, "BTREE", $is_exists);
 
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		if ($_num_mysql <= 0) {
+			$_str_alert = "x110109";
+		}
+
+		return array(
+			"str_alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_column() {
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "cate");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -144,7 +167,7 @@ class MODEL_CATE {
 				"cate_id",
 			);
 
-			$_arr_lastRows  = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, "cate_id > 0 ORDER BY cate_id DESC", 1, 0); //读取倒数第一排序号
+			$_arr_lastRows  = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_selectData, "1=1 ORDER BY cate_id DESC", 1, 0); //读取倒数第一排序号
 			if (isset($_arr_lastRows[0])) {
 				$_arr_lastRow   = $_arr_lastRows[0];
 
@@ -166,7 +189,7 @@ class MODEL_CATE {
 
 		switch ($str_orderType) {
 			case "order_first":
-				$_str_sqlWhere = "cate_id > 0";
+				$_str_sqlWhere = "1=1";
 				if ($num_parentId > 0) {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
@@ -209,7 +232,7 @@ class MODEL_CATE {
 			break;
 
 			case "order_last":
-				$_str_sqlWhere = "cate_id > 0";
+				$_str_sqlWhere = "1=1";
 				if ($num_parentId > 0) {
 					$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 				}
@@ -390,6 +413,57 @@ class MODEL_CATE {
 	}
 
 
+	function mdl_readPub($str_cate, $str_readBy = "cate_id", $num_notThisId = 0, $num_parentId = 0) {
+		$_arr_cateSelect = array(
+			"cate_id",
+			"cate_name",
+			"cate_alias",
+			"cate_type",
+			"cate_tpl",
+			"cate_content",
+			"cate_link",
+			"cate_parent_id",
+			"cate_domain",
+			"cate_status",
+		);
+
+		switch ($str_readBy) {
+			case "cate_id":
+				$_str_sqlWhere = $str_readBy . "=" . $str_cate;
+			break;
+			default:
+				$_str_sqlWhere = $str_readBy . "='" . $str_cate . "'";
+			break;
+		}
+
+		if ($num_notThisId > 0) {
+			$_str_sqlWhere .= " AND cate_id <> " . $num_notThisId;
+		}
+
+		if ($num_parentId > 0) {
+			$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
+		}
+
+		$_arr_cateRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+
+		if (isset($_arr_cateRows[0])) {
+			$_arr_cateRow     = $_arr_cateRows[0];
+		} else {
+			return array(
+				"str_alert" => "x110102", //不存在记录
+			);
+			exit;
+		}
+
+		$_arr_cateRow["cate_trees"]   = $this->trees_process($_arr_cateRow["cate_id"]);
+		unset($this->cateTrees);
+		$_arr_cateRow["urlRow"]       = $this->url_process($_arr_cateRow);
+		$_arr_cateRow["str_alert"]    = "y110102";
+
+		return $_arr_cateRow;
+	}
+
+
 	/**
 	 * mdl_list function.
 	 *
@@ -417,7 +491,7 @@ class MODEL_CATE {
 			"cate_parent_id",
 		);
 
-		$_str_sqlWhere = "cate_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_status) {
 			$_str_sqlWhere .= " AND cate_status='" . $str_status . "'";
@@ -430,6 +504,8 @@ class MODEL_CATE {
 		$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 
 		$_arr_cateRows = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere . " ORDER BY cate_order ASC, cate_id ASC", $num_no, $num_except);
+
+		//print_r($_arr_cateRows);
 
 		foreach ($_arr_cateRows as $_key=>$_value) {
 			$_arr_cateRows[$_key]["cate_level"]  = $num_cateLevel;
@@ -518,7 +594,7 @@ class MODEL_CATE {
 
 	function mdl_count($str_status = "", $str_type = "", $num_parentId = 0) {
 
-		$_str_sqlWhere = "cate_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_status) {
 			$_str_sqlWhere .= " AND cate_status='" . $str_status . "'";
@@ -591,6 +667,13 @@ class MODEL_CATE {
 			case "ok":
 				$this->cateSubmit["cate_parent_id"] = $_arr_cateParentId["str"];
 			break;
+		}
+
+		if ($this->cateSubmit["cate_parent_id"] > 0 && $this->cateSubmit["cate_parent_id"] == $this->cateSubmit["cate_id"]) {
+			return array(
+				"str_alert" => "x110221",
+			);
+			exit;
 		}
 
 		$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_name"], "cate_name", $this->cateSubmit["cate_id"], $this->cateSubmit["cate_parent_id"]);
@@ -779,20 +862,16 @@ class MODEL_CATE {
 			"cate_link",
 			"cate_parent_id",
 			"cate_domain",
-			"cate_ftp_host",
-			"cate_ftp_port",
-			"cate_ftp_user",
-			"cate_ftp_pass",
-			"cate_ftp_path",
 			"cate_status",
 		);
 
 		$_str_sqlWhere    = "cate_id=" . $_num_cateId;
 
 		$_arr_cateRows    = $this->obj_db->select_array(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
-		$_arr_cateRow     = $_arr_cateRows[0];
 
-		if (!$_arr_cateRow) {
+		if (isset($_arr_cateRows[0])) {
+			$_arr_cateRow     = $_arr_cateRows[0];
+		} else {
 			return array(
 				"str_alert" => "x110102", //不存在记录
 			);
@@ -876,12 +955,16 @@ class MODEL_CATE {
 		$_arr_cateRow         = $this->db_read($_num_cateId);
 		$this->cateTrees[]    = $_arr_cateRow;
 
-		if ($_arr_cateRow["cate_parent_id"] > 0) {
+		if ($_arr_cateRow["cate_parent_id"] > 0 && $_arr_cateRow["cate_parent_id"] != $_arr_cateRow["cate_id"]) {
 			$this->trees_process($_arr_cateRow["cate_parent_id"]);
 		}
 
 		krsort($this->cateTrees);
-		return $this->cateTrees;
+
+		foreach ($this->cateTrees as $_key=>$_value) {
+			$_cate_trees[] = $_value;
+		}
+
+		return $_cate_trees;
 	}
 }
-?>

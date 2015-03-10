@@ -20,9 +20,9 @@ class MODEL_MARK {
 
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_markCreat = array(
-			"mark_id"    => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"mark_id"    => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"mark_name"  => "varchar(30) NOT NULL COMMENT '标记名称'",
 		);
 
@@ -41,16 +41,10 @@ class MODEL_MARK {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "mark'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "mark");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -168,7 +162,7 @@ class MODEL_MARK {
 			"mark_name",
 		);
 
-		$_str_sqlWhere = "mark_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND mark_name LIKE '%" . $str_key . "%'";
@@ -207,7 +201,7 @@ class MODEL_MARK {
 
 	function mdl_count($str_key = "") {
 
-		$_str_sqlWhere = "mark_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND mark_name LIKE '%" . $str_key . "%'";
@@ -308,4 +302,3 @@ class MODEL_MARK {
 		return $this->markIds;
 	}
 }
-?>

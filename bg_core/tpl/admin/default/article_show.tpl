@@ -99,6 +99,11 @@
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.articleCate}</label>
+					<p class="form-control-static">{$tplData.cateRow.cate_name}</p>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label static_label">{$lang.label.articleBelong}</label>
 					{cate_list arr=$tplData.cateRows}
 				</div>
 
@@ -135,15 +140,19 @@
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.time}</label>
-					<p class="form-control-static static_input">
+					<p class="form-control-static">
 						{$tplData.articleRow.article_time|date_format:"%Y-%m-%d %H:%M"}
 					</p>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.articleMark}</label>
-					<p class="form-control-static static_input">
-						{$tplData.markRow.mark_name}
+					<p class="form-control-static">
+						{if isset($tplData.markRow.mark_name)}
+							{$tplData.markRow.mark_name}
+						{else}
+							{$lang.label.none}
+						{/if}
 					</p>
 				</div>
 

@@ -9,12 +9,11 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
 include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "cateBelong.class.php");
 include_once(BG_PATH_MODEL . "tag.class.php");
-include_once(BG_PATH_MODEL . "tagBelong.class.php");
 include_once(BG_PATH_MODEL . "mark.class.php");
 include_once(BG_PATH_MODEL . "spec.class.php");
 
@@ -40,7 +39,6 @@ class CONTROL_ARTICLE {
 		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
 		$this->mdl_cateBelong = new MODEL_CATE_BELONG(); //设置栏目从属对象
 		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
 		$this->mdl_mark       = new MODEL_MARK(); //设置标记对象
 		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
@@ -79,11 +77,12 @@ class CONTROL_ARTICLE {
 			}
 
 			$_arr_articleRow["cate_ids"][]   = $_arr_articleRow["article_cate_id"];
-			$_arr_tagBelongRows              = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
+			$_arr_tagRows                    = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_arr_articleRow["article_id"]); //读取从属数据
 
-			foreach ($_arr_tagBelongRows as $_value) {
-				$_arr_tagRow                        = $this->mdl_tag->mdl_read($_value["belong_tag_id"]);
-				$_arr_articleRow["article_tags"][]  = $_arr_tagRow["tag_name"];
+			$_arr_articleRow["article_tags"] = array();
+
+			foreach ($_arr_tagRows as $_value) {
+					$_arr_articleRow["article_tags"][]  = $_value["tag_name"];
 			}
 			$_arr_articleRow["article_tags"] = json_encode($_arr_articleRow["article_tags"]);
 
@@ -100,7 +99,7 @@ class CONTROL_ARTICLE {
 				"article_content"   => "",
 				"article_link"      => "",
 				"article_excerpt"   => "",
-
+				"article_cate_id"   => 0,
 				"article_status"    => $_str_status,
 				"article_box"       => "normal",
 				"article_time_pub"  => time(),
@@ -112,8 +111,8 @@ class CONTROL_ARTICLE {
 
 		//print_r($_arr_articleRow);
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRows = $this->mdl_mark->mdl_list(1000, 0);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show", "normal");
+		$_arr_markRows = $this->mdl_mark->mdl_list(100);
 
 		if (count($_arr_cateRows) < 1) {
 			return array(
@@ -177,23 +176,21 @@ class CONTROL_ARTICLE {
 		}
 		$_arr_articleRow["cate_ids"][]    = $_arr_articleRow["article_cate_id"];
 
-		$_arr_cateRows                    = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRow                     = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
-		$_arr_tagBelongRows               = $this->mdl_tagBelong->mdl_list($_arr_articleRow["article_id"]); //读取从属数据
+		$_arr_cateRow                 = $this->mdl_cate->mdl_read($_arr_articleRow["article_cate_id"]);
+		$_arr_cateRows                = $this->mdl_cate->mdl_list(1000, 0, "show");
+		$_arr_markRow                 = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
+		$_arr_tagRows                 = $this->mdl_tag->mdl_list(10, 0, "", "", "tag_id", $_arr_articleRow["article_id"]); //读取从属数据
 
-		foreach ($_arr_tagBelongRows as $_value) {
-			$_arr_tagRows[] = $this->mdl_tag->mdl_read($_value["belong_tag_id"]);
-		}
-
-		$_arr_articleRow["cate_ids"] = array_unique($_arr_articleRow["cate_ids"]);
+		$_arr_articleRow["cate_ids"]  = array_unique($_arr_articleRow["cate_ids"]);
 
 		$_arr_tpl = array(
+			"cateRow"    => $_arr_cateRow, //栏目
 			"cateRows"   => $_arr_cateRows, //栏目列表
 			"markRow"    => $_arr_markRow, //标记列表
 			"articleRow" => $_arr_articleRow,
 			"tagRows"    => $_arr_tagRows,
 		);
-
+		
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
 		$this->obj_tpl->tplDisplay("article_show.tpl", $_arr_tplData);
@@ -236,6 +233,7 @@ class CONTROL_ARTICLE {
 		if ($_num_cateId != 0) {
 			$_arr_cateIds    = $this->mdl_cate->mdl_cateIds($_num_cateId);
 			$_arr_cateIds[]  = $_num_cateId;
+			$_arr_cateIds    = array_unique($_arr_cateIds);
 		} else {
 			$_arr_cateIds = false;
 		}
@@ -263,7 +261,7 @@ class CONTROL_ARTICLE {
 
 		$_arr_articleYear             = $this->mdl_article->mdl_year();
 		$_arr_cateRows                = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRows                = $this->mdl_mark->mdl_list(1000, 0);
+		$_arr_markRows                = $this->mdl_mark->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_value["article_cate_id"]);
@@ -299,4 +297,3 @@ class CONTROL_ARTICLE {
 		);
 	}
 }
-?>

@@ -19,22 +19,20 @@ class MODEL_CALL {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_callCreat = array(
-			"call_id"        => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"call_show"      => "varchar(300) NOT NULL COMMENT '显示选项'",
+			"call_id"        => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"call_name"      => "varchar(300) NOT NULL COMMENT '调用名'",
-			"call_type"      => "varchar(20) NOT NULL COMMENT '调用类型'",
+			"call_type"      => "enum('article','hits_day','hits_week','hits_month','hits_year','hits_all','spec','cate','tag_list','tag_rank') NOT NULL COMMENT '调用类型'",
 			"call_cate_ids"  => "varchar(300) NOT NULL COMMENT '栏目ID'",
-			"call_cate_id"   => "int(11) NOT NULL COMMENT '栏目ID'",
-			"call_file"      => "varchar(10) NOT NULL COMMENT '静态文件类型'",
-			"call_amount"    => "varchar(300) NOT NULL COMMENT '显示数选项'",
+			"call_cate_id"   => "smallint NOT NULL COMMENT '栏目ID'",
+			"call_spec_id"   => "mediumint NOT NULL COMMENT '专题ID'",
 			"call_mark_ids"  => "varchar(300) NOT NULL COMMENT '标记ID'",
-			"call_attach"    => "varchar(20) NOT NULL COMMENT '含有附件'",
-			"call_hits"      => "varchar(20) NOT NULL COMMENT '排行类型'",
-			"call_trim"      => "int(11) NOT NULL COMMENT '标题字数'",
-			"call_status"    => "varchar(20) NOT NULL COMMENT '状态'",
-			"call_css"       => "varchar(300) NOT NULL COMMENT 'CSS名'",
+			"call_file"      => "enum('html','js','xml','json') NOT NULL COMMENT '静态文件类型'",
+			"call_amount"    => "varchar(300) NOT NULL COMMENT '显示数选项'",
+			"call_attach"    => "enum('all','attach','none') NOT NULL COMMENT '含有附件'",
+			"call_trim"      => "smallint NOT NULL COMMENT '标题字数'",
+			"call_status"    => "enum('enable','disable') NOT NULL COMMENT '状态'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "call", $_arr_callCreat, "call_id", "调用");
@@ -52,16 +50,10 @@ class MODEL_CALL {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "call'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "call");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -88,12 +80,11 @@ class MODEL_CALL {
 			"call_status"    => $this->callSubmit["call_status"],
 			"call_amount"    => $this->callSubmit["call_amount"],
 			"call_trim"      => $this->callSubmit["call_trim"],
-			"call_css"       => $this->callSubmit["call_css"],
 			"call_cate_ids"  => $this->callSubmit["call_cate_ids"],
 			"call_cate_id"   => $this->callSubmit["call_cate_id"],
-			"call_attach"    => $this->callSubmit["call_attach"],
 			"call_mark_ids"  => $this->callSubmit["call_mark_ids"],
-			"call_show"      => $this->callSubmit["call_show"],
+			"call_spec_id"   => $this->callSubmit["call_spec_id"],
+			"call_attach"    => $this->callSubmit["call_attach"],
 		);
 
 		if ($this->callSubmit["call_id"] == 0) { //插入
@@ -148,12 +139,11 @@ class MODEL_CALL {
 			"call_status",
 			"call_amount",
 			"call_trim",
-			"call_css",
 			"call_cate_ids",
 			"call_cate_id",
-			"call_attach",
+			"call_spec_id",
 			"call_mark_ids",
-			"call_show",
+			"call_attach",
 		);
 
 		switch ($str_readBy) {
@@ -184,12 +174,6 @@ class MODEL_CALL {
 			$_arr_callRow["call_amount"]      = json_decode($_arr_callRow["call_amount"], true); //json解码
 		} else {
 			$_arr_callRow["call_amount"]      = array();
-		}
-
-		if (isset($_arr_callRow["call_show"])) {
-			$_arr_callRow["call_show"]        = json_decode($_arr_callRow["call_show"], true); //json解码
-		} else {
-			$_arr_callRow["call_show"]        = array();
 		}
 
 		if (isset($_arr_callRow["call_cate_ids"])) {
@@ -230,15 +214,14 @@ class MODEL_CALL {
 			"call_status",
 			"call_amount",
 			"call_trim",
-			"call_css",
 			"call_cate_ids",
 			"call_cate_id",
-			"call_attach",
+			"call_spec_id",
 			"call_mark_ids",
-			"call_show",
+			"call_attach",
 		);
 
-		$_str_sqlWhere = "call_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%'";
@@ -268,7 +251,7 @@ class MODEL_CALL {
 	 * @return void
 	 */
 	function mdl_count($str_key = "", $str_type = "", $str_status = "") {
-		$_str_sqlWhere = "call_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND call_name LIKE '%" . $str_key . "%'";
@@ -403,27 +386,13 @@ class MODEL_CALL {
 			break;
 		}
 
-		$_arr_callCss = validateStr(fn_post("call_css"), 0, 300);
-		switch ($_arr_callCss["status"]) {
-			case "too_long":
-				return array(
-					"str_alert" => "x170214",
-				);
-				exit;
-			break;
-
-			case "ok":
-				$this->callSubmit["call_css"] = $_arr_callCss["str"];
-			break;
-		}
-
 		$this->callSubmit["call_file"]        = fn_getSafe(fn_post("call_file"), "txt", "");
 		$this->callSubmit["call_attach"]      = fn_getSafe(fn_post("call_attach"), "txt", "");
 		$this->callSubmit["call_cate_id"]     = fn_getSafe(fn_post("call_cate_id"), "int", 0);
+		$this->callSubmit["call_spec_id"]     = fn_getSafe(fn_post("call_spec_id"), "int", 0);
 
 		$this->callSubmit["call_cate_ids"]    = json_encode(fn_post("call_cate_ids"));
 		$this->callSubmit["call_mark_ids"]    = json_encode(fn_post("call_mark_ids"));
-		$this->callSubmit["call_show"]        = json_encode(fn_post("call_show"));
 		$this->callSubmit["call_amount"]      = json_encode(fn_post("call_amount"));
 
 		$this->callSubmit["str_alert"]        = "ok";
@@ -466,4 +435,3 @@ class MODEL_CALL {
 	}
 
 }
-?>

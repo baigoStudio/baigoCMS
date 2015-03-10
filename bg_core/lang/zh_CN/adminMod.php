@@ -15,7 +15,7 @@ return array(
 		"main" => array(
 			"title"  => "文章管理",
 			"mod"    => "article",
-			"icon"   => "file",
+			"icon"   => "duplicate",
 		),
 		"sub" => array(
 			"list" => array(
@@ -192,7 +192,7 @@ return array(
 		"main" => array(
 			"title"  => "管理员",
 			"mod"    => "admin",
-			"icon"   => "user",
+			"icon"   => "lock",
 		),
 		"sub" => array(
 			"list" => array(
@@ -276,6 +276,11 @@ return array(
 				"mod"       => "opt",
 				"act_get"   => "sso",
 			),
+			"app" => array(
+				"title"     => "API 授权设置",
+				"mod"       => "app",
+				"act_get"   => "list",
+			),
 		),
 		"allow" => array(
 			"base"   => "基本",
@@ -283,7 +288,7 @@ return array(
 			"visit"  => "访问方式",
 			"upload" => "上传设置",
 			"sso"    => "SSO 设置",
+			"app"    => "API 授权设置",
 		),
 	),
 );
-?>

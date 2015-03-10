@@ -19,6 +19,11 @@ return array(
 		"hide"    => "隐藏", //隐藏
 	),
 
+	"app" => array(
+		"enable"  => "启用", //生效
+		"disable" => "禁用", //禁用
+	),
+
 	/*-------TAG状态-------*/
 	"tag" => array(
 		"show"    => "显示", //正常
@@ -52,4 +57,3 @@ return array(
 		"hide"    => "隐藏", //隐藏
 	),
 );
-?>

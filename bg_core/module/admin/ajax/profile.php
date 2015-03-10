@@ -23,4 +23,3 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_profile->ajax_info();
 	break;
 }
-?>

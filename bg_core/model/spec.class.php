@@ -20,11 +20,11 @@ class MODEL_SPEC {
 
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_specCreat = array(
-			"spec_id"        => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"spec_id"        => "mediumint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"spec_name"      => "varchar(300) NOT NULL COMMENT '专题名称'",
-			"spec_status"    => "varchar(20) NOT NULL COMMENT '状态'",
+			"spec_status"    => "enum('show','hide') NOT NULL COMMENT '状态'",
 			"spec_content"   => "varchar(3000) NOT NULL COMMENT '专题内容'",
 		);
 
@@ -43,16 +43,10 @@ class MODEL_SPEC {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "spec'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "spec");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -199,7 +193,7 @@ class MODEL_SPEC {
 			"spec_status",
 		);
 
-		$_str_sqlWhere = "spec_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND spec_name LIKE '%" . $str_key . "%'";
@@ -246,7 +240,7 @@ class MODEL_SPEC {
 
 	function mdl_count($str_key = "", $str_status = "") {
 
-		$_str_sqlWhere = "spec_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND spec_name LIKE '%" . $str_key . "%'";
@@ -396,4 +390,3 @@ class MODEL_SPEC {
 		);
 	}
 }
-?>

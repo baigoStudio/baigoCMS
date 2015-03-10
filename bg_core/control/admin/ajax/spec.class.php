@@ -137,4 +137,3 @@ class AJAX_SPEC {
 		exit(json_encode($_arr_tpl));
 	}
 }
-?>

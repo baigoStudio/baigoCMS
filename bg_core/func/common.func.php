@@ -18,7 +18,7 @@ if(!defined("IN_BAIGO")) {
  */
 function fn_rand($num_rand = 32) {
 	$_str_char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	$_str_rnd = "";
+	$_str_rnd  = "";
 	while (strlen($_str_rnd) < $num_rand) {
 		$_str_rnd .= substr($_str_char, (rand(0, strlen($_str_char))), 1);
 	}
@@ -139,7 +139,7 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 			if (BG_SWITCH_TOKEN == true) {
 				$_num_tokenSessionDiff = fn_session("token_sessionTime_" . BG_SITE_SSIN) + 300; //session有效期
 				if (!fn_session("token_session_" . BG_SITE_SSIN) || !fn_session("token_sessionTime_" . BG_SITE_SSIN) || $_num_tokenSessionDiff < time()) {
-					$_str_tokenSession = fn_rand();
+					$_str_tokenSession                             = fn_rand();
 					$_SESSION["token_session_" . BG_SITE_SSIN]     = $_str_tokenSession;
 					$_SESSION["token_sessionTime_" . BG_SITE_SSIN] = time();
 				} else {
@@ -148,7 +148,7 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 
 				$_num_tokenCookieDiff = fn_session("token_cookieTime_" . BG_SITE_SSIN) + 300; //cookie有效期
 				if (!fn_session("token_cookie_" . BG_SITE_SSIN) || !fn_session("token_cookieTime_" . BG_SITE_SSIN) || $_num_tokenCookieDiff < time()) {
-					$_str_tokenCookie = fn_rand();
+					$_str_tokenCookie                              = fn_rand();
 					$_SESSION["token_cookie_" . BG_SITE_SSIN]      = $_str_tokenCookie;
 					$_SESSION["token_cookieTime_" . BG_SITE_SSIN]  = time();
 				} else {
@@ -219,9 +219,9 @@ function fn_getSafe($str_string = "", $str_type = "txt", $str_default = "") {
  * @return void
  */
 function fn_strlen_utf8($str) {
-	$i = 0;
+	$i     = 0;
 	$count = 0;
-	$len = strlen($str);
+	$len   = strlen($str);
 	while ($i < $len) {
 		$chr = ord($str[$i]);
 		$count++;
@@ -252,32 +252,32 @@ function fn_strlen_utf8($str) {
  */
 function fn_substr_utf8($str_string, $begin, $length) {
 	//對字串做URL Eecode
-	$str_string = mb_substr($str_string, $begin, mb_strlen($str_string));
-	$iString = urlencode($str_string);
-	$lstrResult = "";
-	$ilength = 0;
-	$k = 0;
+	$str_string    = mb_substr($str_string, $begin, mb_strlen($str_string));
+	$iString       = urlencode($str_string);
+	$lstrResult    = "";
+	$ilength       = 0;
+	$k             = 0;
 	do {
 		$lstrChar = substr($iString, $k, 1);
 		if ($lstrChar == "%") {
 			$ThisChr = hexdec(substr($iString, $k+1, 2));
 			if ($ThisChr >= 128) {
 				if ($ilength + 3 < $length) {
-					$lstrResult .= urldecode(substr($iString, $k, 9));
-					$k = $k + 9;
-					$ilength += 3;
+					$lstrResult   .= urldecode(substr($iString, $k, 9));
+					$k             = $k + 9;
+					$ilength      += 3;
 				} else {
-					$k = $k + 9;
-					$ilength += 3;
+					$k         = $k + 9;
+					$ilength  += 3;
 				}
 			} else {
-				$lstrResult .= urldecode(substr($iString, $k, 3));
-				$k = $k + 3;
-				$ilength += 2;
+				$lstrResult.= urldecode(substr($iString, $k, 3));
+				$k          = $k + 3;
+				$ilength   += 2;
 			}
 		} else {
 			$lstrResult .= urldecode(substr($iString, $k, 1));
-			$k = $k + 1;
+			$k           = $k + 1;
 			$ilength++;
 		}
 	}
@@ -475,10 +475,9 @@ function fn_regChk($str_chk, $str_reg, $str_wild = false) {
 function fn_getAttach($_str_content) {
 	//print_r($_str_content);
 
-	$_pattern_1        = "/<img.*?src=[\"|']?__baigo__\/" . BG_NAME_ATTACH . "\/.*?[\"|']?\s.*?>/i";
+	$_pattern_1        = "/<img.*?id=[\"|']?baigo_.*?[\"|']?\s.*?>/i";
 	$_pattern_2        = "/\sid=[\"|']?baigo_.*?[\"|']?\s/i";
 	$_str_attachTemp   = html_entity_decode($_str_content, ENT_QUOTES, "UTF-8");
-	$_str_attachTemp   = str_replace(BG_UPLOAD_URL, "__baigo__", $_str_attachTemp);
 	$_str_attachTemp   = str_replace("\\", "", $_str_attachTemp);
 
 	//print_r($_pattern_1);
@@ -494,14 +493,14 @@ function fn_getAttach($_str_content) {
 	if (isset($_match_1[0])) {
 		preg_match($_pattern_2, $_match_1[0], $_match_2);
 		$_str_attach      = trim($_match_2[0]);
-		$_str_attach      = str_replace("id=", "", $_match_2[0]);
+		$_str_attach      = str_replace("id=", "", $_str_attach);
 		$_str_attach      = str_replace("baigo_", "", $_str_attach);
 		$_str_attach      = str_replace("\"", "", $_str_attach);
 		$_str_attach      = trim($_str_attach);
 		$_num_attachId    = str_replace("'", "", $_str_attach);
 	}
 
-	//print_r($_match_2);
+	//print_r($_num_attachId);
 
 	return $_num_attachId;
 }
@@ -559,4 +558,3 @@ function fn_server($key) {
 		return null;
 	}
 }
-?>

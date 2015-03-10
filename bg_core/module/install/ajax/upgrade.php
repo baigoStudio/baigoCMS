@@ -42,4 +42,3 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_upgrade->ajax_over();
 	break;
 }
-?>

@@ -35,4 +35,3 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_opt->ajax_db();
 	break;
 }
-?>

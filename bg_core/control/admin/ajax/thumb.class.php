@@ -98,4 +98,3 @@ class AJAX_THUMB {
 		exit(json_encode($arr_re));
 	}
 }
-?>

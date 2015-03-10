@@ -9,30 +9,26 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "http.func.php"); //载入HTTP函数
-include_once(BG_PATH_FUNC . "baigocode.func.php"); //载入加密解密函数
 
 /*-------------API 接口类-------------*/
 class CLASS_API {
 
-
-	/**
+	/** 验证 app
 	 * app_chk function.
 	 *
 	 * @access public
 	 * @param mixed $arr_appGet
 	 * @param mixed $arr_appRow
-	 * @param bool $chk_token (default: false)
 	 * @return void
 	 */
-	function app_chk($arr_appGet, $arr_appRow, $chk_token = false) {
+	function app_chk($arr_appGet, $arr_appRow) {
 		if ($arr_appGet["str_alert"] != "ok") {
 			return $arr_appRow;
 		}
 
 		if ($arr_appRow["app_status"] != "enable") {
 			return array(
-				"str_alert" => "x050402",
+				"str_alert" => "x190402",
 			);
 			exit;
 		}
@@ -43,7 +39,7 @@ class CLASS_API {
 			$_str_ipAllow = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_allow"]);
 			if (!fn_regChk($_str_ip, $_str_ipAllow, true)) {
 				return array(
-					"str_alert" => "x050212",
+					"str_alert" => "x190212",
 				);
 				exit;
 			}
@@ -51,7 +47,7 @@ class CLASS_API {
 			$_str_ipBad = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_bad"]);
 			if (fn_regChk($_str_ip, $_str_ipBad)) {
 				return array(
-					"str_alert" => "x050213",
+					"str_alert" => "x190213",
 				);
 				exit;
 			}
@@ -59,25 +55,9 @@ class CLASS_API {
 
 		if ($arr_appRow["app_key"] != $arr_appGet["app_key"]) {
 			return array(
-				"str_alert" => "x050217",
+				"str_alert" => "x190217",
 			);
 			exit;
-		}
-
-		if ($chk_token) {
-			if ($arr_appRow["app_token"] != $arr_appGet["app_token"]) {
-				return array(
-					"str_alert" => "x050220",
-				);
-				exit;
-			}
-
-			if (($arr_appRow["app_token_time"] + $arr_appRow["app_token_expire"]) < time()) {
-				return array(
-					"str_alert" => "x050221",
-				);
-				exit;
-			}
 		}
 
 		return array(
@@ -86,37 +66,34 @@ class CLASS_API {
 	}
 
 
-	/**
+	/** 读取 app 信息
 	 * app_get function.
 	 *
 	 * @access public
-	 * @param string $str_method (default: "get")
 	 * @param bool $chk_token (default: false)
 	 * @return void
 	 */
 	function app_get($str_method = "get", $chk_token = false) {
-		if ($str_method == "act_post") {
+		if ($str_method == "post") {
 			$num_appId       = fn_post("app_id");
 			$str_appKey      = fn_post("app_key");
-			$str_appToken    = fn_post("app_token");
 		} else {
 			$num_appId       = fn_get("app_id");
 			$str_appKey      = fn_get("app_key");
-			$str_appToken    = fn_get("app_token");
 		}
 
 		$_arr_appId = validateStr($num_appId, 1, 0, "str", "int");
 		switch ($_arr_appId["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x050203",
+					"str_alert" => "x190203",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x050204",
+					"str_alert" => "x190204",
 				);
 				exit;
 			break;
@@ -131,21 +108,21 @@ class CLASS_API {
 		switch ($_arr_appKey["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x050214",
+					"str_alert" => "x190214",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x050215",
+					"str_alert" => "x190215",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x050216",
+					"str_alert" => "x190216",
 				);
 				exit;
 			break;
@@ -156,90 +133,25 @@ class CLASS_API {
 
 		}
 
-		if ($chk_token) {
-			$_arr_appToken = validateStr($str_appToken, 1, 64, "str", "alphabetDigit");
-			switch ($_arr_appToken["status"]) {
-				case "too_short":
-					return array(
-						"str_alert" => "x050218",
-					);
-					exit;
-				break;
-
-				case "too_long":
-					return array(
-						"str_alert" => "x050219",
-					);
-					exit;
-				break;
-
-				case "ok":
-					$_arr_appGet["app_token"] = $_arr_appToken["str"];
-				break;
-
-			}
-		}
-
 		$_arr_appGet["str_alert"] = "ok";
 
 		return $_arr_appGet;
 	}
 
 
-	/**
-	 * api_notice function.
-	 *
-	 * @access public
-	 * @param mixed $arr_data
-	 * @param mixed $arr_appRows
-	 * @return void
-	 */
-	function api_notice($arr_data, $arr_appRows) {
-		foreach ($arr_appRows as $_key=>$_value) {
-			$_tm_time    = time();
-			$_str_rand   = fn_rand();
-			$_str_sign   = fn_baigoSignMk($_tm_time, $_str_rand);
-
-			$_arr_query = array(
-				"timestamp" => $_tm_time,
-				"random"    => $_str_rand,
-				"signature" => $_str_sign,
-			);
-
-			$_arr_data = array_merge($arr_data, $_arr_query);
-
-			$_arr_return[$_key] = fn_http($_value["app_notice"], $_arr_data, "act_post");
-		}
-
-		return $_arr_return;
-	}
-
-
-	/**
-	 * api_encode function.
-	 *
-	 * @access public
-	 * @param mixed $arr_data
-	 * @param mixed $str_key
-	 * @return void
-	 */
-	function api_encode($arr_data, $str_key) {
-		unset($arr_data["str_alert"]);
-		$_str_src     = base64_decode(fn_jsonEncode($arr_data, "encode"));
-		$_str_code    = fn_baigoEncode($_str_src, $str_key);
-		return $_str_code;
-	}
-
-
-	/**
+	/** 返回结果
 	 * halt_re function.
 	 *
 	 * @access public
 	 * @param mixed $arr_re
 	 * @return void
 	 */
-	function halt_re($arr_re) {
-		exit(base64_decode(fn_jsonEncode($arr_re, "encode"))); //输出错误信息
+	function halt_re($arr_re, $is_encode = false) {
+		if ($is_encode) {
+			$_str_return = fn_jsonEncode($arr_re, "encode");
+		} else {
+			$_str_return = json_encode($arr_re);
+		}
+		exit($_str_return); //输出错误信息
 	}
 }
-?>

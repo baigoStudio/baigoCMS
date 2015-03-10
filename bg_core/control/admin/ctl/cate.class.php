@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "dir.class.php");
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "cate.class.php");
 
 /*-------------用户类-------------*/
@@ -190,4 +190,3 @@ class CONTROL_CATE {
 	}
 
 }
-?>

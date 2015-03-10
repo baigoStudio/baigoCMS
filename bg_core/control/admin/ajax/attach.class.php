@@ -213,4 +213,3 @@ class AJAX_ATTACH {
 		}
 	}
 }
-?>

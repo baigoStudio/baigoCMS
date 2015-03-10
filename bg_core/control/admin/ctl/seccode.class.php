@@ -19,4 +19,3 @@ class CONTROL_SECCODE {
 		$obj_seccode->secDo();
 	}
 }
-?>

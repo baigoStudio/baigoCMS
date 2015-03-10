@@ -1,10 +1,10 @@
 {* article_form.tpl 文章编辑 *}
 {function cate_select arr="" level=""}
 	{foreach $arr as $value}
-		<option {if $value.cate_id == $tplData.articleRow.article_cate_id}selected{/if} value="{$value.cate_id}">
+		<option {if $value.cate_id == $tplData.articleRow.article_cate_id}selected{/if} {if $value.cate_type != "normal"}disabled{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;
 				{/for}
 			{/if}
 			{$value.cate_name}
@@ -22,7 +22,7 @@
 			<li>
 				<div class="checkbox_baigo">
 					<label for="cate_ids_{$value.cate_id}">
-						<input type="checkbox" {if $value.cate_id|in_array:$tplData.articleRow.cate_ids}checked{/if} value="{$value.cate_id}" name="cate_ids[]" id="cate_ids_{$value.cate_id}">
+						<input type="checkbox" {if $value.cate_id|in_array:$tplData.articleRow.cate_ids}checked{/if} {if $value.cate_type != "normal"}disabled{/if} value="{$value.cate_id}" name="cate_ids[]" id="cate_ids_{$value.cate_id}">
 						{$value.cate_name}
 					</label>
 				</div>
@@ -72,7 +72,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{$smarty.const.BG_URL_HELP}?lang=zh_CN&mod=help&act=article#form" target="_blank">
+				<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=article#form" target="_blank">
 					<span class="glyphicon glyphicon-question-sign"></span>
 					{$lang.href.help}
 				</a>
@@ -107,12 +107,34 @@
 							<textarea name="article_content" id="article_content" class="tinymce text_bg">{$tplData.articleRow.article_content}</textarea>
 						</div>
 
-						<label for="article_tag" class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
+						<label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
 
 						<div class="form-group form-inline">
 							<input type="text" name="article_tag" id="article_tag" class="form-control tm-input tm-input-success">
 							<button type="button" class="btn btn-info tm-btn" id="tag_add">{$lang.btn.add}</button>
 						</div>
+
+						<label class="control-label">{$lang.label.articleSpec}</label>
+
+						<div class="form-group">
+							<div class="input-group">
+								<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
+								</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<select name="article_spec_id" class="form-control">
+								<option value="">{$lang.option.noSpec}</option>
+								{if $tplData.specRow.spec_name}
+									<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
+								{/if}
+								<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
+							</select>
+						</div>
+						<div class="form-group" id="spec_page"></div>
 
 						<div class="form-group">
 							<label for="more_checkbox" class="checkbox-inline">
@@ -229,26 +251,6 @@
 						<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
 						<p class="help-block">{$lang.label.timeNote}</p>
 					</div>
-
-					<div class="form-group">
-						<label class="control-label">{$lang.label.articleSpec}</label>
-						<select name="article_spec_id" class="form-control">
-							<option value="">{$lang.option.noSpec}</option>
-							{if $tplData.specRow.spec_name}
-								<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
-							{/if}
-							<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
-						</select>
-					</div>
-
-					<div class="input-group">
-						<input type="text" name="key" id="key" class="form-control" placeholder="{$lang.label.key}">
-						<span class="input-group-btn">
-							<button type="button" id="search" class="btn btn-info">{$lang.btn.searchSpec}</button>
-						</span>
-					</div>
-
-					<div class="form-group" id="spec_page"></div>
 				</div>
 			</div>
 		</div>
@@ -414,8 +416,8 @@
 			var _str_tag = $("#article_tag").val();
 			obj_tagMan.tagsManager("pushTag", _str_tag);
 		});
-		$("#search").click(function(){
-			var _key = $("#key").val();
+		$("#spec_search").click(function(){
+			var _key = $("#spec_key").val();
 			reload_spec(_key, 1);
 		});
 	});

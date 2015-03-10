@@ -18,12 +18,12 @@ class MODEL_THUMB {
 		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_thumbCreat = array(
-			"thumb_id"       => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"thumb_width"    => "int(11) NOT NULL COMMENT '宽度'",
-			"thumb_height"   => "int(11) NOT NULL COMMENT '高度'",
-			"thumb_type"     => "varchar(10) NOT NULL COMMENT '类型'",
+			"thumb_id"       => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"thumb_width"    => "smallint NOT NULL COMMENT '宽度'",
+			"thumb_height"   => "smallint NOT NULL COMMENT '高度'",
+			"thumb_type"     => "enum('ratio','cut') NOT NULL COMMENT '类型'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "thumb", $_arr_thumbCreat, "thumb_id", "缩略图");
@@ -41,16 +41,10 @@ class MODEL_THUMB {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "thumb'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "thumb");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -150,7 +144,7 @@ class MODEL_THUMB {
 			"thumb_type",
 		);
 
-		$_str_sqlWhere = "thumb_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($num_thumbWidth > 0) {
 			$_str_sqlWhere .= " AND thumb_width=" . $num_thumbWidth;
@@ -198,9 +192,9 @@ class MODEL_THUMB {
 			"thumb_type",
 		);
 
-		$_str_sqlWhere = "thumb_id > 0";
+		$_str_sqlWhere    = "1=1";
 
-		$_arr_thumb = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere . " ORDER BY thumb_id DESC", $num_no, $num_except); //查询数据
+		$_arr_thumb       = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere . " ORDER BY thumb_id DESC", $num_no, $num_except); //查询数据
 		$_arr_thumbRow[] = array(
 			"thumb_id"       => 0,
 			"thumb_width"    => 100,
@@ -214,7 +208,7 @@ class MODEL_THUMB {
 
 
 	function mdl_count() {
-		$_str_sqlWhere = "thumb_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		$_num_count = $this->obj_db->count(BG_DB_TABLE . "thumb", $_str_sqlWhere); //查询数据
 
@@ -370,4 +364,3 @@ class MODEL_THUMB {
 		return $this->thumbIds;
 	}
 }
-?>

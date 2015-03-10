@@ -9,4 +9,3 @@ $arr_data = array(
 );
 //file_put_contents(BG_PATH_ROOT . "notice.txt", $arr_data);
 exit($_POST["echostr"]);
-?>

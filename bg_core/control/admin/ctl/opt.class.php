@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "dir.class.php"); //载入模板类
-include_once(BG_PATH_CLASS . "tpl.class.php");
+include_once(BG_PATH_CLASS . "tpl_admin.class.php");
 include_once(BG_PATH_MODEL . "opt.class.php");
 
 /*-------------管理员控制器-------------*/
@@ -50,8 +50,8 @@ class CONTROL_OPT {
 			exit;
 		}
 
-		if(!BG_MODULE_FTP) {
-			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"]);
+		if(BG_MODULE_FTP == false) {
+			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_URL"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"]);
 		}
 
 		foreach ($this->obj_tpl->opt["upload"] as $_key=>$_value) {
@@ -110,7 +110,7 @@ class CONTROL_OPT {
 			exit;
 		}
 
-		if(!BG_MODULE_GEN) {
+		if(BG_MODULE_GEN == false) {
 			unset($this->obj_tpl->opt["visit"]["BG_VISIT_TYPE"]["option"]["static"], $this->obj_tpl->opt["visit"]["BG_VISIT_FILE"]);
 		}
 
@@ -181,4 +181,3 @@ class CONTROL_OPT {
 		);
 	}
 }
-?>

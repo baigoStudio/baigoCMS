@@ -9,11 +9,13 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "call.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "mark.class.php");
+include_once(BG_PATH_MODEL . "spec.class.php");
 include_once(BG_PATH_MODEL . "thumb.class.php");
+
 /*-------------用户类-------------*/
 class CONTROL_CALL {
 
@@ -29,54 +31,12 @@ class CONTROL_CALL {
 		$this->mdl_call       = new MODEL_CALL();
 		$this->mdl_cate       = new MODEL_CATE();
 		$this->mdl_mark       = new MODEL_MARK();
+		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_thumb      = new MODEL_THUMB();
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
 	}
-
-
-	/**
-	 * ctl_form function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ctl_show() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"] != 1) {
-			return array(
-				"str_alert" => "x170301",
-			);
-			exit;
-		}
-
-		$_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
-
-		if ($_num_callId == 0) {
-			return array(
-				"str_alert" => "x170213",
-			);
-		}
-
-		$_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
-		if ($_arr_callRow["str_alert"] != "y170102") {
-			return $_arr_callRow;
-			exit;
-		}
-
-		$_arr_tpl = array(
-			"callRow" => $_arr_callRow,
-		);
-
-		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
-
-		$this->obj_tpl->tplDisplay("call_show.tpl", $_arr_tplData);
-
-		return array(
-			"str_alert" => "y170102",
-		);
-	}
-
 
 	/**
 	 * ctl_form function.
@@ -109,26 +69,25 @@ class CONTROL_CALL {
 			$_arr_callRow = array(
 				"call_id"       => 0,
 				"call_name"     => "",
-				"call_file"     => array(
-					"auto"         => "auto",
-					"ext"          => "html",
-				),
+				"call_file"     => "html",
 				"call_amount"   => array(
 					"top"          => 10,
 					"except"       => 0,
 				),
+				"call_attach"   => "",
+				"call_cate_id"  => "",
 				"call_trim"     => 100,
 				"call_cate_ids" => array(),
 				"call_mark_ids" => array(),
-				"call_type"   => "",
-				"call_css"   => "",
+				"call_spec_id"  => 0,
+				"call_type"     => "",
 				"call_status"   => "enable",
 			);
 		}
 
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRows    = $this->mdl_mark->mdl_list(1000);
-		$_arr_thumbRows   = $this->mdl_thumb->mdl_list(1000);
+		$_arr_markRows    = $this->mdl_mark->mdl_list(100);
+		$_arr_thumbRows   = $this->mdl_thumb->mdl_list(100);
 
 		$_arr_tpl = array(
 			"callRow"    => $_arr_callRow,
@@ -195,4 +154,3 @@ class CONTROL_CALL {
 
 	}
 }
-?>

@@ -138,4 +138,3 @@ class AJAX_TAG {
 		exit(json_encode($_arr_tagRow));
 	}
 }
-?>

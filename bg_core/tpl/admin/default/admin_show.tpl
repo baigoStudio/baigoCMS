@@ -23,7 +23,6 @@
 
 {$cfg = [
 	title          => "{$adminMod.admin.main.title} - {$lang.page.show}",
-	css            => "admin_form",
 	menu_active    => "admin",
 	sub_active     => "list"
 ]}
@@ -85,7 +84,7 @@
 			<div class="well">
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.id}</label>
-					<p class="form-control-static static_input">{$tplData.adminRow.admin_id}</p>
+					<p class="form-control-static">{$tplData.adminRow.admin_id}</p>
 				</div>
 
 				{if $tplData.adminRow.admin_status == "enable"}
@@ -115,7 +114,7 @@
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.adminGroup}</label>
-					<p class="form-control-static static_input">
+					<p class="form-control-static">
 						{if $tplData.groupRow.group_name}
 							{$tplData.groupRow.group_name} | <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=show&group_id={$tplData.adminRow.admin_group_id}">{$lang.href.show}</a>
 						{else}

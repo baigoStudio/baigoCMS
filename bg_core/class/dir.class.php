@@ -97,4 +97,3 @@ class CLASS_DIR {
 		return $_arr_return;
 	}
 }
-?>

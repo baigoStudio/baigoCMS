@@ -9,6 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
+if(!defined("BG_UPLOAD_URL")) {
+	define("BG_UPLOAD_URL", "");
+}
+
 /*-------------上传类-------------*/
 class MODEL_ATTACH {
 
@@ -19,14 +23,14 @@ class MODEL_ATTACH {
 	}
 
 
-	function mdl_create() {
+	function mdl_create_table() {
 		$_arr_attachCreat = array(
-			"attach_id"          => "int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"attach_ext"         => "varchar(10) NOT NULL COMMENT '扩展名'",
-			"attach_time"        => "int(11) NOT NULL COMMENT '时间'",
-			"attach_size"        => "int(11) NOT NULL COMMENT '大小'",
+			"attach_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"attach_ext"         => "char(4) NOT NULL COMMENT '扩展名'",
+			"attach_time"        => "int NOT NULL COMMENT '时间'",
+			"attach_size"        => "mediumint NOT NULL COMMENT '大小'",
 			"attach_name"        => "varchar(1000) NOT NULL COMMENT '原始文件名'",
-			"attach_admin_id"    => "int(50) NOT NULL COMMENT '上传用户 ID'",
+			"attach_admin_id"    => "smallint NOT NULL COMMENT '上传用户 ID'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "attach", $_arr_attachCreat, "attach_id", "附件");
@@ -44,16 +48,10 @@ class MODEL_ATTACH {
 
 
 	function mdl_column() {
-		$_arr_colSelect = array(
-			"column_name"
-		);
-
-		$_str_sqlWhere = "table_schema='" . BG_DB_NAME . "' AND table_name='" . BG_DB_TABLE . "attach'";
-
-		$_arr_colRows = $this->obj_db->select_array("information_schema`.`columns", $_arr_colSelect, $_str_sqlWhere, 100, 0);
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "attach");
 
 		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["column_name"];
+			$_arr_col[] = $_value["Field"];
 		}
 
 		return $_arr_col;
@@ -140,8 +138,10 @@ class MODEL_ATTACH {
 	function mdl_read($num_attachId) {
 		$_arr_attachSelect = array(
 			"attach_id",
+			"attach_name",
 			"attach_time",
 			"attach_ext",
+			"attach_size",
 		);
 
 		$_arr_attachRows  = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, "attach_id=" . $num_attachId, 1, 0); //检查本地表是否存在记录
@@ -183,7 +183,7 @@ class MODEL_ATTACH {
 			"attach_admin_id",
 		);
 
-		$_str_sqlWhere = "attach_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_year) {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%Y')='" . $str_year . "'";
@@ -250,7 +250,7 @@ class MODEL_ATTACH {
 	 * @return void
 	 */
 	function mdl_count($str_year = "", $str_month = "", $str_ext = "", $num_adminId = 0) {
-		$_str_sqlWhere = "attach_id > 0";
+		$_str_sqlWhere = "1=1";
 
 		if ($str_year) {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%Y')='" . $str_year . "'";
@@ -383,4 +383,3 @@ class MODEL_ATTACH {
 	}
 
 }
-?>

@@ -127,4 +127,3 @@ class AJAX_GROUP {
 		exit(json_encode($arr_re));
 	}
 }
-?>
