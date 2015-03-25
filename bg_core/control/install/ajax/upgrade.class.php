@@ -346,9 +346,11 @@ class AJAX_UPGRADE {
 			$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
 		}
 
-		$_arr_articleRow  = $_mdl_article->mdl_copy_table();
-		if ($_arr_articleRow["str_alert"] != "y120105") {
-			$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
+		if (in_array("article_content", $_arr_col)) {
+			$_arr_articleRow  = $_mdl_article->mdl_copy_table();
+			if ($_arr_articleRow["str_alert"] != "y120105") {
+				$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
+			}
 		}
 
 		$_arr_alert = array();
