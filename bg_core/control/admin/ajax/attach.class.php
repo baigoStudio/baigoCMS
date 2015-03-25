@@ -51,6 +51,11 @@ class AJAX_ATTACH {
 			$this->show_err($this->adminLogged["str_alert"]);
 		}
 
+		$_arr_status = $this->obj_upload->upload_init($this->attachMime, $this->attachThumb);
+		if ($_arr_status["str_alert"] != "y070403") {
+			$this->show_err($_arr_status["str_alert"]);
+		}
+
 		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"] != 1) {
 			$this->show_err("x070302");
 		}
@@ -101,7 +106,12 @@ class AJAX_ATTACH {
 	 */
 	function ajax_del() {
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->show_err($this->adminLogged["str_alert"]);
+			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		}
+
+		$_arr_status = $this->obj_upload->upload_init($this->attachMime, $this->attachThumb);
+		if ($_arr_status["str_alert"] != "y070403") {
+			$this->obj_ajax->halt_alert($_arr_status["str_alert"]);
 		}
 
 		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"] == 1) {
@@ -185,10 +195,10 @@ class AJAX_ATTACH {
 	private function show_err($str_alert) {
 		$_arr_re = array(
 			"str_alert"  => $str_alert,
-			"msg"        => $this->obj_ajax->halt_alert[$str_alert],
+			"msg"        => $this->obj_ajax->alert[$str_alert],
 		);
 		if ($str_alert == "x070203") {
-			$_arr_re["msg"] = $this->obj_ajax->halt_alert[$str_alert] . " " . BG_UPLOAD_SIZE . " " . BG_UPLOAD_UNIT;
+			$_arr_re["msg"] = $this->obj_ajax->alert[$str_alert] . " " . BG_UPLOAD_SIZE . " " . BG_UPLOAD_UNIT;
 		}
 		exit(json_encode($_arr_re));
 	}
@@ -205,11 +215,6 @@ class AJAX_ATTACH {
 		$_arr_mimeRows        = $this->mdl_mime->mdl_list(100);
 		foreach ($_arr_mimeRows as $_value) {
 			$this->attachMime[] = $_value["mime_ext"];
-		}
-
-		$_arr_status = $this->obj_upload->upload_init($this->attachMime, $this->attachThumb);
-		if ($_arr_status["str_alert"] != "y070403") {
-			$this->show_err($_arr_status["str_alert"]);
 		}
 	}
 }

@@ -6,6 +6,6 @@
 define("PRD_CMS_POWERED", "Powered by");
 define("PRD_CMS_NAME", "baigo CMS");
 define("PRD_CMS_URL", "http://www.baigo.net/Products/baigoCMS/");
-define("PRD_CMS_VER", "1.1");
-define("PRD_CMS_PUB", "20150310");
+define("PRD_CMS_VER", "1.1.1");
+define("PRD_CMS_PUB", "20150325");
 

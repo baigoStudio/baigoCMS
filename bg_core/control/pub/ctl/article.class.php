@@ -71,7 +71,7 @@ class CONTROL_ARTICLE {
 			exit;
 		}
 
-		if ($this->cateRow["cate_link"]) {
+		if ($this->cateRow["cate_type"] == "link" && $this->cateRow["cate_link"]) {
 			return array(
 				"str_alert" => "x110218",
 				"cate_link" => $this->cateRow["cate_link"],
@@ -123,7 +123,7 @@ class CONTROL_ARTICLE {
 			$this->articleRow = $this->mdl_articlePub->mdl_read($_num_articleId);
 			if ($this->articleRow["str_alert"] == "y120102") {
 				$this->cateRow               = $this->mdl_cate->mdl_readPub($this->articleRow["article_cate_id"]);
-				if ($this->cateRow["str_alert"] == "y110102") {
+				if ($this->cateRow["str_alert"] == "y110102" && $this->cateRow["cate_status"] == "show") {
 					$_str_cateTpl        = $this->tpl_process($this->articleRow["article_cate_id"]);
 					if ($_str_cateTpl == "inherit") {
 						$this->config["tpl"] = $_str_tpl;
@@ -137,7 +137,9 @@ class CONTROL_ARTICLE {
 					if (is_array($this->cateRow["cate_trees"])) {
 						foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
 							$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
-							$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
+							if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+								$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
+							}
 						}
 					}
 				} else {
@@ -154,7 +156,7 @@ class CONTROL_ARTICLE {
 
 		$this->articleRow["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $this->articleRow["article_id"]);
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 
 		$this->tplData = array(
 			"cateRows"   => $_arr_cateRows,
@@ -172,10 +174,14 @@ class CONTROL_ARTICLE {
 	 */
 	private function tpl_process($num_cateId) {
 		$_arr_cateRow = $this->mdl_cate->mdl_readPub($num_cateId);
-		$_str_cateTpl = $_arr_cateRow["cate_tpl"];
+		if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+			$_str_cateTpl = $_arr_cateRow["cate_tpl"];
 
-		if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
-			$_str_cateTpl = $this->tpl_process($_arr_cateRow["cate_parent_id"]);
+			if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
+				$_str_cateTpl = $this->tpl_process($_arr_cateRow["cate_parent_id"]);
+			}
+		} else {
+			$_str_cateTpl = BG_SITE_TPL;
 		}
 
 		return $_str_cateTpl;

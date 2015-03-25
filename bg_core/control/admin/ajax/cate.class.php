@@ -21,6 +21,16 @@ class AJAX_CATE {
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
 		$this->mdl_cate       = new MODEL_CATE();
+
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$this->obj_ajax->halt_alert("x030416");
+			}
+		} else {
+			$this->obj_ajax->halt_alert("x030415");
+		}
+
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}

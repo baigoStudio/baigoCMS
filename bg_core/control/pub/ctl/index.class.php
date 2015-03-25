@@ -33,7 +33,7 @@ class CONTROL_INDEX {
 	 * @return void
 	 */
 	function ctl_index() {
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 
 		$_arr_tplData = array(
 			"cateRows" => $_arr_cateRows,

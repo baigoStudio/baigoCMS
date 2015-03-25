@@ -1,24 +1,28 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
-	<dl class="list_baigo {if $level > 0}list_padding{/if}">
+	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
 		{foreach $arr as $value}
-			<dt>{$value.cate_name}</dt>
-			<dd>
-				<ul class="list-inline">
-					{foreach $lang.allow as $key_s=>$value_s}
-						<li>
-							<span class="glyphicon glyphicon-{if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1 || $tplData.groupRow.group_allow.article[$key_s]}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
-							{$value_s}
-						</li>
-					{/foreach}
-				</ul>
-				{if $value.cate_childs}
-					{cate_list arr=$value.cate_childs level=$value.cate_level}
-				{/if}
-			</dd>
+			<li>
+				<dl class="dl_baigo">
+					<dt>{$value.cate_name}</dt>
+					<dd>
+						<ul class="list-inline">
+							{foreach $lang.allow as $key_s=>$value_s}
+								<li>
+									<span class="glyphicon glyphicon-{if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1 || isset($tplData.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+									{$value_s}
+								</li>
+							{/foreach}
+						</ul>
+						{if $value.cate_childs}
+							{cate_list arr=$value.cate_childs level=$value.cate_level}
+						{/if}
+					</dd>
+				</dl>
+			</li>
 		{/foreach}
-	</dl>
+	</ul>
 {/function}
 
 {$cfg = [
@@ -115,7 +119,7 @@
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.adminGroup}</label>
 					<p class="form-control-static">
-						{if $tplData.groupRow.group_name}
+						{if isset($tplData.groupRow.group_name) && $tplData.groupRow.group_name}
 							{$tplData.groupRow.group_name} | <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=show&group_id={$tplData.adminRow.admin_group_id}">{$lang.href.show}</a>
 						{else}
 							{$lang.label.none}

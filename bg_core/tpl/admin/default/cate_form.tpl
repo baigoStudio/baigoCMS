@@ -32,6 +32,7 @@
 	baigoSubmit    => "true",
 	baigoValidator => "true",
 	upload         => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate"
 ]}
 
@@ -82,7 +83,14 @@
 							</div>
 						</div>
 
-						<div class="form-group" id="cate_single">
+						<div class="form-group" id="item_cate_perpage">
+							<div id="group_cate_perpage">
+								<label for="cate_perpage" class="control-label">{$lang.label.catePerpage}<span id="msg_cate_perpage">*</span></label>
+								<input type="text" name="cate_perpage" id="cate_perpage" value="{$tplData.cateRow.cate_perpage}" class="validate form-control">
+							</div>
+						</div>
+
+						<div class="form-group" id="item_cate_content">
 							<label class="control-label">
 								{$lang.label.cateContent}
 								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
@@ -93,7 +101,7 @@
 							<textarea name="cate_content" id="cate_content" class="tinymce text_bg">{$tplData.cateRow.cate_content}</textarea>
 						</div>
 
-						<div class="form-group" id="cate_link">
+						<div class="form-group" id="item_cate_link">
 							<div id="group_cate_link">
 								<label for="cate_link" class="control-label">{$lang.label.cateLink}<span id="msg_cate_link"></span></label>
 								<input type="text" name="cate_link" id="cate_link" value="{$tplData.cateRow.cate_link}" class="validate form-control">
@@ -221,13 +229,13 @@
 			length: { min: 1, max: 300 },
 			validate: { type: "ajax", format: "text", group: "group_cate_name" },
 			msg: { id: "msg_cate_name", too_short: "{$alert.x110201}", too_long: "{$alert.x110202}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkname", key: "cate_name", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}&cate_parent_id={$tplData.cateRow.cate_parent_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkname", key: "cate_name", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}", attach_id: "cate_parent_id", attach_key: "cate_parent_id" }
 		},
 		cate_alias: {
 			length: { min: 0, max: 300 },
 			validate: { type: "ajax", format: "alphabetDigit", group: "group_cate_alias" },
 			msg: { id: "msg_cate_alias", too_long: "{$alert.x110204}", format_err: "{$alert.x110205}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkalias", key: "cate_alias", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}&cate_parent={$tplData.cateRow.cate_parent_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkalias", key: "cate_alias", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}", attach_id: "cate_parent_id", attach_key: "cate_parent_id" }
 		},
 		cate_link: {
 			length: { min: 0, max: 3000 },
@@ -258,6 +266,11 @@
 			length: { min: 0, max: 3000 },
 			validate: { type: "str", format: "url" },
 			msg: { id: "msg_cate_domain", too_long: "{$alert.x110207}", format_err: "{$alert.x110208}" }
+		},
+		cate_perpage: {
+			length: { min: 1, max: 0 },
+			validate: { type: "str", format: "int", group: "group_cate_perpage" },
+			msg: { id: "msg_cate_perpage", too_short: "{$alert.x110223}", format_err: "{$alert.x110224}" }
 		}
 	};
 
@@ -271,18 +284,27 @@
 	function cate_type(cate_type) {
 		switch (cate_type) {
 			case "single":
-				$("#cate_single").show();
-				$("#cate_link").hide();
+				$("#item_cate_perpage").hide();
+				$("#item_cate_content").show();
+				$("#item_cate_link").hide();
 			break;
 
 			case "link":
-				$("#cate_single").hide();
-				$("#cate_link").show();
+				$("#item_cate_perpage").hide();
+				$("#item_cate_content").hide();
+				$("#item_cate_link").show();
+			break;
+
+			case "normal":
+				$("#item_cate_perpage").show();
+				$("#item_cate_content").show();
+				$("#item_cate_link").hide();
 			break;
 
 			default:
-				$("#cate_single").hide();
-				$("#cate_link").hide();
+				$("#item_cate_perpage").show();
+				$("#item_cate_content").show();
+				$("#item_cate_link").hide();
 			break;
 		}
 	}

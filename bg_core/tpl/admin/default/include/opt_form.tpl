@@ -55,7 +55,7 @@
 			"opt_{$key}": {
 				length: { min: {$value.min}, max: 900 },
 				validate: { type: "{$value.type}", {if isset($value.format)}format: "{$value.format}", {/if}group: "group_{$key}" },
-				msg: { id: "msg_{$key}", {$str_msg_min}: "{$alert.x040201}{$value.label}", {$str_msg_max}: "{$value.label}{$alert.x040202}", format_err: "{$value.label}{$alert.x040203}" }
+				msg: { id: "msg_{$key}", {$str_msg_min}: "{$alert.x040201}{$value.label}", {$str_msg_max}: "{$value.label}{$alert.x060202}", format_err: "{$value.label}{$alert.x060203}" }
 			}{if !$value@last},{/if}
 		{/foreach}
 	};

@@ -18,7 +18,7 @@ switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_cateRow = $ctl_cate->ctl_show();
 		if ($arr_cateRow["str_alert"] != "y110102") {
-			if ($arr_cateRow["cate_link"]) {
+			if ($arr_cateRow["cate_type"] == "link" && $arr_cateRow["cate_link"]) {
 				$_str_linkUrl = $arr_cateRow["cate_link"];
 			} else {
 				$_str_linkUrl = BG_URL_ROOT . "index.php?mod=alert&act_get=display&alert=" . $arr_cateRow["str_alert"];

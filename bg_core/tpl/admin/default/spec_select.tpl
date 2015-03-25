@@ -24,6 +24,7 @@
 	baigoSubmit    => "true",
 	tinymce        => "true",
 	upload         => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&{$tplData.query}"
 ]}
 
@@ -174,7 +175,7 @@
 						<select name="cate_id" class="form-control input-sm">
 							<option value="">{$lang.option.allCate}</option>
 							{cate_list arr=$tplData.cateRows}
-							<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknow}</option>
+							<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknown}</option>
 						</select>
 					</div>
 					<div class="form-group">

@@ -53,6 +53,7 @@
 	datepicker     => "true",
 	tagmanager     => "true",
 	upload         => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article"
 ]}
 

@@ -24,6 +24,21 @@ class API_CATE {
 		$this->obj_api        = new CLASS_API();
 		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
 		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
+
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$_arr_return = array(
+					"str_alert" => "x030416"
+				);
+				$this->obj_api->halt_re($_arr_return);
+			}
+		} else {
+			$_arr_return = array(
+				"str_alert" => "x030415"
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
 	}
 
 
@@ -51,9 +66,16 @@ class API_CATE {
 			$this->obj_api->halt_re($_arr_cateRow);
 		}
 
+		if ($_arr_cateRow["cate_status"] != "show") {
+			$_arr_return = array(
+				"str_alert" => "x110102",
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
+
 		unset($_arr_cateRow["urlRow"]);
 
-		if ($_arr_cateRow["cate_link"]) {
+		if ($_arr_cateRow["cate_type"] == "link" && $_arr_cateRow["cate_link"]) {
 			$_arr_return = array(
 				"str_alert" => "x110218",
 				"cate_link" => $_arr_cateRow["cate_link"],

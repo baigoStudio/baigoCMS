@@ -36,6 +36,21 @@ class API_ARTICLE {
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
+
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$_arr_return = array(
+					"str_alert" => "x030416"
+				);
+				$this->obj_api->halt_re($_arr_return);
+			}
+		} else {
+			$_arr_return = array(
+				"str_alert" => "x030415"
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
 	}
 
 
@@ -71,9 +86,16 @@ class API_ARTICLE {
 			$this->obj_api->halt_re($_arr_cateRow);
 		}
 
+		if ($_arr_cateRow["cate_status"] != "show") {
+			$_arr_return = array(
+				"str_alert" => "x110102",
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
+
 		unset($_arr_cateRow["urlRow"]);
 
-		if ($_arr_cateRow["cate_link"]) {
+		if ($_arr_cateRow["cate_type"] == "link" && $_arr_cateRow["cate_link"]) {
 			$_arr_return = array(
 				"str_alert" => "x110218",
 				"cate_link" => $_arr_cateRow["cate_link"],
@@ -126,8 +148,7 @@ class API_ARTICLE {
 
 		if ($_num_cateId > 0) {
 			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
-
-			if ($_arr_cateRow["str_alert"] == "y110102") {
+			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 				$_arr_cateIds   = $this->mdl_cate->mdl_cateIds($_num_cateId);
 				$_arr_cateIds[] = $_num_cateId;
 				$_arr_cateIds   = array_unique($_arr_cateIds);
@@ -149,8 +170,10 @@ class API_ARTICLE {
 				$_arr_articleRows[$_key]["attachRow"]    = $this->mdl_attach->mdl_url($_value["article_attach_id"], $this->attachThumb);
 			}
 			$_arr_cateRow      = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
-			unset($_arr_cateRow["urlRow"]);
-			$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
+			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+				unset($_arr_cateRow["urlRow"]);
+				$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
+			}
 		}
 
 		$_arr_return = array(

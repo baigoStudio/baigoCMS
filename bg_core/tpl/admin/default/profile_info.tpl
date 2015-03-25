@@ -1,23 +1,27 @@
 {* profile_form.tpl 管理员编辑界面 *}
 {function cate_list arr="" level=""}
-	<dl class="list_baigo {if $level > 0}list_padding{/if}">
+	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
 		{foreach $arr as $value}
-			<dt>{$value.cate_name}</dt>
-			<dd>
-				<ul class="list-inline">
-					{foreach $lang.allow as $key_s=>$value_s}
-						<li>
-							<span class="glyphicon glyphicon-{if $tplData.adminLogged.admin_allow_cate[$value.cate_id][$key_s] == 1 || isset($tplData.adminLogged.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
-							{$value_s}
-						</li>
-					{/foreach}
-				</ul>
-				{if $value.cate_childs}
-					{cate_list arr=$value.cate_childs level=$value.cate_level}
-				{/if}
-			</dd>
+			<li>
+				<dl class="dl_baigo">
+					<dt>{$value.cate_name}</dt>
+					<dd>
+						<ul class="list-inline">
+							{foreach $lang.allow as $key_s=>$value_s}
+								<li>
+									<span class="glyphicon glyphicon-{if $tplData.adminLogged.admin_allow_cate[$value.cate_id][$key_s] == 1 || isset($tplData.adminLogged.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+									{$value_s}
+								</li>
+							{/foreach}
+						</ul>
+						{if $value.cate_childs}
+							{cate_list arr=$value.cate_childs level=$value.cate_level}
+						{/if}
+					</dd>
+				</dl>
+			</li>
 		{/foreach}
-	</dl>
+	</ul>
 {/function}
 
 {$cfg = [
@@ -26,6 +30,7 @@
 	sub_active     => "info",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile"
 ]}
 

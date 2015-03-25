@@ -1,5 +1,5 @@
-v0.0.9 jQuery baigoValidator for Bootstrap Plugin 表单验证插件
-(c) 2012 baigo - http://www.baigo.net/jQueryPlugins/baigoValidator.php
+v0.1.0 jQuery baigoValidator plugin 表单验证插件
+(c) 2015 baigo studio - http://www.baigo.net/jQueryPlugins/baigoValidator/
 License: http://www.opensource.org/licenses/mit-license.php
 
 1 文件
@@ -101,7 +101,7 @@ License: http://www.opensource.org/licenses/mit-license.php
 				digit：数字（可带小数点）
 			validator.type 为 checkbox radio 和 select 时可忽略
 
-		3.2.3 group：表单组 ID
+		3.2.3 group：表单组 ID。此参数主要为配合 Bootstrap 的验证样式，如使用此参数，页面中必须使用 Bootstrap，详细请参考 Bootstrap 中文网站关于表单验证样式的信息 http://v3.bootcss.com/css/#forms-control-validation。
 
 	3.3 length：规定长度或大小，0 为无限制
 		validator.type 为 str 时：
@@ -134,6 +134,8 @@ License: http://www.opensource.org/licenses/mit-license.php
 			str：字符串
 			digit：数字
 		attach：附加查询串
+		attach_id: 附加表单 ID
+		attach_key: 附加查询关键词，既传给 AJAX 程序的内容，其值为附加表单值
 
 4 ajax 返回内容必须为 json，如
 	{"re": "ok" } 成功

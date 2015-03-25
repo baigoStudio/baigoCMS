@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin.inc.php"); //载入全局通用
+include_once(BG_PATH_INC . "common_admin_ajax.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL_ADMIN . "ajax/group.class.php"); //载入模板类
 
 $ajax_group = new AJAX_GROUP();

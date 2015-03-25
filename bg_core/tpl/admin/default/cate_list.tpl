@@ -7,7 +7,7 @@
 		{else}
 			{$_css_status = "danger"}
 		{/if}
-		<tr>
+		<tr{if $value.cate_level == 1} class="active"{/if}>
 			<td class="td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
 			<td>{$value.cate_id}</td>
 			<td class="cate_{$value.cate_level}">
@@ -68,6 +68,7 @@
 	validate       => "true",
 	baigoSubmit    => "true",
 	baigoValidator => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&{$tplData.query}"
 ]}
 

@@ -39,6 +39,21 @@ class API_CALL {
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_attach     = new MODEL_ATTACH();
 		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
+
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$_arr_return = array(
+					"str_alert" => "x030416"
+				);
+				$this->obj_api->halt_re($_arr_return);
+			}
+		} else {
+			$_arr_return = array(
+				"str_alert" => "x030415"
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
 	}
 
 
@@ -166,9 +181,10 @@ class API_CALL {
 			}
 
 			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
-			unset($_arr_cateRow["urlRow"]);
-
-			$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
+			if ($_arr_cateRow["cate_status"] == "show") {
+				unset($_arr_cateRow["urlRow"]);
+				$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
+			}
 
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 

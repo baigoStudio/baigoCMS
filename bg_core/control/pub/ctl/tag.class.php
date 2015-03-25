@@ -74,6 +74,24 @@ class CONTROL_TAG {
 			if ($_value["article_attach_id"] > 0) {
 				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
 			}
+
+			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
+			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+				if (is_array($_arr_cateRow["cate_trees"])) {
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						$_arr_cate = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
+						if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
+							$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
+						}
+					}
+				}
+			} else {
+				$_arr_cateRow = array(
+					"str_alert" => "x110102",
+				);
+			}
+
+			$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
 		}
 
 		//统计 tag 文章数
@@ -96,61 +114,6 @@ class CONTROL_TAG {
 	}
 
 
-	/**
-	 * ctl_list function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	/*function ctl_list() {
-		$_num_perPage     = 90;
-		$_num_tagCount    = $this->mdl_tag->mdl_count("", "show");
-		$_arr_page        = fn_page($_num_tagCount, $_num_perPage); //取得分页数据
-		$_str_query       = http_build_query($this->search);
-		$_arr_tagRows     = $this->mdl_tag->mdl_list($_num_perPage, $_arr_page["except"], "", "show");
-
-
-		foreach ($_arr_tagRows as $_value) {
-			$_num_articleCount = $this->mdl_articlePub->mdl_count("", "", "", false, false, false, array($_value["tag_id"]));
-			$this->mdl_tag->mdl_countDo($_value["tag_id"], $_num_articleCount); //更新
-		}
-
-		$_arr_tplData = array(
-			"query"      => $_str_query,
-			"pageRow"    => $_arr_page,
-			"search"     => $this->search,
-			"tagRows"    => $_arr_tagRows,
-			"cateRows"   => $this->cateRows,
-		);
-
-		$this->obj_tpl->tplDisplay("tag_list.tpl", $_arr_tplData);
-	}*/
-
-
-	/*private function url_process() {
-		switch (BG_VISIT_TYPE) {
-			case "static":
-				$_str_tagUrl        = BG_URL_ROOT . "tag/";
-				$_str_pageAttach    = "page_";
-			break;
-
-			case "pstatic":
-				$_str_tagUrl        = BG_URL_ROOT . "tag/";
-				$_str_pageAttach    = "";
-			break;
-
-			default:
-				$_str_tagUrl        = BG_URL_ROOT . "index.php?mod=tag&act_get=list";
-				$_str_pageAttach    = "&page=";
-			break;
-		}
-
-		return array(
-			"tag_url"        => $_str_tagUrl,
-			"page_attach"    => $_str_pageAttach,
-		);
-	}*/
-
 	private function tag_init() {
 		if(defined("BG_SITE_TPL")) {
 			$this->config["tpl"] = BG_SITE_TPL;
@@ -170,6 +133,6 @@ class CONTROL_TAG {
 			$this->search["page_ext"] = "";
 		}
 
-		$this->cateRows = $this->mdl_cate->mdl_list(1000);
+		$this->cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 	}
 }

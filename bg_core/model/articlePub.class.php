@@ -278,7 +278,7 @@ class MODEL_ARTICLE_PUB {
 	 */
 	function mdl_count($str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $arr_tagIds = false, $_str_callAttach = "", $_str_callType = "") {
 
-		$_str_sqlWhere = "LENGTH(article_title) > 0 AND article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
+		$_str_sqlWhere = "article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND article_title LIKE '%" . $str_key . "%'";
@@ -294,7 +294,7 @@ class MODEL_ARTICLE_PUB {
 
 		if ($arr_cateIds) {
 			$_str_cateIds = implode(",", $arr_cateIds);
-			$_str_sqlWhere .= " AND (belong_cate_id IN (" . $_str_cateIds . ") OR article_cate_id IN (" . $_str_cateIds . "))";
+			$_str_sqlWhere .= " AND belong_cate_id IN (" . $_str_cateIds . ")";
 		}
 
 		if ($arr_markIds) {

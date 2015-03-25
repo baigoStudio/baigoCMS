@@ -147,7 +147,7 @@ class AJAX_INSTALL {
 
 		} else {
 			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-				unlink(BG_PATH_ROOT . ".htaccess", $_str_content);
+				unlink(BG_PATH_ROOT . ".htaccess");
 			}
 		}
 

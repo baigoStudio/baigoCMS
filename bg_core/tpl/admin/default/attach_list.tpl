@@ -8,6 +8,7 @@
 	uploadify      => "true",
 	baigoSubmit    => "true",
 	upload         => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&{$tplData.query}"
 ]}
 
@@ -143,7 +144,7 @@
 											{if $value.adminRow.admin_name}
 												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&admin_id={$value.attach_admin_id}">{$value.adminRow.admin_name}</a>
 											{else}
-												{$lang.label.unknow}
+												{$lang.label.unknown}
 											{/if}
 										</td>
 									</tr>

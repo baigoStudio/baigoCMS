@@ -53,6 +53,7 @@
 	baigoValidator => "true",
 	baigoSubmit    => "true",
 	baigoCheckall  => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call"
 ]}
 
@@ -109,7 +110,7 @@
 								</div>
 								{cate_checkbox arr=$tplData.cateRows}
 							</div>
-							
+
 							<label class="control-label">{$lang.label.articleSpec}</label>
 
 							<div class="form-group">
@@ -120,7 +121,7 @@
 									</span>
 								</div>
 							</div>
-	
+
 							<div class="form-group">
 								<select name="call_spec_id" class="form-control">
 									<option value="">{$lang.option.noSpec}</option>
@@ -196,7 +197,7 @@
 						</select>
 					</div>
 
-					{if $smarty.const.BG_MODULE_GEN == false}
+					{if $smarty.const.BG_MODULE_GEN == true}
 						<div class="form-group">
 							<label for="call_file" class="control-label">{$lang.label.callFile}<span id="msg_call_file">*</span></label>
 							<select name="call_file" id="call_file" class="validate form-control">
@@ -293,7 +294,7 @@
 			});
 		});
 	}
-	
+
 	var opts_validator_form = {
 		call_name: {
 			length: { min: 1, max: 300 },

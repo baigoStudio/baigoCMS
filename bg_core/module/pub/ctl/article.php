@@ -18,7 +18,7 @@ switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_articleRow = $ctl_article->ctl_show();
 		if ($arr_articleRow["str_alert"] != "y120102") {
-			if ($arr_articleRow["cate_link"]) {
+			if ($arr_articleRow["cate_type"] == "link" && $arr_articleRow["cate_link"]) {
 				$_str_linkUrl = $arr_articleRow["cate_link"];
 			} else {
 				if ($arr_articleRow["article_link"]) {

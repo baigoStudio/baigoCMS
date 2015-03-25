@@ -1,27 +1,30 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
-	<dl class="list_baigo {if $level > 0}list_padding{/if}">
+	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
 		{foreach $arr as $value}
-			<dt>{$value.cate_name}</dt>
-
-			<dd>
-				<label for="cate_{$value.cate_id}" class="checkbox-inline">
-					<input type="checkbox" id="cate_{$value.cate_id}" class="chk_all">
-					{$lang.label.all}
-				</label>
-				{foreach $lang.allow as $key_s=>$value_s}
-					<label for="cate_{$value.cate_id}_{$key_s}" class="checkbox-inline">
-						<input type="checkbox" name="admin_allow_cate[{$value.cate_id}][{$key_s}]" value="1" id="cate_{$value.cate_id}_{$key_s}" class="cate_{$value.cate_id}" {if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1}checked{/if} group="admin_allow_cate">
-						{$value_s}
-					</label>
-				{/foreach}
+			<li>
+				<dl class="dl_baigo">
+					<dt>{$value.cate_name}</dt>
+					<dd>
+						<label for="cate_{$value.cate_id}" class="checkbox-inline">
+							<input type="checkbox" id="cate_{$value.cate_id}" class="chk_all">
+							{$lang.label.all}
+						</label>
+						{foreach $lang.allow as $key_s=>$value_s}
+							<label for="cate_{$value.cate_id}_{$key_s}" class="checkbox-inline">
+								<input type="checkbox" name="admin_allow_cate[{$value.cate_id}][{$key_s}]" value="1" id="cate_{$value.cate_id}_{$key_s}" class="cate_{$value.cate_id}" {if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1}checked{/if} group="admin_allow_cate">
+								{$value_s}
+							</label>
+						{/foreach}
+					</dd>
+				</dl>
 				{if $value.cate_childs}
 					{cate_list arr=$value.cate_childs level=$value.cate_level}
 				{/if}
-			</dd>
+			</li>
 		{/foreach}
-	</dl>
+	</ul>
 {/function}
 
 {if $tplData.adminRow.admin_id == 0}
@@ -39,6 +42,7 @@
 	baigoCheckall  => "true",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin"
 ]}
 

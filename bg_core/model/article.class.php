@@ -19,6 +19,8 @@ class MODEL_ARTICLE {
 	}
 
 	function mdl_create_table() {
+		$_str_alert = "y120105";
+
 		$_arr_articleCreat = array(
 			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"article_cate_id"    => "smallint NOT NULL COMMENT '栏目ID'",
@@ -47,10 +49,19 @@ class MODEL_ARTICLE {
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article", $_arr_articleCreat, "article_id", "文章");
 
-		if ($_num_mysql > 0) {
-			$_str_alert = "y120105"; //更新成功
-		} else {
-			$_str_alert = "x120105"; //更新成功
+		if ($_num_mysql < 1) {
+			$_str_alert = "x120105";
+		}
+
+		$_arr_articleCreat = array(
+			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"article_content"    => "text NOT NULL COMMENT '内容'",
+		);
+
+		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article_content", $_arr_articleCreat, "article_id", "文章");
+
+		if ($_num_mysql < 1) {
+			$_str_alert = "x120105";
 		}
 
 		return array(
@@ -251,21 +262,21 @@ class MODEL_ARTICLE {
 				exit;
 			}
 		} else {
-			$_num_articleId  = $this->articleSubmit["article_id"];
-			$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
+			$_str_alert          = "x120103";
+			$_num_articleId      = $this->articleSubmit["article_id"];
+			$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
 
 			if ($_num_mysql > 0) {
-				$_arr_contentData = array(
-					"article_content"  => $this->articleSubmit["article_content"],
-				);
-				$_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "article_content", $_arr_contentData, "article_id=" . $_num_articleId); //更新数据
-				$_str_alert = "y120103";
-			} else {
-				return array(
-					"article_id"   => $_num_articleId,
-					"str_alert"    => "x120103", //失败
-				);
-				exit;
+				$_str_alert      = "y120103";
+			}
+
+			$_arr_contentData    = array(
+				"article_content"  => $this->articleSubmit["article_content"],
+			);
+			$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article_content", $_arr_contentData, "article_id=" . $_num_articleId); //更新数据
+
+			if ($_num_mysql > 0) {
+				$_str_alert      = "y120103";
 			}
 		}
 
@@ -304,7 +315,7 @@ class MODEL_ARTICLE {
 		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND (article_title LIKE '%" . $str_key . "%' OR article_content like '%" . $str_key . "%')";
+			$_str_sqlWhere .= " AND article_title LIKE '%" . $str_key . "%'";
 		}
 
 		if ($str_year) {
@@ -634,12 +645,12 @@ class MODEL_ARTICLE {
 
 
 	/**
-	 * mdl_unknowCate function.
+	 * mdl_unknownCate function.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	function mdl_unknowCate($arr_articleId) {
+	function mdl_unknownCate($arr_articleId) {
 
 		$_arr_articleData = array(
 			"article_cate_id" => -1,
@@ -683,7 +694,7 @@ class MODEL_ARTICLE {
 		$_str_sqlWhere = "1=1";
 
 		if ($str_key) {
-			$_str_sqlWhere .= " AND (article_title LIKE '%" . $str_key . "%' OR article_content like '%" . $str_key . "%')";
+			$_str_sqlWhere .= " AND article_title LIKE '%" . $str_key . "%'";
 		}
 
 		if ($str_year) {

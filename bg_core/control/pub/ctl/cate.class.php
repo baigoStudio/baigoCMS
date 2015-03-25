@@ -47,12 +47,13 @@ class CONTROL_CATE {
 			);
 			exit;
 		}
+
 		if ($this->cateRow["str_alert"] != "y110102") {
 			return $this->cateRow;
 			exit;
 		}
 
-		if ($this->cateRow["cate_link"]) {
+		if ($this->cateRow["cate_type"] == "link" && $this->cateRow["cate_link"]) {
 			return array(
 				"str_alert" => "x110218",
 				"cate_link" => $this->cateRow["cate_link"],
@@ -60,10 +61,14 @@ class CONTROL_CATE {
 			exit;
 		}
 
+		if ($this->cateRow["cate_perpage"] <= BG_SITE_PERPAGE) {
+			$_num_perpage = BG_SITE_PERPAGE;
+		}
+
 		$_num_articleCount            = $this->mdl_articlePub->mdl_count("", "", "", $this->cateIds);
-		$_arr_page                    = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
+		$_arr_page                    = fn_page($_num_articleCount, $_num_perpage); //取得分页数据
 		$_str_query                   = http_build_query($this->search);
-		$_arr_articleRows             = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", $this->cateIds);
+		$_arr_articleRows             = $this->mdl_articlePub->mdl_list($_num_perpage, $_arr_page["except"], "", "", "", $this->cateIds);
 		$_arr_attachThumb             = $this->mdl_thumb->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
@@ -74,16 +79,25 @@ class CONTROL_CATE {
 			}
 
 			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
-
-			if (is_array($_arr_cateRow["cate_trees"])) {
-				foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
-					$_arr_cate                                         = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
-					$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
+			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+				if (is_array($_arr_cateRow["cate_trees"])) {
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						$_arr_cate = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
+						if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
+							$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
+						}
+					}
 				}
+			} else {
+				$_arr_cateRow = array(
+					"str_alert" => "x110102",
+				);
 			}
 
 			$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
 		}
+
+		//print_r($_arr_articleRows);
 
 		$_arr_tplData = array(
 			"query"          => $_str_query,
@@ -142,7 +156,7 @@ class CONTROL_CATE {
 		if ($_num_cateId > 0) {
 			$this->cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
 
-			if ($this->cateRow["str_alert"] == "y110102") {
+			if ($this->cateRow["str_alert"] == "y110102" && $this->cateRow["cate_status"] == "show") {
 				$this->cateIds      = $this->mdl_cate->mdl_cateIds($_num_cateId);
 				$this->cateIds[]    = $_num_cateId;
 				$this->cateIds      = array_unique($this->cateIds);
@@ -158,8 +172,10 @@ class CONTROL_CATE {
 
 				if (is_array($this->cateRow["cate_trees"])) {
 					foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
-						$_arr_cateRow                                 = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
-						$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
+						$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
+						if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+							$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
+						}
 					}
 				}
 			} else {
@@ -171,7 +187,7 @@ class CONTROL_CATE {
 			$this->config["tpl"] = $_str_tpl;
 		}
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 
 		$this->tplData = array(
 			"cateRows"   => $_arr_cateRows,
@@ -189,10 +205,14 @@ class CONTROL_CATE {
 	 */
 	private function tpl_process($num_cateId) {
 		$_arr_cateRow = $this->mdl_cate->mdl_readPub($num_cateId);
-		$_str_cateTpl = $_arr_cateRow["cate_tpl"];
+		if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+			$_str_cateTpl = $_arr_cateRow["cate_tpl"];
 
-		if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
-			$_str_cateTpl = $this->tpl_process($_arr_cateRow["cate_parent_id"]);
+			if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
+				$_str_cateTpl = $this->tpl_process($_arr_cateRow["cate_parent_id"]);
+			}
+		} else {
+			$_str_cateTpl = BG_SITE_TPL;
 		}
 
 		return $_str_cateTpl;

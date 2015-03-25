@@ -102,7 +102,7 @@ return array(
 		"key"             => "关键词", //关键词
 		"alert"           => "返回代码", //提示信息
 		"noname"          => "未命名", //未命名
-		"unknow"          => "未知", //未知
+		"unknown"         => "未知", //未知
 		"normal"          => "正常", //草稿
 		"draft"           => "草稿箱", //草稿
 		"recycle"         => "回收站", //回收站
@@ -204,6 +204,7 @@ return array(
 		"cateLink"        => "跳转至", //跳转至
 		"cateDomain"      => "URL 前缀", //URL 前缀
 		"cateContent"     => "内容", //栏目简介
+		"catePerpage"     => "每页显示数", //每页显示数
 		"cateFtpServ"     => "FTP 服务器", //FTP 服务器
 		"cateFtpPort"     => "FTP 服务器端口", //FTP 服务器端口
 		"cateFtpUser"     => "FTP 用户名", //FTP 用户名
@@ -302,7 +303,7 @@ return array(
 		"revert"          => "放回原处", //恢复
 		"draft"           => "存为草稿",
 		"recycle"         => "放入回收站",
-		"unknow"          => "未知", //未知
+		"unknown"         => "未知", //未知
 	),
 
 	/*------长篇文字------*/

@@ -18,12 +18,13 @@ class CLASS_UPLOAD {
 
 	private $obj_ftp;
 	private $obj_dir;
+	private $ftp_status_conn;
+	private $ftp_status_login;
 	private $uploadMime; //允许上传类型
 	private $uploadThumb; //缩略图
 	private $uploadSize; //允许上传大小
 	private $attachExt; //扩展名
 	private $attachPath; //路径
-	private $attachUrl; //URL
 	private $attachName; //文件名
 	private $fileTmp;
 	private $mime;
@@ -36,7 +37,7 @@ class CLASS_UPLOAD {
 		$this->obj_dir            = new CLASS_DIR();
 		$this->mime               = include_once(BG_PATH_LANG . $this->config["lang"] . "/mime.php");
 		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
-			$this->obj_ftp = new CLASS_FTP(); //设置 FTP 对象
+			$this->obj_ftp        = new CLASS_FTP(); //设置 FTP 对象
 		}
 	}
 
@@ -69,15 +70,16 @@ class CLASS_UPLOAD {
 		}
 		$this->uploadSize = BG_UPLOAD_SIZE * $_num_sizeUnit;
 		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
-			$_ftp_status = $this->obj_ftp->ftp_conn(BG_UPLOAD_FTPHOST, BG_UPLOAD_FTPPORT);
-			if (!$_ftp_status) {
+			$this->ftp_status_conn   = $this->obj_ftp->ftp_conn(BG_UPLOAD_FTPHOST, BG_UPLOAD_FTPPORT);
+			$this->ftp_status_login  = $this->obj_ftp->ftp_login(BG_UPLOAD_FTPUSER, BG_UPLOAD_FTPPASS);
+
+			if (!$this->ftp_status_conn) {
 				return array(
 					"str_alert" => "x030301",
 				);
 				exit;
 			}
-			$_ftp_status = $this->obj_ftp->ftp_login(BG_UPLOAD_FTPUSER, BG_UPLOAD_FTPPASS);
-			if (!$_ftp_status) {
+			if (!$this->ftp_status_login) {
 				return array(
 					"str_alert" => "x030302",
 				);
@@ -190,12 +192,15 @@ class CLASS_UPLOAD {
 	function upload_submit($tm_time, $num_attachId) {
 
 		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传到FTP
-			$this->attachPath = BG_PATH_ATTACH;
+			$this->attachPath    = BG_PATH_ATTACH;
+			$_str_attachPre      = BG_UPLOAD_URL . "/";
 		} else {
-			$this->attachPath = BG_PATH_ATTACH . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
+			$this->attachPath    = BG_PATH_ATTACH . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
+			$_str_attachPre      = BG_URL_ATTACH;
 		}
-		$this->attachUrl = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
-		$this->attachFtp = "/" . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
+
+		$_str_attachUrl   = $_str_attachPre . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
+		$this->attachFtp  = "/" . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
 
 		if (!$this->obj_dir->mk_dir($this->attachPath)) { //建目录失败
 			return array(
@@ -209,6 +214,19 @@ class CLASS_UPLOAD {
 		move_uploaded_file($this->attachFiles["tmp_name"], $this->attachPath . $this->attachName . "." . $this->attachFiles["ext"]); //将上传的文件移到指定路径
 
 		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传到FTP
+			if (!$this->ftp_status_conn) {
+				return array(
+					"str_alert" => "x030301",
+				);
+				exit;
+			}
+			if (!$this->ftp_status_login) {
+				return array(
+					"str_alert" => "x030302",
+				);
+				exit;
+			}
+
 			$_ftp_status = $this->obj_ftp->up_file($this->attachPath . $this->attachName . "." . $this->attachFiles["ext"], BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "." . $this->attachFiles["ext"]);
 			if (!$_ftp_status) {
 				return array(
@@ -231,7 +249,7 @@ class CLASS_UPLOAD {
 
 		return array(
 			"attach_path"    => $this->attachPath . $this->attachName . "." . $this->attachFiles["ext"],
-			"attach_url"     => $this->attachUrl . $this->attachName . "." . $this->attachFiles["ext"],
+			"attach_url"     => $_str_attachUrl . $this->attachName . "." . $this->attachFiles["ext"],
 			"str_alert"      => "y070401",
 		);
 	}
@@ -253,6 +271,18 @@ class CLASS_UPLOAD {
 			}
 
 			if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //是否定义FTP服务器
+				if (!$this->ftp_status_conn) {
+					return array(
+						"str_alert" => "x030301",
+					);
+					exit;
+				}
+				if (!$this->ftp_status_login) {
+					return array(
+						"str_alert" => "x030302",
+					);
+					exit;
+				}
 				$this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . "/" . $_str_filePath);
 			}
 
@@ -265,6 +295,18 @@ class CLASS_UPLOAD {
 					}
 
 					if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+						if (!$this->ftp_status_conn) {
+							return array(
+								"str_alert" => "x030301",
+							);
+							exit;
+						}
+						if (!$this->ftp_status_login) {
+							return array(
+								"str_alert" => "x030302",
+							);
+							exit;
+						}
 						$this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . "/" . $_str_thumbPath);
 					}
 				}
@@ -315,7 +357,25 @@ class CLASS_UPLOAD {
 			copy($_str_srcFile, $_str_dstFile);
 
 			if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
-				$this->obj_ftp->up_file($_str_dstFile, BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "_" . $num_width . "_" . $num_height . "_" . $str_type . "." . $this->attachFiles["ext"]);
+				if (!$this->ftp_status_conn) {
+					return array(
+						"str_alert" => "x030301",
+					);
+					exit;
+				}
+				if (!$this->ftp_status_login) {
+					return array(
+						"str_alert" => "x030302",
+					);
+					exit;
+				}
+				$_ftp_status = $this->obj_ftp->up_file($_str_dstFile, BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "_" . $num_width . "_" . $num_height . "_" . $str_type . "." . $this->attachFiles["ext"]);
+				if (!$_ftp_status) {
+					return array(
+						"str_alert" => "x030303",
+					);
+					exit;
+				}
 				if (file_exists($_str_dstFile)) {
 					unlink($_str_dstFile);
 				}
@@ -365,7 +425,25 @@ class CLASS_UPLOAD {
 		imagedestroy($_dst_image);
 
 		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
-			$this->obj_ftp->up_file($_str_dstFile, BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "_" . $num_width . "_" . $num_height . "_" . $str_type . "." . $this->attachFiles["ext"]);
+			if (!$this->ftp_status_conn) {
+				return array(
+					"str_alert" => "x030301",
+				);
+				exit;
+			}
+			if (!$this->ftp_status_login) {
+				return array(
+					"str_alert" => "x030302",
+				);
+				exit;
+			}
+			$_ftp_status = $this->obj_ftp->up_file($_str_dstFile, BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "_" . $num_width . "_" . $num_height . "_" . $str_type . "." . $this->attachFiles["ext"]);
+			if (!$_ftp_status) {
+				return array(
+					"str_alert" => "x030303",
+				);
+				exit;
+			}
 			if (file_exists($_str_dstFile)) {
 				unlink($_str_dstFile);
 			}

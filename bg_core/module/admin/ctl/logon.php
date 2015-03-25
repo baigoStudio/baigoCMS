@@ -9,6 +9,13 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
+if (isset($_GET["ssid"])) {
+	session_id($_GET["ssid"]); //将当前的SessionId设置成客户端传递回来的SessionId
+}
+
+session_start(); //开启session
+$GLOBALS["ssid"] = session_id();
+
 include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "common_global.inc.php"); //载入通用
 include_once(BG_PATH_FUNC . "session.func.php"); //载入商家控制器

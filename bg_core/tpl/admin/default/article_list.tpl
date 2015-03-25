@@ -23,6 +23,7 @@
 	baigoCheckall  => "true",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
+	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&{$tplData.query}"
 ]}
 
@@ -89,7 +90,7 @@
 				<select name="cate_id" class="form-control input-sm">
 					<option value="">{$lang.option.allCate}</option>
 					{cate_list arr=$tplData.cateRows}
-					<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknow}</option>
+					<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknown}</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -156,7 +157,7 @@
 							</th>
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.articleTitle}</th>
-							<th class="td_md">{$lang.label.cate} / {$lang.label.articleMark}</th>
+							<th class="td_lg">{$lang.label.cate} / {$lang.label.articleMark}</th>
 							<th class="td_md">{$lang.label.admin}</th>
 							<th class="td_sm">{$lang.label.status}</th>
 						</tr>
@@ -210,14 +211,13 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_md">
+								<td class="td_lg">
 									<ul class="list-unstyled">
 										<li>
-											{if isset($value.cateRow.cate_name)}
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.article_cate_id}">{$value.cateRow.cate_name}</a>
-											{else}
-												{$lang.label.unknow}
-											{/if}
+											{foreach $value.cateRow.cate_trees as $key_tree=>$value_tree}
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list&cate_id={$value_tree.cate_id}">{$value_tree.cate_name}</a>
+												{if !$value_tree@last}&raquo;{/if}
+											{/foreach}
 										</li>
 										<li>
 											{if isset($value.markRow.mark_name)}
@@ -232,7 +232,7 @@
 									{if isset($value.adminRow.admin_name)}
 										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name}</a>
 									{else}
-										{$lang.label.unknow}
+										{$lang.label.unknown}
 									{/if}
 								</td>
 								<td class="td_sm">

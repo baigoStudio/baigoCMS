@@ -8,13 +8,20 @@
 if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
+
+if (isset($_GET["ssid"])) {
+	session_id($_GET["ssid"]); //将当前的SessionId设置成客户端传递回来的SessionId
+}
+
+session_start(); //开启session
+$GLOBALS["ssid"] = session_id();
+
 include_once(BG_PATH_INC . "common_global.inc.php"); //载入数据库类
 include_once(BG_PATH_FUNC . "session.func.php"); //载入商家控制器
 include_once(BG_PATH_CLASS . "mysql.class.php"); //载入数据库类
 include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
 
-header("Content-Type: text/html; charset=utf-8");
+header("Content-type: application/json");
 $_cfg_host = array(
 	"host"      => BG_DB_HOST,
 	"name"      => BG_DB_NAME,

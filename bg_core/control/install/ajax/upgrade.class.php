@@ -118,7 +118,7 @@ class AJAX_UPGRADE {
 
 		} else {
 			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-				unlink(BG_PATH_ROOT . ".htaccess", $_str_content);
+				unlink(BG_PATH_ROOT . ".htaccess");
 			}
 		}
 
@@ -452,6 +452,10 @@ class AJAX_UPGRADE {
 
 		if (in_array("cate_order", $_arr_col)) {
 			$_arr_alert["cate_order"] = array("CHANGE", "smallint NOT NULL COMMENT '排序'", "cate_order");
+		}
+
+		if (!in_array("cate_perpage", $_arr_col)) {
+			$_arr_alert["cate_perpage"] = array("ADD", "tinyint NOT NULL COMMENT '每页文章数'");
 		}
 
 		if ($_arr_alert) {

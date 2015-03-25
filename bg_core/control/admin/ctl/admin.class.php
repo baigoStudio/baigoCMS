@@ -260,15 +260,15 @@ class CONTROL_ADMIN {
 		foreach ($_arr_adminRows as $_key=>$_value) {
 			/*$_arr_ssoUser                        = $this->obj_sso->sso_get($_value["admin_id"]); //取得用户组信息
 			if ($_arr_ssoUser["str_alert"] != "y010102" && $_value["article_status"] != "disable") {
-				$_arr_unknowAdmin[] = $_value["admin_id"];
+				$_arr_unknownAdmin[] = $_value["admin_id"];
 				$_arr_adminRows[$_key]["admin_name"] = "";
 			}*/
 			//$_arr_groupRow                       = $this->mdl_group->mdl_read($_value["admin_group_id"]); //取得用户组信息
 			$_arr_adminRows[$_key]["groupRow"] = $this->mdl_group->mdl_read($_value["admin_group_id"]);
 		}
 
-		/*if ($_arr_unknowAdmin) {
-			$this->mdl_admin->mdl_status($_arr_unknowAdmin, "disable");
+		/*if ($_arr_unknownAdmin) {
+			$this->mdl_admin->mdl_status($_arr_unknownAdmin, "disable");
 		}*/
 
 		$_arr_tpl = array(

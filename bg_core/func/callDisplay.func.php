@@ -128,38 +128,38 @@ class CLASS_CALL_DISPLAY {
 		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_spec_id"], false, $this->callRow["call_attach"], $this->callRow["call_type"]);
 
 		//print_r($_arr_articleRows);
+		$_arr_attachThumb   = $this->mdl_thumb->mdl_list(100);
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
-
-			if (isset($_value["belong_cate_id"]) && $_value["belong_cate_id"] > 0) {
-				$_num_cateId = $_value["belong_cate_id"];
-			} else {
-				$_num_cateId = $_value["article_cate_id"];
-			}
-
-			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
-
-			if (is_array($_arr_cateRow["cate_trees"])) {
-				foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
-					$_arr_cate                                         = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
-					$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
-				}
-			}
-
-			$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
-
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
 			if ($_value["article_attach_id"] > 0) {
-				$_arr_attachThumb   = $this->mdl_thumb->mdl_list(100);
-				$_arr_attachRow     = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
-
-				if ($_arr_attachRow["str_alert"] == "y070102") {
-					$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
-				}
-
+				$_arr_articleRows[$_key]["attachRow"]     = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
 			}
 
+			/*if (isset($_value["belong_cate_id"]) && $_value["belong_cate_id"] > 0) {
+				$_num_cateId = $_value["belong_cate_id"];
+			} else {
+				$_num_cateId = $_value["article_cate_id"];
+			}*/
+
+			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
+			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+				if (is_array($_arr_cateRow["cate_trees"])) {
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						$_arr_cate = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
+						if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
+							$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
+						}
+					}
+				}
+			} else {
+				$_arr_cateRow = array(
+					"str_alert" => "y110102",
+				);
+			}
+
+			$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
 		}
 
 		return $_arr_articleRows;

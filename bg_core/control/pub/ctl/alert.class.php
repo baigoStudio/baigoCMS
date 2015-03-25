@@ -30,7 +30,7 @@ class CONTROL_ALERT {
 	*/
 	function ctl_display() {
 		$_str_alert       = fn_getSafe(fn_get("alert"), "txt", "");
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
 
 		$arr_data = array(
 			"alert"      => $_str_alert,

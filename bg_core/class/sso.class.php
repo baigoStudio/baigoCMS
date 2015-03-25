@@ -11,6 +11,7 @@ if(!defined("IN_BAIGO")) {
 /*-------------单点登录类-------------*/
 class CLASS_SSO {
 
+	private $arr_get;
 	private $arr_data;
 	private $arr_result;
 	private $arr_decode;
@@ -38,7 +39,7 @@ class CLASS_SSO {
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=code", $_arr_ssoData, "get"); //提交
-		$this->arr_decode = fn_jsonDecode($_arr_get["ret"], "decode"); //将解码得到的JSON解码
+		$this->arr_decode = fn_jsonDecode($_arr_get["ret"], "decode");
 	}
 
 
@@ -50,17 +51,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
-
+		$this->result_process();
 		if ($this->arr_result["str_alert"] != "y020101" && $this->arr_result["str_alert"] != "y020103") {
 			return $this->arr_result;
 			exit;
@@ -93,16 +86,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010101") {
 			return $this->arr_result; //返回错误信息
@@ -133,16 +119,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010401") {
 			return $this->arr_result; //返回错误信息
@@ -173,16 +152,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010102") {
 			return $this->arr_result; //返回错误信息
@@ -228,16 +200,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010103") {
 			return $this->arr_result; //返回错误信息
@@ -265,16 +230,9 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010205") {
 			return $this->arr_result; //返回错误信息
@@ -304,18 +262,11 @@ class CLASS_SSO {
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$_arr_get         = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
 
 		//print_r($_arr_get);
 
-		if (isset($_arr_get["ret"])) {
-			$this->arr_result = json_decode($_arr_get["ret"], true); //将解码得到的JSON解码
-		} else {
-			return array(
-				"str_alert" => "x030110"
-			);
-			exit;
-		}
+		$this->result_process();
 
 		if ($this->arr_result["str_alert"] != "y010211") {
 			return $this->arr_result; //返回错误信息
@@ -326,5 +277,24 @@ class CLASS_SSO {
 		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
 
 		return $this->arr_decode;
+	}
+
+	private function result_process() {
+		if (isset($this->arr_get["ret"])) {
+			$_arr_result                 = json_decode($this->arr_get["ret"], true);
+			if (isset($_arr_result["str_alert"])) {
+				$_arr_result["str_alert"]    = str_replace("x030410", "x030413", $_arr_result["str_alert"]);
+				$_arr_result["str_alert"]    = str_replace("x030411", "x030414", $_arr_result["str_alert"]);
+				$this->arr_result            = $_arr_result;
+			} else {
+				$this->arr_result = array(
+					"str_alert" => "x030110"
+				);
+			}
+		} else {
+			$this->arr_result = array(
+				"str_alert" => "x030110"
+			);
+		}
 	}
 }

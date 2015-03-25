@@ -31,6 +31,7 @@ class MODEL_CATE {
 			"cate_link"      => "varchar(3000) NOT NULL COMMENT '链接地址'",
 			"cate_parent_id" => "smallint NOT NULL COMMENT '父栏目'",
 			"cate_alias"     => "varchar(300) NOT NULL COMMENT '别名'",
+			"cate_perpage"   => "tinyint NOT NULL COMMENT '每页文章数'",
 			"cate_ftp_host"  => "varchar(3000) NOT NULL COMMENT '站点FTP服务器'",
 			"cate_ftp_port"  => "char(5) NOT NULL COMMENT 'FTP端口'",
 			"cate_ftp_user"  => "varchar(300) NOT NULL COMMENT '站点FTP用户名'",
@@ -106,6 +107,7 @@ class MODEL_CATE {
 			"cate_link"      => $this->cateSubmit["cate_link"],
 			"cate_parent_id" => $this->cateSubmit["cate_parent_id"],
 			"cate_domain"    => $this->cateSubmit["cate_domain"],
+			"cate_perpage"   => $this->cateSubmit["cate_perpage"],
 			"cate_ftp_host"  => $this->cateSubmit["cate_ftp_host"],
 			"cate_ftp_port"  => $this->cateSubmit["cate_ftp_port"],
 			"cate_ftp_user"  => $this->cateSubmit["cate_ftp_user"],
@@ -357,7 +359,7 @@ class MODEL_CATE {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_read($str_cate, $str_readBy = "cate_id", $num_notThisId = 0, $num_parentId = 0) {
+	function mdl_read($str_cate, $str_readBy = "cate_id", $num_notThisId = 0, $num_parentId = -1) {
 		$_arr_cateSelect = array(
 			"cate_id",
 			"cate_name",
@@ -368,6 +370,7 @@ class MODEL_CATE {
 			"cate_link",
 			"cate_parent_id",
 			"cate_domain",
+			"cate_perpage",
 			"cate_ftp_host",
 			"cate_ftp_port",
 			"cate_ftp_user",
@@ -389,7 +392,7 @@ class MODEL_CATE {
 			$_str_sqlWhere .= " AND cate_id <> " . $num_notThisId;
 		}
 
-		if ($num_parentId > 0) {
+		if ($num_parentId >= 0) {
 			$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 		}
 
@@ -425,6 +428,7 @@ class MODEL_CATE {
 			"cate_parent_id",
 			"cate_domain",
 			"cate_status",
+			"cate_perpage",
 		);
 
 		switch ($str_readBy) {
@@ -805,13 +809,14 @@ class MODEL_CATE {
 
 		$this->cateSubmit["cate_content"]     = fn_post("cate_content");
 
+		$this->cateSubmit["cate_perpage"]     = fn_getSafe(fn_post("cate_perpage"), "int", BG_SITE_PERPAGE);
 		$this->cateSubmit["cate_ftp_host"]    = fn_getSafe(fn_post("cate_ftp_host"), "txt", "");
 		$this->cateSubmit["cate_ftp_port"]    = fn_getSafe(fn_post("cate_ftp_port"), "txt", "");
 		$this->cateSubmit["cate_ftp_user"]    = fn_getSafe(fn_post("cate_ftp_user"), "txt", "");
 		$this->cateSubmit["cate_ftp_pass"]    = fn_getSafe(fn_post("cate_ftp_pass"), "txt", "");
 		$this->cateSubmit["cate_ftp_path"]    = fn_getSafe(fn_post("cate_ftp_path"), "txt", "");
 
-		$this->cateSubmit["str_alert"] = "ok";
+		$this->cateSubmit["str_alert"]        = "ok";
 
 		return $this->cateSubmit;
 	}
@@ -902,7 +907,7 @@ class MODEL_CATE {
 	private function url_process($_arr_cateRow) {
 		$_str_cateUrlParent = "";
 
-		if ($_arr_cateRow["cate_link"]) {
+		if ($_arr_cateRow["cate_type"] == "link" && $_arr_cateRow["cate_link"]) {
 			$_str_cateUrl = $_arr_cateRow["cate_link"];
 		} else {
 			/*if ($_arr_cateRow["cate_domain"]) {

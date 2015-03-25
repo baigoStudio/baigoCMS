@@ -53,10 +53,28 @@ class CONTROL_SEARCH {
 				if ($_value["article_attach_id"] > 0) {
 					$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
 				}
+
+				$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
+				if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+					if (is_array($_arr_cateRow["cate_trees"])) {
+						foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+							$_arr_cate = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
+							if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
+								$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
+							}
+						}
+					}
+				} else {
+					$_arr_cateRow = array(
+						"str_alert" => "x110102",
+					);
+				}
+	
+				$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
 			}
 		}
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 
 		$_arr_tplData = array(
 			"query"          => $_str_query,

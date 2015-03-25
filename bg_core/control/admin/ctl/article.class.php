@@ -111,7 +111,7 @@ class CONTROL_ARTICLE {
 
 		//print_r($_arr_articleRow);
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show", "normal");
+		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 		$_arr_markRows = $this->mdl_mark->mdl_list(100);
 
 		if (count($_arr_cateRows) < 1) {
@@ -176,10 +176,10 @@ class CONTROL_ARTICLE {
 		}
 		$_arr_articleRow["cate_ids"][]    = $_arr_articleRow["article_cate_id"];
 
-		$_arr_cateRow                 = $this->mdl_cate->mdl_read($_arr_articleRow["article_cate_id"]);
-		$_arr_cateRows                = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRow                 = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
-		$_arr_tagRows                 = $this->mdl_tag->mdl_list(10, 0, "", "", "tag_id", $_arr_articleRow["article_id"]); //读取从属数据
+		$_arr_cateRow     = $this->mdl_cate->mdl_read($_arr_articleRow["article_cate_id"]);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
+		$_arr_markRow     = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
+		$_arr_tagRows     = $this->mdl_tag->mdl_list(10, 0, "", "", "tag_id", $_arr_articleRow["article_id"]); //读取从属数据
 
 		$_arr_articleRow["cate_ids"]  = array_unique($_arr_articleRow["cate_ids"]);
 
@@ -190,7 +190,7 @@ class CONTROL_ARTICLE {
 			"articleRow" => $_arr_articleRow,
 			"tagRows"    => $_arr_tagRows,
 		);
-		
+
 		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
 		$this->obj_tpl->tplDisplay("article_show.tpl", $_arr_tplData);
@@ -266,15 +266,15 @@ class CONTROL_ARTICLE {
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_value["article_cate_id"]);
 			if ($_arr_cateRow["str_alert"] != "y110102" && $_value["article_cate_id"] > 0) {
-				$_arr_unknowCate[] = $_value["article_id"];
+				$_arr_unknownCate[] = $_value["article_id"];
 			}
 			$_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
 			$_arr_articleRows[$_key]["markRow"]  = $this->mdl_mark->mdl_read($_value["article_mark_id"]);
 			$_arr_articleRows[$_key]["adminRow"] = $this->mdl_admin->mdl_read($_value["article_admin_id"]);
 		}
 
-		if (isset($_arr_unknowCate)) {
-			$this->mdl_article->mdl_unknowCate($_arr_unknowCate);
+		if (isset($_arr_unknownCate)) {
+			$this->mdl_article->mdl_unknownCate($_arr_unknownCate);
 		}
 
 		$_arr_tpl = array(

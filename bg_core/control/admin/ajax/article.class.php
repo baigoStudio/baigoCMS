@@ -36,9 +36,20 @@ class AJAX_ARTICLE {
 		$this->mdl_cateBelong = new MODEL_CATE_BELONG();
 		$this->mdl_tag        = new MODEL_TAG();
 		$this->mdl_tagBelong  = new MODEL_TAG_BELONG();
+
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$this->obj_ajax->halt_alert("x030416");
+			}
+		} else {
+			$this->obj_ajax->halt_alert("x030415");
+		}
+
 		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
+
 		if (is_array($this->adminLogged["admin_allow_cate"])) {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
 				if ($_value["add"] == 1) {
@@ -75,7 +86,7 @@ class AJAX_ARTICLE {
 		if ($_arr_articleSubmit["str_alert"] != "ok") {
 			$this->obj_ajax->halt_alert($_arr_articleSubmit["str_alert"]);
 		}
-		
+
 		foreach ($_arr_articleSubmit["cate_ids"] as $_value) {
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_value);
 			if ($_arr_cateRow["str_alert"] != "y110102") {

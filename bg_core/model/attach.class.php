@@ -320,13 +320,18 @@ class MODEL_ATTACH {
 			return $_arr_attachRow;
 			exit;
 		}
-		$str_attachUrl = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "." . $_arr_attachRow["attach_ext"];
 
-		foreach ($arr_thumbRows as $_key=>$_value) {
-			$_arr_attachRow["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
+		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+			$_str_attachPre = BG_UPLOAD_URL . "/";
+		} else {
+			$_str_attachPre = BG_URL_ATTACH;
 		}
 
-		$_arr_attachRow["attach_url"]    = $str_attachUrl;
+		foreach ($arr_thumbRows as $_key=>$_value) {
+			$_arr_attachRow["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = $_str_attachPre . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
+		}
+
+		$_arr_attachRow["attach_url"] = $_str_attachPre . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "." . $_arr_attachRow["attach_ext"];
 
 		return $_arr_attachRow;
 	}
@@ -366,18 +371,22 @@ class MODEL_ATTACH {
 
 
 	function url_process($num_attachId, $num_attachTime, $num_attachExt, $arr_thumbRows) {
-		$str_attachUrl = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "." . $num_attachExt;
+		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+			$_str_attachPre = BG_UPLOAD_URL . "/";
+		} else {
+			$_str_attachPre = BG_URL_ATTACH;
+		}
 
 		foreach ($arr_thumbRows as $_key=>$_value) {
-			$_arr_attach["attach_thumb"][$_key]["thumb_url"] = BG_UPLOAD_URL . BG_URL_ATTACH . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $num_attachExt;
-			$_arr_attach["attach_thumb"][$_key]["thumb_width"] = $_value["thumb_width"];
-			$_arr_attach["attach_thumb"][$_key]["thumb_height"] = $_value["thumb_height"];
-			$_arr_attach["attach_thumb"][$_key]["thumb_type"] = $_value["thumb_type"];
+			$_arr_attach["attach_thumb"][$_key]["thumb_url"]     = $_str_attachPre . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $num_attachExt;
+			$_arr_attach["attach_thumb"][$_key]["thumb_width"]   = $_value["thumb_width"];
+			$_arr_attach["attach_thumb"][$_key]["thumb_height"]  = $_value["thumb_height"];
+			$_arr_attach["attach_thumb"][$_key]["thumb_type"]    = $_value["thumb_type"];
 		}
 
 		//print_r($_arr_attach);
 
-		$_arr_attach["attach_url"] = $str_attachUrl;
+		$_arr_attach["attach_url"] = $_str_attachPre . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "." . $num_attachExt;
 
 		return $_arr_attach;
 	}
