@@ -63,6 +63,8 @@ class CONTROL_CATE {
 
 		if ($this->cateRow["cate_perpage"] <= BG_SITE_PERPAGE) {
 			$_num_perpage = BG_SITE_PERPAGE;
+		} else {
+			$_num_perpage = $this->cateRow["cate_perpage"];
 		}
 
 		$_num_articleCount            = $this->mdl_articlePub->mdl_count("", "", "", $this->cateIds);
