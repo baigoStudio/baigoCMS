@@ -10,7 +10,7 @@
 						<ul class="list-inline">
 							{foreach $lang.allow as $key_s=>$value_s}
 								<li>
-									<span class="glyphicon glyphicon-{if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1 || isset($tplData.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+									<span class="glyphicon glyphicon-{if isset($tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s]) || isset($tplData.groupRow.group_allow.article[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
 									{$value_s}
 								</li>
 							{/foreach}
@@ -51,17 +51,17 @@
 				<div class="panel-body">
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.username}</label>
-						<p class="form-control-static static_input">{$tplData.userRow.user_name}</p>
+						<p class="form-control-static static_input">{$tplData.ssoRow.user_name}</p>
 					</div>
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.mail}</label>
-						<p class="form-control-static static_input">{$tplData.userRow.user_mail}</p>
+						<p class="form-control-static static_input">{$tplData.ssoRow.user_mail}</p>
 					</div>
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.nick}</label>
-						<p class="form-control-static static_input">{$tplData.userRow.user_nick}</p>
+						<p class="form-control-static static_input">{$tplData.ssoRow.user_nick}</p>
 					</div>
 
 					<div class="form-group">

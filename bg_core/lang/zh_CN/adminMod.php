@@ -276,6 +276,11 @@ return array(
 				"mod"       => "opt",
 				"act_get"   => "sso",
 			),
+			"custom" => array(
+				"title"     => "自定义表单",
+				"mod"       => "custom",
+				"act_get"   => "list",
+			),
 			"app" => array(
 				"title"     => "API 授权设置",
 				"mod"       => "app",
@@ -288,6 +293,7 @@ return array(
 			"visit"  => "访问方式",
 			"upload" => "上传设置",
 			"sso"    => "SSO 设置",
+			"custom" => "自定义表单",
 			"app"    => "API 授权设置",
 		),
 	),

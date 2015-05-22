@@ -42,7 +42,7 @@ class AJAX_APP {
 
 
 	function ajax_reset() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			$this->obj_ajax->halt_alert("x190303");
 		}
 
@@ -81,11 +81,11 @@ class AJAX_APP {
 		}
 
 		if ($_arr_appSubmit["app_id"] > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				$this->obj_ajax->halt_alert("x190303");
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				$this->obj_ajax->halt_alert("x190302");
 			}
 		}
@@ -103,7 +103,7 @@ class AJAX_APP {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			$this->obj_ajax->halt_alert("x190303");
 		}
 
@@ -127,7 +127,7 @@ class AJAX_APP {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			$this->obj_ajax->halt_alert("x190304");
 		}
 

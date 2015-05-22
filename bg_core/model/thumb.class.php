@@ -109,7 +109,7 @@ class MODEL_THUMB {
 
 		$_str_sqlWhere    = "thumb_id=" . $num_thumbId;
 
-		$_arr_thumbRows   = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
+		$_arr_thumbRows   = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
 
 		if (isset($_arr_thumbRows[0])) { //用户名不存在则返回错误
 			$_arr_thumbRow    = $_arr_thumbRows[0];
@@ -162,7 +162,7 @@ class MODEL_THUMB {
 			$_str_sqlWhere .= " AND thumb_id<>" . $num_notId;
 		}
 
-		$_arr_thumbRows = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, 1, 0); //查询数据
+		$_arr_thumbRows = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
 
 		if (isset($_arr_thumbRows[0])) { //用户名不存在则返回错误
 			$_arr_thumbRow = $_arr_thumbRows[0];
@@ -194,7 +194,7 @@ class MODEL_THUMB {
 
 		$_str_sqlWhere    = "1=1";
 
-		$_arr_thumb       = $this->obj_db->select_array(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere . " ORDER BY thumb_id DESC", $num_no, $num_except); //查询数据
+		$_arr_thumb       = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "thumb_id DESC", $num_no, $num_except); //查询数据
 		$_arr_thumbRow[] = array(
 			"thumb_id"       => 0,
 			"thumb_width"    => 100,
@@ -240,6 +240,33 @@ class MODEL_THUMB {
 		);
 	}
 
+	function mdl_cache() {
+		$_str_alert = "y090110";
+
+		$_arr_thumbRows = $this->mdl_list(100);
+
+		$_str_outPut = "<?php" . PHP_EOL;
+		$_str_outPut .= "return array(" . PHP_EOL;
+			foreach ($_arr_thumbRows as $_key=>$_value) {
+				$_str_outPut .= $_key . " => array(" . PHP_EOL;
+					$_str_outPut .= "\"thumb_id\" => " . $_value["thumb_id"] . "," . PHP_EOL;
+					$_str_outPut .= "\"thumb_width\" => " . $_value["thumb_width"] . "," . PHP_EOL;
+					$_str_outPut .= "\"thumb_height\" => " . $_value["thumb_height"] . "," . PHP_EOL;
+					$_str_outPut .= "\"thumb_type\" => \"" . $_value["thumb_type"] . "\"," . PHP_EOL;
+				$_str_outPut .= "),";
+			}
+		$_str_outPut .= ");";
+
+		$_num_size = file_put_contents(BG_PATH_CACHE . "thumb_list.php", $_str_outPut);
+
+		if (!$_num_size) {
+			$_str_alert = "x090110";
+		}
+
+		return array(
+			"str_alert" => $_str_alert,
+		);
+	}
 
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌

@@ -49,7 +49,7 @@ class AJAX_PROFILE {
 	 * @return void
 	 */
 	function ajax_info() {
-		if ($this->adminLogged["admin_allow_profile"]["info"] == 1) {
+		if (isset($this->adminLogged["admin_allow_profile"]["info"])) {
 			$this->obj_ajax->halt_alert("x020108");
 		}
 
@@ -85,7 +85,7 @@ class AJAX_PROFILE {
 	 * @return void
 	 */
 	function ajax_pass() {
-		if ($this->adminLogged["admin_allow_profile"]["pass"] == 1) {
+		if (isset($this->adminLogged["admin_allow_profile"]["pass"])) {
 			$this->obj_ajax->halt_alert("x020109");
 		}
 

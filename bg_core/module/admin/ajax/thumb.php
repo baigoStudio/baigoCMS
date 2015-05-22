@@ -19,6 +19,10 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_thumb->ajax_submit();
 	break;
 
+	case "cache":
+		$ajax_thumb->ajax_cache();
+	break;
+
 	case "del":
 		$ajax_thumb->ajax_del();
 	break;

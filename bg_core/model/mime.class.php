@@ -123,7 +123,7 @@ class MODEL_MIME {
 			$_str_sqlWhere .= " AND mime_id<>" . $num_notId;
 		}
 
-		$_arr_mimeRows = $this->obj_db->select_array(BG_DB_TABLE . "mime",  $_arr_mimeSelect, $_str_sqlWhere, 1, 0); //查询数据
+		$_arr_mimeRows = $this->obj_db->select(BG_DB_TABLE . "mime",  $_arr_mimeSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
 
 		if (isset($_arr_mimeRows[0])) {
 			$_arr_mimeRow = $_arr_mimeRows[0];
@@ -152,7 +152,7 @@ class MODEL_MIME {
 			"mime_note",
 		);
 
-		$_arr_mimeRows = $this->obj_db->select_array(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "1=1 ORDER BY mime_id DESC", $num_no, $num_except); //查询数据
+		$_arr_mimeRows = $this->obj_db->select(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "", "", "mime_id DESC", $num_no, $num_except); //查询数据
 
 		return $_arr_mimeRows;
 	}

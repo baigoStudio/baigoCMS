@@ -43,7 +43,7 @@ class CONTROL_OPT {
 	 * @return void
 	 */
 	function ctl_upload() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"])) {
 			return array(
 				"str_alert" => "x060302",
 			);
@@ -75,7 +75,7 @@ class CONTROL_OPT {
 	 * @return void
 	 */
 	function ctl_sso() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"])) {
 			return array(
 				"str_alert" => "x060303",
 			);
@@ -103,7 +103,7 @@ class CONTROL_OPT {
 	 * @return void
 	 */
 	function ctl_visit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"])) {
 			return array(
 				"str_alert" => "x060304",
 			);
@@ -135,7 +135,7 @@ class CONTROL_OPT {
 	 * @return void
 	 */
 	function ctl_db() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"])) {
 			return array(
 				"str_alert" => "x060306",
 			);
@@ -157,7 +157,7 @@ class CONTROL_OPT {
 	 * @return void
 	 */
 	function ctl_base() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"])) {
 			return array(
 				"str_alert" => "x060301",
 			);

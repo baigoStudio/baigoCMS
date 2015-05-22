@@ -13,7 +13,7 @@
 						</label>
 						{foreach $lang.allow as $key_s=>$value_s}
 							<label for="cate_{$value.cate_id}_{$key_s}" class="checkbox-inline">
-								<input type="checkbox" name="admin_allow_cate[{$value.cate_id}][{$key_s}]" value="1" id="cate_{$value.cate_id}_{$key_s}" class="cate_{$value.cate_id}" {if $tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s] == 1}checked{/if} group="admin_allow_cate">
+								<input type="checkbox" name="admin_allow_cate[{$value.cate_id}][{$key_s}]" value="1" id="cate_{$value.cate_id}_{$key_s}" class="cate_{$value.cate_id}" {if isset($tplData.adminRow.admin_allow_cate[$value.cate_id][$key_s])}checked{/if} group="admin_allow_cate">
 								{$value_s}
 							</label>
 						{/foreach}
@@ -81,27 +81,27 @@
 					<div class="panel-body">
 						{if $tplData.adminRow.admin_id > 0}
 							<div class="form-group">
-								<label for="admin_name" class="control-label">{$lang.label.username}</label>
-								<input type="text" name="admin_name" id="admin_name" class="form-control" readonly value="{$tplData.userRow.user_name}">
+								<label class="control-label">{$lang.label.username}</label>
+								<input type="text" name="admin_name" id="admin_name" class="form-control" readonly value="{$tplData.ssoRow.user_name}">
 							</div>
 
 							<div class="form-group">
 								<div id="group_admin_pass">
-									<label for="admin_pass" class="control-label">{$lang.label.password}{$lang.label.modOnly}</label>
+									<label class="control-label">{$lang.label.password}{$lang.label.modOnly}</label>
 									<input type="text" name="admin_pass" id="admin_pass" class="form-control">
 								</div>
 							</div>
 						{else}
 							<div class="form-group">
 								<div id="group_admin_name">
-									<label for="admin_name" class="control-label">{$lang.label.username}<span id="msg_admin_name">*</span></label>
+									<label class="control-label">{$lang.label.username}<span id="msg_admin_name">*</span></label>
 									<input type="text" name="admin_name" id="admin_name" class="validate form-control">
 								</div>
 							</div>
 
 							<div class="form-group">
 								<div id="group_admin_pass">
-									<label for="admin_pass" class="control-label">{$lang.label.password}<span id="msg_admin_pass">*</span></label>
+									<label class="control-label">{$lang.label.password}<span id="msg_admin_pass">*</span></label>
 									<input type="text" name="admin_pass" id="admin_pass" class="validate form-control">
 								</div>
 							</div>
@@ -109,15 +109,15 @@
 
 						<div class="form-group">
 							<div id="group_admin_mail">
-								<label for="admin_mail" class="control-label">{$lang.label.mail}<span id="msg_admin_mail"></span></label>
-								<input type="text" name="admin_mail" id="admin_mail" value="{$tplData.userRow.user_mail}" class="validate form-control">
+								<label class="control-label">{$lang.label.mail}<span id="msg_admin_mail"></span></label>
+								<input type="text" name="admin_mail" id="admin_mail" value="{$tplData.ssoRow.user_mail}" class="validate form-control">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<div id="group_admin_nick">
-								<label for="admin_nick" class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
-								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.userRow.user_nick}" class="validate form-control">
+								<label class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
+								<input type="text" name="admin_nick" id="admin_nick" value="{$tplData.ssoRow.user_nick}" class="validate form-control">
 							</div>
 						</div>
 
@@ -134,7 +134,7 @@
 
 						<div class="form-group">
 							<div id="group_admin_note">
-								<label for="admin_note" class="control-label">{$lang.label.note}<span id="msg_admin_note"></span></label>
+								<label class="control-label">{$lang.label.note}<span id="msg_admin_note"></span></label>
 								<input type="text" name="admin_note" id="admin_note" value="{$tplData.adminRow.admin_note}" class="validate form-control">
 							</div>
 						</div>
@@ -235,7 +235,7 @@
 
 	$(document).ready(function(){
 		var obj_validate_form = $("#admin_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#admin_form").baigoSubmit(opts_submit_form);
+		var obj_submit_form   = $("#admin_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();

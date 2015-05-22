@@ -50,11 +50,11 @@ class AJAX_GROUP {
 		}
 
 		if ($_arr_groupSubmit["group_id"] > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
 				$this->obj_ajax->halt_alert("x040303");
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["group"]["add"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["add"])) {
 				$this->obj_ajax->halt_alert("x040302");
 			}
 		}
@@ -72,7 +72,7 @@ class AJAX_GROUP {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
 			$this->obj_ajax->halt_alert("x040303");
 		}
 
@@ -99,7 +99,7 @@ class AJAX_GROUP {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["group"]["del"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["del"])) {
 			$this->obj_ajax->halt_alert("x040304");
 		}
 

@@ -80,7 +80,11 @@ class API_ARTICLE {
 
 		unset($_arr_articleRow["article_url"]);
 
-		$_arr_cateRow = $this->mdl_cate->mdl_readPub($_arr_articleRow["article_cate_id"]);
+		if (!file_exists(BG_PATH_CACHE . "cate_" . $_arr_articleRow["article_cate_id"] . ".php")) {
+			$this->mdl_cate->mdl_cache(array($_arr_articleRow["article_cate_id"]));
+		}
+
+		$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_arr_articleRow["article_cate_id"] . ".php");
 
 		if ($_arr_cateRow["str_alert"] != "y110102") {
 			$this->obj_api->halt_re($_arr_cateRow);
@@ -147,11 +151,13 @@ class API_ARTICLE {
 		$_arr_tagIds  = explode("|", $_str_tagIds);
 
 		if ($_num_cateId > 0) {
-			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
+			if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
+				$this->mdl_cate->mdl_cache(array($_num_cateId));
+			}
+
+			$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
 			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
-				$_arr_cateIds   = $this->mdl_cate->mdl_cateIds($_num_cateId);
-				$_arr_cateIds[] = $_num_cateId;
-				$_arr_cateIds   = array_unique($_arr_cateIds);
+				$_arr_cateIds   = $_arr_cateRow["cate_ids"];
 			}
 		} else {
 			$_arr_cateIds = false;
@@ -169,7 +175,11 @@ class API_ARTICLE {
 			if ($_value["article_attach_id"] > 0) {
 				$_arr_articleRows[$_key]["attachRow"]    = $this->mdl_attach->mdl_url($_value["article_attach_id"], $this->attachThumb);
 			}
-			$_arr_cateRow      = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
+			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
+			}
+
+			$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
 			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 				unset($_arr_cateRow["urlRow"]);
 				$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
@@ -213,7 +223,11 @@ class API_ARTICLE {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 
-		$this->attachThumb = $this->mdl_thumb->mdl_list(100);
+		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+			$this->mdl_thumb->mdl_cache();
+		}
+		$this->attachThumb = include(BG_PATH_CACHE . "thumb_list.php");
+		//$this->attachThumb = $this->mdl_thumb->mdl_list(100);
 	}
 
 }

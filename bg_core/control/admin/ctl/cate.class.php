@@ -40,7 +40,7 @@ class CONTROL_CATE {
 	 * @return void
 	 */
 	function ctl_order() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
 			return array(
 				"str_alert" => "x110303"
 			);
@@ -85,7 +85,7 @@ class CONTROL_CATE {
 		$_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
 
 		if ($_num_cateId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
 				return array(
 					"str_alert" => "x110303"
 				);
@@ -97,7 +97,7 @@ class CONTROL_CATE {
 				exit;
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"])) {
 				return array(
 					"str_alert" => "x110302"
 				);
@@ -122,7 +122,7 @@ class CONTROL_CATE {
 			);
 		}
 
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 		$_arr_tplRows     = $this->obj_dir->list_dir(BG_PATH_TPL_PUB);
 
 		$_arr_tpl = array(
@@ -149,7 +149,7 @@ class CONTROL_CATE {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["cate"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["browse"])) {
 			return array(
 				"str_alert" => "x110301"
 			);

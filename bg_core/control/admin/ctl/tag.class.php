@@ -38,7 +38,7 @@ class CONTROL_TAG {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
 			return array(
 				"str_alert" => "x130301",
 			);

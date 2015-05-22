@@ -65,6 +65,10 @@
 		<input type="hidden" name="act_post" id="act_post" value="submit">
 		<input type="hidden" name="cate_id" value="{$tplData.cateRow.cate_id}">
 
+		<input type="hidden" name="aaa" id="aaa" value="AAA">
+		<input type="hidden" name="bbb" id="bbb" value="BBB">
+		<input type="hidden" name="ccc" id="ccc" value="CCC">
+
 		<div class="row">
 			<div class="col-md-9">
 				<div class="panel panel-default">

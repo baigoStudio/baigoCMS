@@ -19,8 +19,36 @@ class CONTROL_UPGRADE {
 	private $mdl_opt;
 
 	function __construct() { //构造函数
-		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_INSTALL);
+		$this->obj_base   = $GLOBALS["obj_base"];
+		$this->config     = $this->obj_base->config;
+		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_INSTALL . $this->config["ui"]);
 		$this->obj_dir    = new CLASS_DIR(); //初始化目录对象
+		$this->upgrade_init();
+	}
+
+
+	function ctl_ext() {
+		$this->obj_tpl->tplDisplay("upgrade_ext.tpl", $this->tplData);
+
+		return array(
+			"str_alert" => "y030403",
+		);
+	}
+
+
+	function ctl_dbconfig() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
+		$this->obj_tpl->tplDisplay("upgrade_dbconfig.tpl", $this->tplData);
+
+		return array(
+			"str_alert" => "y030403",
+		);
 	}
 
 
@@ -31,16 +59,21 @@ class CONTROL_UPGRADE {
 	 * @return void
 	 */
 	function ctl_dbtable() {
-		if (!$this->check_db()) {
+		if ($this->errCount > 0) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030418",
 			);
 			exit;
 		}
 
-		$_arr_tplData = array();
+		if (!$this->check_db()) {
+			return array(
+				"str_alert" => "x030419",
+			);
+			exit;
+		}
 
-		$this->obj_tpl->tplDisplay("upgrade_dbtable.tpl", $_arr_tplData);
+		$this->obj_tpl->tplDisplay("upgrade_dbtable.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y030404",
@@ -55,9 +88,16 @@ class CONTROL_UPGRADE {
 	 * @return void
 	 */
 	function ctl_base() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
 		if (!$this->check_db()) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030419",
 			);
 			exit;
 		}
@@ -76,10 +116,13 @@ class CONTROL_UPGRADE {
 
 		$_arr_optRows["BG_SITE_TPL"]  = $this->mdl_opt->mdl_read("BG_SITE_TPL");
 		$_arr_tplRows                 = $this->obj_dir->list_dir(BG_PATH_TPL_PUB);
-		$_arr_tplData = array(
+
+		$_arr_tpl = array(
 			"optRows"    => $_arr_optRows,
 			"tplRows"    => $_arr_tplRows,
 		);
+
+		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
 		$this->obj_tpl->tplDisplay("upgrade_base.tpl", $_arr_tplData);
 
@@ -96,9 +139,16 @@ class CONTROL_UPGRADE {
 	 * @return void
 	 */
 	function ctl_visit() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
 		if (!$this->check_db()) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030419",
 			);
 			exit;
 		}
@@ -118,9 +168,9 @@ class CONTROL_UPGRADE {
 			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
 		}
 
-		$_arr_tplData["optRows"] = $_arr_optRows;
+		$this->tplData["optRows"] = $_arr_optRows;
 
-		$this->obj_tpl->tplDisplay("upgrade_visit.tpl", $_arr_tplData);
+		$this->obj_tpl->tplDisplay("upgrade_visit.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y030404",
@@ -135,9 +185,16 @@ class CONTROL_UPGRADE {
 	 * @return void
 	 */
 	function ctl_upload() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
 		if (!$this->check_db()) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030419",
 			);
 			exit;
 		}
@@ -159,9 +216,9 @@ class CONTROL_UPGRADE {
 			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
 		}
 
-		$_arr_tplData["optRows"] = $_arr_optRows;
+		$this->tplData["optRows"] = $_arr_optRows;
 
-		$this->obj_tpl->tplDisplay("upgrade_upload.tpl", $_arr_tplData);
+		$this->obj_tpl->tplDisplay("upgrade_upload.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y030404",
@@ -176,9 +233,16 @@ class CONTROL_UPGRADE {
 	 * @return void
 	 */
 	function ctl_sso() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
 		if (!$this->check_db()) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030419",
 			);
 			exit;
 		}
@@ -195,9 +259,9 @@ class CONTROL_UPGRADE {
 			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
 		}
 
-		$_arr_tplData["optRows"] = $_arr_optRows;
+		$this->tplData["optRows"] = $_arr_optRows;
 
-		$this->obj_tpl->tplDisplay("upgrade_sso.tpl", $_arr_tplData);
+		$this->obj_tpl->tplDisplay("upgrade_sso.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y030404",
@@ -206,9 +270,16 @@ class CONTROL_UPGRADE {
 
 
 	function ctl_over() {
+		if ($this->errCount > 0) {
+			return array(
+				"str_alert" => "x030418",
+			);
+			exit;
+		}
+
 		if (!$this->check_db()) {
 			return array(
-				"str_alert" => "x030404",
+				"str_alert" => "x030419",
 			);
 			exit;
 		}
@@ -221,9 +292,7 @@ class CONTROL_UPGRADE {
 			exit;
 		}
 
-		$_arr_tplData = array();
-
-		$this->obj_tpl->tplDisplay("upgrade_over.tpl", $_arr_tplData);
+		$this->obj_tpl->tplDisplay("upgrade_over.tpl", $this->tplData);
 
 		return array(
 			"str_alert" => "y030404",
@@ -235,6 +304,10 @@ class CONTROL_UPGRADE {
 		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
 			return false;
 		} else {
+			if (!defined("BG_DB_PORT")) {
+				define("BG_DB_PORT", "3306");
+			}
+
 			$_cfg_host = array(
 				"host"      => BG_DB_HOST,
 				"name"      => BG_DB_NAME,
@@ -242,9 +315,20 @@ class CONTROL_UPGRADE {
 				"pass"      => BG_DB_PASS,
 				"charset"   => BG_DB_CHARSET,
 				"debug"     => BG_DB_DEBUG,
+				"port"      => BG_DB_PORT,
 			);
-			$GLOBALS["obj_db"]   = new CLASS_MYSQL($_cfg_host); //设置数据库对象
+
+			$GLOBALS["obj_db"]   = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
 			$this->obj_db        = $GLOBALS["obj_db"];
+			if (!$this->obj_db->connect()) {
+				return false;
+				exit;
+			}
+
+			if (!$this->obj_db->select_db()) {
+				return false;
+				exit;
+			}
 			$this->mdl_opt       = new MODEL_OPT(); //设置管理员模型
 			return true;
 		}
@@ -263,5 +347,22 @@ class CONTROL_UPGRADE {
 		} else {
 			return true;
 		}
+	}
+
+
+	private function upgrade_init() {
+		$_arr_extRow      = get_loaded_extensions();
+		$this->errCount   = 0;
+
+		foreach ($this->obj_tpl->type["ext"] as $_key=>$_value) {
+			if (!in_array($_key, $_arr_extRow)) {
+				$this->errCount++;
+			}
+		}
+
+		$this->tplData = array(
+			"errCount"   => $this->errCount,
+			"extRow"     => $_arr_extRow,
+		);
 	}
 }

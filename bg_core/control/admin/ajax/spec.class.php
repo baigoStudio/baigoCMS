@@ -48,7 +48,7 @@ class AJAX_SPEC {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			$this->obj_ajax->halt_alert("x180302");
 		}
 
@@ -65,7 +65,7 @@ class AJAX_SPEC {
 
 
 	function ajax_status() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			$this->obj_ajax->halt_alert("x180302");
 		}
 
@@ -86,7 +86,7 @@ class AJAX_SPEC {
 
 
 	function ajax_toSpec() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			$this->obj_ajax->halt_alert("x180302");
 		}
 
@@ -111,7 +111,7 @@ class AJAX_SPEC {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			$this->obj_ajax->halt_alert("x180304");
 		}
 

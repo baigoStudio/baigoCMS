@@ -38,7 +38,7 @@ class CONTROL_THUMB {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
 			return array(
 				"str_alert" => "x090301",
 			);

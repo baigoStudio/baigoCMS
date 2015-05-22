@@ -161,6 +161,7 @@
 										{foreach $status.cate as $key=>$value}
 											<option value="{$key}">{$value}</option>
 										{/foreach}
+										<option value="cache">{$lang.option.cache}</option>
 										<option value="del">{$lang.option.del}</option>
 									</select>
 								</div>

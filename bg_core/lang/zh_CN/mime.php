@@ -16,11 +16,11 @@ return array(
 		"note"    => "JPG 图片",
 	),
 	"image/jpeg" => array(
-		"ext"     => "jpg",
+		"ext"     => "jpeg",
 		"note"    => "JPG 图片",
 	),
 	"image/pjpeg" => array(
-		"ext"     => "jpg",
+		"ext"     => "pjpeg",
 		"note"    => "JPG 图片",
 	),
 	"image/gif" => array(

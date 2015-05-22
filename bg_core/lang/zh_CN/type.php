@@ -53,10 +53,11 @@ return array(
 	/*------是否有图片类型------*/
 	"callAttach" => array(
 		"all"     => "全部", //普通
-		"attach"  => "仅显示带附件文章", //单页
-		"none"    => "仅显示无附件文章", //跳转至
+		"attach"  => "仅显示带图片文章", //单页
+		"none"    => "仅显示无图片文章", //跳转至
 	),
 
+	/*------调用生成文件------*/
 	"callFile" => array(
 		"html"    => "HTML",
 		"js"      => "JS",
@@ -68,5 +69,26 @@ return array(
 	"thumb" => array(
 		"ratio"   => "比例", //按比例
 		"cut"     => "裁切", //裁切
+	),
+
+	/*------自定义表单------*/
+	"custom" => array(
+		"article" => "文章",
+		//"cate"    => "栏目",
+	),
+
+	"excerpt" => array(
+		"auto"    => "自动截取",
+		"txt"     => "仅截取文本",
+		"none"    => "不要摘要",
+		"manual"  => "手工编辑",
+	),
+
+	"ext" => array(
+		"mysqli"      => "Mysqli 扩展库", //栏目类型
+		"gd"          => "GD 扩展库", //栏目类型
+		"mbstring"    => "mbstring 扩展库", //栏目类型
+		"curl"        => "cURL 扩展库", //栏目类型
+		"ftp"         => "FTP 扩展库", //栏目类型
 	),
 );

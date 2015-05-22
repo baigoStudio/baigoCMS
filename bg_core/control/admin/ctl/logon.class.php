@@ -71,10 +71,9 @@ class CONTROL_LOGON {
 		$_str_rand = fn_rand(6);
 		$this->mdl_admin->mdl_login($_arr_ssoLogin["user_id"], $_str_rand);
 
-
-		$_SESSION["admin_id_" . BG_SITE_SSIN]         = $_arr_ssoLogin["user_id"];
-		$_SESSION["admin_ssintime_" . BG_SITE_SSIN]   = time();
-		$_SESSION["admin_hash_" . BG_SITE_SSIN]       = fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_rand);
+		fn_session("admin_id", "mk", $_arr_ssoLogin["user_id"]);
+		fn_session("admin_ssin_time", "mk", time());
+		fn_session("admin_hash", "mk", fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_rand));
 
 		return array(
 			"admin_id"   => $_arr_ssoLogin["user_id"],

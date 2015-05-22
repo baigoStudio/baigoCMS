@@ -148,7 +148,7 @@ class MODEL_CATE_BELONG {
 			$_str_sqlWhere .= " AND belong_cate_id=" . $num_cateId;
 		}
 
-		$_arr_belongRows  = $this->obj_db->select_array(BG_DB_TABLE . "cate_belong",  $_arr_belongSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_belongRows  = $this->obj_db->select(BG_DB_TABLE . "cate_belong",  $_arr_belongSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_belongRows[0])) {
 			$_arr_belongRow   = $_arr_belongRows[0];
@@ -177,7 +177,7 @@ class MODEL_CATE_BELONG {
 			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
 		}
 
-		$_arr_belongRows = $this->obj_db->select_array(BG_DB_TABLE . "cate_belong", $_arr_belongSelect, $_str_sqlWhere . " ORDER BY belong_id DESC", 1000, 0);
+		$_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "cate_belong", $_arr_belongSelect, $_str_sqlWhere, "", "belong_id DESC", 1000, 0);
 
 		return $_arr_belongRows;
 	}

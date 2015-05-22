@@ -27,6 +27,35 @@ class AJAX_UPGRADE {
 				$this->obj_ajax->halt_alert("x030403");
 			}
 		}
+		$this->upgrade_init();
+	}
+
+
+	function ajax_dbconfig() {
+		if (!fn_token("chk")) { //令牌
+			$this->obj_ajax->halt_alert("x030102");
+		}
+
+		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
+		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
+		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
+		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
+		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
+		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
+
+		$_str_content = "<?php" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
+
+		file_put_contents(BG_PATH_CONFIG . "config_db.inc.php", $_str_content);
+
+		$this->obj_ajax->halt_alert("y030404");
 	}
 
 
@@ -53,10 +82,11 @@ class AJAX_UPGRADE {
 		$this->table_attach();
 		$this->table_spec();
 		$this->table_app();
+		$this->table_custom();
 		$this->view_article();
 		$this->view_tag();
 
-		$this->obj_ajax->halt_alert("y030103");
+		$this->obj_ajax->halt_alert("y030113");
 	}
 
 
@@ -228,7 +258,7 @@ class AJAX_UPGRADE {
 		}
 
 		if (in_array("admin_id", $_arr_col)) {
-			$_arr_alert["admin_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "admin_id");
+			$_arr_alert["admin_id"] = array("CHANGE", "int NOT NULL AUTO_INCREMENT COMMENT 'ID'", "admin_id");
 		}
 
 		if (in_array("admin_group_id", $_arr_col)) {
@@ -360,6 +390,22 @@ class AJAX_UPGRADE {
 
 		if ($_arr_alert) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article", $_arr_alert);
+			if (!$_reselt) {
+				$this->obj_ajax->halt_alert("x120106");
+			}
+		}
+
+
+		$_arr_col     = $_mdl_article->mdl_column_content();
+		$_arr_alert   = array();
+
+		if (!in_array("article_custom", $_arr_col)) {
+			$_arr_alert["article_custom"] = array("ADD", "text NOT NULL COMMENT '自定义字段'");
+		}
+
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article_content", $_arr_alert);
 			if (!$_reselt) {
 				$this->obj_ajax->halt_alert("x120106");
 			}
@@ -878,44 +924,14 @@ class AJAX_UPGRADE {
 	}
 
 
-	/**
-	 * sso_base function.
-	 *
-	 * @access private
-	 * @return void
-	 */
-	private function sso_base() {
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_NAME\", \"baigo SSO\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_DOMAIN\", \"" . BG_SITE_DOMAIN . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_URL\", \"" . BG_SITE_URL . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_PERPAGE\", 30);" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_TIMEZONE\", \"Etc/GMT+8\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_DATE\", \"Y-m-d\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_DATESHORT\", \"m-d\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_TIME\", \"H:i:s\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_TIMESHORT\", \"H:i\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
+	private function table_custom() {
+		include_once(BG_PATH_MODEL . "custom.class.php"); //载入管理帐号模型
+		$_mdl_custom     = new MODEL_CUSTOM();
 
-		file_put_contents(BG_PATH_SSO . "config/opt_base.inc.php", $_str_content);
-	}
-
-
-	/**
-	 * sso_reg function.
-	 *
-	 * @access private
-	 * @return void
-	 */
-	private function sso_reg() {
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_REG_NEEDMAIL\", \"off\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_REG_ONEMAIL\", \"false\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_ACC_MAIL\", \"\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_BAD_MAIL\", \"\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_BAD_NAME\", BG_BAD_NAME);" . PHP_EOL;
-
-		file_put_contents(BG_PATH_SSO . "config/opt_reg.inc.php", $_str_content);
+		$_arr_customRow  = $_mdl_custom->mdl_create_table();
+		if ($_arr_customRow["str_alert"] != "y200105") {
+			$this->obj_ajax->halt_alert($_arr_customRow["str_alert"]);
+		}
 	}
 
 
@@ -925,8 +941,12 @@ class AJAX_UPGRADE {
 		}
 
 		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030404");
+			$this->obj_ajax->halt_alert("x030419");
 		} else {
+			if (!defined("BG_DB_PORT")) {
+				define("BG_DB_PORT", "3306");
+			}
+
 			$_cfg_host = array(
 				"host"      => BG_DB_HOST,
 				"name"      => BG_DB_NAME,
@@ -934,9 +954,19 @@ class AJAX_UPGRADE {
 				"pass"      => BG_DB_PASS,
 				"charset"   => BG_DB_CHARSET,
 				"debug"     => BG_DB_DEBUG,
+				"port"      => BG_DB_PORT,
 			);
-			$GLOBALS["obj_db"]   = new CLASS_MYSQL($_cfg_host); //初始化基类
+
+			$GLOBALS["obj_db"]   = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
 			$this->obj_db        = $GLOBALS["obj_db"];
+
+			if (!$this->obj_db->connect()) {
+				$this->obj_ajax->halt_alert("x030111");
+			}
+
+			if (!$this->obj_db->select_db()) {
+				$this->obj_ajax->halt_alert("x030112");
+			}
 		}
 	}
 
@@ -950,6 +980,36 @@ class AJAX_UPGRADE {
 
 		if (!in_array(BG_DB_TABLE . "opt", $_arr_tables)) {
 			$this->obj_ajax->halt_alert("x030412");
+		}
+	}
+
+
+	private function upgrade_init() {
+		$_arr_extRow      = get_loaded_extensions();
+		$_num_errCount   = 0;
+
+		if (!in_array("mysqli", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("gd", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("mbstring", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("curl", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("ftp", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if ($_num_errCount > 0) {
+			$this->obj_ajax->halt_alert("x030418");
 		}
 	}
 }

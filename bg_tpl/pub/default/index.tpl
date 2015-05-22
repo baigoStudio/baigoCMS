@@ -15,10 +15,10 @@
 		<!-- Wrapper for slides -->
 		<div class="carousel-inner" role="listbox">
 			<div class="item active">
-				<img src="{$smarty.const.BG_URL_STATIC_PUB}default/image/index_slide_1.jpg">
+				<img src="{$smarty.const.BG_URL_STATIC_PUB}{$smarty.const.BG_SITE_TPL}/image/index_slide_1.jpg">
 			</div>
 			<div class="item">
-				<img src="{$smarty.const.BG_URL_STATIC_PUB}default/image/index_slide_2.jpg">
+				<img src="{$smarty.const.BG_URL_STATIC_PUB}{$smarty.const.BG_SITE_TPL}/image/index_slide_2.jpg">
 			</div>
 		</div>
 

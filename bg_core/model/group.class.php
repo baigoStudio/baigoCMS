@@ -141,7 +141,7 @@ class MODEL_GROUP {
 			$_str_sqlWhere .= " AND group_id<>" . $num_notId;
 		}
 
-		$_arr_groupRows = $this->obj_db->select_array(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_groupRows = $this->obj_db->select(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_groupRows[0])) {
 			$_arr_groupRow = $_arr_groupRows[0];
@@ -153,7 +153,7 @@ class MODEL_GROUP {
 		}
 
 		if (isset($_arr_groupRow["group_allow"])) {
-			$_arr_groupRow["group_allow"] = json_decode($_arr_groupRow["group_allow"], true); //json解码
+			$_arr_groupRow["group_allow"] = fn_jsonDecode($_arr_groupRow["group_allow"], "no"); //json解码
 		} else {
 			$_arr_groupRow["group_allow"] = array();
 		}
@@ -221,7 +221,7 @@ class MODEL_GROUP {
 			$_str_sqlWhere .= " AND group_status='" . $str_status . "'";
 		}
 
-		$_arr_groupRows = $this->obj_db->select_array(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere . " ORDER BY group_id DESC", $num_no, $num_except); //列出本地表是否存在记录
+		$_arr_groupRows = $this->obj_db->select(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, "", "group_id DESC", $num_no, $num_except); //列出本地表是否存在记录
 
 		return $_arr_groupRows;
 
@@ -366,7 +366,7 @@ class MODEL_GROUP {
 			break;
 		}
 
-		$this->groupSubmit["group_allow"] = json_encode(fn_post("group_allow"));
+		$this->groupSubmit["group_allow"] = fn_jsonEncode(fn_post("group_allow"), "no");
 		$this->groupSubmit["str_alert"]   = "ok";
 
 		return $this->groupSubmit;

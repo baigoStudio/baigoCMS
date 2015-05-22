@@ -24,6 +24,7 @@ class AJAX_INSTALL {
 		if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
 			$this->obj_ajax->halt_alert("x030403");
 		}
+		$this->install_init();
 	}
 
 
@@ -39,14 +40,16 @@ class AJAX_INSTALL {
 		}
 
 		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
+		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
 		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
 		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
 		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
 		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
-		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "bg_");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
 
 		$_str_content = "<?php" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
@@ -83,6 +86,7 @@ class AJAX_INSTALL {
 		$this->table_attach();
 		$this->table_spec();
 		$this->table_app();
+		$this->table_custom();
 		$this->view_article();
 		$this->view_tag();
 
@@ -584,6 +588,7 @@ class AJAX_INSTALL {
 				"upload"        => 1,
 				"sso"           => 1,
 				"gen"           => 1,
+				"api"           => 1,
 			),
 		);
 
@@ -763,6 +768,16 @@ class AJAX_INSTALL {
 	}
 
 
+	private function table_custom() {
+		include_once(BG_PATH_MODEL . "custom.class.php"); //载入管理帐号模型
+		$_mdl_custom     = new MODEL_CUSTOM();
+
+		$_arr_customRow  = $_mdl_custom->mdl_create_table();
+		if ($_arr_customRow["str_alert"] != "y200105") {
+			$this->obj_ajax->halt_alert($_arr_customRow["str_alert"]);
+		}
+	}
+
 	/**
 	 * sso_dbconfig function.
 	 *
@@ -771,7 +786,9 @@ class AJAX_INSTALL {
 	 */
 	private function sso_dbconfig() {
 		$_str_content = "<?php" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_DRIVER\", \"" . BG_DB_DRIVER . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_HOST\", \"" . BG_DB_HOST . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PORT\", \"" . BG_DB_PORT . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_NAME\", \"" . BG_DB_NAME . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_USER\", \"" . BG_DB_USER . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_PASS\", \"" . BG_DB_PASS . "\");" . PHP_EOL;
@@ -906,6 +923,10 @@ class AJAX_INSTALL {
 		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
 			$this->obj_ajax->halt_alert("x030404");
 		} else {
+			if (!defined("BG_DB_PORT")) {
+				define("BG_DB_PORT", "3306");
+			}
+
 			$_cfg_host = array(
 				"host"      => BG_DB_HOST,
 				"name"      => BG_DB_NAME,
@@ -913,9 +934,19 @@ class AJAX_INSTALL {
 				"pass"      => BG_DB_PASS,
 				"charset"   => BG_DB_CHARSET,
 				"debug"     => BG_DB_DEBUG,
+				"port"      => BG_DB_PORT,
 			);
-			$GLOBALS["obj_db"]   = new CLASS_MYSQL($_cfg_host); //初始化基类
+
+			$GLOBALS["obj_db"]   = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
 			$this->obj_db        = $GLOBALS["obj_db"];
+
+			if (!$this->obj_db->connect()) {
+				$this->obj_ajax->halt_alert("x030111");
+			}
+
+			if (!$this->obj_db->select_db()) {
+				$this->obj_ajax->halt_alert("x030112");
+			}
 		}
 	}
 
@@ -929,6 +960,36 @@ class AJAX_INSTALL {
 
 		if (!in_array(BG_DB_TABLE . "opt", $_arr_tables)) {
 			$this->obj_ajax->halt_alert("x030412");
+		}
+	}
+
+
+	private function install_init() {
+		$_arr_extRow      = get_loaded_extensions();
+		$_num_errCount   = 0;
+
+		if (!in_array("mysqli", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("gd", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("mbstring", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("curl", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if (!in_array("ftp", $_arr_extRow)) {
+			$_num_errCount++;
+		}
+
+		if ($_num_errCount > 0) {
+			$this->obj_ajax->halt_alert("x030417");
 		}
 	}
 }

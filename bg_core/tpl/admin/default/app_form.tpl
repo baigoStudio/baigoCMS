@@ -45,7 +45,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<div id="group_app_name">
-								<label for="" class="control-label">{$lang.label.appName}<span id="msg_app_name">*</span></label>
+								<label class="control-label">{$lang.label.appName}<span id="msg_app_name">*</span></label>
 								<input type="text" name="app_name" id="app_name" value="{$tplData.appRow.app_name}" class="validate form-control">
 							</div>
 						</div>
@@ -70,7 +70,7 @@
 										</label>
 										{foreach $value_m.allow as $key_s=>$value_s}
 											<label for="allow_{$key_m}_{$key_s}" class="checkbox-inline">
-												<input type="checkbox" name="app_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" class="allow_{$key_m}" {if $tplData.appRow.app_allow[$key_m][$key_s] == 1}checked{/if}>
+												<input type="checkbox" name="app_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" class="allow_{$key_m}" {if isset($tplData.appRow.app_allow[$key_m][$key_s])}checked{/if}>
 												{$value_s}
 											</label>
 										{/foreach}
@@ -81,7 +81,7 @@
 
 						<div class="form-group">
 							<div id="group_app_ip_allow">
-								<label for="app_ip_allow" class="control-label">{$lang.label.ipAllow}<span id="msg_app_ip_allow"></span></label>
+								<label class="control-label">{$lang.label.ipAllow}<span id="msg_app_ip_allow"></span></label>
 								<textarea name="app_ip_allow" id="app_ip_allow" class="validate form-control text_md">{$tplData.appRow.app_ip_allow}</textarea>
 							</div>
 							<p class="help-block">{$lang.label.ipNote}</p>
@@ -89,7 +89,7 @@
 
 						<div class="form-group">
 							<div id="group_app_ip_bad">
-								<label for="app_ip_bad" class="control-label">{$lang.label.ipBad}<span id="msg_app_ip_bad"></span></label>
+								<label class="control-label">{$lang.label.ipBad}<span id="msg_app_ip_bad"></span></label>
 								<textarea name="app_ip_bad" id="app_ip_bad" class="validate form-control text_md">{$tplData.appRow.app_ip_bad}</textarea>
 							</div>
 							<p class="help-block">{$lang.label.ipNote}</p>
@@ -97,7 +97,7 @@
 
 						<div class="form-group">
 							<div id="group_app_note">
-								<label for="app_note" class="control-label">{$lang.label.note}<span id="msg_app_note"></span></label>
+								<label class="control-label">{$lang.label.note}<span id="msg_app_note"></span></label>
 								<input type="text" name="app_note" id="app_note" value="{$tplData.appRow.app_note}" class="validate form-control">
 							</div>
 						</div>

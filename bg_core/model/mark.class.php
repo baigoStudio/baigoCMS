@@ -130,7 +130,7 @@ class MODEL_MARK {
 			$_str_sqlWhere .= " AND mark_id<>" . $num_notId;
 		}
 
-		$_arr_markRows = $this->obj_db->select_array(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_markRows = $this->obj_db->select(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_markRows[0])) {
 			$_arr_markRow = $_arr_markRows[0];
@@ -168,7 +168,7 @@ class MODEL_MARK {
 			$_str_sqlWhere .= " AND mark_name LIKE '%" . $str_key . "%'";
 		}
 
-		$_arr_markRows = $this->obj_db->select_array(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere . " ORDER BY mark_id DESC", $num_no, $num_except);
+		$_arr_markRows = $this->obj_db->select(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, "", "mark_id DESC", $num_no, $num_except);
 
 		return $_arr_markRows;
 	}

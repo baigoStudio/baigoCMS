@@ -136,7 +136,7 @@ class MODEL_SPEC {
 			$_str_sqlWhere .= " AND spec_id<>" . $num_notId;
 		}
 
-		$_arr_specRows = $this->obj_db->select_array(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_specRows = $this->obj_db->select(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_specRows[0])) {
 			$_arr_specRow = $_arr_specRows[0];
@@ -203,7 +203,7 @@ class MODEL_SPEC {
 			$_str_sqlWhere .= " AND spec_status='" . $str_status . "'";
 		}
 
-		$_arr_specRows = $this->obj_db->select_array(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere . " ORDER BY spec_id DESC", $num_no, $num_except);
+		$_arr_specRows = $this->obj_db->select(BG_DB_TABLE . "spec",  $_arr_specSelect, $_str_sqlWhere, "", "spec_id DESC", $num_no, $num_except);
 
 		foreach ($_arr_specRows as $_key=>$_value) {
 			$_arr_specRows[$_key]["urlRow"] = $this->url_process($_value);

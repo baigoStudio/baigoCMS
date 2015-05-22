@@ -45,7 +45,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_upload() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"])) {
 			$this->obj_ajax->halt_alert("x060302");
 		}
 
@@ -62,7 +62,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_sso() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"])) {
 			$this->obj_ajax->halt_alert("x060303");
 		}
 
@@ -79,7 +79,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_visit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"])) {
 			$this->obj_ajax->halt_alert("x060304");
 		}
 
@@ -130,7 +130,7 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_base() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"])) {
 			$this->obj_ajax->halt_alert("x060301");
 		}
 
@@ -147,19 +147,21 @@ class AJAX_OPT {
 	 * @return void
 	 */
 	function ajax_db() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"])) {
 			$this->obj_ajax->halt_alert("x060306");
 		}
 
 		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
-		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "sso");
-		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "sso");
+		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
+		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
+		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
 		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
 		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
-		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "sso_");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
 
 		$_str_content = "<?php" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;

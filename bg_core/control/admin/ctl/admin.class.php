@@ -49,7 +49,7 @@ class CONTROL_ADMIN {
 	 * @return void
 	 */
 	function ctl_toGroup() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"])) {
 			return array(
 				"str_alert" => "x020305",
 			);
@@ -57,9 +57,17 @@ class CONTROL_ADMIN {
 		}
 
 		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
-		$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
-		if ($_arr_ssoUser["str_alert"] != "y010102") { //SSO 中不存在该用户
-			return $_arr_ssoUser;
+
+		if ($_num_adminId == $this->adminLogged["admin_id"]) {
+			return array(
+				"str_alert" => "x020306",
+			);
+			exit;
+		}
+
+		$_arr_ssoRow  = $this->obj_sso->sso_get($_num_adminId);
+		if ($_arr_ssoRow["str_alert"] != "y010102") { //SSO 中不存在该用户
+			return $_arr_ssoRow;
 			exit;
 		}
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
@@ -67,11 +75,11 @@ class CONTROL_ADMIN {
 			return $_arr_adminRow;
 			exit;
 		}
-		$_arr_adminRow["userRow"] = $_arr_ssoUser;
 
 		$_arr_groupRows = $this->mdl_group->mdl_list(100, 0, "", "admin"); //列出管理组
 
 		$_arr_tpl = array(
+			"ssoRow"     => $_arr_ssoRow, //管理员信息
 			"adminRow"   => $_arr_adminRow, //管理员信息
 			"groupRows"  => $_arr_groupRows, //管理员信息
 		);
@@ -96,14 +104,21 @@ class CONTROL_ADMIN {
 		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		if ($_num_adminId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"])) {
 				return array(
 					"str_alert" => "x020303",
 				);
+				exit;
 			}
-			$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
-			if ($_arr_ssoUser["str_alert"] != "y010102") { //SSO 中不存在该用户
-				return $_arr_ssoUser;
+			if ($_num_adminId == $this->adminLogged["admin_id"]) {
+				return array(
+					"str_alert" => "x020306",
+				);
+				exit;
+			}
+			$_arr_ssoRow = $this->obj_sso->sso_get($_num_adminId);
+			if ($_arr_ssoRow["str_alert"] != "y010102") { //SSO 中不存在该用户
+				return $_arr_ssoRow;
 				exit;
 			}
 			$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
@@ -112,17 +127,18 @@ class CONTROL_ADMIN {
 				exit;
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 				return array(
 					"str_alert" => "x020302",
 				);
+				exit;
 			}
 			$_arr_adminRow = array(
 				"admin_id"      => 0,
 				"admin_note"    => "",
 				"admin_status"  => "enable",
 			);
-			$_arr_ssoUser = array(
+			$_arr_ssoRow = array(
 				"user_mail" => "",
 				"user_nick" => "",
 			);
@@ -131,7 +147,7 @@ class CONTROL_ADMIN {
 		$_arr_cateRows = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_ssoUser,
+			"ssoRow"     => $_arr_ssoRow,
 			"adminRow"   => $_arr_adminRow, //管理员信息
 			"cateRows"   => $_arr_cateRows, //栏目信息
 		);
@@ -153,17 +169,18 @@ class CONTROL_ADMIN {
 	 * @return void
 	 */
 	function ctl_show() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
 			return array(
 				"str_alert" => "x020301",
 			);
+			exit;
 		}
 
 		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
-		$_arr_ssoUser = $this->obj_sso->sso_get($_num_adminId);
-		if ($_arr_ssoUser["str_alert"] != "y010102") {
-			return $_arr_ssoUser;
+		$_arr_ssoRow = $this->obj_sso->sso_get($_num_adminId);
+		if ($_arr_ssoRow["str_alert"] != "y010102") {
+			return $_arr_ssoRow;
 			exit;
 		}
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
@@ -176,7 +193,7 @@ class CONTROL_ADMIN {
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
 		$_arr_tpl = array(
-			"userRow"    => $_arr_ssoUser,
+			"ssoRow"     => $_arr_ssoRow,
 			"adminRow"   => $_arr_adminRow, //管理员信息
 			"groupRow"   => $_arr_groupRow,
 			"cateRows"   => $_arr_cateRows, //栏目信息
@@ -200,10 +217,11 @@ class CONTROL_ADMIN {
 	 */
 	function ctl_auth() {
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 			return array(
 				"str_alert" => "x020302",
 			);
+			exit;
 		}
 		$_arr_adminRow["admin_status"] = "enable";
 
@@ -231,7 +249,7 @@ class CONTROL_ADMIN {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
 			return array(
 				"str_alert" => "x020301",
 			);
@@ -258,8 +276,8 @@ class CONTROL_ADMIN {
 		$_arr_adminRows   = $this->mdl_admin->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_status, $_num_groupId);
 
 		foreach ($_arr_adminRows as $_key=>$_value) {
-			/*$_arr_ssoUser                        = $this->obj_sso->sso_get($_value["admin_id"]); //取得用户组信息
-			if ($_arr_ssoUser["str_alert"] != "y010102" && $_value["article_status"] != "disable") {
+			/*$_arr_ssoRow                        = $this->obj_sso->sso_get($_value["admin_id"]); //取得用户组信息
+			if ($_arr_ssoRow["str_alert"] != "y010102" && $_value["article_status"] != "disable") {
 				$_arr_unknownAdmin[] = $_value["admin_id"];
 				$_arr_adminRows[$_key]["admin_name"] = "";
 			}*/

@@ -23,6 +23,11 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_call->ajax_del();
 	break;
 
+	case "enable":
+	case "disable":
+		$ajax_call->ajax_status();
+	break;
+
 	default:
 		switch ($GLOBALS["act_get"]) {
 			case "chkname":

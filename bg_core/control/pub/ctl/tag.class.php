@@ -66,32 +66,23 @@ class CONTROL_TAG {
 		$_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
 		$_str_query           = http_build_query($this->search);
 		$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", false, false, false, $_arr_tagIds);
-		$_arr_attachThumb     = $this->mdl_thumb->mdl_list(100);
+		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+			$this->mdl_thumb->mdl_cache();
+		}
+		$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
 			if ($_value["article_attach_id"] > 0) {
-				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
+				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_thumbRows);
 			}
 
-			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["article_cate_id"]);
-			if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
-				if (is_array($_arr_cateRow["cate_trees"])) {
-					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
-						$_arr_cate = $this->mdl_cate->mdl_readPub($_value_tree["cate_id"]);
-						if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
-							$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"]  = $_arr_cate["urlRow"];
-						}
-					}
-				}
-			} else {
-				$_arr_cateRow = array(
-					"str_alert" => "x110102",
-				);
+			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
 			}
 
-			$_arr_articleRows[$_key]["cateRow"]      = $_arr_cateRow;
+			$_arr_articleRows[$_key]["cateRow"] = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
 		}
 
 		//统计 tag 文章数
@@ -133,6 +124,11 @@ class CONTROL_TAG {
 			$this->search["page_ext"] = "";
 		}
 
-		$this->cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
+		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+			$this->mdl_cate->mdl_cache();
+		}
+
+		$this->cateRows = include(BG_PATH_CACHE . "cate_trees.php");
+		//$this->cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
 	}
 }

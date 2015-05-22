@@ -46,7 +46,7 @@ class AJAX_MARK {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
 			$this->obj_ajax->halt_alert("x140302");
 		}
 
@@ -69,7 +69,7 @@ class AJAX_MARK {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
 			$this->obj_ajax->halt_alert("x140304");
 		}
 

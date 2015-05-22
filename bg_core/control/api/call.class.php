@@ -166,37 +166,44 @@ class API_CALL {
 	 * @return void
 	 */
 	private function call_article() {
-		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_mark_ids"], false, $this->callRow["call_attach"], $this->callRow["call_type"]);
+		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_spec_id"], false, $this->callRow["call_attach"], $this->callRow["call_type"]);
 
-		//print_r($_arr_articleRows);
+		if ($_arr_articleRows) {
+			foreach ($_arr_articleRows as $_key=>$_value) {
 
-		foreach ($_arr_articleRows as $_key=>$_value) {
+				unset($_arr_articleRows[$_key]["article_url"]);
 
-			unset($_arr_articleRows[$_key]["article_url"]);
-
-			if (isset($_value["belong_cate_id"]) && $_value["belong_cate_id"] > 0) {
-				$_num_cateId = $_value["belong_cate_id"];
-			} else {
-				$_num_cateId = $_value["article_cate_id"];
-			}
-
-			$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
-			if ($_arr_cateRow["cate_status"] == "show") {
-				unset($_arr_cateRow["urlRow"]);
-				$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
-			}
-
-			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
-
-			if ($_value["article_attach_id"] > 0) {
-				$_arr_attachThumb   = $this->mdl_thumb->mdl_list(100);
-				$_arr_attachRow     = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_attachThumb);
-
-				if ($_arr_attachRow["str_alert"] == "y070102") {
-					$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
+				if (isset($_value["belong_cate_id"]) && $_value["belong_cate_id"] > 0) {
+					$_num_cateId = $_value["belong_cate_id"];
+				} else {
+					$_num_cateId = $_value["article_cate_id"];
 				}
-			}
 
+				if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
+					$this->mdl_cate->mdl_cache(array($_num_cateId));
+				}
+
+				$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
+				if ($_arr_cateRow["cate_status"] == "show") {
+					unset($_arr_cateRow["urlRow"]);
+					$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
+				}
+
+				$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
+
+				if ($_value["article_attach_id"] > 0) {
+					if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+						$this->mdl_thumb->mdl_cache();
+					}
+					$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+					$_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_thumbRows);
+
+					if ($_arr_attachRow["str_alert"] == "y070102") {
+						$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
+					}
+				}
+
+			}
 		}
 
 		//print_r($_arr_articleRows);

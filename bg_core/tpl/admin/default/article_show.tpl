@@ -55,6 +55,17 @@
 						</p>
 					</div>
 
+					{foreach $tplData.customRows as $key=>$value}
+						<div class="form-group">
+							<label class="control-label static_label">{$value.custom_name}</label>
+							<p class="form-control-static static_input">
+								{if isset($tplData.articleRow.article_custom[{$value.custom_id}])}
+									{$tplData.articleRow.article_custom[{$value.custom_id}]}
+								{/if}
+							</p>
+						</div>
+					{/foreach}
+
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.articleTag}</label>
 						<p class="form-control-static">

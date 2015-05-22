@@ -191,7 +191,7 @@ class MODEL_TAG {
 			$_str_sqlWhere .= " AND tag_id<>" . $num_notId;
 		}
 
-		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_tagRows[0])) {
 			$_arr_tagRow  = $_arr_tagRows[0];
@@ -236,16 +236,18 @@ class MODEL_TAG {
 			$_str_sqlWhere .= " AND tag_status='" . $str_status . "'";
 		}
 
+		$_str_sqlGroup = "";
+
 		if ($num_articleId > 0) {
 			$_view_name = "tag_view";
 			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
 			switch ($str_type) {
 				case "tag_rank":
-					$_str_sqlWhere .= " GROUP BY tag_article_count, tag_id";
+					$_str_sqlGroup = "tag_article_count, tag_id";
 				break;
 
 				default:
-					$_str_sqlWhere .= " GROUP BY tag_id";
+					$_str_sqlGroup = "tag_id";
 				break;
 			}
 			$_arr_distinct = array("tag_id");
@@ -256,15 +258,15 @@ class MODEL_TAG {
 
 		switch ($str_type) {
 			case "tag_rank":
-				$_str_sqlWhere .= " ORDER BY tag_article_count DESC, tag_id DESC";
+				$_str_sqlOrder = "tag_article_count DESC, tag_id DESC";
 			break;
 
 			default:
-				$_str_sqlWhere .= " ORDER BY tag_id DESC";
+				$_str_sqlOrder = "tag_id DESC";
 			break;
 		}
 
-		$_arr_tagRows = $this->obj_db->select_array(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $num_no, $num_except, $_arr_distinct);
+		$_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $_str_sqlGroup, $_str_sqlOrder, $num_no, $num_except, $_arr_distinct);
 
 		foreach ($_arr_tagRows as $_key=>$_value) {
 			$_arr_tagRows[$_key]["urlRow"] = $this->url_process($_value);

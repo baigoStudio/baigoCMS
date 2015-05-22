@@ -18,7 +18,7 @@
 			<select name="year" id="search_year" class="form-control input-sm">
 				<option value="">{$lang.option.allYear}</option>
 				{foreach $tplData.yearRows as $value}
-					<option {if $tplData.search.year == $value.attach_year}selected{/if} value="{$value.attach_year}">{$value.attach_year}</option>
+					<option value="{$value.attach_year}">{$value.attach_year}</option>
 				{/foreach}
 			</select>
 		</div>
@@ -31,7 +31,7 @@
 					{else}
 						{$_str_month = $_i}
 					{/if}
-					<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
+					<option value="{$_str_month}">{$_str_month}</option>
 				{/for}
 			</select>
 		</div>
@@ -39,7 +39,7 @@
 			<select name="ext" id="search_ext" class="form-control input-sm">
 				<option value="">{$lang.option.allExt}</option>
 				{foreach $tplData.extRows as $value}
-					<option {if $tplData.search.ext == $value.attach_ext}selected{/if} value="{$value.attach_ext}">{$value.attach_ext}</option>
+					<option value="{$value.attach_ext}">{$value.attach_ext}</option>
 				{/foreach}
 			</select>
 		</div>
@@ -57,6 +57,7 @@
 	<div class="tab-content attach_modal">
 		<div class="tab-pane active" id="pane_insert">
 			<div id="attach_list" class="row"></div>
+			<div class="clearfix"></div>
 			<div id="attach_page" class="text-right"></div>
 		</div>
 		<div class="tab-pane" id="pane_upload">
@@ -144,29 +145,29 @@ function reload_attach(_page, _year, _month, _ext) {
 		$.each(result.attachRows, function(i_attach, field_attach){
 			//alert(field_attach.attach_name);
 			_str_appent_attach = "<div class=\"col-xs-6 col-md-3\">" +
-					"<div class=\"dropdown\">" +
-						"<a class=\"btn btn-default thumbnail dropdown-toggle attach_item\" id=\"attach_" + field_attach.attach_id + "\" data-toggle=\"dropdown\">";
-							if (field_attach.attach_type == "image") {
-								_str_url = field_attach.attach_thumb[0].thumb_url;
-							} else {
-								_str_url = "{$smarty.const.BG_URL_IMAGE}file_" + field_attach.attach_ext + ".png";
-							}
-							_str_appent_attach += "<img src=\"" + _str_url + "\" alt=\"" + field_attach.attach_name + "\">" +
-							"<span class=\"caret\"></span>" +
-						"</a>" +
-						"<ul class=\"dropdown-menu\" aria-labelledby=\"attach_" + field_attach.attach_id + "\">" +
-							"<li><a href=\"javascript:insertAttach('" + field_attach.attach_url + "', '" + field_attach.attach_name + "', '" + field_attach.attach_id + "', '" + field_attach.attach_type + "', '" + field_attach.attach_ext + "');\">{$lang.href.insertOriginal}</a></li>";
+				"<div class=\"dropdown\">" +
+					"<a class=\"btn btn-default thumbnail dropdown-toggle attach_item\" id=\"attach_" + field_attach.attach_id + "\" data-toggle=\"dropdown\">";
+						if (field_attach.attach_type == "image") {
+							_str_url = field_attach.attach_thumb[0].thumb_url;
+						} else {
+							_str_url = "{$smarty.const.BG_URL_IMAGE}file_" + field_attach.attach_ext + ".png";
+						}
+						_str_appent_attach += "<img src=\"" + _str_url + "\" alt=\"" + field_attach.attach_name + "\">" +
+						"<span class=\"caret\"></span>" +
+					"</a>" +
+					"<ul class=\"dropdown-menu\" aria-labelledby=\"attach_" + field_attach.attach_id + "\">" +
+						"<li><a href=\"javascript:insertAttach('" + field_attach.attach_url + "', '" + field_attach.attach_name + "', '" + field_attach.attach_id + "', '" + field_attach.attach_type + "', '" + field_attach.attach_ext + "');\">{$lang.href.insertOriginal}</a></li>";
 
-							if (field_attach.attach_type == "image") {
-								$.each(field_attach.attach_thumb, function(thumb_i, field_thumb){
-									_str_appent_attach += "<li><a href=\"javascript:insertAttach('" + field_thumb.thumb_url+ "', '" + field_attach.attach_name + "', '" + field_attach.attach_id + "', '" + field_attach.attach_type + "', '" + field_attach.attach_ext + "');\">{$lang.href.insertThumb}: " + field_thumb.thumb_width + "x" + field_thumb.thumb_height + " " + _thumb_type[field_thumb.thumb_type] + "</a></li>";
-								})
-							}
+						if (field_attach.attach_type == "image") {
+							$.each(field_attach.attach_thumb, function(thumb_i, field_thumb){
+								_str_appent_attach += "<li><a href=\"javascript:insertAttach('" + field_thumb.thumb_url+ "', '" + field_attach.attach_name + "', '" + field_attach.attach_id + "', '" + field_attach.attach_type + "', '" + field_attach.attach_ext + "');\">{$lang.href.insertThumb}: " + field_thumb.thumb_width + "x" + field_thumb.thumb_height + " " + _thumb_type[field_thumb.thumb_type] + "</a></li>";
+							})
+						}
 
-							_str_appent_attach += "<li><a href=\"" + field_attach.attach_url + "\" target=\"_blank\">{$lang.href.show}: " + field_attach.attach_name + "</a></li>" +
-						"</ul>" +
-					"</div>" +
-				"</div>";
+						_str_appent_attach += "<li><a href=\"" + field_attach.attach_url + "\" target=\"_blank\">{$lang.href.browseOriginal}</a></li>" +
+					"</ul>" +
+				"</div>" +
+			"</div>";
 
 			$("#attach_list").append(_str_appent_attach);
 		});

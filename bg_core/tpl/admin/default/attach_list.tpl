@@ -111,6 +111,9 @@
 										<td>
 											<ul class="list-unstyled">
 												<li><a href="{$value.attach_url}" target="_blank">{$value.attach_name}</a></li>
+												<li>
+													<abbr title="{$value.attach_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}">{$value.attach_time|date_format:$smarty.const.BG_SITE_DATE}</abbr>
+												</li>
 												{if $value.attach_size > 1024}
 													{$_num_attachSize = $value.attach_size / 1024}
 													{$_str_attachUnit = "KB"}
@@ -120,9 +123,11 @@
 												{else if $value.attach_size > 1024 * 1024 * 1024}
 													{$_num_attachSize = $value.attach_size / 1024 / 1024 / 1024}
 													{$_str_attachUnit = "GB"}
+												{else}
+													{$_num_attachSize = $value.attach_size}
+													{$_str_attachUnit = "Byte"}
 												{/if}
 												<li>{$_num_attachSize|string_format:"%.2f"} {$_str_attachUnit}</li>
-												<li>{$value.attach_time|date_format:$smarty.const.BG_SITE_DATE}</li>
 												<li>
 													{if $value.attach_type == "image"}
 														<div class="dropdown">

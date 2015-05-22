@@ -124,7 +124,7 @@
 
 							<div class="form-group">
 								<select name="call_spec_id" class="form-control">
-									<option value="">{$lang.option.noSpec}</option>
+									<option value="">{$lang.option.all}</option>
 									{if $tplData.specRow.spec_name}
 										<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
 									{/if}

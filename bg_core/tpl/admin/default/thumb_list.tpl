@@ -79,7 +79,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<form name="thumb_list" id="thumb_list">
+			<form name="thumb_list" id="thumb_list" class="form-inline">
 				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 				<div class="panel panel-default">
@@ -125,8 +125,19 @@
 								<tr>
 									<td colspan="2"><span id="msg_thumb_id"></span></td>
 									<td colspan="3">
-										<input type="hidden" name="act_post" id="act_post" value="del">
-										<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
+										<div class="form-group">
+											<select name="act_post" id="act_post" class="validate form-control input-sm">
+												<option value="">{$lang.option.batch}</option>
+												<option value="cache">{$lang.option.cache}</option>
+												<option value="del">{$lang.option.del}</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
+										</div>
+										<div class="form-group">
+											<span id="msg_act_post"></span>
+										</div>
 									</td>
 								</tr>
 							</tfoot>
@@ -151,6 +162,11 @@
 			length: { min: 1, max: 0 },
 			validate: { type: "checkbox" },
 			msg: { id: "msg_thumb_id", too_few: "{$alert.x030202}" }
+		},
+		act_post: {
+			length: { min: 1, max: 0 },
+			validate: { type: "select" },
+			msg: { id: "msg_act_post", too_few: "{$alert.x030203}" }
 		}
 	};
 

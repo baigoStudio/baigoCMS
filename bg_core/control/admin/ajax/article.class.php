@@ -52,16 +52,16 @@ class AJAX_ARTICLE {
 
 		if (is_array($this->adminLogged["admin_allow_cate"])) {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
-				if ($_value["add"] == 1) {
+				if (isset($_value["add"])) {
 					$this->allowCateIds["add"][] = $_key;
 				}
-				if ($_value["edit"] == 1) {
+				if (isset($_value["edit"])) {
 					$this->allowCateIds["edit"][] = $_key;
 				}
-				if ($_value["del"] == 1) {
+				if (isset($_value["del"])) {
 					$this->allowCateIds["del"][] = $_key;
 				}
-				if ($_value["approve"] == 1) {
+				if (isset($_value["approve"])) {
 					$this->allowCateIds["approve"][] = $_key;
 				}
 			}
@@ -99,26 +99,26 @@ class AJAX_ARTICLE {
 
 		if ($_arr_articleSubmit["article_id"] > 0) {
 			//判断权限
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"] != 1 && $this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["edit"]) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"]) && isset($this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["edit"])) {
 				$this->obj_ajax->halt_alert("x120303");
 			}
 			foreach ($_arr_articleSubmit["cate_ids"] as $_value) {
-				if (in_array($_value, $this->allowCateIds["edit"]) || $this->adminLogged["groupRow"]["group_allow"]["article"]["edit"] == 1) {
+				if (($this->allowCateIds["edit"] && in_array($_value, $this->allowCateIds["edit"])) || isset($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"])) {
 					$_arr_cateIds[] = $_value;
 				}
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["add"] != 1 && $this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["add"]) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["add"]) && isset($this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["add"])) {
 				$this->obj_ajax->halt_alert("x120302");
 			}
 			foreach ($_arr_articleSubmit["cate_ids"] as $_value) {
-				if (in_array($_value, $this->allowCateIds["add"]) || $this->adminLogged["groupRow"]["group_allow"]["article"]["add"] == 1) {
+				if (($this->allowCateIds["add"] && in_array($_value, $this->allowCateIds["add"])) || isset($this->adminLogged["groupRow"]["group_allow"]["article"]["add"])) {
 					$_arr_cateIds[] = $_value;
 				}
 			}
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1 || $this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["approve"] == 1) {
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"]) || isset($this->adminLogged["admin_allow_cate"][$_arr_articleSubmit["article_cate_id"]]["approve"])) {
 			$_str_status = $_arr_articleSubmit["article_status"];
 		} else {
 			$_str_status = "wait";
@@ -126,35 +126,43 @@ class AJAX_ARTICLE {
 
 		//print_r($_arr_articleSubmit);
 
-		$_arr_articleRow = $this->mdl_article->mdl_submit($this->adminLogged["admin_id"]);
+		$_arr_articleRow = $this->mdl_article->mdl_submit($this->adminLogged["admin_id"], $_str_status);
 
-		$_arr_tags = explode(",", $_arr_articleSubmit["article_tags"]);
+		$_arr_tags    = explode(",", $_arr_articleSubmit["article_tags"]);
+		$_arr_tagIds  = array();
+
 		foreach ($_arr_tags as $_value) {
 			$_value = trim($_value);
-			$_arr_tagRow = $this->mdl_tag->mdl_read($_value, "tag_name");
-			if ($_arr_tagRow["str_alert"] == "y130102") {
-				$_arr_tagIds[]      = $_arr_tagRow["tag_id"];
-				//统计 tag 文章数
-				$_num_articleCount  = $this->mdl_tagBelong->mdl_count($_arr_tagRow["tag_id"]);
-				$this->mdl_tag->mdl_countDo($_arr_tagRow["tag_id"], $_num_articleCount); //更新
-			} else {
-				$_arr_tagRow    = $this->mdl_tag->mdl_submit($_value, "show");
-				$_arr_tagIds[]  = $_arr_tagRow["tag_id"];
+			if ($_value) {
+				$_arr_tagRow = $this->mdl_tag->mdl_read($_value, "tag_name");
+				if ($_arr_tagRow["str_alert"] == "y130102") {
+					$_arr_tagIds[]      = $_arr_tagRow["tag_id"];
+					//统计 tag 文章数
+					$_num_articleCount  = $this->mdl_tagBelong->mdl_count($_arr_tagRow["tag_id"]);
+					$this->mdl_tag->mdl_countDo($_arr_tagRow["tag_id"], $_num_articleCount); //更新
+				} else {
+					$_arr_tagRow    = $this->mdl_tag->mdl_submit($_value, "show");
+					$_arr_tagIds[]  = $_arr_tagRow["tag_id"];
+				}
 			}
 		}
 
 		//print_r($_arr_tagIds);
 
 		if ($_arr_articleSubmit["article_id"] > 0) {
-			$_arr_cateBelongDel  = $this->mdl_cateBelong->mdl_del(0, $_arr_articleRow["article_id"], false, false, $_arr_cateIds);
-			$_arr_tagBelongDel   = $this->mdl_tagBelong->mdl_del(0, $_arr_articleRow["article_id"], false, false, $_arr_tagIds);
-			$_belong             = $this->belong_submit($_arr_articleSubmit["article_id"], $_arr_cateIds, $_arr_tagIds);
+			$_arr_cateBelongDel    = $this->mdl_cateBelong->mdl_del(0, $_arr_articleRow["article_id"], false, false, $_arr_cateIds);
+			if ($_arr_tagIds) {
+				$_arr_tagBelongDel = $this->mdl_tagBelong->mdl_del(0, $_arr_articleRow["article_id"], false, false, $_arr_tagIds);
+			} else {
+				$_arr_tagBelongDel = $this->mdl_tagBelong->mdl_del(0, $_arr_articleRow["article_id"]);
+			}
+			$_belong               = $this->belong_submit($_arr_articleSubmit["article_id"], $_arr_cateIds, $_arr_tagIds);
 		} else {
-			$_belong = $this->belong_submit($_arr_articleRow["article_id"], $_arr_cateIds, $_arr_tagIds);
+			$_belong               = $this->belong_submit($_arr_articleRow["article_id"], $_arr_cateIds, $_arr_tagIds);
 		}
 
 		if ($_arr_articleRow["str_alert"] == "x120103") {
-			if ($_belong || $_arr_cateBelongDel["str_alert"] == "y150104" || $_arr_tagBelongDel["str_alert"] == "y160104") {
+			if (isset($_belong) || (isset($_arr_cateBelongDel["str_alert"]) && $_arr_cateBelongDel["str_alert"] == "y150104") || (isset($_arr_tagBelongDel["str_alert"]) && $_arr_tagBelongDel["str_alert"] == "y160104")) {
 				$_arr_articleRow["str_alert"] = "y120103";
 			}
 		}
@@ -190,11 +198,11 @@ class AJAX_ARTICLE {
 			break;
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1) {
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"])) {
 			$_arr_cateId = false;
 		} else {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
-				if ($_value["approve"] == 1) {
+				if (isset($_value["approve"])) {
 					$_arr_cateId[] = $_key;
 				}
 			}
@@ -223,12 +231,12 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert("x120208");
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1) {
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"])) {
 			$_arr_cateId     = false;
 			$_num_adminId    = 0;
 		} else {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
-				if ($_value["approve"] == 1) {
+				if (isset($_value["approve"])) {
 					$_arr_cateId[] = $_key;
 				}
 			}
@@ -258,12 +266,12 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert("x120208");
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"] == 1) {
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"])) {
 			$_arr_cateId     = false;
 			$_num_adminId    = 0;
 		} else {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
-				if ($_value["edit"] == 1) {
+				if (isset($_value["edit"])) {
 					$_arr_cateId[] = $_key;
 				}
 			}
@@ -288,12 +296,12 @@ class AJAX_ARTICLE {
 			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["del"] == 1) {
-			$_arr_cateId = false;
-			$_num_adminId = 0;
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["del"])) {
+			$_arr_cateId     = false;
+			$_num_adminId    = 0;
 		} else {
 			foreach ($this->adminLogged["admin_allow_cate"] as $_key=>$_value) {
-				if ($_value["del"] == 1) {
+				if (isset($_value["del"])) {
 					$_arr_cateId[] = $_key;
 				}
 			}
@@ -335,18 +343,22 @@ class AJAX_ARTICLE {
 		$_is_submit = false;
 		if (is_array($_arr_cateIds)) {
 			foreach ($_arr_cateIds as $_value) {
-				$_arr_cateBelongRow = $this->mdl_cateBelong->mdl_submit($_num_articleId, $_value);
-				if (!$_is_submit && $_arr_cateBelongRow["str_alert"] == "y150101") {
-					$_is_submit = true;
+				if ($_value) {
+					$_arr_cateBelongRow = $this->mdl_cateBelong->mdl_submit($_num_articleId, $_value);
+					if (!$_is_submit && $_arr_cateBelongRow["str_alert"] == "y150101") {
+						$_is_submit = true;
+					}
 				}
 			}
 		}
 
 		if (is_array($_arr_tagIds)) {
 			foreach ($_arr_tagIds as $_value) {
-				$_arr_tagBelongRow = $this->mdl_tagBelong->mdl_submit($_num_articleId, $_value);
-				if (!$_is_submit && $_arr_tagBelongRow["str_alert"] == "y160101") {
-					$_is_submit = true;
+				if ($_value) {
+					$_arr_tagBelongRow = $this->mdl_tagBelong->mdl_submit($_num_articleId, $_value);
+					if (!$_is_submit && $_arr_tagBelongRow["str_alert"] == "y160101") {
+						$_is_submit = true;
+					}
 				}
 			}
 		}

@@ -167,7 +167,7 @@
 							{if $value.article_box == "normal"}
 								{if $value.article_time_pub > $smarty.now}
 									{$_css_status = "info"}
-									{$_str_status = "{$lang.label.deadline} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+									{$_str_status = "{$lang.label.deadline} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
 								{else}
 									{if $value.article_top == 1}
 										{$_css_status = "primary"}
@@ -240,7 +240,9 @@
 										<li>
 											<span class="label label-{$_css_status}">{$_str_status}</span>
 										</li>
-										<li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
+										<li>
+											<abbr title="{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}">{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</abbr>
+										</li>
 									</ul>
 								</td>
 							</tr>

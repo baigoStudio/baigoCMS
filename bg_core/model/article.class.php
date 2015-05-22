@@ -13,9 +13,11 @@ if(!defined("IN_BAIGO")) {
 class MODEL_ARTICLE {
 
 	private $obj_db;
+	private $is_magic;
 
 	function __construct() { //构造函数
-		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
+		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
+		$this->is_magic   = get_magic_quotes_gpc();
 	}
 
 	function mdl_create_table() {
@@ -30,6 +32,7 @@ class MODEL_ARTICLE {
 			"article_box"        => "enum('normal','draft','recycle') NOT NULL COMMENT '盒子'",
 			"article_mark_id"    => "smallint NOT NULL COMMENT '标记 ID'",
 			"article_spec_id"    => "mediumint NOT NULL COMMENT '专题ID'",
+			"article_attach_id"  => "int NOT NULL COMMENT '附件ID'",
 			"article_link"       => "varchar(900) NOT NULL COMMENT '链接'",
 			"article_time"       => "int NOT NULL COMMENT '时间'",
 			"article_time_pub"   => "int NOT NULL COMMENT '定时发布'",
@@ -44,7 +47,6 @@ class MODEL_ARTICLE {
 			"article_time_month" => "int NOT NULL COMMENT '月点击重置时间'",
 			"article_time_year"  => "int NOT NULL COMMENT '年点击重置时间'",
 			"article_top"        => "tinyint NOT NULL COMMENT '置顶'",
-			"article_attach_id"  => "int NOT NULL COMMENT '附件ID'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article", $_arr_articleCreat, "article_id", "文章");
@@ -56,6 +58,7 @@ class MODEL_ARTICLE {
 		$_arr_articleCreat = array(
 			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"article_content"    => "text NOT NULL COMMENT '内容'",
+			"article_custom"     => "text NOT NULL COMMENT '自定义字段'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article_content", $_arr_articleCreat, "article_id", "文章");
@@ -85,6 +88,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_top",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_top", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -104,6 +108,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_hits_day",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_day", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -123,6 +128,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_hits_week",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_week", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -142,6 +148,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_hits_month",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_month", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -161,6 +168,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_hits_year",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_year", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -180,6 +188,7 @@ class MODEL_ARTICLE {
 		$_arr_articleIndex = array(
 			"article_hits_all",
 			"article_time_pub",
+			"article_id",
 		);
 
 		$_num_mysql = $this->obj_db->create_index("order_all", BG_DB_TABLE . "article", $_arr_articleIndex, "BTREE", $is_exists);
@@ -224,15 +233,24 @@ class MODEL_ARTICLE {
 		return $_arr_col;
 	}
 
+	function mdl_column_content() {
+		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "article_content");
 
-	function mdl_submit($num_adminId = 0) {
+		foreach ($_arr_colRows as $_key=>$_value) {
+			$_arr_col[] = $_value["Field"];
+		}
+
+		return $_arr_col;
+	}
+
+	function mdl_submit($num_adminId = 0, $str_status) {
 
 		$_arr_articleData = array(
 			"article_title"      => $this->articleSubmit["article_title"],
 			"article_excerpt"    => $this->articleSubmit["article_excerpt"],
 			"article_cate_id"    => $this->articleSubmit["article_cate_id"],
 			"article_mark_id"    => $this->articleSubmit["article_mark_id"],
-			"article_status"     => $this->articleSubmit["article_status"],
+			"article_status"     => $str_status,
 			"article_box"        => $this->articleSubmit["article_box"],
 			"article_link"       => $this->articleSubmit["article_link"],
 			"article_time_pub"   => $this->articleSubmit["article_time_pub"],
@@ -244,6 +262,7 @@ class MODEL_ARTICLE {
 
 		if ($this->articleSubmit["article_id"] == 0) {
 			$_arr_articleData["article_admin_id"]    = $num_adminId;
+			//$_arr_articleData["article_top"]         = 1;
 			$_arr_articleData["article_time"]        = time();
 
 			$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article", $_arr_articleData); //插入数据
@@ -252,6 +271,7 @@ class MODEL_ARTICLE {
 				$_arr_contentData = array(
 					"article_id"       => $_num_articleId,
 					"article_content"  => $this->articleSubmit["article_content"],
+					"article_custom"   => $this->articleSubmit["article_custom"],
 				);
 				$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article_content", $_arr_contentData); //插入数据
 				$_str_alert     = "y120101";
@@ -272,6 +292,7 @@ class MODEL_ARTICLE {
 
 			$_arr_contentData    = array(
 				"article_content"  => $this->articleSubmit["article_content"],
+				"article_custom"   => $this->articleSubmit["article_custom"],
 			);
 			$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article_content", $_arr_contentData, "article_id=" . $_num_articleId); //更新数据
 
@@ -357,7 +378,7 @@ class MODEL_ARTICLE {
 			$_str_sqlWhere .= " AND article_admin_id=" . $num_adminId;
 		}
 
-		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere . " ORDER BY article_top DESC, article_time_pub DESC", $num_no, $num_except);
+		$_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_top DESC, article_time_pub DESC", $num_no, $num_except);
 
 		return $_arr_articleRows;
 	}
@@ -396,7 +417,7 @@ class MODEL_ARTICLE {
 			"article_spec_id",
 		);
 
-		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
+		$_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
 
 		if (isset($_arr_articleRows[0])) {
 			$_arr_articleRow = $_arr_articleRows[0];
@@ -408,9 +429,10 @@ class MODEL_ARTICLE {
 
 		$_arr_articleSelect = array(
 			"article_content",
+			"article_custom",
 		);
 
-		$_arr_contentRows = $this->obj_db->select_array(BG_DB_TABLE . "article_content", $_arr_articleSelect, "article_id=" . $num_articleId, 1, 0); //读取数据
+		$_arr_contentRows = $this->obj_db->select(BG_DB_TABLE . "article_content", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
 
 		if (isset($_arr_contentRows[0])) {
 			$_arr_contentRow = $_arr_contentRows[0];
@@ -420,7 +442,15 @@ class MODEL_ARTICLE {
 			);
 		}
 
-		$_arr_articleRow["article_content"]   = $_arr_contentRow["article_content"];
+		//if (!$this->is_magic) {
+			$_arr_articleRow["article_content"]   = stripslashes($_arr_contentRow["article_content"]);
+		//} else {
+			//$_arr_articleRow["article_content"]   = $_arr_contentRow["article_content"];
+		//}
+
+		$_arr_articleRow["article_custom"]    = fn_jsonDecode($_arr_contentRow["article_custom"], "decode");
+		$_arr_articleRow["article_excerpt"]   = html_entity_decode($_arr_articleRow["article_excerpt"]);
+
 		$_arr_articleRow["str_alert"]         = "y120102";
 
 		return $_arr_articleRow;
@@ -747,7 +777,7 @@ class MODEL_ARTICLE {
 
 		$_str_sqlWhere = "article_time > 0";
 
-		$_arr_articleRows = $this->obj_db->select_array(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere . " ORDER BY article_time ASC", 100, 0, false, true);
+		$_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_time ASC", 100, 0, false, true);
 
 		return $_arr_articleRows;
 	}
@@ -811,20 +841,6 @@ class MODEL_ARTICLE {
 
 			case "ok":
 				$this->articleSubmit["article_link"] = $_arr_articleLink["str"];
-			break;
-		}
-
-		$_arr_articleExcerpt = validateStr(fn_post("article_excerpt"), 0, 900);
-		switch ($_arr_articleExcerpt["status"]) {
-			case "too_long":
-				return array(
-					"str_alert" => "x120205",
-				);
-				exit;
-			break;
-
-			case "ok":
-				$this->articleSubmit["article_excerpt"] = $_arr_articleExcerpt["str"];
 			break;
 		}
 
@@ -904,12 +920,47 @@ class MODEL_ARTICLE {
 		$this->articleSubmit["cate_ids"][]        = $this->articleSubmit["article_cate_id"];
 		$this->articleSubmit["cate_ids"]          = array_unique($this->articleSubmit["cate_ids"]);
 		$this->articleSubmit["article_content"]   = fn_post("article_content");
+		$this->articleSubmit["article_attach_id"] = fn_getAttach($this->articleSubmit["article_content"]);
 
-		if (!$this->articleSubmit["article_excerpt"] || $this->articleSubmit["article_excerpt"] == "<br>") {
-			$this->articleSubmit["article_excerpt"] = fn_substr_utf8($this->articleSubmit["article_content"], 0, 300);
+		$_str_excerptType = fn_getSafe(fn_post("article_excerpt_type"), "txt", "auto");
+
+		switch ($_str_excerptType) {
+			case "auto":
+				$this->articleSubmit["article_excerpt"] = fn_substr_utf8($this->articleSubmit["article_content"], 0, BG_SITE_EXCERPT);
+			break;
+
+			case "txt":
+				$_str_articleExcerpt = strip_tags($this->articleSubmit["article_content"]);
+				$this->articleSubmit["article_excerpt"] = fn_substr_utf8($_str_articleExcerpt, 0, BG_SITE_EXCERPT);
+			break;
+
+			case "none":
+				$this->articleSubmit["article_excerpt"] = "";
+			break;
+
+			case "manual":
+				$_arr_articleExcerpt = validateStr(fn_post("article_excerpt"), 0, 900);
+				switch ($_arr_articleExcerpt["status"]) {
+					case "too_long":
+						return array(
+							"str_alert" => "x120205",
+						);
+						exit;
+					break;
+
+					case "ok":
+						$this->articleSubmit["article_excerpt"] = $_arr_articleExcerpt["str"];
+					break;
+				}
+			break;
 		}
 
-		$this->articleSubmit["article_attach_id"] = fn_getAttach($this->articleSubmit["article_content"]);
+		if (!$this->is_magic) {
+			$this->articleSubmit["article_content"]   = addslashes($this->articleSubmit["article_content"]);
+		}
+
+		$_arr_articleCuctom    = fn_post("article_custom");
+		$this->articleSubmit["article_custom"]    = fn_jsonEncode($_arr_articleCuctom, "encode");
 		$this->articleSubmit["article_mark_id"]   = fn_getSafe(fn_post("article_mark_id"), "int", 0);
 		$this->articleSubmit["article_spec_id"]   = fn_getSafe(fn_post("article_spec_id"), "int", 0);
 		$this->articleSubmit["article_tags"]      = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");

@@ -26,7 +26,7 @@ class MODEL_ATTACH {
 	function mdl_create_table() {
 		$_arr_attachCreat = array(
 			"attach_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"attach_ext"         => "char(4) NOT NULL COMMENT '扩展名'",
+			"attach_ext"         => "varchar(5) NOT NULL COMMENT '扩展名'",
 			"attach_time"        => "int NOT NULL COMMENT '时间'",
 			"attach_size"        => "mediumint NOT NULL COMMENT '大小'",
 			"attach_name"        => "varchar(1000) NOT NULL COMMENT '原始文件名'",
@@ -122,7 +122,7 @@ class MODEL_ATTACH {
 			$_str_sqlWhere .= " AND attach_admin_id=" . $num_adminId;
 		}
 
-		$_arr_attachRows = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere . " ORDER BY attach_id DESC", 1000, 0);
+		$_arr_attachRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "attach_id DESC", 1000, 0);
 
 		return $_arr_attachRows;
 	}
@@ -144,7 +144,7 @@ class MODEL_ATTACH {
 			"attach_size",
 		);
 
-		$_arr_attachRows  = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, "attach_id=" . $num_attachId, 1, 0); //检查本地表是否存在记录
+		$_arr_attachRows  = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, "attach_id=" . $num_attachId, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_attachRows[0])) {
 			$_arr_attachRow   = $_arr_attachRows[0];
@@ -173,7 +173,7 @@ class MODEL_ATTACH {
 	 * @param int $num_adminId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_year = "", $str_month = "", $str_ext = "", $num_adminId = 0) {
+	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $str_ext = "", $num_adminId = 0) {
 		$_arr_attachSelect = array(
 			"attach_id",
 			"attach_name",
@@ -184,6 +184,10 @@ class MODEL_ATTACH {
 		);
 
 		$_str_sqlWhere = "1=1";
+
+		if ($str_key) {
+			$_str_sqlWhere .= " AND attach_name LIKE '%" . $str_key . "%'";
+		}
 
 		if ($str_year) {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%Y')='" . $str_year . "'";
@@ -201,7 +205,7 @@ class MODEL_ATTACH {
 			$_str_sqlWhere .= " AND attach_admin_id=" . $num_adminId;
 		}
 
-		$_arr_attachRows = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere . " ORDER BY attach_id DESC", $num_no, $num_except);
+		$_arr_attachRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "attach_id DESC", $num_no, $num_except);
 
 		return $_arr_attachRows;
 	}
@@ -216,8 +220,8 @@ class MODEL_ATTACH {
 	 * @return void
 	 */
 	function mdl_del($num_adminId = 0) {
-
 		$_str_attachId = implode(",", $this->attachIds["attach_ids"]);
+
 		$_str_sqlWhere = "attach_id IN (" . $_str_attachId . ")";
 
 		if ($num_adminId > 0) {
@@ -249,8 +253,12 @@ class MODEL_ATTACH {
 	 * @param int $num_adminId (default: 0)
 	 * @return void
 	 */
-	function mdl_count($str_year = "", $str_month = "", $str_ext = "", $num_adminId = 0) {
+	function mdl_count($str_key = "", $str_year = "", $str_month = "", $str_ext = "", $num_adminId = 0) {
 		$_str_sqlWhere = "1=1";
+
+		if ($str_key) {
+			$_str_sqlWhere .= " AND attach_name LIKE '%" . $str_key . "%'";
+		}
 
 		if ($str_year) {
 			$_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%Y')='" . $str_year . "'";
@@ -286,9 +294,8 @@ class MODEL_ATTACH {
 			"DISTINCT attach_ext",
 		);
 
-		$_str_sqlWhere = "LENGTH(attach_ext) > 0";
-
-		$_arr_attachRows = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, 100, 0, false, true);
+		$_str_sqlWhere    = "LENGTH(attach_ext) > 0";
+		$_arr_attachRows  = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "", 100, 0, false, true);
 
 		return $_arr_attachRows;
 	}
@@ -308,7 +315,7 @@ class MODEL_ATTACH {
 
 		$_str_sqlWhere = "attach_time > 0";
 
-		$_arr_yearRows = $this->obj_db->select_array(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere . " ORDER BY attach_time ASC", 100, 0, false, true);
+		$_arr_yearRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "attach_time ASC", 100, 0, false, true);
 
 		return $_arr_yearRows;
 	}

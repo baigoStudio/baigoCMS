@@ -46,7 +46,7 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
 			$this->obj_ajax->halt_alert("x080302");
 		}
 
@@ -69,7 +69,7 @@ class AJAX_MIME {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
 			$this->obj_ajax->halt_alert("x080304");
 		}
 

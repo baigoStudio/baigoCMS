@@ -58,8 +58,12 @@ class AJAX_ADMIN {
 		}
 
 		if ($_arr_adminSubmit["admin_id"] > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"])) {
 				$this->obj_ajax->halt_alert("x020303");
+			}
+
+			if ($_arr_adminSubmit["admin_id"] == $this->adminLogged["admin_id"]) {
+				$this->obj_ajax->halt_alert("x020306");
 			}
 
 			$_arr_ssoGet = $this->obj_sso->sso_get($_arr_adminSubmit["admin_id"]);
@@ -71,7 +75,7 @@ class AJAX_ADMIN {
 			$_arr_ssoEdit    = $this->obj_sso->sso_edit($_arr_adminSubmit["admin_name"], "", $_str_adminPass, $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
 			$_num_adminId    = $_arr_adminSubmit["admin_id"];
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 				$this->obj_ajax->halt_alert("x020302");
 			}
 
@@ -117,7 +121,7 @@ class AJAX_ADMIN {
 			$this->obj_ajax->halt_alert($_arr_adminSubmit["str_alert"]);
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 			$this->obj_ajax->halt_alert("x020302");
 		}
 
@@ -144,11 +148,16 @@ class AJAX_ADMIN {
 	 * @return void
 	 */
 	function ajax_toGroup() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"])) {
 			$this->obj_ajax->halt_alert("x020305");
 		}
 
 		$_num_adminId = fn_getSafe(fn_post("admin_id"), "int", 0);
+
+		if ($_num_adminId == $this->adminLogged["admin_id"]) {
+			$this->obj_ajax->halt_alert("x020306");
+		}
+
 		$_num_groupId = fn_getSafe(fn_post("group_id"), "int", 0);
 
 		//检验用户是否存在
@@ -179,7 +188,7 @@ class AJAX_ADMIN {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["del"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["del"])) {
 			$this->obj_ajax->halt_alert("x020304");
 		}
 
@@ -201,7 +210,7 @@ class AJAX_ADMIN {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"])) {
 			$this->obj_ajax->halt_alert("x020303");
 		}
 

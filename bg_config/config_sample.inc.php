@@ -25,6 +25,7 @@ define("BG_DEFAULT_TOKEN", 604800); //默认口令过期时间，秒
 
 /*-------------------------目录名称-------------------------*/
 define("BG_NAME_CONFIG", "bg_config"); //配置文件
+define("BG_NAME_CACHE", "bg_cache"); //缓存 v1.1.2
 
 define("BG_NAME_HTML", "bg_html"); //生成文件目录
 define("BG_NAME_INCLUDE", "include"); //静态模式时引用存放目录
@@ -68,6 +69,7 @@ define("BG_NAME_SMARTY", "smarty"); //Smarty 目录
 /*-------------------------路径-------------------------*/
 define("BG_PATH_ROOT", str_replace("\\", "/", substr(dirname(__FILE__), 0, strrpos(dirname(__FILE__), BG_NAME_CONFIG)))); //根目录
 define("BG_PATH_CONFIG", BG_PATH_ROOT . BG_NAME_CONFIG . "/"); //配置文件目录
+define("BG_PATH_CACHE", BG_PATH_ROOT . BG_NAME_CACHE . "/"); //缓存文件目录 v1.1.2
 
 define("BG_PATH_HTML", BG_PATH_ROOT . BG_NAME_HTML . "/"); //静态模式时 HTML 存放目录
 define("BG_PATH_INCLUDE", BG_PATH_HTML . BG_NAME_INCLUDE . "/"); //静态模式时引用存放目录
@@ -136,6 +138,7 @@ define("BG_URL_JS", BG_URL_STATIC . BG_NAME_JS . "/"); //JS
 define("BG_MODULE_GEN", false); //生成静态页面模块 true 已安装
 define("BG_MODULE_FTP", false); //FTP 分发模块 true 已安装
 
+
 /*-------------------------载入其他配置-------------------------*/
 include_once(BG_PATH_INC . "version.inc.php"); //版本信息
 include_once(BG_PATH_CONFIG . "config_db.inc.php"); //数据库
@@ -144,4 +147,4 @@ include_once(BG_PATH_CONFIG . "opt_sso.inc.php"); //SSO
 include_once(BG_PATH_CONFIG . "opt_upload.inc.php"); //上传
 include_once(BG_PATH_CONFIG . "opt_visit.inc.php"); //URL
 
-$GLOBALS["img_ext"] = array("jpg", "jpe", "jpeg", "gif", "png", "bmp");
+$GLOBALS["img_ext"] = array("jpg", "pjpg", "jpe", "pjpe", "jpeg", "pjpeg", "gif", "png", "bmp");

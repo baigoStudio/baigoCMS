@@ -3,7 +3,7 @@ define("BG_SITE_NAME", "baigo Studio");
 define("BG_SITE_DOMAIN", "www.baigo.net");
 define("BG_SITE_URL", "http://www.baigo.net");
 define("BG_SITE_PERPAGE", 10);
-define("BG_SITE_TIMEZONE", "Etc/GMT+8");
+define("BG_SITE_TIMEZONE", "Asia/Shanghai");
 define("BG_SITE_DATE", "Y-m-d");
 define("BG_SITE_DATESHORT", "m-d");
 define("BG_SITE_TIME", "H:i:s");

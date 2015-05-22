@@ -18,13 +18,13 @@
 				</p>
 			</div>
 
-			{if $tplData.adminLogged.admin_allow_profile.info == "1"}
+			{if isset($tplData.adminLogged.admin_allow_profile.info)}
 				<div class="form-group">
 					<span class="label label-danger">{$lang.label.profileInfo}</span>
 				</div>
 			{/if}
 
-			{if $tplData.adminLogged.admin_allow_profile.pass == "1"}
+			{if isset($tplData.adminLogged.admin_allow_profile.pass)}
 				<div class="form-group">
 					<span class="label label-danger">{$lang.label.profilePass}</span>
 				</div>

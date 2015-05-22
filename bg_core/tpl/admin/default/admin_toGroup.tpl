@@ -17,7 +17,7 @@
 
 		<div class="form-group">
 			<label class="control-label">{$lang.label.username}</label>
-			<p class="form-control-static">{$tplData.adminRow.userRow.user_name}</p>
+			<p class="form-control-static">{$tplData.ssoRow.user_name}</p>
 		</div>
 
 		<div class="form-group">
@@ -56,8 +56,8 @@ var opts_submit_form = {
 };
 
 $(document).ready(function(){
-	var obj_validate_form = $("#admin_form").baigoValidator(opts_validator_form);
-	var obj_submit_form = $("#admin_form").baigoSubmit(opts_submit_form);
+	var obj_validate_form  = $("#admin_form").baigoValidator(opts_validator_form);
+	var obj_submit_form    = $("#admin_form").baigoSubmit(opts_submit_form);
 	$("#go_save").click(function(){
 		if (obj_validate_form.validateSubmit()) {
 			obj_submit_form.formSubmit();

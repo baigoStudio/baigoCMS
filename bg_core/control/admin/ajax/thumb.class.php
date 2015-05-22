@@ -46,7 +46,7 @@ class AJAX_THUMB {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
 			$this->obj_ajax->halt_alert("x090302");
 		}
 
@@ -62,6 +62,13 @@ class AJAX_THUMB {
 	}
 
 
+	function ajax_cache() {
+		$_arr_cache = $this->mdl_thumb->mdl_cache();
+
+		$this->obj_ajax->halt_alert($_arr_cache["str_alert"]);
+	}
+
+
 	/**
 	 * ajax_del function.
 	 *
@@ -69,7 +76,7 @@ class AJAX_THUMB {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
 			$this->obj_ajax->halt_alert("x090304");
 		}
 

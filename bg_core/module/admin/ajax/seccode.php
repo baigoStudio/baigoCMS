@@ -16,11 +16,10 @@ if (isset($_GET["ssid"])) {
 session_start(); //开启session
 $GLOBALS["ssid"] = session_id();
 
+header("Content-type: application/json");
 include_once(BG_PATH_INC . "common_global.inc.php"); //载入通用
-include_once(BG_PATH_CLASS . "base.class.php"); //载入模板类
 include_once(BG_PATH_CONTROL_ADMIN . "ajax/seccode.class.php"); //载入登录控制器
 
-$GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化模板对象
 $ajax_seccode           = new AJAX_SECCODE();
 
 switch ($GLOBALS["act_get"]) {

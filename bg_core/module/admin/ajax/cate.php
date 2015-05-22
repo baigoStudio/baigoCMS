@@ -23,6 +23,10 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_cate->ajax_submit();
 	break;
 
+	case "cache":
+		$ajax_cate->ajax_cache();
+	break;
+
 	case "del":
 		$ajax_cate->ajax_del();
 	break;

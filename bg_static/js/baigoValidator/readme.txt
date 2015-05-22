@@ -1,4 +1,4 @@
-v0.1.0 jQuery baigoValidator plugin 表单验证插件
+v1.0 jQuery baigoValidator plugin 表单验证插件
 (c) 2015 baigo studio - http://www.baigo.net/jQueryPlugins/baigoValidator/
 License: http://www.opensource.org/licenses/mit-license.php
 
@@ -134,8 +134,8 @@ License: http://www.opensource.org/licenses/mit-license.php
 			str：字符串
 			digit：数字
 		attach：附加查询串
-		attach_id: 附加表单 ID
-		attach_key: 附加查询关键词，既传给 AJAX 程序的内容，其值为附加表单值
+		attach_selectors: 附加表单选择器（多个）
+		attach_keys: 附加查询关键词（多个），既传给 AJAX 程序的内容，其值为 attach_selectors 表单值，顺序必须与 attach_selectors 对应，插件会将两个参数转换为 attach_keys[0]=attach_selectors[0]值&attach_keys[1]=attach_selectors[1]值 的形式附加至 AJAX 查询串。
 
 4 ajax 返回内容必须为 json，如
 	{"re": "ok" } 成功

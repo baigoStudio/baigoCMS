@@ -33,7 +33,11 @@ class CONTROL_INDEX {
 	 * @return void
 	 */
 	function ctl_index() {
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
+		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+			$this->mdl_cate->mdl_cache();
+		}
+
+		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
 
 		$_arr_tplData = array(
 			"cateRows" => $_arr_cateRows,

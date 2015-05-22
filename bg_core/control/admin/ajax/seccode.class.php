@@ -27,7 +27,7 @@ class AJAX_SECCODE {
 	function ajax_check() {
 		$seccode = fn_getSafe(fn_get("seccode"), "txt", "");
 
-		if (strtolower($seccode) == fn_session("seccode_" . BG_SITE_SSIN)) {
+		if (strtolower($seccode) == fn_session("seccode")) {
 			$_str_alert = "ok";
 		} else {
 			$_str_alert = $this->alert["x030101"];

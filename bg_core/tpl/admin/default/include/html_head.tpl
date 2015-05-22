@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{$config.lang}">
+<html lang="{$config.lang|truncate:2:''}">
 <head>
 
 	<meta charset="utf-8">
@@ -19,7 +19,7 @@
 
 	{if isset($cfg.upload)}
 		<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-		<link rel="stylesheet" href="{$smarty.const.BG_URL_JS}jQuery-File-Upload/jquery.fileupload.css" type="text/css" rel="stylesheet">
+		<link href="{$smarty.const.BG_URL_JS}jQuery-File-Upload/jquery.fileupload.css" type="text/css" rel="stylesheet">
 	{/if}
 
 	{if isset($cfg.datepicker)}
@@ -34,21 +34,6 @@
 	{if isset($cfg.baigoSubmit)}
 		<!--表单 ajax 提交 js-->
 		<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
-	{/if}
-
-	{if isset($cfg.tinymce)}
-		<!--html 编辑器-->
-		<script src="{$smarty.const.BG_URL_JS}tinymce/tinymce.min.js" type="text/javascript"></script>
-		<script type="text/javascript">
-		tinyMCE.init({
-			selector: "textarea.tinymce",
-			language: "{$config.lang}",
-			plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
-			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image | code",
-			convert_urls: false,
-			remove_script_host: false
-		});
-		</script>
 	{/if}
 
 </head>

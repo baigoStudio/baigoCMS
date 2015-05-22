@@ -78,7 +78,7 @@
 										</label>
 										{foreach $value_m.allow as $key_s=>$value_s}
 											<label for="allow_{$key_m}_{$key_s}" class="checkbox-inline">
-												<input type="checkbox" name="group_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" {if $tplData.groupRow.group_allow[$key_m][$key_s] == 1}checked{/if} class="allow_{$key_m}" group="group_allow">
+												<input type="checkbox" name="group_allow[{$key_m}][{$key_s}]" value="1" id="allow_{$key_m}_{$key_s}" {if isset($tplData.groupRow.group_allow[$key_m][$key_s])}checked{/if} class="allow_{$key_m}" group="group_allow">
 												{$value_s}
 											</label>
 										{/foreach}

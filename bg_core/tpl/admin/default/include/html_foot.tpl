@@ -34,6 +34,21 @@
 		<script src="{$smarty.const.BG_URL_JS}baigoCheckall.js" type="text/javascript"></script>
 	{/if}
 
+	{if isset($cfg.tinymce)}
+		<!--html 编辑器-->
+		<script src="{$smarty.const.BG_URL_JS}tinymce/tinymce.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		tinyMCE.init({
+			selector: "textarea.tinymce",
+			language: "{$config.lang}",
+			plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
+			toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image | code",
+			convert_urls: false,
+			remove_script_host: false
+		});
+		</script>
+	{/if}
+
 	{if isset($cfg.datepicker)}
 		<!--日历插件-->
 		<script src="{$smarty.const.BG_URL_JS}datetimepicker/jquery.datetimepicker.js" type="text/javascript"></script>
@@ -84,7 +99,7 @@
 			});
 			setTimeout("tokenReload();", 300000);
 		}
-	
+
 		$(document).ready(function(){
 			setTimeout("tokenReload();", 300000);
 		});

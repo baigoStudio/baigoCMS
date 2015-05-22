@@ -2,7 +2,7 @@
 return "<a name=\"page\"></a>
 	<h3>分页参数</h3>
 	<p>
-		在所有需要用到分页的地方，都有该参数，如：栏目、文章、专题等，对象名一般为 <code>{pageRow}</code>。
+		在所有需要用到分页的地方，都有该参数，如：栏目、文章、专题等，对象名一般为 <code>pageRow</code>。
 	</p>
 	<div class=\"panel panel-default\">
 		<div class=\"table-responsive\">
@@ -100,6 +100,5 @@ return "<a name=\"page\"></a>
       echo(&quot;&lt;a href='page_&quot; . \$pageRow[&quot;total&quot;] . &quot;'&gt;&#26411;&#39029;&lt;/a&gt;&quot;);
     echo(&quot;&lt;/li&gt;&quot;);
   }
-echo(&quot;&lt;/ul&gt;&quot;);
-</code></pre>
+echo(&quot;&lt;/ul&gt;&quot;);</code></pre>
 	</p>";

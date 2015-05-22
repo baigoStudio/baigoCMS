@@ -39,7 +39,7 @@ class CONTROL_MIME {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
 			return array(
 				"str_alert" => "x080301",
 			);

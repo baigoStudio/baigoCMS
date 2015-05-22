@@ -50,7 +50,7 @@ class CONTROL_ATTACH {
 	 * @return void
 	 */
 	function ctl_form() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"])) {
 			return array(
 				"str_alert" => "x070302",
 			);
@@ -90,7 +90,7 @@ class CONTROL_ATTACH {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) {
 			return array(
 				"str_alert" => "x070301",
 			);
@@ -105,6 +105,7 @@ class CONTROL_ATTACH {
 		}
 
 		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_year    = fn_getSafe(fn_get("year"), "txt", "");
 		$_str_month   = fn_getSafe(fn_get("month"), "txt", "");
 		$_str_ext     = fn_getSafe(fn_get("ext"), "txt", "");
@@ -112,23 +113,24 @@ class CONTROL_ATTACH {
 
 		$_arr_search = array(
 			"act_get"    => $_act_get,
+			"key"        => $_str_key,
 			"year"       => $_str_year,
 			"month"      => $_str_month,
 			"ext"        => $_str_ext,
 			"admin_id"   => $_num_adminId,
 		); //搜索设置
 
-		$_num_attachCount = $this->mdl_attach->mdl_count($_str_year, $_str_month, $_str_ext, $_num_adminId);
+		$_num_attachCount = $this->mdl_attach->mdl_count($_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId);
 		$_arr_page        = fn_page($_num_attachCount);
 		$_str_query       = http_build_query($_arr_search);
 		$_arr_pathRows    = $this->mdl_attach->mdl_year(100);
 		$_arr_extRows     = $this->mdl_attach->mdl_ext();
-		$_arr_attachRows  = $this->mdl_attach->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_year, $_str_month, $_str_ext, $_num_adminId);
+		$_arr_attachRows  = $this->mdl_attach->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId);
 
 		foreach ($_arr_attachRows as $_key=>$_value) {
 			if (in_array($_value["attach_ext"], $this->config["img_ext"])) {
 				$_arr_attachRows[$_key]["attach_type"]  = "image";
-				$_arr_thumb = $this->mdl_attach->url_process($_value["attach_id"], $_value["attach_time"], $_value["attach_ext"], $this->attachThumb);
+				$_arr_thumb                             = $this->mdl_attach->url_process($_value["attach_id"], $_value["attach_time"], $_value["attach_ext"], $this->attachThumb);
 				//print_r($_arr_thumb);
 				$_arr_attachRows[$_key]["attach_url"]   = $_arr_thumb["attach_url"];
 				$_arr_attachRows[$_key]["attach_thumb"] = $_arr_thumb["attach_thumb"];

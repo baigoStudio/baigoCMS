@@ -56,7 +56,7 @@ class AJAX_ATTACH {
 			$this->show_err($_arr_status["str_alert"]);
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"])) {
 			$this->show_err("x070302");
 		}
 
@@ -114,7 +114,7 @@ class AJAX_ATTACH {
 			$this->obj_ajax->halt_alert($_arr_status["str_alert"]);
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"] == 1) {
+		if (isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"])) {
 			$_num_adminId = 0;
 		} else {
 			$_num_adminId = $this->adminLogged["admin_id"];
@@ -145,20 +145,21 @@ class AJAX_ATTACH {
 			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) {
 			$this->obj_ajax->halt_alert("x070301");
 		}
 
-		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
-		$_str_year        = fn_getSafe(fn_get("year"), "txt", "");
-		$_str_month       = fn_getSafe(fn_get("month"), "txt", "");
-		$_str_ext         = fn_getSafe(fn_get("ext"), "txt", "");
-		$_num_adminId     = fn_getSafe(fn_get("admin_id"), "int", 0);
+		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_year    = fn_getSafe(fn_get("year"), "txt", "");
+		$_str_month   = fn_getSafe(fn_get("month"), "txt", "");
+		$_str_ext     = fn_getSafe(fn_get("ext"), "txt", "");
+		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_num_perPage     = 8;
-		$_num_attachCount = $this->mdl_attach->mdl_count($_str_year, $_str_month, $_str_ext, $_num_adminId);
+		$_num_attachCount = $this->mdl_attach->mdl_count($_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId);
 		$_arr_page        = fn_page($_num_attachCount, $_num_perPage);
-		$_arr_attachRows  = $this->mdl_attach->mdl_list($_num_perPage, $_arr_page["except"], $_str_year, $_str_month, $_str_ext, $_num_adminId);
+		$_arr_attachRows  = $this->mdl_attach->mdl_list($_num_perPage, $_arr_page["except"], $_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId);
 
 		foreach ($_arr_attachRows as $_key=>$_value) {
 			if (in_array($_value["attach_ext"], $this->obj_upload->config["img_ext"])) {
@@ -167,7 +168,7 @@ class AJAX_ATTACH {
 				$_arr_attachRows[$_key]["attach_url"]   = $_arr_thumb["attach_url"];
 				$_arr_attachRows[$_key]["attach_thumb"] = $_arr_thumb["attach_thumb"];
 			} else {
-				$_arr_attachRows[$_key]["attach_type"] = "file";
+				$_arr_attachRows[$_key]["attach_type"]  = "file";
 			}
 			$_arr_adminRow                                = $this->mdl_admin->mdl_read($_value["attach_admin_id"]);
 			$_arr_attachRows[$_key]["attach_admin_name"]  = $_arr_adminRow["admin_name"];
@@ -214,7 +215,7 @@ class AJAX_ATTACH {
 		$this->attachThumb    = $this->mdl_thumb->mdl_list(100);
 		$_arr_mimeRows        = $this->mdl_mime->mdl_list(100);
 		foreach ($_arr_mimeRows as $_value) {
-			$this->attachMime[] = $_value["mime_ext"];
+			$this->attachMime[] = $_value["mime_name"];
 		}
 	}
 }

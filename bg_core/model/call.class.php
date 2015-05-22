@@ -159,7 +159,7 @@ class MODEL_CALL {
 			$_str_sqlWhere .= " AND call_id<>" . $num_notId;
 		}
 
-		$_arr_callRows = $this->obj_db->select_array(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, 1, 0); //检查本地表是否存在记录
+		$_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_callRows[0])) {
 			$_arr_callRow = $_arr_callRows[0];
@@ -171,19 +171,19 @@ class MODEL_CALL {
 		}
 
 		if (isset($_arr_callRow["call_amount"])) {
-			$_arr_callRow["call_amount"]      = json_decode($_arr_callRow["call_amount"], true); //json解码
+			$_arr_callRow["call_amount"]      = fn_jsonDecode($_arr_callRow["call_amount"], "no"); //json解码
 		} else {
 			$_arr_callRow["call_amount"]      = array();
 		}
 
 		if (isset($_arr_callRow["call_cate_ids"])) {
-			$_arr_callRow["call_cate_ids"] = json_decode($_arr_callRow["call_cate_ids"], true); //json解码
+			$_arr_callRow["call_cate_ids"] = fn_jsonDecode($_arr_callRow["call_cate_ids"], "no"); //json解码
 		} else {
 			$_arr_callRow["call_cate_ids"] = array();
 		}
 
 		if (isset($_arr_callRow["call_mark_ids"])) {
-			$_arr_callRow["call_mark_ids"] = json_decode($_arr_callRow["call_mark_ids"], true); //json解码
+			$_arr_callRow["call_mark_ids"] = fn_jsonDecode($_arr_callRow["call_mark_ids"], "no"); //json解码
 		} else {
 			$_arr_callRow["call_mark_ids"] = array();
 		}
@@ -235,7 +235,7 @@ class MODEL_CALL {
 			$_str_sqlWhere .= " AND call_status='" . $str_status . "'";
 		}
 
-		$_arr_callRows = $this->obj_db->select_array(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere . " ORDER BY call_id DESC", $num_no, $num_except); //列出本地表是否存在记录
+		$_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", "call_id DESC", $num_no, $num_except); //列出本地表是否存在记录
 
 		return $_arr_callRows;
 
@@ -268,6 +268,36 @@ class MODEL_CALL {
 		$_num_count = $this->obj_db->count(BG_DB_TABLE . "call", $_str_sqlWhere); //查询数据
 
 		return $_num_count;
+	}
+
+
+	/**
+	 * mdl_status function.
+	 *
+	 * @access public
+	 * @param mixed $this->callIds["call_ids"]
+	 * @param mixed $str_status
+	 * @return void
+	 */
+	function mdl_status($str_status) {
+		$_str_callId = implode(",", $this->callIds["call_ids"]);
+
+		$_arr_callData = array(
+			"call_status" => $str_status,
+		);
+
+		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "call_id IN (" . $_str_callId . ")"); //更新数据
+
+		//如车影响行数小于0则返回错误
+		if ($_num_mysql > 0) {
+			$_str_alert = "y170103";
+		} else {
+			$_str_alert = "x170103";
+		}
+
+		return array(
+			"str_alert" => $_str_alert,
+		); //成功
 	}
 
 
@@ -391,9 +421,9 @@ class MODEL_CALL {
 		$this->callSubmit["call_cate_id"]     = fn_getSafe(fn_post("call_cate_id"), "int", 0);
 		$this->callSubmit["call_spec_id"]     = fn_getSafe(fn_post("call_spec_id"), "int", 0);
 
-		$this->callSubmit["call_cate_ids"]    = json_encode(fn_post("call_cate_ids"));
-		$this->callSubmit["call_mark_ids"]    = json_encode(fn_post("call_mark_ids"));
-		$this->callSubmit["call_amount"]      = json_encode(fn_post("call_amount"));
+		$this->callSubmit["call_cate_ids"]    = fn_jsonEncode(fn_post("call_cate_ids"), "no");
+		$this->callSubmit["call_mark_ids"]    = fn_jsonEncode(fn_post("call_mark_ids"), "no");
+		$this->callSubmit["call_amount"]      = fn_jsonEncode(fn_post("call_amount"), "no");
 
 		$this->callSubmit["str_alert"]        = "ok";
 

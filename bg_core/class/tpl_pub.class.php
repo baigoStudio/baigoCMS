@@ -41,8 +41,10 @@ class CLASS_TPL {
 	 * @param string $arr_tplData (default: "") 模版数据
 	 * @return void
 	 */
-	function tplDisplay($str_tpl, $arr_tplData = "") {
-		$this->obj_smarty->registerPlugin("function", "call_display", "fn_callDisplay"); //注册自定义函数
+	function tplDisplay($str_tpl, $arr_tplData = "", $is_func = true) {
+		if ($is_func) {
+			$this->obj_smarty->registerPlugin("function", "call_display", "fn_callDisplay"); //注册自定义函数
+		}
 
 		$this->obj_smarty->assign("lang", $this->lang);
 		$this->obj_smarty->assign("alert", $this->alert);

@@ -46,7 +46,7 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
 			$this->obj_ajax->halt_alert("x130303");
 		}
 		$_arr_tagSubmit = $this->mdl_tag->input_submit();
@@ -67,7 +67,7 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_status() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
 			$this->obj_ajax->halt_alert("x130303");
 		}
 
@@ -95,7 +95,7 @@ class AJAX_TAG {
 	 * @return void
 	 */
 	function ajax_del() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
 			$this->obj_ajax->halt_alert("x130304");
 		}
 

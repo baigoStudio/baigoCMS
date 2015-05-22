@@ -37,7 +37,7 @@ class CONTROL_GROUP {
 	 * @return void
 	 */
 	function ctl_show() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
 			return array(
 				"str_alert" => "x040301",
 			);
@@ -82,7 +82,7 @@ class CONTROL_GROUP {
 		$_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		if ($_num_groupId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
 				return array(
 					"str_alert" => "x040303",
 				);
@@ -94,7 +94,7 @@ class CONTROL_GROUP {
 				exit;
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["add"])) {
 				return array(
 					"str_alert" => "x040302",
 				);
@@ -131,7 +131,7 @@ class CONTROL_GROUP {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
 			return array(
 				"str_alert" => "x040301",
 			);

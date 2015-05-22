@@ -66,7 +66,7 @@
 		<div class="clearfix"></div>
 	</div>
 
-	<form name="call_list" id="call_list">
+	<form name="call_list" id="call_list" class="form-inline">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 
 		<div class="panel panel-default">
@@ -118,8 +118,21 @@
 						<tr>
 							<td colspan="2"><span id="msg_call_id"></span></td>
 							<td colspan="2">
-								<input type="hidden" id="act_post" name="act_post" value="del">
-								<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
+								<div class="form-group">
+									<select name="act_post" id="act_post" class="validate form-control input-sm">
+										<option value="">{$lang.option.batch}</option>
+										{foreach $status.call as $key=>$value}
+											<option value="{$key}">{$value}</option>
+										{/foreach}
+										<option value="del">{$lang.option.del}</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.submit}</button>
+								</div>
+								<div class="form-group">
+									<span id="msg_act_post"></span>
+								</div>
 							</td>
 						</tr>
 					</tfoot>
@@ -161,7 +174,7 @@
 
 	$(document).ready(function(){
 		var obj_validate_list = $("#call_list").baigoValidator(opts_validator_list);
-		var obj_submit_list = $("#call_list").baigoSubmit(opts_submit_list);
+		var obj_submit_list   = $("#call_list").baigoSubmit(opts_submit_list);
 		$("#go_submit").click(function(){
 			if (obj_validate_list.validateSubmit()) {
 				obj_submit_list.formSubmit();

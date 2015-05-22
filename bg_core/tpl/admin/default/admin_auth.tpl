@@ -72,14 +72,14 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<div id="group_admin_name">
-								<label for="admin_name" class="control-label">{$lang.label.username}<span id="msg_admin_name">*</span></label>
+								<label class="control-label">{$lang.label.username}<span id="msg_admin_name">*</span></label>
 								<input type="text" name="admin_name" id="admin_name" class="validate form-control">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<div id="group_admin_nick">
-								<label for="admin_nick" class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
+								<label class="control-label">{$lang.label.nick}<span id="msg_admin_nick"></span></label>
 								<input type="text" name="admin_nick" id="admin_nick" class="validate form-control">
 							</div>
 						</div>
@@ -97,7 +97,7 @@
 
 						<div class="form-group">
 							<div id="group_admin_note">
-								<label for="admin_note" class="control-label">{$lang.label.note}<span id="msg_admin_note"></span></label>
+								<label class="control-label">{$lang.label.note}<span id="msg_admin_note"></span></label>
 								<input type="text" name="admin_note" id="admin_note" class="validate form-control">
 							</div>
 						</div>

@@ -144,10 +144,13 @@ class CLASS_UPLOAD {
 			break;
 		}
 
+
+		$_obj_finfo               = new finfo();
+		$_str_mime                = $_obj_finfo->file($this->attachFiles["tmp_name"], FILEINFO_MIME_TYPE);
 		$_str_ext                 = pathinfo($this->attachFiles["name"], PATHINFO_EXTENSION); //取得扩展名
 		$this->attachFiles["ext"] = strtolower($_str_ext); //扩展名
 
-		if (!in_array($this->attachFiles["ext"], $this->uploadMime)) { //是否允许
+		if (!in_array($_str_mime, $this->uploadMime)) { //是否允许
 			return array(
 				"str_alert" => "x070202",
 			);
@@ -351,7 +354,7 @@ class CLASS_UPLOAD {
 
 		$_width_src       = imagesx($_src_image); //取得源图片的尺寸
 		$_height_src      = imagesy($_src_image);
-		$_arr_thumb_size  = $this->thumb_size($num_width, $num_height, $_width_src, $_height_src, $str_type); //计算缩略图尺寸
+		$_arr_thumb_size  = $this->size_progress($num_width, $num_height, $_width_src, $_height_src, $str_type); //计算缩略图尺寸
 
 		if ($_arr_thumb_size["width_dst"] >= $_width_src && $_arr_thumb_size["height_dst"] >= $_height_src) { //如果源图片小于目标缩略图，则只是拷贝
 			copy($_str_srcFile, $_str_dstFile);
@@ -388,12 +391,15 @@ class CLASS_UPLOAD {
 		}
 
 		$_dst_image = imagecreatetruecolor($_arr_thumb_size["width_dst"], $_arr_thumb_size["height_dst"]); //根据计算结果生成毛图片
+		$_dst_image = $this->transparent_progress($_dst_image);
 
 		switch ($str_type) {
 			case "cut": //裁切
 				$_tmp_image = imagecreatetruecolor($_arr_thumb_size["width_tmp"], $_arr_thumb_size["height_tmp"]);
+				$_tmp_image = $this->transparent_progress($_tmp_image);
+
 				imagecopyresampled($_tmp_image, $_src_image, 0, 0, 0, 0, $_arr_thumb_size["width_tmp"], $_arr_thumb_size["height_tmp"], $_width_src, $_height_src); //先缩小
-				imagecopymerge($_dst_image, $_tmp_image, 0, 0, $_arr_thumb_size["width_cut"], $_arr_thumb_size["height_cut"], $_arr_thumb_size["width_dst"], $_arr_thumb_size["height_dst"], 100); //合成
+				imagecopy($_dst_image, $_tmp_image, 0, 0, $_arr_thumb_size["width_cut"], $_arr_thumb_size["height_cut"], $_arr_thumb_size["width_dst"], $_arr_thumb_size["height_dst"]); //合成
 				imagedestroy($_tmp_image);
 			break;
 			default: //按比例缩小
@@ -456,7 +462,7 @@ class CLASS_UPLOAD {
 
 
 	/** 计算缩略图尺寸
-	 * thumb_size function.
+	 * size_progress function.
 	 *
 	 * @access public
 	 * @param mixed $num_width 宽度
@@ -466,7 +472,7 @@ class CLASS_UPLOAD {
 	 * @param string $str_type (default: "ratio") 类型（默认等比例）
 	 * @return void
 	 */
-	function thumb_size($num_width, $num_height, $width_src, $height_src, $str_type = "ratio") {
+	private function size_progress($num_width, $num_height, $width_src, $height_src, $str_type = "ratio") {
 
 		switch ($str_type) {
 			case "cut": //裁切
@@ -482,7 +488,7 @@ class CLASS_UPLOAD {
 						$_height_cut  = intval(($_height_tmp - $num_height) / 2);
 					}
 				} else { //纵向
-					$_width_tmp    = intval($num_width);
+					$_width_tmp    = intval($num_width); //缩小宽度
 					$_height_tmp   = intval($height_src / $width_src * $_width_tmp); //按比例计算高度
 					$_width_cut    = 0;
 					$_height_cut   = intval(($_height_tmp - $num_height) / 2); //需裁切的部分
@@ -500,11 +506,19 @@ class CLASS_UPLOAD {
 
 			default: //按比例缩小
 				if ($width_src > $height_src) { //横向
-					$_width_tmp    = intval($num_width);
+					$_width_tmp    = intval($num_width); //缩小宽度
 					$_height_tmp   = intval($height_src / $width_src * $_width_tmp); //按比例计算高度
+					if ($_height_tmp > $num_height) { //如缩小后，高度大于设定高度，则按照高度重新计算
+						$_height_tmp  = intval($num_height);
+						$_width_tmp   = intval($_height_tmp / ($height_src / $width_src));
+					}
 				} else { //纵向
 					$_height_tmp   = intval($num_height); //缩小高度
 					$_width_tmp    = intval($width_src / $height_src * $_height_tmp); //按比例计算宽度
+					if ($_width_tmp > $num_width) { //如缩小后，宽度大于设定宽度，则按照宽度重新计算
+						$_width_tmp   = intval($num_width);
+						$_height_tmp  = intval($_width_tmp / ($width_src / $height_src));
+					}
 				}
 				$_width_cut     = 0;
 				$_height_cut    = 0;
@@ -523,6 +537,25 @@ class CLASS_UPLOAD {
 		);
 	}
 
+
+	private function transparent_progress($_res_image) {
+		switch ($this->attachFiles["ext"]) { //创建图片对象
+			case "gif":
+				$_color_bg = imagecolorallocate($_res_image, 255, 255, 255);
+				imagefill($_res_image, 0, 0, $_color_bg);
+				imagecolortransparent($_res_image, $_color_bg);
+			break;
+
+			case "png":
+				imagealphablending($_res_image, false);
+				$_color_transparent = imagecolorallocatealpha($_res_image, 0, 0, 0, 127);
+				imagefill($_res_image, 0, 0, $_color_transparent);
+				imagesavealpha($_res_image, true);
+			break;
+		}
+
+		return $_res_image;
+	}
 
 	/**
 	 * __destruct function.

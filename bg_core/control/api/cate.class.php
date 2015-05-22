@@ -60,7 +60,11 @@ class API_CATE {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_cateRow = $this->mdl_cate->mdl_readPub($_num_cateId);
+		if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
+			$this->mdl_cate->mdl_cache(array($_num_cateId));
+		}
+
+		$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
 
 		if ($_arr_cateRow["str_alert"] != "y110102") {
 			$this->obj_api->halt_re($_arr_cateRow);

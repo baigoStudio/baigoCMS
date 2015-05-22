@@ -56,4 +56,15 @@ return array(
 		"show"    => "显示", //正常
 		"hide"    => "隐藏", //隐藏
 	),
+
+	/*------自定义表单------*/
+	"custom" => array(
+		"enable"  => "启用", //发布
+		"disable" => "禁用", //隐藏
+	),
+
+	"ext" => array(
+		"installed"   => "已安装", //栏目类型
+		"uninstall"   => "未安装", //栏目类型
+	),
 );

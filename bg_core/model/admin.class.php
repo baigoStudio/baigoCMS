@@ -18,10 +18,9 @@ class MODEL_ADMIN {
 		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
 	}
 
-
 	function mdl_create_table() {
 		$_arr_adminCreate = array(
-			"admin_id"               => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"admin_id"               => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"admin_name"             => "varchar(30) NOT NULL COMMENT '用户名'",
 			"admin_note"             => "varchar(30) NOT NULL COMMENT '备注'",
 			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
@@ -74,7 +73,9 @@ class MODEL_ADMIN {
 			"admin_ip"           => fn_getIp(),
 			"admin_rand"         => $str_rand,
 		);
+
 		$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminUpdate, "admin_id=" . $num_adminId); //更新数据
+
 		if ($_num_mysql > 0) {
 			$_str_alert = "y020103"; //更新成功
 		} else {
@@ -252,7 +253,7 @@ class MODEL_ADMIN {
 			"admin_allow_profile",
 		);
 
-		$_arr_adminRows = $this->obj_db->select_array(BG_DB_TABLE . "admin", $_arr_adminSelect, "admin_id=" . $num_adminId, 1, 0); //检查本地表是否存在记录
+		$_arr_adminRows = $this->obj_db->select(BG_DB_TABLE . "admin", $_arr_adminSelect, "admin_id=" . $num_adminId, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_adminRows[0])) { //用户名不存在则返回错误
 			$_arr_adminRow = $_arr_adminRows[0];
@@ -264,13 +265,13 @@ class MODEL_ADMIN {
 		}
 
 		if (isset($_arr_adminRow["admin_allow_cate"])) {
-			$_arr_adminRow["admin_allow_cate"]    = json_decode($_arr_adminRow["admin_allow_cate"], true); //json解码
+			$_arr_adminRow["admin_allow_cate"]    = fn_jsonDecode($_arr_adminRow["admin_allow_cate"], "no"); //json解码
 		} else {
 			$_arr_adminRow["admin_allow_cate"]    = array();
 		}
 
 		if (isset($_arr_adminRow["admin_allow_profile"])) {
-			$_arr_adminRow["admin_allow_profile"] = json_decode($_arr_adminRow["admin_allow_profile"], true); //json解码
+			$_arr_adminRow["admin_allow_profile"] = fn_jsonDecode($_arr_adminRow["admin_allow_profile"], "no"); //json解码
 		} else {
 			$_arr_adminRow["admin_allow_profile"] = array();
 		}
@@ -326,7 +327,7 @@ class MODEL_ADMIN {
 			$_str_sqlWhere .= " AND admin_group_id=" . $num_groupId;
 		}
 
-		$_arr_adminRows = $this->obj_db->select_array(BG_DB_TABLE . "admin", $_arr_adminSelect, $_str_sqlWhere . " ORDER BY admin_id DESC", $num_no, $num_except); //查询数据
+		$_arr_adminRows = $this->obj_db->select(BG_DB_TABLE . "admin", $_arr_adminSelect, $_str_sqlWhere, "", "admin_id DESC", $num_no, $num_except); //查询数据
 
 		//print_r($_arr_adminRows);
 
@@ -559,8 +560,8 @@ class MODEL_ADMIN {
 
 		}
 
-		$this->adminSubmit["admin_allow_cate"]    = json_encode(fn_post("admin_allow_cate"));
-		$this->adminSubmit["admin_allow_profile"] = json_encode(fn_post("admin_allow_profile"));
+		$this->adminSubmit["admin_allow_cate"]    = fn_jsonEncode(fn_post("admin_allow_cate"), "no");
+		$this->adminSubmit["admin_allow_profile"] = fn_jsonEncode(fn_post("admin_allow_profile"), "no");
 		$this->adminSubmit["str_alert"]           = "ok";
 
 		return $this->adminSubmit;

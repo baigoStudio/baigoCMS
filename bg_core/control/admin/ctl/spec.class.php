@@ -42,7 +42,7 @@ class CONTROL_SPEC {
 	 * @return void
 	 */
 	function ctl_select() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			return array(
 				"str_alert" => "x180303",
 			);
@@ -130,7 +130,7 @@ class CONTROL_SPEC {
 		$_num_specId = fn_getSafe(fn_get("spec_id"), "int", 0);
 
 		if ($_num_specId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 				return array(
 					"str_alert" => "x180303",
 				);
@@ -142,7 +142,7 @@ class CONTROL_SPEC {
 				exit;
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 				return array(
 					"str_alert" => "x180302",
 				);
@@ -177,7 +177,7 @@ class CONTROL_SPEC {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			return array(
 				"str_alert" => "x180301",
 			);

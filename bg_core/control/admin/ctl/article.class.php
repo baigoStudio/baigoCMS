@@ -16,6 +16,7 @@ include_once(BG_PATH_MODEL . "cateBelong.class.php");
 include_once(BG_PATH_MODEL . "tag.class.php");
 include_once(BG_PATH_MODEL . "mark.class.php");
 include_once(BG_PATH_MODEL . "spec.class.php");
+include_once(BG_PATH_MODEL . "custom.class.php");
 
 /*-------------文章控制器-------------*/
 class CONTROL_ARTICLE {
@@ -42,6 +43,7 @@ class CONTROL_ARTICLE {
 		$this->mdl_mark       = new MODEL_MARK(); //设置标记对象
 		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
+		$this->mdl_custom     = new MODEL_CUSTOM();
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -64,7 +66,7 @@ class CONTROL_ARTICLE {
 				exit;
 			}
 
-			if ($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"] != 1 && $this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["edit"] != 1 && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) { //判断权限
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["edit"]) && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) { //判断权限
 				return array(
 					"str_alert" => "x120303"
 				);
@@ -87,32 +89,39 @@ class CONTROL_ARTICLE {
 			$_arr_articleRow["article_tags"] = json_encode($_arr_articleRow["article_tags"]);
 
 			$_arr_specRow = $this->mdl_spec->mdl_read($_arr_articleRow["article_spec_id"]);
+
+			$_arr_articleRow["article_excerpt_type"] = "manual";
+
+			//print_r($_arr_articleRow);
 		} else {
-			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"]) && $this->adminLogged["groupRow"]["group_allow"]["article"]["approve"] == 1) {
+			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["approve"])) {
 				$_str_status = "pub";
 			} else {
 				$_str_status = "wait";
 			}
 			$_arr_articleRow = array(
-				"article_id"        => 0,
-				"article_title"     => "",
-				"article_content"   => "",
-				"article_link"      => "",
-				"article_excerpt"   => "",
-				"article_cate_id"   => 0,
-				"article_status"    => $_str_status,
-				"article_box"       => "normal",
-				"article_time_pub"  => time(),
-				"cate_ids"          => array(),
-				"article_tags"      => array(),
+				"article_id"            => 0,
+				"article_title"         => "",
+				"article_content"       => "",
+				"article_link"          => "",
+				"article_excerpt"       => "",
+				"article_excerpt_type"  => "auto",
+				"article_cate_id"       => 0,
+				"article_status"        => $_str_status,
+				"article_box"           => "normal",
+				"article_time_pub"      => time(),
+				"cate_ids"              => array(),
+				"article_tags"          => array(),
 			);
 			$_arr_specRow = array();
 		}
 
 		//print_r($_arr_articleRow);
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRows = $this->mdl_mark->mdl_list(100);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
+		$_arr_markRows    = $this->mdl_mark->mdl_list(100);
+		$_arr_customRows  = $this->mdl_custom->mdl_list(100, 0, "", "article", "enable");
+		//print_r($_arr_customRows);
 
 		if (count($_arr_cateRows) < 1) {
 			return array(
@@ -127,6 +136,7 @@ class CONTROL_ARTICLE {
 			"specRow"    => $_arr_specRow,
 			"cateRows"   => $_arr_cateRows, //栏目列表
 			"markRows"   => $_arr_markRows, //标记列表
+			"customRows" => $_arr_customRows, //标记列表
 			"articleRow" => $_arr_articleRow, //栏目信息
 		);
 
@@ -163,7 +173,7 @@ class CONTROL_ARTICLE {
 			exit;
 		}
 
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["browse"] != 1 && $this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["browse"] != 1 && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) { //判断权限
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["browse"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["browse"]) && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) { //判断权限
 			return array(
 				"str_alert" => "x120301"
 			);
@@ -180,6 +190,7 @@ class CONTROL_ARTICLE {
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
 		$_arr_markRow     = $this->mdl_mark->mdl_read($_arr_articleRow["article_mark_id"]);
 		$_arr_tagRows     = $this->mdl_tag->mdl_list(10, 0, "", "", "tag_id", $_arr_articleRow["article_id"]); //读取从属数据
+		$_arr_customRows  = $this->mdl_custom->mdl_list(100, 0, "", "article", "enable");
 
 		$_arr_articleRow["cate_ids"]  = array_unique($_arr_articleRow["cate_ids"]);
 
@@ -187,6 +198,7 @@ class CONTROL_ARTICLE {
 			"cateRow"    => $_arr_cateRow, //栏目
 			"cateRows"   => $_arr_cateRows, //栏目列表
 			"markRow"    => $_arr_markRow, //标记列表
+			"customRows" => $_arr_customRows, //标记列表
 			"articleRow" => $_arr_articleRow,
 			"tagRows"    => $_arr_tagRows,
 		);
@@ -239,7 +251,7 @@ class CONTROL_ARTICLE {
 		}
 
 		if ($_arr_search["admin_id"] == 0) {
-			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["del"]) && $this->adminLogged["groupRow"]["group_allow"]["article"]["del"] == 1) {
+			if (isset($this->adminLogged["groupRow"]["group_allow"]["article"]["del"])) {
 				$_num_adminId = 0;
 			} else {
 				$_num_adminId = $this->adminLogged["admin_id"];

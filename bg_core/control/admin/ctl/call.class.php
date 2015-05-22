@@ -48,7 +48,7 @@ class CONTROL_CALL {
 		$_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
 
 		if ($_num_callId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
 				return array(
 					"str_alert" => "x170303",
 				);
@@ -59,8 +59,9 @@ class CONTROL_CALL {
 				return $_arr_callRow;
 				exit;
 			}
+			//print_r($_arr_callRow);
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
 				return array(
 					"str_alert" => "x170302",
 				);
@@ -113,7 +114,7 @@ class CONTROL_CALL {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"])) {
 			return array(
 				"str_alert" => "x170301",
 			);

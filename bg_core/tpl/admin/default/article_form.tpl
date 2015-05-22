@@ -92,7 +92,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<div id="group_article_title">
-								<label for="article_title" class="control-label">{$lang.label.articleTitle}<span id="msg_article_title">*</span></label>
+								<label class="control-label">{$lang.label.articleTitle}<span id="msg_article_title">*</span></label>
 								<input type="text" name="article_title" id="article_title" value="{$tplData.articleRow.article_title}" class="validate form-control">
 							</div>
 						</div>
@@ -108,53 +108,20 @@
 							<textarea name="article_content" id="article_content" class="tinymce text_bg">{$tplData.articleRow.article_content}</textarea>
 						</div>
 
-						<label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
-
-						<div class="form-group form-inline">
-							<input type="text" name="article_tag" id="article_tag" class="form-control tm-input tm-input-success">
-							<button type="button" class="btn btn-info tm-btn" id="tag_add">{$lang.btn.add}</button>
-						</div>
-
-						<label class="control-label">{$lang.label.articleSpec}</label>
+						<label class="control-label">{$lang.label.excerptType}</label>
 
 						<div class="form-group">
-							<div class="input-group">
-								<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
-								</span>
-							</div>
+							{foreach $type.excerpt as $key=>$value}
+								<label for="article_excerpt_type_{$key}" class="radio-inline">
+									<input type="radio" name="article_excerpt_type" id="article_excerpt_type_{$key}" {if $tplData.articleRow.article_excerpt_type == $key}checked{/if} value="{$key}" class="article_excerpt_type">
+									{$value}
+								</label>
+							{/foreach}
 						</div>
 
-						<div class="form-group">
-							<select name="article_spec_id" class="form-control">
-								<option value="">{$lang.option.noSpec}</option>
-								{if $tplData.specRow.spec_name}
-									<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
-								{/if}
-								<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
-							</select>
-						</div>
-						<div class="form-group" id="spec_page"></div>
-
-						<div class="form-group">
-							<label for="more_checkbox" class="checkbox-inline">
-								<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.articleRow.article_link}checked{/if}>
-								{$lang.label.more}
-							</label>
-						</div>
-
-						<div id="more_input">
+						<div id="group_article_excerpt">
 							<div class="form-group">
-								<div id="group_article_link">
-									<label for="article_link" class="control-label">{$lang.label.articleLink}<span id="msg_article_link"></span></label>
-									<input type="text" name="article_link" id="article_link" value="{$tplData.articleRow.article_link}" class="validate form-control">
-									<p class="help-block">{$lang.label.articleLinkNote}</p>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="article_excerpt" class="control-label">
+								<label class="control-label">
 									{$lang.label.articleExcerpt}
 									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 										<span class="glyphicon glyphicon-picture"></span>
@@ -162,6 +129,32 @@
 									</a>
 								</label>
 								<textarea name="article_excerpt" id="article_excerpt" class="tinymce text_md">{$tplData.articleRow.article_excerpt}</textarea>
+							</div>
+						</div>
+
+						<div class="row">
+							{foreach $tplData.customRows as $key=>$value}
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label">{$value.custom_name}<span id="msg_article_custom_{$value.custom_id}"></span></label>
+										<input type="text" name="article_custom[{$value.custom_id}]" value="{if isset($tplData.articleRow.article_custom[{$value.custom_id}])}{$tplData.articleRow.article_custom[{$value.custom_id}]}{/if}" class="form-control">
+									</div>
+								</div>
+							{/foreach}
+						</div>
+
+						<label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
+
+						<div class="form-group form-inline">
+							<input type="text" name="article_tag" id="article_tag" class="form-control tm-input tm-input-success">
+							<button type="button" class="btn btn-info tm-btn" id="tag_add">{$lang.btn.add}</button>
+						</div>
+
+						<div class="form-group">
+							<div id="group_article_link" {if $tplData.articleRow.article_link}class="has-warning"{/if}>
+								<label class="control-label">{$lang.label.articleLink}<span id="msg_article_link"></span></label>
+								<input type="text" name="article_link" id="article_link" value="{$tplData.articleRow.article_link}" class="validate form-control">
+								<p class="help-block">{$lang.label.articleLinkNote}</p>
 							</div>
 						</div>
 
@@ -189,9 +182,17 @@
 						</select>
 					</div>
 
-					<label class="control-label">{$lang.label.articleBelong}<span id="msg_cate_ids"></span></label>
+					<div class="checkbox">
+						<label for="cate_ids_checkbox">
+							<input type="checkbox" {if count($tplData.articleRow.cate_ids) > 1}checked{/if} data-toggle="collapse" data-target="#cate_ids_input" id="cate_ids_checkbox">
+							{$lang.label.articleBelong}
+						</label>
+					</div>
+
 					<div class="form-group">
-						{cate_checkbox arr=$tplData.cateRows}
+						<div class="collapse{if count($tplData.articleRow.cate_ids) > 1} in{/if}" id="cate_ids_input">
+							{cate_checkbox arr=$tplData.cateRows}
+						</div>
 					</div>
 
 					<label class="control-label">{$lang.label.status}<span id="msg_article_status">*</span></label>
@@ -199,7 +200,7 @@
 						{foreach $status.article as $key=>$value}
 							<div class="radio_baigo">
 								<label for="article_status_{$key}">
-									<input type="radio" name="article_status" id="article_status_{$key}" {if $tplData.articleRow.article_status == $key}checked{/if} value="{$key}" class="validate" group="article_status" {if $tplData.adminLogged.groupRow.group_allow.article.approve != 1}disabled{/if}>
+									<input type="radio" name="article_status" id="article_status_{$key}" {if $tplData.articleRow.article_status == $key}checked{/if} value="{$key}" class="validate" group="article_status">
 									{$value}
 								</label>
 							</div>
@@ -229,7 +230,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="article_mark_id" class="control-label">{$lang.label.articleMark}</label>
+						<label class="control-label">{$lang.label.articleMark}</label>
 						<select name="article_mark_id" class="form-control">
 							<option value="">{$lang.option.noMark}</option>
 							{foreach $tplData.markRows as $value}
@@ -241,17 +242,41 @@
 					<div class="form-group">
 						<div class="checkbox">
 							<label for="deadline_checkbox">
-								<input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} id="deadline_checkbox">
+								<input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} data-toggle="collapse" data-target="#deadline_input" id="deadline_checkbox">
 								{$lang.label.deadline}
 								<span id="msg_article_time_pub"></span>
 							</label>
 						</div>
 					</div>
 
-					<div id="deadline_input" class="form-group">
-						<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
-						<p class="help-block">{$lang.label.timeNote}</p>
+					<div id="deadline_input" class="collapse{if $tplData.articleRow.article_time_pub > $smarty.now} in{/if}">
+						<div class="form-group">
+							<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
+							<p class="help-block">{$lang.label.timeNote}</p>
+						</div>
 					</div>
+
+					<label class="control-label">{$lang.label.articleSpec}</label>
+
+					<div class="form-group">
+						<div class="input-group">
+							<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
+							</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<select name="article_spec_id" class="form-control">
+							<option value="">{$lang.option.noSpec}</option>
+							{if $tplData.specRow.spec_name}
+								<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
+							{/if}
+							<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
+						</select>
+					</div>
+					<div class="form-group" id="spec_page"></div>
 				</div>
 			</div>
 		</div>
@@ -356,46 +381,34 @@
 		btn_url: "{$cfg.str_url}"
 	};
 
-	function show_deadline() {
-		if ($("#deadline_checkbox").prop("checked")) {
-			$("#deadline_input").show();
+	function excerpt_type(_excerpt_type) {
+		if (_excerpt_type == "manual") {
+			$("#group_article_excerpt").show();
 		} else {
-			$("#deadline_input").hide();
-		}
-	}
-
-	function show_more() {
-		if ($("#more_checkbox").prop("checked")) {
-			$("#more_input").show();
-		} else {
-			$("#more_input").hide();
+			$("#group_article_excerpt").hide();
 		}
 	}
 
 	$(document).ready(function(){
 		reload_spec("", 1);
-		show_deadline();
-		show_more();
+		excerpt_type("{$tplData.articleRow.article_excerpt_type}");
 		$("#attach_modal").on("hidden.bs.modal", function() {
 		    $(this).removeData("bs.modal");
 		});
 
+		$(".article_excerpt_type").click(function(){
+			var _excerpt_type = $(this).val();
+			excerpt_type(_excerpt_type);
+		});
+
 		var obj_validate_form = $("#article_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#article_form").baigoSubmit(opts_submit_form);
+		var obj_submit_form   = $("#article_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
 			tinyMCE.triggerSave();
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
 			}
 		});
-		$("#deadline_checkbox").click(function(){
-			show_deadline();
-		});
-
-		$("#more_checkbox").click(function(){
-			show_more();
-		});
-
 		$(".input_date").datetimepicker(opts_datetimepicker);
 
 		var obj_tagMan = jQuery("#article_tag").tagsManager({
@@ -417,6 +430,7 @@
 			var _str_tag = $("#article_tag").val();
 			obj_tagMan.tagsManager("pushTag", _str_tag);
 		});
+
 		$("#spec_search").click(function(){
 			var _key = $("#spec_key").val();
 			reload_spec(_key, 1);

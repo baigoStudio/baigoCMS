@@ -20,6 +20,7 @@ class CONTROL_ARTICLE {
 	private $mdl_articlePub;
 	private $mdl_tag;
 	private $mdl_attach;
+	private $config;
 
 	function __construct() { //构造函数
 		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
@@ -71,6 +72,13 @@ class CONTROL_ARTICLE {
 			exit;
 		}
 
+		if ($this->cateRow["cate_status"] != "show") {
+			return array(
+				"str_alert" => "x110102",
+			);
+			exit;
+		}
+
 		if ($this->cateRow["cate_type"] == "link" && $this->cateRow["cate_link"]) {
 			return array(
 				"str_alert" => "x110218",
@@ -80,8 +88,11 @@ class CONTROL_ARTICLE {
 		}
 
 		if ($this->articleRow["article_attach_id"] > 0) {
-			$_arr_attachThumb                = $this->mdl_thumb->mdl_list(100);
-			$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"], $_arr_attachThumb);
+			if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+				$this->mdl_thumb->mdl_cache();
+			}
+			$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+			$this->articleRow["attachRow"]   = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"], $_arr_thumbRows);
 		}
 
 		//print_r(date("W", strtotime("2014-12-01")));
@@ -121,69 +132,30 @@ class CONTROL_ARTICLE {
 
 		if ($_num_articleId > 0) {
 			$this->articleRow = $this->mdl_articlePub->mdl_read($_num_articleId);
-			if ($this->articleRow["str_alert"] == "y120102") {
-				$this->cateRow               = $this->mdl_cate->mdl_readPub($this->articleRow["article_cate_id"]);
-				if ($this->cateRow["str_alert"] == "y110102" && $this->cateRow["cate_status"] == "show") {
-					$_str_cateTpl        = $this->tpl_process($this->articleRow["article_cate_id"]);
-					if ($_str_cateTpl == "inherit") {
-						$this->config["tpl"] = $_str_tpl;
-					} else {
-						$this->config["tpl"] = $_str_cateTpl;
-					}
-					if (!$this->config["tpl"]) {
-						$this->config["tpl"] = "default";
-					}
-
-					if (is_array($this->cateRow["cate_trees"])) {
-						foreach ($this->cateRow["cate_trees"] as $_key=>$_value) {
-							$_arr_cateRow = $this->mdl_cate->mdl_readPub($_value["cate_id"]);
-							if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
-								$this->cateRow["cate_trees"][$_key]["urlRow"] = $_arr_cateRow["urlRow"];
-							}
-						}
-					}
-				} else {
-					$this->config["tpl"] = $_str_tpl;
-				}
-			} else {
-				$this->config["tpl"] = $_str_tpl;
+			if (!file_exists(BG_PATH_CACHE . "cate_" . $this->articleRow["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache(array($this->articleRow["article_cate_id"]));
 			}
-		} else {
-			$this->config["tpl"] = $_str_tpl;
+
+			if ($this->articleRow["str_alert"] == "y120102") {
+				$this->cateRow          = include(BG_PATH_CACHE . "cate_" . $this->articleRow["article_cate_id"] . ".php");
+				$this->config["tpl"]    = $this->cateRow["cate_tplDo"];
+				//$this->config["tpl"]    = $this->mdl_cate->tpl_process($this->articleRow["article_cate_id"]);
+			}
 		}
 
 		$this->articleRow["cateRow"] = $this->cateRow;
 
 		$this->articleRow["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $this->articleRow["article_id"]);
 
-		$_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
+		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+			$this->mdl_cate->mdl_cache();
+		}
+
+		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
 
 		$this->tplData = array(
 			"cateRows"   => $_arr_cateRows,
 			"articleRow" => $this->articleRow,
 		);
-	}
-
-
-	/**
-	 * tpl_process function.
-	 *
-	 * @access private
-	 * @param mixed $num_cateId
-	 * @return void
-	 */
-	private function tpl_process($num_cateId) {
-		$_arr_cateRow = $this->mdl_cate->mdl_readPub($num_cateId);
-		if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
-			$_str_cateTpl = $_arr_cateRow["cate_tpl"];
-
-			if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {
-				$_str_cateTpl = $this->tpl_process($_arr_cateRow["cate_parent_id"]);
-			}
-		} else {
-			$_str_cateTpl = BG_SITE_TPL;
-		}
-
-		return $_str_cateTpl;
 	}
 }

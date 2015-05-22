@@ -39,7 +39,7 @@ class CONTROL_APP {
 	返回提示
 	*/
 	function ctl_show() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			return array(
 				"str_alert" => "x190301",
 			);
@@ -76,7 +76,7 @@ class CONTROL_APP {
 		$_num_appId = fn_getSafe(fn_get("app_id"), "int", 0);
 
 		if ($_num_appId > 0) {
-			if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				return array(
 					"str_alert" => "x190303",
 				);
@@ -88,7 +88,7 @@ class CONTROL_APP {
 				exit;
 			}
 		} else {
-			if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				return array(
 					"str_alert" => "x190302",
 				);
@@ -120,7 +120,7 @@ class CONTROL_APP {
 	无返回
 	*/
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			return array(
 				"str_alert" => "x190301",
 			);

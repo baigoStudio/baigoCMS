@@ -323,6 +323,12 @@ return "<a name=\"list\"></a>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前文章的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
 					</tr>
+					<tr>
+						<td class=\"nowrap\">article_custom</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">自定义表单</td>
+						<td>自定义表单的内容。用 <code>article_custom.自定义表单 ID</code> 的方法便可获取自定义表单的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义表单</a>。</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>

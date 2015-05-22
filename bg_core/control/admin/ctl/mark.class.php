@@ -38,7 +38,7 @@ class CONTROL_MARK {
 	 * @return void
 	 */
 	function ctl_list() {
-		if ($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"] != 1) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
 			return array(
 				"str_alert" => "x140301",
 			);
