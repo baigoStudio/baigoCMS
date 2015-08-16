@@ -6,7 +6,7 @@
 $base = $_SERVER["DOCUMENT_ROOT"] . str_replace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
 include_once($base . "bg_config/config.inc.php"); //载入配置
 
-$arr_mod = array("article", "tag", "spec", "cate", "attach", "call");
+$arr_mod = array("article", "tag", "mark", "spec", "cate", "attach", "call", "custom");
 
 if (isset($_GET["mod"])) {
 	$mod = $_GET["mod"];

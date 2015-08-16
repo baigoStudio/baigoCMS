@@ -15,7 +15,7 @@ include_once(BG_PATH_CONTROL_PUB . "ctl/alert.class.php"); //载入模板类
 $ctl_alert = new CONTROL_ALERT(); //设置模板对象
 
 switch ($GLOBALS["act_get"]) {
-	case "display":
-		$ctl_alert->ctl_display();
+	case "show":
+		$ctl_alert->ctl_show();
 	break;
 }

@@ -82,12 +82,20 @@
 			<div class="pull-left">
 				<small>
 					{$smarty.const.PRD_CMS_POWERED}
-					<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_NAME}</a>
+					{if $config.ui == "default"}
+						<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_NAME}</a>
+					{else}
+						{$config.ui} CMS
+					{/if}
 					{$smarty.const.PRD_CMS_VER}
 				</small>
 			</div>
 			<div class="pull-right foot_logo">
-				<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME} {$smarty.const.PRD_CMS_VER}</a>
+				{if $config.ui == "default"}
+					<a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME} {$smarty.const.PRD_CMS_VER}</a>
+				{else}
+					<a href="#">{$config.ui} CMS</a>
+				{/if}
 			</div>
 			<div class="clearfix"></div>
 		</div>

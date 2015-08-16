@@ -7,18 +7,22 @@
 	baigoSubmit    => "true"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
 	<li>{$adminMod.opt.sub.app.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=list">
-			<span class="glyphicon glyphicon-chevron-left"></span>
-			{$lang.href.back}
-		</a>
+		<ul class="nav nav-pills nav_baigo">
+			<li>
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=list">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+					{$lang.href.back}
+				</a>
+			</li>
+		</ul>
 	</div>
 
 	<form name="app_form" id="app_form">
@@ -57,8 +61,8 @@
 
 						<div class="form-group">
 							<label class="control-label static_label">{$lang.label.appAllow}</label>
-							<dl class="list_baigo">
-								{foreach $allow as $key_m=>$value_m}
+							<dl class="list_dl">
+								{foreach $appMod as $key_m=>$value_m}
 									<dt>{$value_m.title}</dt>
 									<dd>
 										<ul class="list-inline">
@@ -119,7 +123,7 @@
 
 					<div class="form-group">
 						<label class="control-label">{$lang.label.status}</label>
-						<p class="form-control-static">
+						<p class="form-control-static label_baigo">
 							<span class="label label-{$_css_status}">{$status.app[$tplData.appRow.app_status]}</span>
 						</p>
 					</div>
@@ -136,7 +140,7 @@
 
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_submit_form = {
@@ -144,6 +148,7 @@
 		confirm_id: "act_post",
 		confirm_val: "reset",
 		confirm_msg: "{$lang.confirm.resetKey}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=show&app_id={$tplData.appRow.app_id}"
@@ -157,4 +162,4 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

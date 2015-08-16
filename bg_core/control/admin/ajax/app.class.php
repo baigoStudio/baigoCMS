@@ -24,19 +24,11 @@ class AJAX_APP {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //已登录用户信息
 		$this->obj_ajax       = new CLASS_AJAX(); //获取界面类型
+		$this->obj_ajax->chk_install();
 		$this->mdl_app        = new MODEL_APP(); //设置用户模型
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -50,19 +42,19 @@ class AJAX_APP {
 
 		if ($_num_appId == 0) {
 			return array(
-				"str_alert" => "x190203",
+				"alert" => "x190203",
 			);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($_num_appId);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			return $_arr_appRow;
 			exit;
 		}
 
 		$_arr_appRow  = $this->mdl_app->mdl_reset($_num_appId);
 
-		$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
 	}
 
 
@@ -76,8 +68,8 @@ class AJAX_APP {
 	function ajax_submit() {
 		$_arr_appSubmit = $this->mdl_app->input_submit();
 
-		if ($_arr_appSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appSubmit["str_alert"]);
+		if ($_arr_appSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appSubmit["alert"]);
 		}
 
 		if ($_arr_appSubmit["app_id"] > 0) {
@@ -92,7 +84,7 @@ class AJAX_APP {
 
 		$_arr_appRow = $this->mdl_app->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
 	}
 
 
@@ -110,13 +102,13 @@ class AJAX_APP {
 		$_str_status = fn_getSafe($GLOBALS["act_post"], "txt", "");
 
 		$_arr_appIds = $this->mdl_app->input_ids();
-		if ($_arr_appIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appIds["str_alert"]);
+		if ($_arr_appIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appIds["alert"]);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_status($_str_status);
 
-		$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
 	}
 
 
@@ -132,12 +124,12 @@ class AJAX_APP {
 		}
 
 		$_arr_appIds = $this->mdl_app->input_ids();
-		if ($_arr_appIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_appIds["str_alert"]);
+		if ($_arr_appIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_appIds["alert"]);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
 	}
 }

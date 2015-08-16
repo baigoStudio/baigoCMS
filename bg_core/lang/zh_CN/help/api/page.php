@@ -53,13 +53,13 @@ return "<a name=\"page\"></a>
 <pre><code class=\"language-php\">echo(&quot;&lt;ul&gt;&quot;);
   if (\$pageRow[&quot;page&quot;] &gt; 1) {
     echo(&quot;&lt;li&gt;&quot;);
-      echo(&quot;&lt;a href='page_1'&gt;&#39318;&#39029;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=1'&gt;&#39318;&#39029;&lt;/a&gt;&quot;);
     echo(&quot;&lt;/li&gt;&quot;);
   }
 
   if (\$pageRow[&quot;p&quot;] * 10 &gt; 0) {
     echo(&quot;&lt;li&gt;&quot;);
-      echo(&quot;&lt;a href='page_&quot; . \$pageRow[&quot;p&quot;] * 10 . &quot;'&gt;&#19978;&#21313;&#39029;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=&quot; . \$pageRow[&quot;p&quot;] * 10 . &quot;'&gt;&#19978;&#21313;&#39029;&lt;/a&gt;&quot;);
     echo(&quot;&lt;/li&gt;&quot;);
   }
 
@@ -67,16 +67,16 @@ return "<a name=\"page\"></a>
     if (\$pageRow[&quot;page&quot;] &lt;= 1) {
       echo(&quot;&lt;span&gt;&amp;laquo;&lt;/span&gt;&quot;);
     } else {
-      echo(&quot;&lt;a href='page_&quot; . \$pageRow[&quot;page&quot;] - 1 . &quot;'&gt;&amp;laquo;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=&quot; . \$pageRow[&quot;page&quot;] - 1 . &quot;'&gt;&amp;laquo;&lt;/a&gt;&quot;);
     }
   echo(&quot;&lt;/li&gt;&quot;);
 
-  for (\$_iii = \$pageRow[&quot;begin&quot;]; \$_iii &gt;= \$pageRow[&quot;end&quot;]; \$_iii++) {
+  for (\$_iii = \$pageRow[&quot;begin&quot;]; \$_iii &lt;= \$pageRow[&quot;end&quot;]; \$_iii++) {
    echo(&quot; &lt;li&gt;&quot;);
       if (\$_iii == \$pageRow[&quot;page&quot;]) {
         echo(&quot;&lt;span&gt;&quot; . \$_iii . &quot;&lt;/span&gt;&quot;);
       } else {
-        echo(&quot;&lt;a href='page_&quot; . \$_iii . &quot;'&gt;&quot; . \$_iii . &quot;&lt;/a&gt;&quot;);
+        echo(&quot;&lt;a href='page=&quot; . \$_iii . &quot;'&gt;&quot; . \$_iii . &quot;&lt;/a&gt;&quot;);
       }
     echo(&quot;&lt;/li&gt;&quot;);
   }
@@ -85,19 +85,19 @@ return "<a name=\"page\"></a>
     if (\$pageRow[&quot;page&quot;] &gt;= \$pageRow[&quot;total&quot;]) {
       echo(&quot;&lt;span&gt;&amp;raquo;&lt;/span&gt;&quot;);
     } else {
-      echo(&quot;&lt;a href='page_&quot; . \$pageRow[&quot;page&quot;] + 1 . &quot;'&gt;&amp;raquo;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=&quot; . \$pageRow[&quot;page&quot;] + 1 . &quot;'&gt;&amp;raquo;&lt;/a&gt;&quot;);
     }
   echo(&quot;&lt;/li&gt;&quot;);
 
-  if (\$_iii &lt; \$pageRow[&quot;total&quot;]}
+  if (\$_iii &lt; \$pageRow[&quot;total&quot;]) {
     echo(&quot;&lt;li&gt;&quot;);
-      echo(&quot;&lt;a href='page_&quot; . \$_iii . &quot;'&gt;&#19979;&#21313;&#39029;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=&quot; . \$_iii . &quot;'&gt;&#19979;&#21313;&#39029;&lt;/a&gt;&quot;);
     echo(&quot;&lt;/li&gt;&quot;);
   }
 
   if (\$pageRow[&quot;page&quot;] &lt; \$pageRow[&quot;total&quot;]) {
     echo(&quot;&lt;li&gt;&quot;);
-      echo(&quot;&lt;a href='page_&quot; . \$pageRow[&quot;total&quot;] . &quot;'&gt;&#26411;&#39029;&lt;/a&gt;&quot;);
+      echo(&quot;&lt;a href='page=&quot; . \$pageRow[&quot;total&quot;] . &quot;'&gt;&#26411;&#39029;&lt;/a&gt;&quot;);
     echo(&quot;&lt;/li&gt;&quot;);
   }
 echo(&quot;&lt;/ul&gt;&quot;);</code></pre>

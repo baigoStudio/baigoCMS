@@ -29,6 +29,7 @@ return array(
 		"pass"            => "修改密码",
 		"search"          => "搜索", //搜索
 		"spec"            => "专题",
+		"attachArticle"   => "本文附件管理", //媒体库
 
 		"upgrade"         => "baigo CMS 升级程序",
 		"upgradeTable"    => "升级数据库",
@@ -94,8 +95,10 @@ return array(
 
 		"upload"          => "上传附件",
 		"uploadList"      => "上传或插入", //上传或插入
+		"uploadArticle"   => "本文", //上传或插入
 
-		"attachList"      => "媒体库", //媒体库
+		"attachArticle"   => "本文附件管理", //媒体库
+		"attachList"      => "转至附件管理", //媒体库
 		"articleList"     => "浏览文章", //浏览文章
 	),
 
@@ -116,7 +119,8 @@ return array(
 		"status"          => "状态", //状态
 		"none"            => "无",
 		"type"            => "类型", //栏目类型
-
+		"desc"            => "说明",
+		"rangeId"         => "附件 ID 范围",
 		"appName"         => "应用名称",
 		"appId"           => "APP ID",
 		"appKey"          => "APP KEY",
@@ -125,8 +129,11 @@ return array(
 		"appAllow"        => "权限", //系统权限
 		"apiUrl"          => "API 接口 URL",
 
-		"customName"      => "表单名称",
-		"customType"      => "表单类型",
+		"customName"      => "字段名称",
+		"customTarget"    => "目标",
+		"customOpt"       => "选项",
+		"customOptNote"   => "请参考 MySQL 字段类型",
+		"customParent"    => "隶属于字段",
 
 		"ipAllow"         => "允许通信 IP",
 		"ipBad"           => "禁止通信 IP",
@@ -160,6 +167,7 @@ return array(
 
 		"loading"         => "正在载入……",
 		"uploading"       => "正在上传",
+		"submitting"      => "正在提交……",
 
 		"upgrade"         => "正在进行升级安装",
 		"upgradeTable"    => "即将升级数据库",
@@ -202,6 +210,14 @@ return array(
 		"articleSpec"     => "专题",
 		"articleExcerpt"  => "摘要", //摘要
 		"excerptType"     => "摘要类型", //摘要
+		"excerptDefault"  => "默认摘要类型", //摘要
+
+		"hits"            => "点击数",
+		"hitsDay"         => "日点击",
+		"hitsWeek"        => "周点击",
+		"hitsMonth"       => "月点击",
+		"hitsYear"        => "年点击",
+		"hitsAll"         => "总点击",
 
 		"cate"            => "栏目", //栏目
 		"cateAllow"       => "栏目管理权限", //栏目权限
@@ -212,7 +228,8 @@ return array(
 		"cateStatus"      => "栏目状态", //栏目状态
 		"cateLink"        => "跳转至", //跳转至
 		"cateDomain"      => "URL 前缀", //URL 前缀
-		"cateContent"     => "内容", //栏目简介
+		"cateDomainNote"  => "末尾请勿加 /",
+		"cateContent"     => "栏目介绍", //栏目简介
 		"catePerpage"     => "每页显示数", //每页显示数
 		"cateFtpServ"     => "FTP 服务器", //FTP 服务器
 		"cateFtpPort"     => "FTP 服务器端口", //FTP 服务器端口
@@ -283,6 +300,7 @@ return array(
 		"edit"    => "编辑",
 		"del"     => "删除",
 		"approve" => "审核",
+		"cate"    => "栏目信息",
 	),
 
 	"option" => array(
@@ -298,13 +316,14 @@ return array(
 		"allMonth"        => "所有月份", //所有月份
 
 		"pleaseSelect"    => "请选择", //请选择
-		"asParent"        => "作为一级栏目", //作为一级栏目
+		"asCateParent"    => "作为一级栏目", //作为一级栏目
+		"asCustomParent"  => "作为一级字段", //作为一级栏目
 		"noGroup"         => "不加入组",
 		"noMark"          => "无标记",
 		"noSpec"          => "不加入专题",
 		"original"        => "原图",
 		"tplInherit"      => "继承上一级", //继承上一级模板
-		"cache"           => "刷新缓存",
+		"cache"           => "更新缓存",
 
 		"top"             => "置顶",
 		"untop"           => "取消置顶",
@@ -345,11 +364,9 @@ return array(
 		"del"         => "永久删除", //删除
 		"complete"    => "完成",
 		"search"      => "搜索", //搜索
-		"searchSpec"  => "搜索",
 		"filter"      => "筛选", //筛选
 		"thumb"       => "缩略图",
 		"upload"      => "上传附件",
-		"recycle"     => "移至回收站", //移至回收站
 		"empty"       => "清空我的回收站", //清空回收站
 		"browse"      => "请选择文件 ...",
 		"skip"        => "跳过",
@@ -359,6 +376,10 @@ return array(
 
 		"belongAdd"   => "选择",
 		"belongDel"   => "移除",
+
+		"setPrimary"  => "设为主图",
+		"attachClear" => "清理附件",
+		"thumbGen"    => "重新生成缩略图",
 
 		"reloadSpec"  => "重载专题",
 		"stepNext"    => "下一步",
@@ -370,6 +391,8 @@ return array(
 		"del"         => "确认永久删除吗？此操作不可恢复！", //确认清空回收站
 		"empty"       => "确认清空回收站吗？此操作不可恢复！", //确认清空回收站
 		"resetKey"    => "确认重置吗？此操作不可恢复！",
+		"clear"       => "确认清理附件吗？此操作将耗费将长时间！", //确认清空回收站
+		"gen"         => "确认重新生成吗？此操作将耗费将长时间！", //确认清空回收站
 	),
 
 	/*------图片说明------*/

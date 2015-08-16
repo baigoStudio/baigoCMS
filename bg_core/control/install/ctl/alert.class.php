@@ -27,7 +27,7 @@ class CONTROL_ALERT {
 	 * @access public
 	 * @return void
 	 */
-	function ctl_display() {
+	function ctl_show() {
 		$_str_alert = fn_getSafe(fn_get("alert"), "txt", "");
 		$this->tplData = array(
 			"alert"  => $_str_alert,

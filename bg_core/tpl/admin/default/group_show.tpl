@@ -6,18 +6,22 @@
 	sub_active     => "list"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">{$adminMod.group.main.title}</a></li>
 	<li>{$lang.page.show}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">
-			<span class="glyphicon glyphicon-chevron-left"></span>
-			{$lang.href.back}
-		</a>
+		<ul class="nav nav-pills nav_baigo">
+			<li>
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+					{$lang.href.back}
+				</a>
+			</li>
+		</ul>
 	</div>
 
 	<div class="row">
@@ -31,7 +35,7 @@
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.groupAllow}</label>
-						<dl class="list_baigo">
+						<dl class="list_dl">
 							{foreach $adminMod as $key_m=>$value_m}
 								<dt>{$value_m.main.title}</dt>
 								<dd>
@@ -85,5 +89,5 @@
 		</div>
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

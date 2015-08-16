@@ -26,7 +26,7 @@ return array(
 	/*------用户组类型------*/
 	"group" => array(
 		"admin"   => "管理组", //管理组
-		"user"    => "用户组", //用户组
+		//"user"    => "用户组", //用户组
 	),
 
 	/*------栏目类型------*/
@@ -71,8 +71,8 @@ return array(
 		"cut"     => "裁切", //裁切
 	),
 
-	/*------自定义表单------*/
-	"custom" => array(
+	/*------自定义字段------*/
+	"target" => array(
 		"article" => "文章",
 		//"cate"    => "栏目",
 	),
@@ -85,10 +85,11 @@ return array(
 	),
 
 	"ext" => array(
-		"mysqli"      => "Mysqli 扩展库", //栏目类型
+		"mysqli"      => "MySqli 扩展库", //栏目类型
 		"gd"          => "GD 扩展库", //栏目类型
-		"mbstring"    => "mbstring 扩展库", //栏目类型
+		"mbstring"    => "MBString 扩展库", //栏目类型
 		"curl"        => "cURL 扩展库", //栏目类型
 		"ftp"         => "FTP 扩展库", //栏目类型
+		//"finfo"       => "Fileinfo 扩展库", //栏目类型
 	),
 );

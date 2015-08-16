@@ -11,15 +11,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$adminMod.article.sub.spec.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -59,14 +59,14 @@
 							</div>
 						</div>
 
+						<label class="control-label">{$lang.label.specContent}</label>
 						<div class="form-group">
-							<label class="control-label">
-								{$lang.label.specContent}
-								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
-									<span class="glyphicon glyphicon-picture"></span>
-									{$lang.href.uploadList}
-								</a>
-							</label>
+							<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-sm" data-toggle="modal" data-target="#attach_modal">
+								<span class="glyphicon glyphicon-picture"></span>
+								{$lang.href.uploadList}
+							</a>
+						</div>
+						<div class="form-group">
 							<textarea name="spec_content" id="spec_content" class="tinymce text_bg">{$tplData.specRow.spec_content}</textarea>
 						</div>
 
@@ -108,7 +108,7 @@
 		</div>
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 
 	<script type="text/javascript">
@@ -131,6 +131,7 @@
 	};
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -153,5 +154,5 @@
 	});
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

@@ -22,19 +22,11 @@ class AJAX_TAG {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_tag        = new MODEL_TAG();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -50,13 +42,13 @@ class AJAX_TAG {
 			$this->obj_ajax->halt_alert("x130303");
 		}
 		$_arr_tagSubmit = $this->mdl_tag->input_submit();
-		if ($_arr_tagSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagSubmit["str_alert"]);
+		if ($_arr_tagSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagSubmit["alert"]);
 		}
 
 		$_arr_tagRow = $this->mdl_tag->mdl_submit($_arr_tagSubmit["tag_name"], $_arr_tagSubmit["tag_status"]);
 
-		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_tagRow["alert"]);
 	}
 
 
@@ -73,8 +65,8 @@ class AJAX_TAG {
 
 		$_arr_tagIds = $this->mdl_tag->input_ids();
 
-		if ($_arr_tagIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagIds["str_alert"]);
+		if ($_arr_tagIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagIds["alert"]);
 		}
 
 		$_str_tagStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
@@ -84,7 +76,7 @@ class AJAX_TAG {
 
 		$_arr_tagRow = $this->mdl_tag->mdl_status($_str_tagStatus);
 
-		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_tagRow["alert"]);
 	}
 
 
@@ -100,13 +92,13 @@ class AJAX_TAG {
 		}
 
 		$_arr_tagIds = $this->mdl_tag->input_ids();
-		if ($_arr_tagIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_tagIds["str_alert"]);
+		if ($_arr_tagIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_tagIds["alert"]);
 		}
 
 		$_arr_tagRow = $this->mdl_tag->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_tagRow["alert"]);
 	}
 
 
@@ -120,7 +112,7 @@ class AJAX_TAG {
 		$_str_tagName = fn_getSafe(fn_get("tag_name"), "txt", "");
 		$_num_tagId   = fn_getSafe(fn_get("tag_id"), "int", 0);
 		$_arr_tagRow  = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
-		if ($_arr_tagRow["str_alert"] == "y130102") {
+		if ($_arr_tagRow["alert"] == "y130102") {
 			$this->obj_ajax->halt_re("x130203");
 		}
 
@@ -141,7 +133,7 @@ class AJAX_TAG {
 	function ajax_list() {
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_arr_tagRows = $this->mdl_tag->mdl_list(1000, 0, $_str_key, "show");
-		foreach ($_arr_tagRows as $_value) {
+		foreach ($_arr_tagRows as $_key=>$_value) {
 			$_arr_tagRow[] = $_value["tag_name"];
 		}
 

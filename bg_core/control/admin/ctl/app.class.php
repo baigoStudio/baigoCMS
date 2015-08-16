@@ -41,7 +41,7 @@ class CONTROL_APP {
 	function ctl_show() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			return array(
-				"str_alert" => "x190301",
+				"alert" => "x190301",
 			);
 			exit;
 		}
@@ -50,12 +50,12 @@ class CONTROL_APP {
 
 		if ($_num_appId == 0) {
 			return array(
-				"str_alert" => "x190203",
+				"alert" => "x190203",
 			);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($_num_appId);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			return $_arr_appRow;
 			exit;
 		}
@@ -65,7 +65,7 @@ class CONTROL_APP {
 		$this->obj_tpl->tplDisplay("app_show.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y190102",
+			"alert" => "y190102",
 		);
 	}
 
@@ -78,19 +78,19 @@ class CONTROL_APP {
 		if ($_num_appId > 0) {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				return array(
-					"str_alert" => "x190303",
+					"alert" => "x190303",
 				);
 				exit;
 			}
 			$_arr_appRow = $this->mdl_app->mdl_read($_num_appId);
-			if ($_arr_appRow["str_alert"] != "y190102") {
+			if ($_arr_appRow["alert"] != "y190102") {
 				return $_arr_appRow;
 				exit;
 			}
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 				return array(
-					"str_alert" => "x190302",
+					"alert" => "x190302",
 				);
 				exit;
 			}
@@ -111,7 +111,7 @@ class CONTROL_APP {
 		$this->obj_tpl->tplDisplay("app_form.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y190102",
+			"alert" => "y190102",
 		);
 	}
 
@@ -122,7 +122,7 @@ class CONTROL_APP {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
 			return array(
-				"str_alert" => "x190301",
+				"alert" => "x190301",
 			);
 			exit;
 		}
@@ -151,7 +151,7 @@ class CONTROL_APP {
 
 		$this->obj_tpl->tplDisplay("app_list.tpl", $_arr_tplData);
 		return array(
-			"str_alert" => "y190302",
+			"alert" => "y190302",
 		);
 	}
 }

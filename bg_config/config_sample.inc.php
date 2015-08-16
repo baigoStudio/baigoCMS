@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 
 define("IN_BAIGO", true); //程序是否合法被包含
-define("BG_SYS_DEBUG", false); //数据库调试模式
-define("BG_DB_DEBUG", false); //数据库调试模式
+define("BG_SYS_DEBUG", false); //系统调试开关
+define("BG_DB_DEBUG", false); //数据库调试开关
 
 define("PRD_SSO_URL", "http://www.baigo.net/Products/baigoSSO/"); //sso 官网
 
@@ -14,7 +14,7 @@ define("PRD_SSO_URL", "http://www.baigo.net/Products/baigoSSO/"); //sso 官网
 define("BG_SWITCH_LANG", false); //语言选择开关 true 允许选择
 define("BG_SWITCH_UI", false); //界面选择开关 true 允许选择
 define("BG_SWITCH_TOKEN", true); //表单提交令牌开关 true 验证令牌
-define("BG_SWITCH_SMARTY_DEBUG", false); //表单提交令牌开关 true 验证令牌
+define("BG_SWITCH_SMARTY_DEBUG", false); //Smarty 调试开关
 
 /*-------------------------默认-------------------------*/
 define("BG_DEFAULT_LANG", "zh_CN"); //默认语言
@@ -50,6 +50,8 @@ define("BG_NAME_ADMIN", "admin"); //管理目录名(模型、控制器、模块�
 define("BG_NAME_PUB", "pub"); //前台目录名(模型、控制器、模块等)
 define("BG_NAME_BGAPI", "bg_api"); //后台
 define("BG_NAME_API", "api"); //后台
+define("BG_NAME_BGNOTICE", "bg_notice"); //后台
+define("BG_NAME_NOTICE", "notice"); //后台
 
 define("BG_NAME_BGINSTALL", "bg_install"); //安装目录名(入口)
 define("BG_NAME_INSTALL", "install"); //安装目录名(模型、控制器、模块等)
@@ -89,6 +91,7 @@ define("BG_PATH_MODULE_ADMIN", BG_PATH_MODULE . BG_NAME_ADMIN ."/"); //后台模
 define("BG_PATH_MODULE_INSTALL", BG_PATH_MODULE . BG_NAME_INSTALL ."/"); //安装模块文件
 define("BG_PATH_MODULE_PUB", BG_PATH_MODULE . BG_NAME_PUB . "/"); //前台模块文件
 define("BG_PATH_MODULE_API", BG_PATH_MODULE . BG_NAME_API . "/"); //模块文件
+define("BG_PATH_MODULE_NOTICE", BG_PATH_MODULE . BG_NAME_NOTICE . "/");
 define("BG_PATH_MODULE_HELP", BG_PATH_MODULE . BG_NAME_HELP . "/"); //模块文件
 
 define("BG_PATH_CONTROL", BG_PATH_CORE . BG_NAME_CONTROL . "/"); //控制器
@@ -96,6 +99,7 @@ define("BG_PATH_CONTROL_ADMIN", BG_PATH_CONTROL . BG_NAME_ADMIN . "/"); //后台
 define("BG_PATH_CONTROL_INSTALL", BG_PATH_CONTROL . BG_NAME_INSTALL . "/"); //安装控制器
 define("BG_PATH_CONTROL_PUB", BG_PATH_CONTROL . BG_NAME_PUB . "/"); //前台控制器
 define("BG_PATH_CONTROL_API", BG_PATH_CONTROL . BG_NAME_API . "/"); //控制
+define("BG_PATH_CONTROL_NOTICE", BG_PATH_CONTROL . BG_NAME_NOTICE . "/"); //控制
 define("BG_PATH_CONTROL_HELP", BG_PATH_CONTROL . BG_NAME_HELP . "/"); //控制
 
 define("BG_PATH_SYSTPL", BG_PATH_CORE . BG_NAME_TPL . "/"); //系统模板
@@ -121,6 +125,7 @@ define("BG_URL_SSO", BG_URL_ROOT . BG_NAME_SSO . "/"); //sso 目录
 
 define("BG_URL_PUB", BG_URL_ROOT); //前台
 define("BG_URL_API", BG_URL_ROOT . BG_NAME_BGAPI . "/"); //API 目录
+define("BG_URL_NOTICE", BG_URL_ROOT . BG_NAME_BGNOTICE . "/"); //NOTICE 目录
 define("BG_URL_ADMIN", BG_URL_ROOT . BG_NAME_BGADMIN . "/"); //后台
 define("BG_URL_INSTALL", BG_URL_ROOT . BG_NAME_BGINSTALL . "/"); //安装
 
@@ -146,5 +151,3 @@ include_once(BG_PATH_CONFIG . "opt_base.inc.php"); //基本设置
 include_once(BG_PATH_CONFIG . "opt_sso.inc.php"); //SSO
 include_once(BG_PATH_CONFIG . "opt_upload.inc.php"); //上传
 include_once(BG_PATH_CONFIG . "opt_visit.inc.php"); //URL
-
-$GLOBALS["img_ext"] = array("jpg", "pjpg", "jpe", "pjpe", "jpeg", "pjpeg", "gif", "png", "bmp");

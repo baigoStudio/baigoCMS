@@ -1,6 +1,6 @@
 {*cate_form.php 栏目编辑界面*}
 {function cate_list arr=""}
-	{foreach $arr as $value}
+	{foreach $arr as $key=>$value}
 		<option value="{$value.cate_id}" {if $tplData.cateRow.cate_parent_id == $value.cate_id}selected{/if} {if $tplData.cateRow.cate_id == $value.cate_id}disabled{/if}>
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
@@ -36,15 +36,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=list">{$adminMod.cate.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -75,7 +75,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<div id="group_cate_name">
-								<label form="cate_name" class="control-label">{$lang.label.cateName}<span id="msg_cate_name">*</span></label>
+								<label class="control-label">{$lang.label.cateName}<span id="msg_cate_name">*</span></label>
 								<input type="text" name="cate_name" id="cate_name" value="{$tplData.cateRow.cate_name}" class="validate form-control">
 							</div>
 						</div>
@@ -94,15 +94,25 @@
 							</div>
 						</div>
 
-						<div class="form-group" id="item_cate_content">
-							<label class="control-label">
-								{$lang.label.cateContent}
+						{if $tplData.cateRow.cate_parent_id <= 0}
+							<div class="form-group">
+								<label for="cate_domain" class="control-label">{$lang.label.cateDomain}<span id="msg_cate_domain"></span></label>
+								<input type="text" name="cate_domain" id="cate_domain" value="{$tplData.cateRow.cate_domain}" class="validate form-control">
+								<p class="help-block">{$lang.label.cateDomainNote}</p>
+							</div>
+						{/if}
+
+						<div id="item_cate_content">
+							<label class="control-label">{$lang.label.cateContent}</label>
+							<div class="form-group">
 								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
 									<span class="glyphicon glyphicon-picture"></span>
 									{$lang.href.uploadList}
 								</a>
-							</label>
-							<textarea name="cate_content" id="cate_content" class="tinymce text_bg">{$tplData.cateRow.cate_content}</textarea>
+							</div>
+							<div class="form-group">
+								<textarea name="cate_content" id="cate_content" class="tinymce text_bg">{$tplData.cateRow.cate_content}</textarea>
+							</div>
 						</div>
 
 						<div class="form-group" id="item_cate_link">
@@ -112,7 +122,7 @@
 							</div>
 						</div>
 
-						{if $smarty.const.BG_MODULE_GEN == true && $smarty.const.BG_MODULE_FTP == true}
+						{if $smarty.const.BG_MODULE_GEN == true && $smarty.const.BG_MODULE_FTP == true && $tplData.cateRow.cate_parent_id <= 0}
 							<div class="form-group">
 								<label for="more_checkbox" class="checkbox-inline">
 									<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_host}checked{/if}>
@@ -121,11 +131,6 @@
 							</div>
 
 							<div id="more_input">
-								<div class="form-group">
-									<label for="cate_domain" class="control-label">{$lang.label.cateDomain}<span id="msg_cate_domain"></span></label>
-									<input type="text" name="cate_domain" id="cate_domain" value="{$tplData.cateRow.cate_domain}" class="validate form-control">
-								</div>
-
 								<div class="form-group">
 									<label for="cate_ftp_host" class="control-label">{$lang.label.cateFtpServ}<span id="msg_cate_ftp_host"></span></label>
 									<input type="text" name="cate_ftp_host" id="cate_ftp_host" value="{$tplData.cateRow.cate_ftp_host}" class="form-control">
@@ -173,7 +178,7 @@
 						<label for="cate_parent_id" class="control-label">{$lang.label.cateParent}<span id="msg_cate_parent_id">*</span></label>
 						<select name="cate_parent_id" id="cate_parent_id" class="validate form-control">
 							<option value="">{$lang.option.pleaseSelect}</option>
-							<option {if $tplData.cateRow.cate_parent_id == 0}selected{/if} value="0">{$lang.option.asParent}</option>
+							<option {if $tplData.cateRow.cate_parent_id == 0}selected{/if} value="0">{$lang.option.asCateParent}</option>
 							{cate_list arr=$tplData.cateRows}
 						</select>
 					</div>
@@ -183,7 +188,7 @@
 						<select name="cate_tpl" id="cate_tpl" class="validate form-control">
 							<option value="">{$lang.option.pleaseSelect}</option>
 							<option {if $tplData.cateRow.cate_tpl == "inherit"}selected{/if} value="inherit">{$lang.option.tplInherit}</option>
-							{foreach $tplData.tplRows as $value}
+							{foreach $tplData.tplRows as $key=>$value}
 								{if $value["type"] == "dir"}
 								<option {if $tplData.cateRow.cate_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
 								{/if}
@@ -225,7 +230,7 @@
 		</div>
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -243,8 +248,8 @@
 		},
 		cate_link: {
 			length: { min: 0, max: 3000 },
-			validate: { type: "str", format: "url", group: "group_cate_link" },
-			msg: { id: "msg_cate_link", too_long: "{$alert.x110211}", format_err: "{$alert.x110212}" }
+			validate: { type: "str", format: "text", group: "group_cate_link" },
+			msg: { id: "msg_cate_link", too_long: "{$alert.x110211}" }
 		},
 		cate_parent_id: {
 			length: { min: 1, max: 0 },
@@ -268,7 +273,7 @@
 		},
 		cate_domain: {
 			length: { min: 0, max: 3000 },
-			validate: { type: "str", format: "url" },
+			validate: { type: "str", format: "text" },
 			msg: { id: "msg_cate_domain", too_long: "{$alert.x110207}", format_err: "{$alert.x110208}" }
 		},
 		cate_perpage: {
@@ -280,6 +285,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -355,5 +361,5 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

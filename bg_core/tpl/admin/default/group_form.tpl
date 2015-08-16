@@ -18,15 +18,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">{$adminMod.group.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -60,7 +60,7 @@
 
 						<div id="groupAdmin" class="form-group">
 							<label class="control-label">{$lang.label.groupAllow}<span id="msg_group_allow">*</span></label>
-							<dl class="list_baigo">
+							<dl class="list_dl">
 								<dd>
 									<div class="checkbox_baigo">
 										<label for="chk_all">
@@ -143,7 +143,7 @@
 
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -172,6 +172,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=group",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -208,5 +209,5 @@
 	});
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

@@ -8,13 +8,11 @@
 if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
+
 /*-------------单点登录类-------------*/
 class CLASS_SSO {
 
-	private $arr_get;
 	private $arr_data;
-	private $arr_result;
-	private $arr_decode;
 
 	function __construct() { //构造函数
 		$this->arr_data = array(
@@ -24,25 +22,103 @@ class CLASS_SSO {
 	}
 
 
+	/** 编码
+	 * sso_encode function.
+	 *
+	 * @access public
+	 * @param mixed $_str_json
+	 * @return void
+	 */
+	function sso_encode($arr_data) {
+		$_arr_json    = array_merge($this->arr_data, $arr_data); //合并数组
+		$_str_json    = fn_jsonEncode($_arr_json, "encode");
+
+		$_arr_sso = array(
+			"act_post"   => "encode", //方法
+			"data"       => $_str_json,
+		);
+
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=code", $_arr_ssoData, "post"); //提交
+
+		return fn_jsonDecode($_arr_get["ret"], "no");
+	}
+
+
 	/** 解码
 	 * sso_decode function.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	function sso_decode() {
+	function sso_decode($str_code, $str_key) {
 		$_arr_sso = array(
 			"act_get"    => "decode", //方法
-			"code"       => $this->arr_result["code"], //加密串
-			"key"        => $this->arr_result["key"], //解码秘钥
+			"code"       => $str_code, //加密串
+			"key"        => $str_key, //解码秘钥
 		);
 
 		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
 		$_arr_get         = fn_http(BG_SSO_URL . "?mod=code", $_arr_ssoData, "get"); //提交
-		$this->arr_decode = fn_jsonDecode($_arr_get["ret"], "decode");
+
+		return fn_jsonDecode($_arr_get["ret"], "decode");
 	}
 
 
+	/** 签名
+	 * sso_signature function.
+	 *
+	 * @access public
+	 * @param mixed $tm_time
+	 * @param mixed $str_rand
+	 * @return void
+	 */
+	function sso_signature($tm_time, $str_rand) {
+		$_arr_sso = array(
+			"act_get"    => "signature", //方法
+			"time"       => $tm_time,
+			"random"     => $str_rand,
+		);
+
+		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
+		$_arr_get         = fn_http(BG_SSO_URL . "?mod=signature", $_arr_ssoData, "get"); //提交
+
+		return fn_jsonDecode($_arr_get["ret"], "no");
+	}
+
+
+	/** 验证签名
+	 * sso_verify function.
+	 *
+	 * @access public
+	 * @param mixed $tm_time
+	 * @param mixed $str_rand
+	 * @param mixed $str_sign
+	 * @return void
+	 */
+	function sso_verify($tm_time, $str_rand, $str_sign) {
+		$_arr_sso = array(
+			"act_get"    => "verify", //方法
+			"time"       => $tm_time,
+			"random"     => $str_rand,
+			"signature"  => $str_sign,
+		);
+
+		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
+		$_arr_get         = fn_http(BG_SSO_URL . "?mod=signature", $_arr_ssoData, "get"); //提交
+
+		return fn_jsonDecode($_arr_get["ret"], "no");
+	}
+
+
+	/** 管理员
+	 * sso_admin function.
+	 *
+	 * @access public
+	 * @param mixed $str_adminName
+	 * @param mixed $str_adminPass
+	 * @return void
+	 */
 	function sso_admin($str_adminName, $str_adminPass) {
 		$_arr_sso = array(
 			"act_post"   => "add",
@@ -50,19 +126,19 @@ class CLASS_SSO {
 			"admin_pass" => md5($str_adminPass),
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso); //合并数组
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=admin", $_arr_ssoData, "post"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-		if ($this->arr_result["str_alert"] != "y020101" && $this->arr_result["str_alert"] != "y020103") {
-			return $this->arr_result;
+		if ($_arr_result["alert"] != "y020101" && $_arr_result["alert"] != "y020103") {
+			return $_arr_result;
 			exit;
 		}
 
-		$this->sso_decode(); //解码
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode          = $this->sso_decode($_arr_result["code"], $_arr_result["key"]); //解码
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
 
@@ -85,20 +161,19 @@ class CLASS_SSO {
 			"user_nick"  => $str_userNick,
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso); //合并数组
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso); //合并数组
+		$_arr_get      = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010101") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010101") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode(); //解码
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode          = $this->sso_decode($_arr_result["code"], $_arr_result["key"]); //解码
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
 
@@ -118,20 +193,52 @@ class CLASS_SSO {
 			"user_pass"  => md5($str_userPass),
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010401") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010401") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode();
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode          = $this->sso_decode($_arr_result["code"], $_arr_result["key"]); //解码
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
+	}
+
+
+	/** 同步登录
+	 * sso_sync_login function.
+	 *
+	 * @access public
+	 * @param mixed $num_userId
+	 * @return void
+	 */
+	function sso_sync_login($num_userId) {
+		$_str_key             = fn_rand(6);
+		$_arr_data["user_id"] = $num_userId;
+		$_arr_code            = $this->sso_encode($_arr_data);
+
+		$_tm_time             = time();
+		$_str_rand            = fn_rand();
+		$_arr_signature       = $this->sso_signature($_tm_time, $_str_rand);
+
+		$_arr_ssoData = array(
+			"act_get"    => "login",
+			"time"       => $_tm_time,
+			"random"     => $_str_rand,
+			"signature"  => $_arr_signature["signature"],
+			"code"       => $_arr_code["code"],
+			"key"        => $_arr_code["key"],
+		);
+
+		$_arr_get             = fn_http(BG_SSO_URL . "?mod=sync", $_arr_ssoData, "get"); //提交
+		$_arr_result          = $this->result_process($_arr_get);
+		$_arr_result["html"]  = base64_decode($_arr_result["html"]);
+
+		return $_arr_result;
 	}
 
 
@@ -151,20 +258,19 @@ class CLASS_SSO {
 			"user_name"  => $str_user,
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010102") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010102") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode();
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode          = $this->sso_decode($_arr_result["code"], $_arr_result["key"]); //解码
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
 
@@ -199,20 +305,19 @@ class CLASS_SSO {
 			"user_nick"          => $str_userNick,
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "post"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010103") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010103") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
-		$this->sso_decode();
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode          = $this->sso_decode($_arr_result["code"], $_arr_result["key"]); //解码
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
 
@@ -229,24 +334,23 @@ class CLASS_SSO {
 			"user_name"  => $str_userName,
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010205") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010205") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
 		//$this->sso_decode();
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
 
-	/** 检查Email
+	/** 检查 Email
 	 * sso_chkmail function.
 	 *
 	 * @access public
@@ -261,40 +365,57 @@ class CLASS_SSO {
 			"user_id"    => $num_userId,
 		);
 
-		$_arr_ssoData     = array_merge($this->arr_data, $_arr_sso);
-		$this->arr_get    = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_ssoData = array_merge($this->arr_data, $_arr_sso);
+		$_arr_get     = fn_http(BG_SSO_URL . "?mod=user", $_arr_ssoData, "get"); //提交
+		$_arr_result  = $this->result_process($_arr_get);
 
-		//print_r($_arr_get);
-
-		$this->result_process();
-
-		if ($this->arr_result["str_alert"] != "y010211") {
-			return $this->arr_result; //返回错误信息
+		if ($_arr_result["alert"] != "y010211") {
+			return $_arr_result; //返回错误信息
 			exit;
 		}
 
 		//$this->sso_decode();
-		$this->arr_decode["str_alert"] = $this->arr_result["str_alert"];
+		$_arr_decode["alert"] = $_arr_result["alert"];
 
-		return $this->arr_decode;
+		return $_arr_decode;
 	}
 
-	private function result_process() {
-		if (isset($this->arr_get["ret"])) {
-			$_arr_result                 = json_decode($this->arr_get["ret"], true);
-			if (isset($_arr_result["str_alert"])) {
-				$_arr_result["str_alert"]    = str_replace("x030410", "x030413", $_arr_result["str_alert"]);
-				$_arr_result["str_alert"]    = str_replace("x030411", "x030414", $_arr_result["str_alert"]);
-				$this->arr_result            = $_arr_result;
-			} else {
-				$this->arr_result = array(
-					"str_alert" => "x030110"
-				);
-			}
-		} else {
-			$this->arr_result = array(
-				"str_alert" => "x030110"
+
+	/**
+	 * result_process function.
+	 *
+	 * @access private
+	 * @return void
+	 */
+	private function result_process($arr_get) {
+		if (!isset($arr_get["ret"])) {
+			$_arr_result = array(
+				"alert" => "x030110"
 			);
+			return $_arr_result;
+			exit;
 		}
+
+		$_arr_result = json_decode($arr_get["ret"], true);
+		if (!isset($_arr_result["alert"])) {
+			$_arr_result = array(
+				"alert" => "x030110"
+			);
+			return $_arr_result;
+			exit;
+		}
+
+		if (!isset($_arr_result["prd_sso_pub"]) || $_arr_result["prd_sso_pub"] < 20150713) {
+			$_arr_result = array(
+				"alert" => "x030114"
+			);
+			return $_arr_result;
+			exit;
+		}
+
+		$_arr_result["alert"]   = str_replace("x030410", "x030413", $_arr_result["alert"]);
+		$_arr_result["alert"]   = str_replace("x030411", "x030414", $_arr_result["alert"]);
+
+		return $_arr_result;
 	}
 }

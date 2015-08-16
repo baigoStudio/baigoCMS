@@ -1,11 +1,11 @@
 {* admin_callForm.tpl 管理组编辑界面 *}
 {function cate_checkbox arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
-		{foreach $arr as $value}
+		{foreach $arr as $key=>$value}
 			<li>
 				<div class="checkbox_baigo">
 					<label for="call_cate_ids_{$value.cate_id}">
-						<input type="checkbox" {if $value.cate_id|in_array:$tplData.callRow.call_cate_ids}checked{/if} value="{$value.cate_id}" name="call_cate_ids[]" id="call_cate_ids_{$value.cate_id}" class="call_cate_ids_{$value.cate_parent_id}">
+						<input type="checkbox" {if $value.cate_id|in_array:$tplData.callRow.call_cate_ids}checked{/if} value="{$value.cate_id}" name="call_cate_ids[]" id="call_cate_ids_{$value.cate_id}" class="call_cate_ids_{$value.cate_parent_id}" {if $value.cate_type != "normal"}disabled{/if}>
 						{$value.cate_name}
 					</label>
 				</div>
@@ -19,11 +19,11 @@
 
 {function cate_radio arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
-		{foreach $arr as $value}
+		{foreach $arr as $key=>$value}
 			<li>
 				<div class="radio_baigo">
 					<label for="call_cate_id_{$value.cate_id}">
-						<input type="radio" {if $tplData.callRow.call_cate_id == $value.cate_id}checked{/if} value="{$value.cate_id}" name="call_cate_id" id="call_cate_id_{$value.cate_id}" {if !$value.cate_childs}disabled="disabled"{/if}>
+						<input type="radio" {if $tplData.callRow.call_cate_id == $value.cate_id}checked{/if} value="{$value.cate_id}" name="call_cate_id" id="call_cate_id_{$value.cate_id}" {if !$value.cate_childs}disabled{/if}>
 						{$value.cate_name}
 					</label>
 				</div>
@@ -57,15 +57,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=list">{$adminMod.call.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -117,7 +117,9 @@
 								<div class="input-group">
 									<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
 									<span class="input-group-btn">
-										<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
+										<button type="button" class="btn btn-info" id="spec_search">
+											<span class="glyphicon glyphicon-search"></span>
+										</button>
 									</span>
 								</div>
 							</div>
@@ -233,12 +235,12 @@
 						<input type="text" name="call_amount[except]" id="call_amount_except" value="{$tplData.callRow.call_amount.except}" class="validate form-control">
 					</div>
 
-					<div class="form-group">
+					{*<div class="form-group">
 						<label for="call_trim" class="control-label">{$lang.label.callTrim}<span id="msg_call_trim">*</span></label>
 						<input type="text" name="call_trim" id="call_trim" value="{$tplData.callRow.call_trim}" class="validate form-control">
 					</div>
 
-					{*<div class="form-group">
+					<div class="form-group">
 						<label for="call_css" class="control-label">{$lang.label.callCss}<span id="msg_call_css"></span></label>
 						<input type="text" name="call_css" id="call_css" value="{$tplData.callRow.call_css}" class="validate form-control">
 					</div>*}
@@ -248,7 +250,7 @@
 
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	function reload_spec(_key, _page) {
@@ -327,11 +329,6 @@
 			validate: { type: "str", format: "int" },
 			msg: { id: "msg_call_amount_except", too_short: "{$alert.x170209}", format_err: "{$alert.x170210}" }
 		},
-		call_trim: {
-			length: { min: 1, max: 0 },
-			validate: { type: "str", format: "int" },
-			msg: { id: "msg_call_trim", too_short: "{$alert.x170211}", format_err: "{$alert.x170212}" }
-		},
 		call_css: {
 			length: { min: 0, max: 300 },
 			validate: { type: "str", format: "text" },
@@ -346,6 +343,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=call",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -398,5 +396,5 @@
 	});
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

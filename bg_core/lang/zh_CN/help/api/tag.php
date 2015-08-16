@@ -97,7 +97,7 @@ return "<a name=\"get\"></a>
 						<td>pub 为发布，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前 TAG 的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>

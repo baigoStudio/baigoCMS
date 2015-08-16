@@ -14,6 +14,7 @@ class MODEL_ARTICLE_PUB {
 
 	private $obj_db;
 	private $is_magic;
+	public $custom_columns = array();
 
 	function __construct() { //构造函数
 		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
@@ -52,13 +53,13 @@ class MODEL_ARTICLE_PUB {
 		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "article_cate_view", $_arr_articleCreat, BG_DB_TABLE . "article", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
-			$_str_alert = "y120108"; //更新成功
+			$_str_alert = "y150108"; //更新成功
 		} else {
-			$_str_alert = "x120108"; //更新成功
+			$_str_alert = "x150108"; //更新成功
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -87,20 +88,70 @@ class MODEL_ARTICLE_PUB {
 			array("article_time_year",  BG_DB_TABLE . "article"),
 			array("article_hits_all",   BG_DB_TABLE . "article"),
 			array("belong_tag_id",      BG_DB_TABLE . "tag_belong"),
+			array("belong_cate_id",     BG_DB_TABLE . "cate_belong"),
 		);
 
-		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "tag_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`)";
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "tag_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "tag_belong`.`belong_article_id`) LEFT JOIN `" . BG_DB_TABLE . "cate_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "cate_belong`.`belong_article_id`)";
 
 		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "article_tag_view", $_arr_articleCreat, BG_DB_TABLE . "article", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
-			$_str_alert = "y120108"; //更新成功
+			$_str_alert = "y160108"; //更新成功
 		} else {
-			$_str_alert = "x120108"; //更新成功
+			$_str_alert = "x160108"; //更新成功
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
+		);
+	}
+
+
+	function mdl_create_custom_view($arr_customRows) {
+		$_arr_articleCreat = array(
+			array("article_id",          BG_DB_TABLE . "article"),
+			array("article_title",       BG_DB_TABLE . "article"),
+			array("article_excerpt",     BG_DB_TABLE . "article"),
+			array("article_link",        BG_DB_TABLE . "article"),
+			array("article_time",        BG_DB_TABLE . "article"),
+			array("article_time_pub",    BG_DB_TABLE . "article"),
+			array("article_attach_id",   BG_DB_TABLE . "article"),
+			array("article_spec_id",     BG_DB_TABLE . "article"),
+			array("article_status",      BG_DB_TABLE . "article"),
+			array("article_box",         BG_DB_TABLE . "article"),
+			array("article_top",         BG_DB_TABLE . "article"),
+			array("article_cate_id",     BG_DB_TABLE . "article"),
+			array("article_hits_day",    BG_DB_TABLE . "article"),
+			array("article_time_day",    BG_DB_TABLE . "article"),
+			array("article_hits_week",   BG_DB_TABLE . "article"),
+			array("article_time_week",   BG_DB_TABLE . "article"),
+			array("article_hits_month",  BG_DB_TABLE . "article"),
+			array("article_time_month",  BG_DB_TABLE . "article"),
+			array("article_hits_year",   BG_DB_TABLE . "article"),
+			array("article_time_year",   BG_DB_TABLE . "article"),
+			array("article_hits_all",    BG_DB_TABLE . "article"),
+			array("belong_cate_id",      BG_DB_TABLE . "cate_belong"),
+		);
+
+		foreach ($arr_customRows as $_key=>$_value) {
+			$_arr_articleCreat[] = array(
+				"custom_" . $_value["custom_id"],
+				BG_DB_TABLE . "article_custom",
+			);
+		}
+
+		$_str_sqlJoin = "LEFT JOIN `" . BG_DB_TABLE . "article_custom` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "article_custom`.`article_id`) LEFT JOIN `" . BG_DB_TABLE . "cate_belong` ON (`" . BG_DB_TABLE . "article`.`article_id`=`" . BG_DB_TABLE . "cate_belong`.`belong_article_id`)";
+
+		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "article_custom_view", $_arr_articleCreat, BG_DB_TABLE . "article", $_str_sqlJoin);
+
+		if ($_num_mysql > 0) {
+			$_str_alert = "y210108"; //更新成功
+		} else {
+			$_str_alert = "x210108"; //更新成功
+		}
+
+		return array(
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -138,13 +189,12 @@ class MODEL_ARTICLE_PUB {
 			$_arr_articleRow = $_arr_articleRows[0];
 		} else {
 			return array(
-				"str_alert" => "x120102",
+				"alert" => "x120102",
 			);
 		}
 
 		$_arr_articleSelect = array(
 			"article_content",
-			"article_custom",
 		);
 
 		$_arr_contentRows = $this->obj_db->select(BG_DB_TABLE . "article_content", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
@@ -153,20 +203,42 @@ class MODEL_ARTICLE_PUB {
 			$_arr_contentRow = $_arr_contentRows[0];
 		} else {
 			return array(
-				"str_alert" => "x120102",
+				"alert" => "x120102",
 			);
 		}
 
-		//if (!$this->is_magic) {
-			$_arr_articleRow["article_content"]   = stripslashes($_arr_contentRow["article_content"]);
-		//} else {
-			//$_arr_articleRow["article_content"]   = $_arr_contentRow["article_content"];
-		//}
+		$_arr_articleRow["article_content"]   = stripslashes($_arr_contentRow["article_content"]);
 
-		$_arr_articleRow["article_custom"]    = fn_jsonDecode($_arr_contentRow["article_custom"], "decode");
+		$_arr_customRow = $this->mdl_read_custom($num_articleId);
+		if ($_arr_customRow["alert"] == "y120102") {
+			$_arr_articleRow["article_customs"]   = $_arr_customRow["article_customs"];
+		}
+
 		$_arr_articleRow["article_url"]       = $this->url_process($_arr_articleRow);
 		$_arr_articleRow["article_excerpt"]   = html_entity_decode($_arr_articleRow["article_excerpt"]);
-		$_arr_articleRow["str_alert"]         = "y120102";
+		$_arr_articleRow["alert"]             = "y120102";
+
+		return $_arr_articleRow;
+	}
+
+
+	function mdl_read_custom($num_articleId) {
+
+		$_arr_articleSelect = $this->custom_columns;
+
+		$_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "article_custom", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
+
+		if (isset($_arr_customRows[0])) {
+			$_arr_customRow = $_arr_customRows[0];
+		} else {
+			return array(
+				"alert" => "x120102",
+			);
+		}
+
+		$_arr_articleRow["article_customs"]   = $_arr_customRow;
+
+		$_arr_articleRow["alert"]             = "y120102";
 
 		return $_arr_articleRow;
 	}
@@ -183,11 +255,11 @@ class MODEL_ARTICLE_PUB {
 	 * @param string $str_month (default: "")
 	 * @param bool $arr_cateIds (default: false)
 	 * @param bool $arr_markIds (default: false)
-	 * @param string $_str_callAttach (default: "")
-	 * @param string $_str_callType (default: "")
+	 * @param string $str_attachType (default: "")
+	 * @param string $str_orderType (default: "")
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $arr_tagIds = false, $_str_callAttach = "", $_str_callType = "") {
+	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $arr_tagIds = false, $arr_customRows = false, $str_attachType = "", $str_orderType = "") {
 		$_arr_articleSelect = array(
 			"article_id",
 			"article_title",
@@ -233,14 +305,32 @@ class MODEL_ARTICLE_PUB {
 		}
 
 		if ($arr_tagIds) {
+			$_view_name      = "tag";
 			$_str_tagIds     = implode(",", $arr_tagIds);
 			$_str_sqlWhere  .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
-			$_view_name      = "article_tag_view";
+		} else if ($arr_customRows) {
+			$_view_name          = "custom";
+			/*$_str_sqlWhere      .= " AND (";
+			$_str_sqlWhereSub    = "";
+			foreach ($arr_customRows as $_key=>$_value) {
+				if ($_value) {
+					$_str_sqlWhereSub  .= " (value_custom_id=" . $_key . " AND value_custom_value LIKE '%" . $_value . "%') OR";
+				}
+			}
+			$_str_sqlWhere  .= $_str_sqlWhereSub . ")";
+			$_str_sqlWhere   = str_replace(" OR)", ")", $_str_sqlWhere);
+			$_str_sqlWhere   = str_replace(" AND ()", "", $_str_sqlWhere);*/
+
+			foreach ($arr_customRows as $_key=>$_value) {
+				if ($_value) {
+					$_str_sqlWhere  .= " AND " . $_key . " LIKE '%" . $_value . "%'";
+				}
+			}
 		} else {
-			$_view_name      = "article_cate_view";
+			$_view_name = "cate";
 		}
 
-		switch ($_str_callAttach) {
+		switch ($str_attachType) {
 			case "attach":
 				$_str_sqlWhere .= " AND article_attach_id>0";
 			break;
@@ -254,20 +344,25 @@ class MODEL_ARTICLE_PUB {
 			break;
 		}
 
-		if (!$_str_callType || $_str_callType == "article") {
+		if (!$str_orderType || $str_orderType == "article") {
 			$_str_sqlOrder   = "article_top DESC, article_time_pub DESC, article_id DESC";
 		} else {
-			$_str_sqlOrder   = "article_" . $_str_callType . " DESC, article_time_pub DESC, article_id DESC";
+			$_str_sqlOrder   = "article_" . $str_orderType . " DESC, article_time_pub DESC, article_id DESC";
 		}
 
 		//print_r($_str_sqlWhere);
 
-		$_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . $_view_name, $_arr_articleSelect, $_str_sqlWhere, "article_top, article_time_pub, article_id", $_str_sqlOrder, $num_no, $num_except, array("article_id"));
+		$_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article_" . $_view_name . "_view", $_arr_articleSelect, $_str_sqlWhere, "article_top, article_time_pub, article_id", $_str_sqlOrder, $num_no, $num_except, array("article_id"));
 
 		if ($_arr_articleRows) {
 			foreach ($_arr_articleRows as $_key=>$_value) {
-				$_arr_articleRows[$_key]["article_url"]      = $this->url_process($_value);
-				$_arr_articleRows[$_key]["article_excerpt"]  = html_entity_decode($_value["article_excerpt"]);
+				$_arr_articleRows[$_key]["article_url"]     = $this->url_process($_value);
+				$_arr_articleRows[$_key]["article_excerpt"] = html_entity_decode($_value["article_excerpt"]);
+
+				$_arr_customRow = $this->mdl_read_custom($_value["article_id"]);
+				if ($_arr_customRow["alert"] == "y120102") {
+					$_arr_articleRows[$_key]["article_customs"]   = $_arr_customRow["article_customs"];
+				}
 			}
 		}
 
@@ -284,11 +379,11 @@ class MODEL_ARTICLE_PUB {
 	 * @param string $str_month (default: "")
 	 * @param bool $arr_cateIds (default: false)
 	 * @param bool $arr_markIds (default: false)
-	 * @param string $_str_callAttach (default: "")
-	 * @param string $_str_callType (default: "")
+	 * @param string $str_attachType (default: "")
+	 * @param string $str_orderType (default: "")
 	 * @return void
 	 */
-	function mdl_count($str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $arr_tagIds = false, $_str_callAttach = "", $_str_callType = "") {
+	function mdl_count($str_key = "", $str_year = "", $str_month = "", $arr_cateIds = false, $arr_markIds = false, $num_specId = 0, $arr_tagIds = false, $arr_customRows = false, $str_attachType = "", $str_orderType = "") {
 
 		$_str_sqlWhere = "article_status='pub' AND article_box='normal' AND article_time_pub<=" . time();
 
@@ -319,14 +414,32 @@ class MODEL_ARTICLE_PUB {
 		}
 
 		if ($arr_tagIds) {
+			$_view_name      = "tag";
 			$_str_tagIds     = implode(",", $arr_tagIds);
 			$_str_sqlWhere  .= " AND belong_tag_id IN (" . $_str_tagIds . ")";
-			$_view_name = "article_tag_view";
+		} else if ($arr_customRows) {
+			$_view_name          = "custom";
+			/*$_str_sqlWhere      .= " AND (";
+			$_str_sqlWhereSub    = "";
+			foreach ($arr_customRows as $_key=>$_value) {
+				if ($_value) {
+					$_str_sqlWhereSub  .= " (value_custom_id=" . $_key . " AND value_custom_value LIKE '%" . $_value . "%') OR";
+				}
+			}
+			$_str_sqlWhere  .= $_str_sqlWhereSub . ")";
+			$_str_sqlWhere   = str_replace(" OR)", ")", $_str_sqlWhere);
+			$_str_sqlWhere   = str_replace(" AND ()", "", $_str_sqlWhere);*/
+
+			foreach ($arr_customRows as $_key=>$_value) {
+				if ($_value) {
+					$_str_sqlWhere  .= " AND " . $_key . " LIKE '%" . $_value . "%'";
+				}
+			}
 		} else {
-			$_view_name = "article_cate_view";
+			$_view_name = "cate";
 		}
 
-		switch ($_str_callAttach) {
+		switch ($str_attachType) {
 			case "attach":
 				$_str_sqlWhere .= " AND article_attach_id>0";
 			break;
@@ -342,7 +455,7 @@ class MODEL_ARTICLE_PUB {
 
 		//print_r($_str_sqlWhere);
 
-		$_num_articleCount    = $this->obj_db->count(BG_DB_TABLE . $_view_name, $_str_sqlWhere, array("article_id")); //查询数据
+		$_num_articleCount    = $this->obj_db->count(BG_DB_TABLE . "article_" . $_view_name . "_view", $_str_sqlWhere, array("article_id")); //查询数据
 
 		return $_num_articleCount;
 	}
@@ -404,7 +517,7 @@ class MODEL_ARTICLE_PUB {
 				break;
 
 				case "pstatic":
-					$_str_articleUrl = BG_URL_ROOT . "article/" . $_arr_articleRow["article_id"];
+					$_str_articleUrl = BG_URL_ROOT . "article/id-" . $_arr_articleRow["article_id"];
 				break;
 
 				default:

@@ -19,6 +19,10 @@ switch ($GLOBALS["act_post"]) {
 		$ajax_article->ajax_submit();
 	break;
 
+	case "primary":
+		$ajax_article->ajax_primary();
+	break;
+
 	case "top":
 	case "untop":
 		$ajax_article->ajax_top();

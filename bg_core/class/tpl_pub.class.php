@@ -44,6 +44,9 @@ class CLASS_TPL {
 	function tplDisplay($str_tpl, $arr_tplData = "", $is_func = true) {
 		if ($is_func) {
 			$this->obj_smarty->registerPlugin("function", "call_display", "fn_callDisplay"); //注册自定义函数
+			$this->obj_smarty->registerPlugin("function", "call_attach", "fn_callAttach"); //注册自定义函数
+			$this->obj_smarty->registerPlugin("function", "call_cate", "fn_callCate"); //注册自定义函数
+			$this->obj_smarty->registerPlugin("modifier","ubb","fn_ubb");
 		}
 
 		$this->obj_smarty->assign("lang", $this->lang);

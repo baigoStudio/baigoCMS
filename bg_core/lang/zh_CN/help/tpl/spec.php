@@ -18,19 +18,25 @@ return "<a name=\"list\"></a>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">specRows</td>
+						<td class=\"nowrap\">tplData.specRows</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">专题列表</td>
-						<td>详情请查看 <a href=\"#specRow\">specRow</a></td>
+						<td>详情请查看 <a href=\"#specRow\">specRow</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#searchList\">search</a></td>
+						<td class=\"nowrap\">tplData.search</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">搜索参数</td>
-						<td>显示专题列表所需要的搜索参数。</td>
+						<td>显示专题列表所需要的搜索参数，查看 <a href=\"#search_list\">tplData.search</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">pageRow</td>
+						<td class=\"nowrap\">tplData.query</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">搜索参数序列化字符串</td>
+						<td>搜索参数序列化为字符串以后的结果。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">tplData.pageRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">分页参数</td>
 						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=page\">分页参数</a></td>
@@ -41,7 +47,7 @@ return "<a name=\"list\"></a>
 	</div>
 	<p>&nbsp;</p>
 
-	<a name=\"searchList\"></a>
+	<a name=\"search_list\"></a>
 	<h4><code>{\$tplData.search}</code> 数组</h4>
 
 	<p>显示文章列表所需要的搜索参数。</p>
@@ -58,12 +64,6 @@ return "<a name=\"list\"></a>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">动作</td>
-						<td>只能为 list。</td>
-					</tr>
 					<tr>
 						<td class=\"nowrap\">page_ext</td>
 						<td class=\"nowrap\">string</td>
@@ -102,25 +102,25 @@ return "<a name=\"list\"></a>
 				<tbody>
 
 					<tr>
-						<td class=\"nowrap\"><a href=\"#specRow\">specRow</a></td>
+						<td class=\"nowrap\">tplData.specRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">当前专题详细信息</td>
-						<td> </td>
+						<td>查看 <a href=\"#specRow\">tplData.specRow</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">articleRows</td>
+						<td class=\"nowrap\">tplData.articleRows</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">文章列表</td>
 						<td>所有隶属于此专题的文章。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=article#articleRow\" target=\"_blank\">文章</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#searchShow\">search</a></td>
+						<td class=\"nowrap\">tplData.search</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">搜索参数</td>
-						<td>显示文章列表所需要的搜索参数。</td>
+						<td>显示文章列表所需要的搜索参数，查看 <a href=\"#search_show\">tplData.search</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">pageRow</td>
+						<td class=\"nowrap\">tplData.pageRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">分页参数</td>
 						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=page\">分页参数</a></td>
@@ -180,7 +180,7 @@ return "<a name=\"list\"></a>
 						<td>pub 为发布，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前专题的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
@@ -192,7 +192,7 @@ return "<a name=\"list\"></a>
 
 	<p>&nbsp;</p>
 
-	<a name=\"searchShow\"></a>
+	<a name=\"search_show\"></a>
 	<h4><code>{\$tplData.search}</code> 数组</h4>
 
 	<p>显示文章列表所需要的搜索参数。</p>
@@ -209,12 +209,6 @@ return "<a name=\"list\"></a>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">动作</td>
-						<td>只能为 show。</td>
-					</tr>
 					<tr>
 						<td class=\"nowrap\">spec_id</td>
 						<td class=\"nowrap\">int</td>

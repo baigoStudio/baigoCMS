@@ -44,7 +44,7 @@ class CONTROL_SPEC {
 	function ctl_select() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			return array(
-				"str_alert" => "x180303",
+				"alert" => "x180303",
 			);
 			exit;
 		}
@@ -53,18 +53,17 @@ class CONTROL_SPEC {
 
 		if ($_num_specId == 0) {
 			return array(
-				"str_alert" => "x180204",
+				"alert" => "x180204",
 			);
 			exit;
 		}
 
 		$_arr_specRow = $this->mdl_spec->mdl_read($_num_specId);
-		if ($_arr_specRow["str_alert"] != "y180102") {
+		if ($_arr_specRow["alert"] != "y180102") {
 			return $_arr_specRow;
 			exit;
 		}
 
-		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key_select  = fn_getSafe(fn_get("key_select"), "txt", "");
 		$_str_status      = fn_getSafe(fn_get("status"), "txt", "");
 		$_num_cateId      = fn_getSafe(fn_get("cate_id"), "int", 0);
@@ -72,7 +71,7 @@ class CONTROL_SPEC {
 		$_str_key_belong  = fn_getSafe(fn_get("key_belong"), "txt", "");
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key_select" => $_str_key_select,
 			"status"     => $_str_status,
 			"cate_id"    => $_num_cateId,
@@ -81,8 +80,9 @@ class CONTROL_SPEC {
 		);
 
 		if ($_num_cateId != 0) {
-			$_arr_cateIds    = $this->mdl_cate->mdl_cateIds($_num_cateId);
+			$_arr_cateIds    = $this->mdl_cate->mdl_ids($_num_cateId);
 			$_arr_cateIds[]  = $_num_cateId;
+			$_arr_cateIds    = array_unique($_arr_cateIds);
 		} else {
 			$_arr_cateIds = false;
 		}
@@ -115,7 +115,7 @@ class CONTROL_SPEC {
 		$this->obj_tpl->tplDisplay("spec_select.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y180102",
+			"alert" => "y180102",
 		);
 	}
 
@@ -132,19 +132,19 @@ class CONTROL_SPEC {
 		if ($_num_specId > 0) {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 				return array(
-					"str_alert" => "x180303",
+					"alert" => "x180303",
 				);
 				exit;
 			}
 			$_arr_specRow = $this->mdl_spec->mdl_read($_num_specId);
-			if ($_arr_specRow["str_alert"] != "y180102") {
+			if ($_arr_specRow["alert"] != "y180102") {
 				return $_arr_specRow;
 				exit;
 			}
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 				return array(
-					"str_alert" => "x180302",
+					"alert" => "x180302",
 				);
 				exit;
 			}
@@ -165,7 +165,7 @@ class CONTROL_SPEC {
 		$this->obj_tpl->tplDisplay("spec_form.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y180102",
+			"alert" => "y180102",
 		);
 	}
 
@@ -179,17 +179,16 @@ class CONTROL_SPEC {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["spec"])) {
 			return array(
-				"str_alert" => "x180301",
+				"alert" => "x180301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"status"     => $_str_status,
 		);
@@ -211,7 +210,7 @@ class CONTROL_SPEC {
 		$this->obj_tpl->tplDisplay("spec_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y180301",
+			"alert" => "y180301",
 		);
 	}
 

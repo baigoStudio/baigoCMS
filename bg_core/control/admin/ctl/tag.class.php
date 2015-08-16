@@ -40,18 +40,17 @@ class CONTROL_TAG {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
 			return array(
-				"str_alert" => "x130301",
+				"alert" => "x130301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 		$_num_tagId   = fn_getSafe(fn_get("tag_id"), "int", 0);
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"status"     => $_str_status,
 		);
@@ -63,7 +62,7 @@ class CONTROL_TAG {
 
 		if ($_num_tagId > 0) {
 			$_arr_tagRow = $this->mdl_tag->mdl_read($_num_tagId);
-			if ($_arr_tagRow["str_alert"] != "y130102") {
+			if ($_arr_tagRow["alert"] != "y130102") {
 				return $_arr_tagRow;
 				exit;
 			}
@@ -88,7 +87,7 @@ class CONTROL_TAG {
 		$this->obj_tpl->tplDisplay("tag_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y130301",
+			"alert" => "y130301",
 		);
 	}
 

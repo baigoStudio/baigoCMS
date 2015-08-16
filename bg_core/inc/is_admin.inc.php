@@ -9,9 +9,9 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-if ($GLOBALS["adminLogged"]["str_alert"] != "y020102") {
+if ($GLOBALS["adminLogged"]["alert"] != "y020102") {
 	if ($GLOBALS["view"] == "iframe") {
-		$_str_url = BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $GLOBALS["adminLogged"]["str_alert"];
+		$_str_url = BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $GLOBALS["adminLogged"]["alert"];
 	} else {
 		if (fn_server("REQUEST_URI")) {
 			$_str_attach = base64_encode(fn_server("REQUEST_URI"));

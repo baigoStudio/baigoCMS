@@ -23,8 +23,6 @@ include_once(BG_PATH_CLASS . "mysqli.class.php"); //载入数据库类
 include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/logon.class.php"); //载入登录控制器
 
-header("Content-Type: text/html; charset=utf-8");
-
 if (!defined("BG_DB_PORT")) {
 	define("BG_DB_PORT", "3306");
 }
@@ -54,12 +52,14 @@ if (!$GLOBALS["obj_db"]->select_db()) {
 $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ctl_logon              = new CONTROL_LOGON();
 
+header("Content-Type: text/html; charset=utf-8");
+
 switch ($GLOBALS["act_post"]) {
 	case "login":
 		$arr_logonRow = $ctl_logon->ctl_login();
 
-		if ($arr_logonRow["str_alert"] != "y020401") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=logon&forward=" . $arr_logonRow["forward"] . "&alert=" . $arr_logonRow["str_alert"] . $_url_attach);
+		if ($arr_logonRow["alert"] != "y020401") {
+			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=logon&forward=" . $arr_logonRow["forward"] . "&alert=" . $arr_logonRow["alert"] . $_url_attach);
 		} else {
 			header("Location: " . base64_decode($arr_logonRow["forward"]));
 		}

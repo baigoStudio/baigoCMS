@@ -36,7 +36,7 @@ class MODEL_MIME {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -73,7 +73,7 @@ class MODEL_MIME {
 				$_str_alert = "y080101";
 			} else {
 				return array(
-					"str_alert" => "x080101",
+					"alert" => "x080101",
 				);
 				exit;
 			}
@@ -85,14 +85,14 @@ class MODEL_MIME {
 				$_str_alert = "y080103";
 			} else {
 				return array(
-					"str_alert" => "x080103",
+					"alert" => "x080103",
 				);
 				exit;
 			}
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 			"mime_id" => $_num_mimeId,
 		);
 	}
@@ -129,12 +129,12 @@ class MODEL_MIME {
 			$_arr_mimeRow = $_arr_mimeRows[0];
 		} else {
 			return array(
-				"str_alert" => "x080102", //不存在记录
+				"alert" => "x080102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_mimeRow["str_alert"] = "y080102";
+		$_arr_mimeRow["alert"] = "y080102";
 
 		return $_arr_mimeRow;
 	}
@@ -181,7 +181,7 @@ class MODEL_MIME {
 		}
 
 		return array(
-			"str_alert" => $_str_alert
+			"alert" => $_str_alert
 		);
 	}
 
@@ -189,7 +189,7 @@ class MODEL_MIME {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -198,7 +198,7 @@ class MODEL_MIME {
 
 		if ($this->mimeSubmit["mime_id"] > 0) {
 			$_arr_mimeRow = $this->mdl_read($this->mimeSubmit["mime_id"]);
-			if ($_arr_mimeRow["str_alert"] != "y080102") {
+			if ($_arr_mimeRow["alert"] != "y080102") {
 				return $_arr_mimeRow;
 				exit;
 			}
@@ -208,14 +208,14 @@ class MODEL_MIME {
 		switch ($_arr_mimeName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x080201",
+					"alert" => "x080201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x080202",
+					"alert" => "x080202",
 				);
 				exit;
 			break;
@@ -226,9 +226,9 @@ class MODEL_MIME {
 		}
 
 		$_arr_mimeRow = $this->mdl_read($this->mimeSubmit["mime_name"], "mime_name", $this->mimeSubmit["mime_id"]);
-		if ($_arr_mimeRow["str_alert"] == "y080102") {
+		if ($_arr_mimeRow["alert"] == "y080102") {
 			return array(
-				"str_alert" => "x080206",
+				"alert" => "x080206",
 			);
 			exit;
 		}
@@ -237,14 +237,14 @@ class MODEL_MIME {
 		switch ($_arr_mimeExt["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x080203",
+					"alert" => "x080203",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x080204",
+					"alert" => "x080204",
 				);
 				exit;
 			break;
@@ -259,7 +259,7 @@ class MODEL_MIME {
 		switch ($_arr_mimeNote["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x080205",
+					"alert" => "x080205",
 				);
 				exit;
 			break;
@@ -270,7 +270,7 @@ class MODEL_MIME {
 
 		}
 
-		$this->mimeSubmit["str_alert"] = "ok";
+		$this->mimeSubmit["alert"] = "ok";
 		return $this->mimeSubmit;
 	}
 
@@ -284,7 +284,7 @@ class MODEL_MIME {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -301,7 +301,7 @@ class MODEL_MIME {
 		}
 
 		$this->mimeIds = array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 			"mime_ids"   => $_arr_mimeIds
 		);
 

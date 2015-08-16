@@ -10,15 +10,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
 	<li>{$adminMod.opt.sub.app.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -52,7 +52,7 @@
 
 						<div class="form-group">
 							<label class="control-label">{$lang.label.appAllow}<span id="msg_app_allow">*</span></label>
-							<dl class="list_baigo">
+							<dl class="list_dl">
 								<dd>
 									<div class="checkbox_baigo">
 										<label for="chk_all">
@@ -61,7 +61,7 @@
 										</label>
 									</div>
 								</dd>
-								{foreach $allow as $key_m=>$value_m}
+								{foreach $appMod as $key_m=>$value_m}
 									<dt>{$value_m.title}</dt>
 									<dd>
 										<label for="allow_{$key_m}" class="checkbox-inline">
@@ -135,7 +135,7 @@
 
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -173,6 +173,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -190,4 +191,4 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

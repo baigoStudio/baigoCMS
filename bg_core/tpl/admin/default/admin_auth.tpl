@@ -2,7 +2,7 @@
 {* 栏目显示函数（递归） *}
 {function cate_list arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
-		{foreach $arr as $value}
+		{foreach $arr as $key=>$value}
 			<li>
 				<dl class="dl_baigo">
 					<dt>{$value.cate_name}</dt>
@@ -38,15 +38,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list">{$adminMod.admin.main.title}</a></li>
 	<li>{$lang.page.auth}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -144,7 +144,7 @@
 
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -173,6 +173,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -190,4 +191,4 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

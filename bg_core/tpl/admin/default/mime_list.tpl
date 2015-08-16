@@ -10,15 +10,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=list">{$adminMod.attach.main.title}</a></li>
 	<li>{$adminMod.attach.sub.mime.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=list">
 					<span class="glyphicon glyphicon-plus"></span>
@@ -65,11 +65,11 @@
 					</div>
 
 					<div class="form-group">
-						<label form="mime_name_often" class="control-label">{$lang.label.mimeOften}</label>
+						<label class="control-label">{$lang.label.mimeOften}</label>
 						<select id="mime_name_often" class="form-control">
 							<option value="">{$lang.option.pleaseSelect}</option>
 							{foreach $tplData.mimeOften as $key=>$value}
-								<option value="{$key}">{$key}</option>
+								<option value="{$key}">{$key} [{$value.note}]</option>
 							{/foreach}
 						</select>
 					</div>
@@ -102,7 +102,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $tplData.mimeRows as $value}
+								{foreach $tplData.mimeRows as $key=>$value}
 									<tr>
 										<td class="td_mn"><input type="checkbox" name="mime_id[]" value="{$value.mime_id}" id="mime_id_{$value.mime_id}" class="chk_all validate" group="mime_id"></td>
 										<td class="td_mn">{$value.mime_id}</td>
@@ -141,10 +141,10 @@
 	</div>
 
 	<div class="text-right">
-		{include "include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -181,6 +181,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -188,6 +189,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=mime",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -223,5 +225,5 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

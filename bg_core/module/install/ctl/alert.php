@@ -17,7 +17,7 @@ $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ctl_alert              = new CONTROL_ALERT(); //初始化商家
 
 switch ($GLOBALS["act_get"]) {
-	case "display":
-		$arr_alertRow = $ctl_alert->ctl_display();
+	case "show":
+		$arr_alertRow = $ctl_alert->ctl_show();
 	break;
 }

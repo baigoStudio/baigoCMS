@@ -62,7 +62,7 @@ return "<h3>模板概述</h3>
 						<td>用于显示所有隶属于此专题的文章，以及专题介绍等信息。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">search_show.tpl</td>
+						<td class=\"nowrap\">search_key.tpl</td>
 						<td class=\"nowrap\">搜索显示</td>
 						<td>用于显示搜索结果。</td>
 					</tr>

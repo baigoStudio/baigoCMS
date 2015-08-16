@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"admin\"></a>
-	<h3>创建管理员</h3>
+return "<h3>创建管理员</h3>
 	<p>本操作将向 SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 SSO 用户作为管理员，请查看 <a href=\"#auth\">授权为管理员</a>。</p>
 	<p><img src=\"{images}admin.jpg\" class=\"img-responsive\"></p>
 	<div class=\"panel panel-default\">
@@ -17,7 +16,7 @@ return "<a name=\"admin\"></a>
 			<p>请根据实际情况填写。</p>
 		</div>
 	</div>
-	<p>填写完毕，点击提交，提交成功后，点击下一步。</p>
+	<p>填写完毕，点击“保存“，保存成功后，点击“下一步“。</p>
 	<hr>
 
 	<a name=\"auth\"></a>

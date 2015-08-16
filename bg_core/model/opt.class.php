@@ -11,148 +11,138 @@ if(!defined("IN_BAIGO")) {
 
 /*-------------管理员模型-------------*/
 class MODEL_OPT {
-	private $obj_db;
 
-	function __construct() { //构造函数
-		$this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
-	}
-
-
-	function mdl_create_table() {
-		$_arr_optCreat = array(
-			"opt_id"     => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"opt_key"    => "varchar(100) NOT NULL COMMENT '键'",
-			"opt_value"  => "varchar(1000) NOT NULL COMMENT '值'",
-		);
-
-		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "opt", $_arr_optCreat, "opt_id", "设置项");
-
-		if ($_num_mysql > 0) {
-			$_str_alert = "y060105"; //更新成功
-		} else {
-			$_str_alert = "x060105"; //更新成功
+	function mdl_const($str_type) {
+		if (!fn_token("chk")) { //令牌
+			$this->obj_ajax->halt_alert("x030102");
 		}
 
-		return array(
-			"str_alert" => $_str_alert, //更新成功
-		);
-	}
+		$_arr_opt = fn_post("opt");
 
-
-	function mdl_column() {
-		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "opt");
-
-		foreach ($_arr_colRows as $_key=>$_value) {
-			$_arr_col[] = $_value["Field"];
-		}
-
-		return $_arr_col;
-	}
-
-
-	/**
-	 * mdl_submit function.
-	 *
-	 * @access public
-	 * @param mixed $str_optKey
-	 * @param mixed $str_optValue
-	 * @return void
-	 */
-	function mdl_submit($str_optKey, $str_optValue) {
-		$_arr_optData = array(
-			"opt_value"  => $str_optValue,
-		);
-
-		$_arr_optRow = $this->mdl_read($str_optKey);
-
-		if ($_arr_optRow["str_alert"] != "y060102") {
-			$_arr_opt = array(
-				"opt_key"    => $str_optKey,
-			);
-			$_arr_optInsert = array_merge($_arr_opt, $_arr_optData);
-			$_str_optKey = $this->obj_db->insert(BG_DB_TABLE . "opt", $_arr_optInsert); //更新数据
-			if ($_str_optKey) {
-				$_str_alert = "y060101"; //更新成功
+		$_str_content = "<?php" . PHP_EOL;
+		foreach ($_arr_opt as $_key=>$_value) {
+			$_arr_optChk = validateStr($_value, 1, 900);
+			$_str_optValue = $_arr_optChk["str"];
+			if (is_numeric($_value)) {
+				$_str_content .= "define(\"" . $_key . "\", " . $_str_optValue . ");" . PHP_EOL;
 			} else {
-				return array(
-					"str_alert" => "x060101", //更新失败
-				);
-				exit;
-
-			}
-		} else {
-			$_str_optKey = $str_optKey;
-			$_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "opt", $_arr_optData, "opt_key='" . $_str_optKey . "'"); //更新数据
-			if ($_num_mysql > 0) {
-				$_str_alert = "y060103"; //更新成功
-			} else {
-				return array(
-					"str_alert" => "x060103", //更新失败
-				);
-				exit;
-
+				$_str_content .= "define(\"" . $_key . "\", \"" . str_replace(PHP_EOL, "|", $_str_optValue) . "\");" . PHP_EOL;
 			}
 		}
 
+		if ($str_type == "base") {
+			$_str_content .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
+		} else if ($str_type == "visit") {
+			if ($_arr_opt["BG_VISIT_TYPE"] != "static") {
+				$_str_content .= "define(\"BG_VISIT_FILE\", \"html\");" . PHP_EOL;
+			}
+		}
+
+		$_str_content = str_replace("||", "", $_str_content);
+
+		$_num_size    = file_put_contents(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_content);
+
+		if ($_num_size > 0) {
+			$_str_alert = "y060101";
+		} else {
+			$_str_alert = "x060101";
+		}
+
 		return array(
-			"opt_key"    => $_str_optKey,
-			"str_alert"  => $_str_alert, //成功
+			"alert" => $_str_alert,
 		);
 	}
 
 
-	/**
-	 * mdl_read function.
-	 *
-	 * @access public
-	 * @param mixed $str_optKey
-	 * @return void
-	 */
-	function mdl_read($str_optKey) {
-		$_arr_optSelect = array(
-			"opt_key",
-			"opt_value",
-		);
+	function mdl_htaccess() {
+		$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
+		$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
+			$_str_content .= "RewriteEngine On" . PHP_EOL;
+			$_str_content .= "RewriteBase " . BG_URL_ROOT . PHP_EOL;
+			$_str_content .= "RewriteRule ^article/id-(\d+)/?.*$ " . BG_URL_ROOT . "index.php?mod=article&act_get=show&article_id=$1 [L]" . PHP_EOL;
+			$_str_content .= "RewriteRule ^cate/[^\\x00\-\\xff]+/id-(\d+)(/key-([^\\x00\-\\xff^/]*))?(/customs-((\w|%)*))?(/page-(\d+))?/?.*$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$1&key=$3&customs=$5&page=$8 [L]" . PHP_EOL;
+			$_str_content .= "RewriteRule ^tag/tag-([^\\x00\-\\xff^/]*)(/page-(\d+))?/?.*$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1&page=$3 [L]" . PHP_EOL;
+			$_str_content .= "RewriteRule ^spec/id-(\d+)(/page-(\d+))?/?.*$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1&page=$3 [L]" . PHP_EOL;
+			$_str_content .= "RewriteRule ^spec(/page-(\d+))?/?.*$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list&page=$2 [L]" . PHP_EOL;
+			$_str_content .= "RewriteRule ^search(/key-([^\\x00\-\\xff^/]*))?(/customs-((\w|%)*))?(/cate-(\d+))?(/page-(\d+))?/?.*$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$2&customs=$4&cate_id=$7&page=$9 [L]" . PHP_EOL;
+		$_str_content .= "</IfModule>" . PHP_EOL;
+		$_str_content .= "# END baigo CMS" . PHP_EOL;
 
-		$_str_sqlWhere    = "opt_key='" . $str_optKey . "'";
+		$_num_size = file_put_contents(BG_PATH_ROOT . ".htaccess", $_str_content);
 
-		$_arr_optRows     = $this->obj_db->select(BG_DB_TABLE . "opt", $_arr_optSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
-
-		if (isset($_arr_optRows[0])) { //用户名不存在则返回错误
-			$_arr_optRow      = $_arr_optRows[0];
+		if ($_num_size > 0) {
+			$_str_alert = "y060101";
 		} else {
+			$_str_alert = "x060101";
+		}
+
+		return array(
+			"alert" => $_str_alert,
+		);
+	}
+
+
+	function mdl_dbconfig() {
+		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x060102", //不存在记录
+				"alert" => "x030102",
 			);
 			exit;
 		}
 
-		$_arr_optRow["str_alert"] = "y060102";
+		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
+		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
+		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
+		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
+		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
+		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
+		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
 
-		return $_arr_optRow;
+		$_str_content     = "<?php" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
+		$_str_content    .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
 
-	}
+		$_num_size        = file_put_contents(BG_PATH_CONFIG . "config_db.inc.php", $_str_content);
 
-
-	/**
-	 * mdl_del function.
-	 *
-	 * @access public
-	 * @param mixed $str_optKey
-	 * @return void
-	 */
-	function mdl_del($str_optKey) {
-		$_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "opt", "opt_key='" . $str_optKey . "'"); //删除数据
-
-		//如车影响行数小于0则返回错误
-		if ($_num_mysql > 0) {
-			$_str_alert = "y060104"; //成功
+		if ($_num_size > 0) {
+			$_str_alert = "y060101";
 		} else {
-			$_str_alert = "x060104"; //失败
+			$_str_alert = "x060101";
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
+		);
+	}
+
+
+	function mdl_over() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_str_content = "<?php" . PHP_EOL;
+		$_str_content .= "define(\"BG_INSTALL_VER\", \"" . PRD_CMS_VER . "\");" . PHP_EOL;
+		$_str_content .= "define(\"BG_INSTALL_PUB\", " . PRD_CMS_PUB . ");" . PHP_EOL;
+		$_str_content .= "define(\"BG_INSTALL_TIME\", " . time() . ");" . PHP_EOL;
+
+		$_num_size = file_put_contents(BG_PATH_CONFIG . "is_install.php", $_str_content);
+		if ($_num_size > 0) {
+			$_str_alert = "y060101";
+		} else {
+			$_str_alert = "x060101";
+		}
+
+		return array(
+			"alert" => $_str_alert,
 		);
 	}
 }

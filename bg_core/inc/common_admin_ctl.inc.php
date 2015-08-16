@@ -16,12 +16,11 @@ if (isset($_GET["ssid"])) {
 session_start(); //开启session
 $GLOBALS["ssid"] = session_id();
 
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "common_global.inc.php"); //载入数据库类
 include_once(BG_PATH_FUNC . "session.func.php"); //载入商家控制器
 include_once(BG_PATH_CLASS . "mysqli.class.php"); //载入数据库类
 include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
-
-header("Content-Type: text/html; charset=utf-8");
 
 if (!defined("BG_DB_PORT")) {
 	define("BG_DB_PORT", "3306");
@@ -51,3 +50,5 @@ if (!$GLOBALS["obj_db"]->select_db()) {
 
 $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $GLOBALS["adminLogged"] = fn_ssin_begin(); //验证 session, 并获取管理员信息
+
+header("Content-Type: text/html; charset=utf-8");

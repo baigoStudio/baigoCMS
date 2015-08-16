@@ -40,17 +40,16 @@ class CONTROL_MARK {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
 			return array(
-				"str_alert" => "x140301",
+				"alert" => "x140301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_num_markId  = fn_getSafe(fn_get("mark_id"), "int", 0);
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 		);
 
@@ -61,7 +60,7 @@ class CONTROL_MARK {
 
 		if ($_num_markId > 0) {
 			$_arr_markRow = $this->mdl_mark->mdl_read($_num_markId);
-			if ($_arr_markRow["str_alert"] != "y140102") {
+			if ($_arr_markRow["alert"] != "y140102") {
 				return $_arr_markRow;
 				exit;
 			}
@@ -85,7 +84,7 @@ class CONTROL_MARK {
 		$this->obj_tpl->tplDisplay("mark_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y140301",
+			"alert" => "y140301",
 		);
 	}
 

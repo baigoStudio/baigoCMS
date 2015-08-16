@@ -41,16 +41,15 @@ class CONTROL_MIME {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
 			return array(
-				"str_alert" => "x080301",
+				"alert" => "x080301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_num_mimeId  = fn_getSafe(fn_get("mime_id"), "int", 0);
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"mime_id"    => $_num_mimeId,
 		);
 
@@ -65,7 +64,7 @@ class CONTROL_MIME {
 
 		if ($_num_mimeId > 0) {
 			$_arr_mimeRow = $this->mdl_mime->mdl_read($_num_mimeId);
-			if ($_arr_mimeRow["str_alert"] != "y080102") {
+			if ($_arr_mimeRow["alert"] != "y080102") {
 				return $_arr_mimeRow;
 				exit;
 			}
@@ -93,7 +92,7 @@ class CONTROL_MIME {
 		$this->obj_tpl->tplDisplay("mime_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y080301",
+			"alert" => "y080301",
 		);
 	}
 

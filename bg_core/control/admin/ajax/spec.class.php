@@ -23,20 +23,12 @@ class AJAX_SPEC {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_article    = new MODEL_ARTICLE();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -54,13 +46,13 @@ class AJAX_SPEC {
 
 		$_arr_specSubmit = $this->mdl_spec->input_submit();
 
-		if ($_arr_specSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_specSubmit["str_alert"]);
+		if ($_arr_specSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_specSubmit["alert"]);
 		}
 
 		$_arr_specRow = $this->mdl_spec->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_specRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_specRow["alert"]);
 	}
 
 
@@ -70,8 +62,8 @@ class AJAX_SPEC {
 		}
 
 		$_arr_specIds = $this->mdl_spec->input_ids();
-		if ($_arr_specIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_specIds["str_alert"]);
+		if ($_arr_specIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_specIds["alert"]);
 		}
 
 		$_str_specStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
@@ -81,7 +73,7 @@ class AJAX_SPEC {
 
 		$_arr_specRow = $this->mdl_spec->mdl_status($_str_specStatus);
 
-		$this->obj_ajax->halt_alert($_arr_specRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_specRow["alert"]);
 	}
 
 
@@ -91,8 +83,8 @@ class AJAX_SPEC {
 		}
 
 		$_arr_articleIds = $this->mdl_article->input_ids();
-		if ($_arr_articleIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_articleIds["str_alert"]);
+		if ($_arr_articleIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_articleIds["alert"]);
 		}
 
 		$_str_act     = fn_getSafe($GLOBALS["act_post"], "txt", "");
@@ -100,7 +92,7 @@ class AJAX_SPEC {
 
 		$_arr_articleRow = $this->mdl_article->mdl_toSpec($_str_act, $_nun_specId);
 
-		$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_articleRow["alert"]);
 	}
 
 
@@ -116,13 +108,13 @@ class AJAX_SPEC {
 		}
 
 		$_arr_specIds = $this->mdl_spec->input_ids();
-		if ($_arr_specIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_specIds["str_alert"]);
+		if ($_arr_specIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_specIds["alert"]);
 		}
 
 		$_arr_specRow = $this->mdl_spec->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_specRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_specRow["alert"]);
 	}
 
 

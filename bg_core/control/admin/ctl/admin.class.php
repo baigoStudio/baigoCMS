@@ -51,7 +51,7 @@ class CONTROL_ADMIN {
 	function ctl_toGroup() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"])) {
 			return array(
-				"str_alert" => "x020305",
+				"alert" => "x020305",
 			);
 			exit;
 		}
@@ -60,18 +60,18 @@ class CONTROL_ADMIN {
 
 		if ($_num_adminId == $this->adminLogged["admin_id"]) {
 			return array(
-				"str_alert" => "x020306",
+				"alert" => "x020306",
 			);
 			exit;
 		}
 
 		$_arr_ssoRow  = $this->obj_sso->sso_get($_num_adminId);
-		if ($_arr_ssoRow["str_alert"] != "y010102") { //SSO 中不存在该用户
+		if ($_arr_ssoRow["alert"] != "y010102") { //SSO 中不存在该用户
 			return $_arr_ssoRow;
 			exit;
 		}
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
-		if ($_arr_adminRow["str_alert"] != "y020102") { //不存在该管理员
+		if ($_arr_adminRow["alert"] != "y020102") { //不存在该管理员
 			return $_arr_adminRow;
 			exit;
 		}
@@ -89,7 +89,7 @@ class CONTROL_ADMIN {
 		$this->obj_tpl->tplDisplay("admin_toGroup.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y020302",
+			"alert" => "y020302",
 		);
 	}
 
@@ -106,30 +106,30 @@ class CONTROL_ADMIN {
 		if ($_num_adminId > 0) {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"])) {
 				return array(
-					"str_alert" => "x020303",
+					"alert" => "x020303",
 				);
 				exit;
 			}
 			if ($_num_adminId == $this->adminLogged["admin_id"]) {
 				return array(
-					"str_alert" => "x020306",
+					"alert" => "x020306",
 				);
 				exit;
 			}
 			$_arr_ssoRow = $this->obj_sso->sso_get($_num_adminId);
-			if ($_arr_ssoRow["str_alert"] != "y010102") { //SSO 中不存在该用户
+			if ($_arr_ssoRow["alert"] != "y010102") { //SSO 中不存在该用户
 				return $_arr_ssoRow;
 				exit;
 			}
 			$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
-			if ($_arr_adminRow["str_alert"] != "y020102") { //不存在该管理员
+			if ($_arr_adminRow["alert"] != "y020102") { //不存在该管理员
 				return $_arr_adminRow;
 				exit;
 			}
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 				return array(
-					"str_alert" => "x020302",
+					"alert" => "x020302",
 				);
 				exit;
 			}
@@ -157,7 +157,7 @@ class CONTROL_ADMIN {
 		$this->obj_tpl->tplDisplay("admin_form.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y020302",
+			"alert" => "y020302",
 		);
 	}
 
@@ -171,7 +171,7 @@ class CONTROL_ADMIN {
 	function ctl_show() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
 			return array(
-				"str_alert" => "x020301",
+				"alert" => "x020301",
 			);
 			exit;
 		}
@@ -179,12 +179,12 @@ class CONTROL_ADMIN {
 		$_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
 		$_arr_ssoRow = $this->obj_sso->sso_get($_num_adminId);
-		if ($_arr_ssoRow["str_alert"] != "y010102") {
+		if ($_arr_ssoRow["alert"] != "y010102") {
 			return $_arr_ssoRow;
 			exit;
 		}
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_num_adminId);
-		if ($_arr_adminRow["str_alert"] != "y020102") {
+		if ($_arr_adminRow["alert"] != "y020102") {
 			return $_arr_adminRow;
 			exit;
 		}
@@ -204,7 +204,7 @@ class CONTROL_ADMIN {
 		$this->obj_tpl->tplDisplay("admin_show.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y020302",
+			"alert" => "y020302",
 		);
 	}
 
@@ -219,7 +219,7 @@ class CONTROL_ADMIN {
 
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
 			return array(
-				"str_alert" => "x020302",
+				"alert" => "x020302",
 			);
 			exit;
 		}
@@ -237,7 +237,7 @@ class CONTROL_ADMIN {
 		$this->obj_tpl->tplDisplay("admin_auth.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y020302",
+			"alert" => "y020302",
 		);
 	}
 
@@ -251,20 +251,18 @@ class CONTROL_ADMIN {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
 			return array(
-				"str_alert" => "x020301",
+				"alert" => "x020301",
 			);
 			exit;
 		}
 
 		//print_r($this->adminLogged);
-
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 		$_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"status"     => $_str_status,
 			"group_id"   => $_num_groupId,
@@ -277,7 +275,7 @@ class CONTROL_ADMIN {
 
 		foreach ($_arr_adminRows as $_key=>$_value) {
 			/*$_arr_ssoRow                        = $this->obj_sso->sso_get($_value["admin_id"]); //取得用户组信息
-			if ($_arr_ssoRow["str_alert"] != "y010102" && $_value["article_status"] != "disable") {
+			if ($_arr_ssoRow["alert"] != "y010102" && $_value["article_status"] != "disable") {
 				$_arr_unknownAdmin[] = $_value["admin_id"];
 				$_arr_adminRows[$_key]["admin_name"] = "";
 			}*/
@@ -301,7 +299,7 @@ class CONTROL_ADMIN {
 		$this->obj_tpl->tplDisplay("admin_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y020301",
+			"alert" => "y020301",
 		);
 	}
 }

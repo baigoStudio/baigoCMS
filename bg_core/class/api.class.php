@@ -22,13 +22,13 @@ class CLASS_API {
 	 * @return void
 	 */
 	function app_chk($arr_appGet, $arr_appRow) {
-		if ($arr_appGet["str_alert"] != "ok") {
+		if ($arr_appGet["alert"] != "ok") {
 			return $arr_appRow;
 		}
 
 		if ($arr_appRow["app_status"] != "enable") {
 			return array(
-				"str_alert" => "x190402",
+				"alert" => "x190402",
 			);
 			exit;
 		}
@@ -39,7 +39,7 @@ class CLASS_API {
 			$_str_ipAllow = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_allow"]);
 			if (!fn_regChk($_str_ip, $_str_ipAllow, true)) {
 				return array(
-					"str_alert" => "x190212",
+					"alert" => "x190212",
 				);
 				exit;
 			}
@@ -47,7 +47,7 @@ class CLASS_API {
 			$_str_ipBad = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_bad"]);
 			if (fn_regChk($_str_ip, $_str_ipBad)) {
 				return array(
-					"str_alert" => "x190213",
+					"alert" => "x190213",
 				);
 				exit;
 			}
@@ -55,13 +55,13 @@ class CLASS_API {
 
 		if ($arr_appRow["app_key"] != $arr_appGet["app_key"]) {
 			return array(
-				"str_alert" => "x190217",
+				"alert" => "x190217",
 			);
 			exit;
 		}
 
 		return array(
-			"str_alert" => "ok",
+			"alert" => "ok",
 		);
 	}
 
@@ -86,14 +86,14 @@ class CLASS_API {
 		switch ($_arr_appId["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x190203",
+					"alert" => "x190203",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x190204",
+					"alert" => "x190204",
 				);
 				exit;
 			break;
@@ -108,21 +108,21 @@ class CLASS_API {
 		switch ($_arr_appKey["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x190214",
+					"alert" => "x190214",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x190215",
+					"alert" => "x190215",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x190216",
+					"alert" => "x190216",
 				);
 				exit;
 			break;
@@ -133,7 +133,7 @@ class CLASS_API {
 
 		}
 
-		$_arr_appGet["str_alert"] = "ok";
+		$_arr_appGet["alert"] = "ok";
 
 		return $_arr_appGet;
 	}
@@ -153,5 +153,23 @@ class CLASS_API {
 			$_str_return = json_encode($arr_re);
 		}
 		exit($_str_return); //输出错误信息
+	}
+
+
+	function chk_install() {
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$_arr_return = array(
+					"alert" => "x030416"
+				);
+				$this->halt_re($_arr_return);
+			}
+		} else {
+			$_arr_return = array(
+				"alert" => "x030415"
+			);
+			$this->halt_re($_arr_return);
+		}
 	}
 }

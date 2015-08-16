@@ -35,5 +35,4 @@
 		<!--表单 ajax 提交 js-->
 		<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
 	{/if}
-
 </head>

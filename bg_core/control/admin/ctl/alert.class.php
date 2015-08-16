@@ -25,12 +25,12 @@ class CONTROL_ALERT {
 
 
 	/** 显示提示信息
-	 * ctl_display function.
+	 * ctl_show function.
 	 *
 	 * @access public
 	 * @return void
 	 */
-	function ctl_display() {
+	function ctl_show() {
 		$_str_alert   = fn_getSafe(fn_get("alert"), "txt", "");
 
 		$arr_data = array(

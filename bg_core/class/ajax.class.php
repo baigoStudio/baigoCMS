@@ -18,6 +18,7 @@ class CLASS_AJAX {
 		$this->obj_base   = $GLOBALS["obj_base"];
 		$this->config     = $this->obj_base->config;
 		$this->alert      = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入提示信息
+		$this->type       = include_once(BG_PATH_LANG . $this->config["lang"] . "/type.php"); //载入类型文件
 	}
 
 
@@ -49,5 +50,17 @@ class CLASS_AJAX {
 			"re" => $this->alert[$str_alert]
 		);
 		exit(json_encode($arr_re));
+	}
+
+
+	function chk_install() {
+		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
+			include_once(BG_PATH_CONFIG . "is_install.php");
+			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
+				$this->halt_alert("x030416");
+			}
+		} else {
+			$this->halt_alert("x030415");
+		}
 	}
 }

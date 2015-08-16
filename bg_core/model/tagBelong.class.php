@@ -35,7 +35,7 @@ class MODEL_TAG_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -81,7 +81,7 @@ class MODEL_TAG_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -106,7 +106,7 @@ class MODEL_TAG_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -140,26 +140,26 @@ class MODEL_TAG_BELONG {
 
 		$_arr_belongRow = $this->mdl_read($num_articleId, $num_tagId);
 
-		if ($_arr_belongRow["str_alert"] == "x160102" && $num_articleId > 0 && $num_tagId > 0) { //插入
+		if ($_arr_belongRow["alert"] == "x160102" && $num_articleId > 0 && $num_tagId > 0) { //插入
 			$_num_belongId = $this->obj_db->insert(BG_DB_TABLE . "tag_belong", $_arr_belongData);
 
 			if ($_num_belongId > 0) { //数据库插入是否成功
 				$_str_alert = "y160101";
 			} else {
 				return array(
-					"str_alert" => "x160101",
+					"alert" => "x160101",
 				);
 				exit;
 			}
 		} else {
 			return array(
-				"str_alert" => "x160101",
+				"alert" => "x160101",
 			);
 			exit;
 		}
 
 		return array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -196,40 +196,27 @@ class MODEL_TAG_BELONG {
 			$_arr_belongRow   = $_arr_belongRows[0];
 		} else {
 			return array(
-				"str_alert" => "x160102", //不存在记录
+				"alert" => "x160102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_belongRow["str_alert"] = "y160102";
+		$_arr_belongRow["alert"] = "y160102";
 
 		return $_arr_belongRow;
 	}
 
 
-	/**
-	 * mdl_count function.
-	 *
-	 * @access public
-	 * @param int $num_tagId (default: 0)
-	 * @param int $num_articleId (default: 0)
-	 * @return void
-	 */
-	function mdl_count($num_tagId = 0, $num_articleId = 0) {
-
+	function mdl_count($num_tagId = 0) {
 		$_str_sqlWhere = "1=1";
 
 		if ($num_tagId > 0) {
 			$_str_sqlWhere .= " AND belong_tag_id=" . $num_tagId;
 		}
 
-		if ($num_articleId > 0) {
-			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
-		}
+		$_num_mysql  = $this->obj_db->count(BG_DB_TABLE . "tag_belong", $_str_sqlWhere);
 
-		$_num_belongCount = $this->obj_db->count(BG_DB_TABLE . "tag_belong", $_str_sqlWhere); //查询数据
-
-		return $_num_belongCount;
+		return $_num_mysql;
 	}
 
 
@@ -282,7 +269,7 @@ class MODEL_TAG_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 }

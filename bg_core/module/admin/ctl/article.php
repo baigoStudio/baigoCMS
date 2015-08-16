@@ -10,7 +10,6 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_INC . "common_admin_ctl.inc.php"); //载入全局通用
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "is_admin.inc.php"); //载入后台通用
 include_once(BG_PATH_CONTROL_ADMIN . "ctl/article.class.php"); //载入文章类
 
@@ -19,24 +18,24 @@ $ctl_article = new CONTROL_ARTICLE();
 switch ($GLOBALS["act_get"]) {
 	case "show":
 		$arr_articleRow = $ctl_article->ctl_show();
-		if ($arr_articleRow["str_alert"] != "y120102") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $arr_articleRow["str_alert"]);
+		if ($arr_articleRow["alert"] != "y120102") {
+			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_articleRow["alert"]);
 			exit;
 		}
 	break;
 
 	case "form":
 		$arr_articleRow = $ctl_article->ctl_form();
-		if ($arr_articleRow["str_alert"] != "y120102") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $arr_articleRow["str_alert"]);
+		if ($arr_articleRow["alert"] != "y120102") {
+			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_articleRow["alert"]);
 			exit;
 		}
 	break;
 
 	default:
 		$arr_articleRow = $ctl_article->ctl_list();
-		if ($arr_articleRow["str_alert"] != "y120301") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=display&alert=" . $arr_articleRow["str_alert"]);
+		if ($arr_articleRow["alert"] != "y120301") {
+			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_articleRow["alert"]);
 			exit;
 		}
 	break;

@@ -50,12 +50,12 @@ class CONTROL_CALL {
 		if ($_num_callId > 0) {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
 				return array(
-					"str_alert" => "x170303",
+					"alert" => "x170303",
 				);
 				exit;
 			}
 			$_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
-			if ($_arr_callRow["str_alert"] != "y170102") {
+			if ($_arr_callRow["alert"] != "y170102") {
 				return $_arr_callRow;
 				exit;
 			}
@@ -63,7 +63,7 @@ class CONTROL_CALL {
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
 				return array(
-					"str_alert" => "x170302",
+					"alert" => "x170302",
 				);
 				exit;
 			}
@@ -77,7 +77,7 @@ class CONTROL_CALL {
 				),
 				"call_attach"   => "",
 				"call_cate_id"  => "",
-				"call_trim"     => 100,
+				//"call_trim"     => 100,
 				"call_cate_ids" => array(),
 				"call_mark_ids" => array(),
 				"call_spec_id"  => 0,
@@ -102,7 +102,7 @@ class CONTROL_CALL {
 		$this->obj_tpl->tplDisplay("call_form.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y170102",
+			"alert" => "y170102",
 		);
 	}
 
@@ -116,18 +116,17 @@ class CONTROL_CALL {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"])) {
 			return array(
-				"str_alert" => "x170301",
+				"alert" => "x170301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"type"       => $_str_type,
 			"status"     => $_str_status,
@@ -150,7 +149,7 @@ class CONTROL_CALL {
 		$this->obj_tpl->tplDisplay("call_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y170301",
+			"alert" => "y170301",
 		);
 
 	}

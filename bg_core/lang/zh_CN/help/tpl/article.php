@@ -17,10 +17,16 @@ return "<h3>文章显示</h3>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#articleRow\">articleRow</a></td>
+						<td class=\"nowrap\">tplData.articleRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">当前文章的详细信息</td>
-						<td> </td>
+						<td>查看 <a href=\"#articleRow\">tplData.articleRow</a>。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">tplData.associateRows</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">关联文章的列表</td>
+						<td>系统将一个或以上 TAG 相同的文章列出。此数组为多维数组，详细信息查看 <a href=\"#articleRow\">tplData.articleRow</a>。</td>
 					</tr>
 				</tbody>
 			</table>
@@ -167,16 +173,16 @@ return "<h3>文章显示</h3>
 						<td>pub 为发布，wait 为待审，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">article_customs</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">自定义字段值</td>
+						<td>自定义字段的内容。用 <code>{\$tplData.articleRow.article_customs[\"custom_自定义字段 ID\"}</code> 的方法便可显示自定义字段的内容。详情请查看通用资源 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=common#custom\" target=\"_blank\">自定义字段</a>，或后台管理 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前文章的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">article_custom</td>
-						<td class=\"nowrap\">array</td>
-						<td class=\"nowrap\">自定义表单</td>
-						<td>自定义表单的内容。用 <code>{\$tplData.articleRow.article_custom.自定义表单 ID}</code> 的方法便可显示自定义表单的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义表单</a>。</td>
 					</tr>
 				</tbody>
 			</table>

@@ -5,28 +5,29 @@
 	mod_help   => "install",
 	act_help   => "visit"
 ]}
-{include "include/install_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_head.tpl" cfg=$cfg}
 
 	<form name="upgrade_form_visit" id="upgrade_form_visit">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="visit">
 
-		{include "include/install_form.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_form.tpl" cfg=$cfg}
 
 		<div class="form-group">
 			<div class="btn-group">
 				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.save}</button>
-				{include "include/install_drop.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_drop.tpl" cfg=$cfg}
 			</div>
 		</div>
 
 	</form>
 
-{include "include/install_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.stepNext}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=upload"

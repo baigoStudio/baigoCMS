@@ -35,7 +35,7 @@ class MODEL_CATE_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -64,7 +64,7 @@ class MODEL_CATE_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -98,26 +98,26 @@ class MODEL_CATE_BELONG {
 
 		$_arr_belongRow = $this->mdl_read($num_articleId, $num_cateId);
 
-		if ($_arr_belongRow["str_alert"] == "x150102" && $num_articleId > 0 && $num_cateId > 0) { //插入
+		if ($_arr_belongRow["alert"] == "x150102" && $num_articleId > 0 && $num_cateId > 0) { //插入
 			$_num_belongId = $this->obj_db->insert(BG_DB_TABLE . "cate_belong", $_arr_belongData);
 
 			if ($_num_belongId > 0) { //数据库插入是否成功
 				$_str_alert = "y150101";
 			} else {
 				return array(
-					"str_alert" => "x150101",
+					"alert" => "x150101",
 				);
 				exit;
 			}
 		} else {
 			return array(
-				"str_alert" => "x150101",
+				"alert" => "x150101",
 			);
 			exit;
 		}
 
 		return array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -154,12 +154,12 @@ class MODEL_CATE_BELONG {
 			$_arr_belongRow   = $_arr_belongRows[0];
 		} else {
 			return array(
-				"str_alert" => "x150102", //不存在记录
+				"alert" => "x150102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_belongRow["str_alert"] = "y150102";
+		$_arr_belongRow["alert"] = "y150102";
 
 		return $_arr_belongRow;
 	}
@@ -180,35 +180,6 @@ class MODEL_CATE_BELONG {
 		$_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "cate_belong", $_arr_belongSelect, $_str_sqlWhere, "", "belong_id DESC", 1000, 0);
 
 		return $_arr_belongRows;
-	}
-
-
-	/**
-	 * mdl_count function.
-	 *
-	 * @access public
-	 * @param int $num_cateId (default: 0)
-	 * @param int $num_articleId (default: 0)
-	 * @return void
-	 */
-	function mdl_count($num_cateId = 0, $num_articleId = 0) {
-
-		$_str_sqlWhere = "1=1";
-
-		if ($num_cateId > 0) {
-			$_str_sqlWhere .= " AND belong_cate_id=" . $num_cateId;
-		}
-
-		if ($num_articleId > 0) {
-			$_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
-		}
-
-		$_num_belongCount = $this->obj_db->count(BG_DB_TABLE . "cate_belong", $_str_sqlWhere); //查询数据
-
-		/*print_r($_arr_userRow);
-		exit;*/
-
-		return $_num_belongCount;
 	}
 
 
@@ -264,7 +235,7 @@ class MODEL_CATE_BELONG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 }

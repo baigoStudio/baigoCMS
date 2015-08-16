@@ -30,7 +30,7 @@ class MODEL_CATE {
 			"cate_domain"    => "varchar(3000) NOT NULL COMMENT '绑定域名'",
 			"cate_type"      => "enum('normal','single','link') NOT NULL COMMENT '类型'",
 			"cate_tpl"       => "varchar(1000) NOT NULL COMMENT '模板'",
-			"cate_content"   => "text NOT NULL COMMENT '栏目内容'",
+			"cate_content"   => "text NOT NULL COMMENT '栏目介绍'",
 			"cate_link"      => "varchar(3000) NOT NULL COMMENT '链接地址'",
 			"cate_parent_id" => "smallint NOT NULL COMMENT '父栏目'",
 			"cate_alias"     => "varchar(300) NOT NULL COMMENT '别名'",
@@ -53,7 +53,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -82,7 +82,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -125,7 +125,7 @@ class MODEL_CATE {
 			} else {
 				return array(
 					"cate_id"      => 0,
-					"str_alert"    => "x110101",
+					"alert"    => "x110101",
 				);
 				exit;
 			}
@@ -139,7 +139,7 @@ class MODEL_CATE {
 			} else {
 				return array(
 					"cate_id"      => $_num_cateId,
-					"str_alert"    => "x110103",
+					"alert"    => "x110103",
 				);
 				exit;
 			}
@@ -147,7 +147,7 @@ class MODEL_CATE {
 
 		return array(
 			"cate_id"    => $_num_cateId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -213,7 +213,7 @@ class MODEL_CATE {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"str_alert" => "x110217",
+						"alert" => "x110217",
 					);
 					exit;
 				}
@@ -256,7 +256,7 @@ class MODEL_CATE {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"str_alert" => "x110217",
+						"alert" => "x110217",
 					);
 					exit;
 				}
@@ -290,7 +290,7 @@ class MODEL_CATE {
 					$_arr_targetRow     = $_arr_targetRows[0];
 				} else {
 					return array(
-						"str_alert" => "x110220",
+						"alert" => "x110220",
 					);
 					exit;
 				}
@@ -304,7 +304,7 @@ class MODEL_CATE {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"str_alert" => "x110217",
+						"alert" => "x110217",
 					);
 					exit;
 				}
@@ -348,7 +348,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => "y110103",
+			"alert" => "y110103",
 		);
 	}
 
@@ -406,7 +406,7 @@ class MODEL_CATE {
 			$_arr_cateRow     = $_arr_cateRows[0];
 		} else {
 			return array(
-				"str_alert" => "x110102", //不存在记录
+				"alert" => "x110102", //不存在记录
 			);
 			exit;
 		}
@@ -418,7 +418,7 @@ class MODEL_CATE {
 		$_arr_cateRow["cate_trees"]   = $this->trees_process($_arr_cateRow["cate_id"]);
 		unset($this->cateTrees);
 		$_arr_cateRow["urlRow"]       = $this->url_process($_arr_cateRow);
-		$_arr_cateRow["str_alert"]    = "y110102";
+		$_arr_cateRow["alert"]    = "y110102";
 
 		return $_arr_cateRow;
 	}
@@ -462,7 +462,7 @@ class MODEL_CATE {
 			$_arr_cateRow     = $_arr_cateRows[0];
 		} else {
 			return array(
-				"str_alert" => "x110102", //不存在记录
+				"alert" => "x110102", //不存在记录
 			);
 			exit;
 		}
@@ -474,7 +474,7 @@ class MODEL_CATE {
 		$_arr_cateRow["cate_trees"]   = $this->trees_process($_arr_cateRow["cate_id"]);
 		unset($this->cateTrees);
 		$_arr_cateRow["urlRow"]       = $this->url_process($_arr_cateRow);
-		$_arr_cateRow["str_alert"]    = "y110102";
+		$_arr_cateRow["alert"]    = "y110102";
 
 		return $_arr_cateRow;
 	}
@@ -489,7 +489,7 @@ class MODEL_CATE {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_status = "", $str_type = "", $num_parentId = 0, $num_cateLevel = 1) {
+	function mdl_list($num_no, $num_except = 0, $str_status = "", $str_type = "", $num_parentId = 0, $num_level = 1) {
 		$_arr_updateData = array(
 			"cate_order" => "cate_id",
 		);
@@ -504,6 +504,7 @@ class MODEL_CATE {
 			"cate_status",
 			"cate_type",
 			"cate_parent_id",
+			"cate_domain",
 		);
 
 		$_str_sqlWhere = "1=1";
@@ -523,22 +524,38 @@ class MODEL_CATE {
 		//print_r($_arr_cateRows);
 
 		foreach ($_arr_cateRows as $_key=>$_value) {
-			$_arr_cateRows[$_key]["cate_level"]  = $num_cateLevel;
+			$_arr_cateRows[$_key]["cate_level"]  = $num_level;
 			$_value["cate_trees"]                = $this->trees_process($_value["cate_id"]);
 			unset($this->cateTrees);
 			$_arr_cateRows[$_key]["urlRow"]      = $this->url_process($_value);
-			$_arr_cateRows[$_key]["cate_childs"] = $this->mdl_list(1000, 0, $str_status, $str_type, $_value["cate_id"], $num_cateLevel + 1);
+			$_arr_cateRows[$_key]["cate_childs"] = $this->mdl_list(1000, 0, $str_status, $str_type, $_value["cate_id"], $num_level + 1);
 		}
 
 		return $_arr_cateRows;
 	}
 
 
-	function mdl_cateIds($num_cateId) {
+	function mdl_ids($num_cateId) {
 		$_arr_cateRows    = $this->mdl_list(1000, 0, "show", "", $num_cateId);
-		$_arr_cates       = $this->cate_ids_process($_arr_cateRows);
-		unset($this->cate_ids);
+		$_arr_cates       = $this->ids_process($_arr_cateRows);
 		return $_arr_cates;
+	}
+
+
+	function mdl_list_id() {
+		$_arr_cateSelect = array(
+			"cate_id",
+		);
+
+		$_str_sqlWhere = "1=1";
+
+		$_arr_cateRows = $this->obj_db->select(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, "", "cate_id ASC", 1000, 0);
+
+		foreach ($_arr_cateRows as $_key=>$_value) {
+			$_arr_list_id[] = $_value["cate_id"];
+		}
+
+		return $_arr_list_id;
 	}
 
 
@@ -567,7 +584,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -602,7 +619,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -648,94 +665,100 @@ class MODEL_CATE {
 	function mdl_cache($arr_cateIds = false, $arr_cateDels = false) {
 		$_str_alert = "y110110";
 
-		$_arr_cateRows = $this->mdl_list(1000, 0, "show");
+		$_arr_cateRows    = $this->mdl_list(1000, 0, "show");
 
-		$_str_outPut = "<?php" . PHP_EOL;
-		$_str_outPut .= "return array(" . PHP_EOL;
-			$_str_outPut .= $this->file_process($_arr_cateRows);
-		$_str_outPut .= ");";
+		$_str_outPut      = "<?php" . PHP_EOL;
+		$_str_outPut     .= "return array(" . PHP_EOL;
+		$_str_outPut     .= $this->cache_process($_arr_cateRows);
+		$_str_outPut     .= ");";
 
-		$_num_size = file_put_contents(BG_PATH_CACHE . "cate_trees.php", $_str_outPut);
+		$_num_size        = file_put_contents(BG_PATH_CACHE . "cate_trees.php", $_str_outPut);
 
 		if (!$_num_size) {
 			$_str_alert = "x110110";
 		}
 
-		if ($arr_cateIds) {
-			foreach ($arr_cateIds as $_key=>$_value) {
-				$_str_outPut = "<?php" . PHP_EOL;
-				$_str_outPut .= "return array(" . PHP_EOL;
+		if (!$arr_cateIds) {
+			$arr_cateIds = $this->mdl_list_id();
+		}
 
-				$_arr_cateRow = $this->mdl_readPub($_value);
+		foreach ($arr_cateIds as $_key=>$_value) {
+			$_str_outPut = "<?php" . PHP_EOL;
+			$_str_outPut .= "return array(" . PHP_EOL;
 
-				$_str_outPut .= "\"str_alert\" => \"" . $_arr_cateRow["str_alert"] . "\"," . PHP_EOL;
+			$_arr_cateRow = $this->mdl_readPub($_value);
 
-				if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+			$_str_outPut .= "\"alert\" => \"" . $_arr_cateRow["alert"] . "\"," . PHP_EOL;
 
-					$_str_outPut .= "\"cate_id\" => " . $_arr_cateRow["cate_id"] . "," . PHP_EOL;
-					$_str_outPut .= "\"cate_name\" => \"" . $_arr_cateRow["cate_name"] . "\"," . PHP_EOL;
-					$_str_outPut .= "\"cate_parent_id\" => " . $_arr_cateRow["cate_parent_id"] . "," . PHP_EOL;
-					$_str_outPut .= "\"cate_perpage\" => " . $_arr_cateRow["cate_perpage"] . "," . PHP_EOL;
-					$_str_outPut .= "\"cate_status\" => \"" . $_arr_cateRow["cate_status"] . "\"," . PHP_EOL;
-					$_str_outPut .= "\"cate_type\" => \"" . $_arr_cateRow["cate_type"] . "\"," . PHP_EOL;
+			if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 
-					$_str_tplDo    = $this->tpl_process($_arr_cateRow["cate_id"]);
-					$_str_outPut  .= "\"cate_tplDo\" => \"" .$_str_tplDo . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_id\" => " . $_arr_cateRow["cate_id"] . "," . PHP_EOL;
+				$_str_outPut .= "\"cate_name\" => \"" . $_arr_cateRow["cate_name"] . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_alias\" => \"" . $_arr_cateRow["cate_alias"] . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_parent_id\" => " . $_arr_cateRow["cate_parent_id"] . "," . PHP_EOL;
+				$_str_outPut .= "\"cate_perpage\" => " . $_arr_cateRow["cate_perpage"] . "," . PHP_EOL;
+				$_str_outPut .= "\"cate_domain\" => \"" . $_arr_cateRow["cate_domain"] . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_status\" => \"" . $_arr_cateRow["cate_status"] . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_type\" => \"" . $_arr_cateRow["cate_type"] . "\"," . PHP_EOL;
 
-					//if (!$this->is_magic) {
-						$_arr_cateRow["cate_content"] = addslashes($_arr_cateRow["cate_content"]);
-					//}
+				$_str_tplDo    = $this->tpl_process($_arr_cateRow["cate_id"]);
+				$_str_outPut  .= "\"cate_tplDo\" => \"" . $_str_tplDo . "\"," . PHP_EOL;
 
-					$_str_outPut .= "\"cate_content\" => \"" . $_arr_cateRow["cate_content"] . "\"," . PHP_EOL;
+				//if (!$this->is_magic) {
+					$_arr_cateRow["cate_content"] = addslashes($_arr_cateRow["cate_content"]);
+				//}
 
-					$_str_outPut .= "\"cate_ids\" => array(" . PHP_EOL;
+				$_str_outPut .= "\"cate_content\" => \"" . $_arr_cateRow["cate_content"] . "\"," . PHP_EOL;
 
-						$_arr_ids   = $this->mdl_cateIds($_arr_cateRow["cate_id"]);
-						$_arr_ids[] = $_arr_cateRow["cate_id"];
-						$_arr_ids   = array_unique($_arr_ids);
+				$_str_outPut .= "\"cate_ids\" => array(" . PHP_EOL;
 
-						foreach ($_arr_ids as $_key_ids=>$_value_ids) {
-							$_str_outPut .= $_value_ids . "," . PHP_EOL;
-						}
+					$_arr_ids   = $this->mdl_ids($_arr_cateRow["cate_id"]);
+					$_arr_ids[] = $_arr_cateRow["cate_id"];
+					$_arr_ids   = array_unique($_arr_ids);
 
-					$_str_outPut .= ")," . PHP_EOL;
+					foreach ($_arr_ids as $_key_ids=>$_value_ids) {
+						$_str_outPut .= $_value_ids . "," . PHP_EOL;
+					}
 
-					$_str_outPut .= "\"urlRow\" => array(" . PHP_EOL;
-						$_str_outPut .= "\"cate_url\" => \"" . $_arr_cateRow["urlRow"]["cate_url"] . "\"," . PHP_EOL;
-						$_str_outPut .= "\"page_attach\" => \"" . $_arr_cateRow["urlRow"]["page_attach"] . "\"," . PHP_EOL;
-					$_str_outPut .= ")," . PHP_EOL;
+				$_str_outPut .= ")," . PHP_EOL;
 
-					if (is_array($_arr_cateRow["cate_trees"])) {
-						$_str_outPut .= "\"cate_trees\" => array(" . PHP_EOL;
-						foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
-							$_arr_cate = $this->mdl_readPub($_value_tree["cate_id"]);
-							$_str_outPut .= $_key_tree . " => array(" . PHP_EOL;
+				$_str_outPut .= "\"urlRow\" => array(" . PHP_EOL;
+					$_str_outPut .= "\"cate_url\" => \"" . $_arr_cateRow["urlRow"]["cate_url"] . "\"," . PHP_EOL;
+					$_str_outPut .= "\"page_attach\" => \"" . $_arr_cateRow["urlRow"]["page_attach"] . "\"," . PHP_EOL;
+				$_str_outPut .= ")," . PHP_EOL;
 
-							if ($_arr_cate["str_alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
-								//$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"] = $_arr_cate["urlRow"];
+				if (is_array($_arr_cateRow["cate_trees"])) {
+					$_str_outPut .= "\"cate_trees\" => array(" . PHP_EOL;
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						$_arr_cate = $this->mdl_readPub($_value_tree["cate_id"]);
+						$_str_outPut .= $_key_tree . " => array(" . PHP_EOL;
 
-								$_str_outPut .= "\"cate_id\" => " . $_arr_cate["cate_id"] . "," . PHP_EOL;
-								$_str_outPut .= "\"cate_name\" => \"" . $_arr_cate["cate_name"] . "\"," . PHP_EOL;
+						if ($_arr_cate["alert"] == "y110102" && $_arr_cate["cate_status"] == "show") {
+							//$_arr_cateRow["cate_trees"][$_key_tree]["urlRow"] = $_arr_cate["urlRow"];
 
-								$_str_outPut .= "\"urlRow\" => array(" . PHP_EOL;
-									$_str_outPut .= "\"cate_url\" => \"" . $_arr_cate["urlRow"]["cate_url"] . "\"," . PHP_EOL;
-									$_str_outPut .= "\"page_attach\" => \"" . $_arr_cate["urlRow"]["page_attach"] . "\"," . PHP_EOL;
-								$_str_outPut .= ")," . PHP_EOL;
+							$_str_outPut .= "\"cate_id\" => " . $_arr_cate["cate_id"] . "," . PHP_EOL;
+							$_str_outPut .= "\"cate_name\" => \"" . $_arr_cate["cate_name"] . "\"," . PHP_EOL;
+							$_str_outPut .= "\"cate_alias\" => \"" . $_arr_cate["cate_alias"] . "\"," . PHP_EOL;
+							$_str_outPut .= "\"cate_domain\" => \"" . $_arr_cate["cate_domain"] . "\"," . PHP_EOL;
 
-							}
-
+							$_str_outPut .= "\"urlRow\" => array(" . PHP_EOL;
+								$_str_outPut .= "\"cate_url\" => \"" . $_arr_cate["urlRow"]["cate_url"] . "\"," . PHP_EOL;
+								$_str_outPut .= "\"page_attach\" => \"" . $_arr_cate["urlRow"]["page_attach"] . "\"," . PHP_EOL;
 							$_str_outPut .= ")," . PHP_EOL;
+
 						}
+
 						$_str_outPut .= ")," . PHP_EOL;
 					}
+					$_str_outPut .= ")," . PHP_EOL;
 				}
-				$_str_outPut .= ");";
+			}
+			$_str_outPut .= ");";
 
-				$_num_size = file_put_contents(BG_PATH_CACHE . "cate_" . $_value . ".php", $_str_outPut);
+			$_num_size = file_put_contents(BG_PATH_CACHE . "cate_" . $_value . ".php", $_str_outPut);
 
-				if (!$_num_size) {
-					$_str_alert = "x110110";
-				}
+			if (!$_num_size) {
+				$_str_alert = "x110110";
 			}
 		}
 
@@ -748,7 +771,7 @@ class MODEL_CATE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 	}
 
@@ -762,7 +785,7 @@ class MODEL_CATE {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -771,7 +794,7 @@ class MODEL_CATE {
 
 		if ($this->cateSubmit["cate_id"] > 0) {
 			$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_id"]);
-			if ($_arr_cateRow["str_alert"] != "y110102") {
+			if ($_arr_cateRow["alert"] != "y110102") {
 				return $_arr_cateRow;
 				exit;
 			}
@@ -781,14 +804,14 @@ class MODEL_CATE {
 		switch ($_arr_cateName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x110201",
+					"alert" => "x110201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x110202",
+					"alert" => "x110202",
 				);
 				exit;
 			break;
@@ -803,7 +826,7 @@ class MODEL_CATE {
 		switch ($_arr_cateParentId["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x110213",
+					"alert" => "x110213",
 				);
 				exit;
 			break;
@@ -815,16 +838,16 @@ class MODEL_CATE {
 
 		if ($this->cateSubmit["cate_parent_id"] > 0 && $this->cateSubmit["cate_parent_id"] == $this->cateSubmit["cate_id"]) {
 			return array(
-				"str_alert" => "x110221",
+				"alert" => "x110221",
 			);
 			exit;
 		}
 
 		$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_name"], "cate_name", $this->cateSubmit["cate_id"], $this->cateSubmit["cate_parent_id"]);
 
-		if ($_arr_cateRow["str_alert"] == "y110102") {
+		if ($_arr_cateRow["alert"] == "y110102") {
 			return array(
-				"str_alert" => "x110203",
+				"alert" => "x110203",
 			);
 			exit;
 		}
@@ -833,14 +856,14 @@ class MODEL_CATE {
 		switch ($_arr_cateAlias["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x110204",
+					"alert" => "x110204",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x110205",
+					"alert" => "x110205",
 				);
 				exit;
 			break;
@@ -852,26 +875,19 @@ class MODEL_CATE {
 
 		if ($this->cateSubmit["cate_alias"]) {
 			$_arr_cateRow = $this->mdl_read($this->cateSubmit["cate_alias"], "cate_alias", $this->cateSubmit["cate_id"], $this->cateSubmit["cate_parent_id"]);
-			if ($_arr_cateRow["str_alert"] == "y110102") {
+			if ($_arr_cateRow["alert"] == "y110102") {
 				return array(
-					"str_alert" => "x110206",
+					"alert" => "x110206",
 				);
 				exit;
 			}
 		}
 
-		$_arr_cateLink = validateStr(fn_post("cate_link"), 0, 3000, "str", "url");
+		$_arr_cateLink = validateStr(fn_post("cate_link"), 0, 3000);
 		switch ($_arr_cateLink["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x110211",
-				);
-				exit;
-			break;
-
-			case "format_err":
-				return array(
-					"str_alert" => "x110212",
+					"alert" => "x110211",
 				);
 				exit;
 			break;
@@ -885,7 +901,7 @@ class MODEL_CATE {
 		switch ($_arr_cateTpl["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x110214",
+					"alert" => "x110214",
 				);
 				exit;
 			break;
@@ -900,7 +916,7 @@ class MODEL_CATE {
 		switch ($_arr_cateType["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x110215",
+					"alert" => "x110215",
 				);
 				exit;
 			break;
@@ -915,7 +931,7 @@ class MODEL_CATE {
 		switch ($_arr_cateStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x110216",
+					"alert" => "x110216",
 				);
 				exit;
 			break;
@@ -926,18 +942,18 @@ class MODEL_CATE {
 
 		}
 
-		$_arr_cateDomain = validateStr(fn_post("cate_domain"), 0, 3000, "str", "url");
+		$_arr_cateDomain = validateStr(fn_post("cate_domain"), 0, 3000);
 		switch ($_arr_cateDomain["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x110207",
+					"alert" => "x110207",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x110208",
+					"alert" => "x110208",
 				);
 				exit;
 			break;
@@ -960,7 +976,7 @@ class MODEL_CATE {
 		$this->cateSubmit["cate_ftp_pass"]    = fn_getSafe(fn_post("cate_ftp_pass"), "txt", "");
 		$this->cateSubmit["cate_ftp_path"]    = fn_getSafe(fn_post("cate_ftp_path"), "txt", "");
 
-		$this->cateSubmit["str_alert"]        = "ok";
+		$this->cateSubmit["alert"]        = "ok";
 
 		return $this->cateSubmit;
 	}
@@ -975,7 +991,7 @@ class MODEL_CATE {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -992,7 +1008,7 @@ class MODEL_CATE {
 		}
 
 		$this->cateIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"cate_ids"    => $_arr_cateIds
 		);
 
@@ -1022,7 +1038,7 @@ class MODEL_CATE {
 			$_arr_cateRow     = $_arr_cateRows[0];
 		} else {
 			return array(
-				"str_alert" => "x110102", //不存在记录
+				"alert" => "x110102", //不存在记录
 			);
 			exit;
 		}
@@ -1031,24 +1047,25 @@ class MODEL_CATE {
 			$_arr_cateRow["cate_content"] = stripslashes($_arr_cateRow["cate_content"]);
 		//}
 
-		$_arr_cateRow["str_alert"]    = "y110102";
+		$_arr_cateRow["alert"]    = "y110102";
 
 		return $_arr_cateRow;
 	}
 
 
-	private function cate_ids_process($_arr_cateRows) {
-		foreach ($_arr_cateRows as $_value) {
-			if (count($_value["cate_childs"]) > 0) {
-				$_arr_cate      = $this->cate_ids_process($_value["cate_childs"]);
-				$this->cate_ids = array_merge($_arr_cate, $this->cate_ids);
-			}
+	private function ids_process($_arr_cateRows) {
+		$_arr_ids = array();
+		foreach ($_arr_cateRows as $_key=>$_value) {
 			if ($_value["cate_id"] > 0) {
-				$this->cate_ids[] = $_value["cate_id"];
+				$_arr_ids[] = $_value["cate_id"];
+			}
+			if (count($_value["cate_childs"]) > 0) {
+				$_arr_cate  = $this->ids_process($_value["cate_childs"]);
+				$_arr_ids   = array_merge($_arr_cate, $_arr_ids);
 			}
 		}
 
-		return $this->cate_ids;
+		return $_arr_ids;
 	}
 
 
@@ -1058,40 +1075,53 @@ class MODEL_CATE {
 		if ($_arr_cateRow["cate_type"] == "link" && $_arr_cateRow["cate_link"]) {
 			$_str_cateUrl = $_arr_cateRow["cate_link"];
 		} else {
-			/*if ($_arr_cateRow["cate_domain"]) {
-				$_str_urlPrefix = $_arr_cateRow["cate_domain"];
-			} else {
-				$_str_urlPrefix = BG_URL_ROOT;
-			}*/
 			switch (BG_VISIT_TYPE) {
 				case "static":
-					foreach ($_arr_cateRow["cate_trees"] as $_tree_value) {
-						if ($_tree_value["cate_alias"]) {
-							$_str_cateUrlParent .= $_tree_value["cate_alias"] . "/";
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						if ($_value_tree["cate_alias"]) {
+							$_str_cateUrlParent .= $_value_tree["cate_alias"] . "/";
 						} else {
-							$_str_cateUrlParent .= $_tree_value["cate_name"] . "/";
+							$_str_cateUrlParent .= $_value_tree["cate_id"] . "/";
 						}
 					}
 
-					$_str_cateUrl      = BG_URL_ROOT . "cate/" . $_str_cateUrlParent;
-					$_str_pageAttach   = "page_";
+					if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
+						$_str_urlPrefix = $_arr_cateRow["cate_domain"] . "/";
+					} else {
+						$_str_urlPrefix = BG_URL_ROOT;
+					}
+
+					$_str_cateUrl      = $_str_urlPrefix . "cate/" . $_str_cateUrlParent;
+					$_str_pageAttach   = "page-";
 				break;
 
 				case "pstatic":
-					foreach ($_arr_cateRow["cate_trees"] as $_tree_value) {
-						if ($_tree_value["cate_alias"]) {
-							$_str_cateUrlParent .= $_tree_value["cate_alias"] . "/";
+					foreach ($_arr_cateRow["cate_trees"] as $_key_tree=>$_value_tree) {
+						if ($_value_tree["cate_alias"]) {
+							$_str_cateUrlParent .= $_value_tree["cate_alias"] . "/";
 						} else {
-							$_str_cateUrlParent .= $_tree_value["cate_name"] . "/";
+							$_str_cateUrlParent .= $_value_tree["cate_id"] . "/";
 						}
 					}
 
-					$_str_cateUrl      = BG_URL_ROOT . "cate/" . $_str_cateUrlParent . $_arr_cateRow["cate_id"] . "/";
-					$_str_pageAttach   = "";
+					if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
+						$_str_urlPrefix = $_arr_cateRow["cate_domain"] . "/";
+					} else {
+						$_str_urlPrefix = BG_URL_ROOT;
+					}
+
+					$_str_cateUrl      = $_str_urlPrefix . "cate/" . $_str_cateUrlParent . "id-" . $_arr_cateRow["cate_id"] . "/";
+					$_str_pageAttach   = "page-";
 				break;
 
 				default:
-					$_str_cateUrl      = BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=" . $_arr_cateRow["cate_id"];
+					if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
+						$_str_urlPrefix = $_arr_cateRow["cate_domain"] . "/";
+					} else {
+						$_str_urlPrefix = BG_URL_ROOT;
+					}
+
+					$_str_cateUrl      = $_str_urlPrefix . "index.php?mod=cate&act_get=show&cate_id=" . $_arr_cateRow["cate_id"];
 					$_str_pageAttach   = "&page=";
 				break;
 			}
@@ -1114,6 +1144,8 @@ class MODEL_CATE {
 
 		krsort($this->cateTrees);
 
+		$_cate_trees = array();
+
 		foreach ($this->cateTrees as $_key=>$_value) {
 			$_cate_trees[] = $_value;
 		}
@@ -1122,13 +1154,14 @@ class MODEL_CATE {
 	}
 
 
-	private function file_process($_arr_cateRows) {
+	private function cache_process($_arr_cateRows) {
 		$_str_outPut = "";
 
 		foreach ($_arr_cateRows as $_key=>$_value) {
-			$_str_outPut .= $_key . " => array(" . PHP_EOL;
+			$_str_outPut .= $_value["cate_id"] . " => array(" . PHP_EOL;
 				$_str_outPut .= "\"cate_id\" => " . $_value["cate_id"] . "," . PHP_EOL;
 				$_str_outPut .= "\"cate_name\" => \"" . $_value["cate_name"] . "\"," . PHP_EOL;
+				$_str_outPut .= "\"cate_alias\" => \"" . $_value["cate_alias"] . "\"," . PHP_EOL;
 				$_str_outPut .= "\"cate_parent_id\" => " . $_value["cate_parent_id"] . "," . PHP_EOL;
 
 				$_str_outPut .= "\"urlRow\" => array(" . PHP_EOL;
@@ -1137,7 +1170,7 @@ class MODEL_CATE {
 				$_str_outPut .= ")," . PHP_EOL;
 
 				if ($_value["cate_childs"]) {
-					$_str_childs = $this->file_process($_value["cate_childs"]);
+					$_str_childs = $this->cache_process($_value["cate_childs"]);
 					$_str_outPut .= "\"cate_childs\" => array(" . PHP_EOL;
 					$_str_outPut .= $_str_childs . PHP_EOL;
 					$_str_outPut .= ")," . PHP_EOL;
@@ -1158,7 +1191,7 @@ class MODEL_CATE {
 		}
 
 		$_arr_cateRow = $this->mdl_readPub($num_cateId);
-		if ($_arr_cateRow["str_alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+		if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 			$_str_cateTpl = $_arr_cateRow["cate_tpl"];
 
 			if ($_str_cateTpl == "inherit" && $_arr_cateRow["cate_parent_id"] > 0) {

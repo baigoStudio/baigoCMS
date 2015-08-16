@@ -461,6 +461,13 @@ return array(
 			"min"        => 1,
 			"default"    => 30,
 		),
+		"BG_SITE_ASSOCIATE" => array(
+			"label"      => "关联文章显示数",
+			"type"       => "str",
+			"format"     => "int",
+			"min"        => 1,
+			"default"    => 10,
+		),
 		"BG_SITE_EXCERPT" => array(
 			"label"      => "文章摘要截取字数",
 			"type"       => "str",
@@ -561,7 +568,6 @@ return array(
 			"format"     => "text",
 			"min"        => 0,
 			"default"    => "",
-			"note"       => "如上传至本服务器，可为空"
 		),
 		"BG_UPLOAD_FTPPORT" => array(
 			"label"      => "FTP 端口",
@@ -591,6 +597,20 @@ return array(
 			"min"        => 0,
 			"default"    => "",
 			"note"        => "末尾请勿加 /",
+		),
+		"BG_UPLOAD_FTPPASV" => array(
+			"label"      => "FTP 被动模式",
+			"type"       => "radio",
+			"min"        => 1,
+			"default"    => "on",
+			"option" => array(
+				"on"    => array(
+					"value"    => "开启"
+				),
+				"off"   => array(
+					"value"    => "关闭"
+				),
+			),
 		),
 	),
 	"sso" => array(

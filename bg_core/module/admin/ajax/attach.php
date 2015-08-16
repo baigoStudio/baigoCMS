@@ -15,6 +15,23 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/attach.class.php"); //载入登录控
 $ajax_attach = new AJAX_ATTACH();
 
 switch ($GLOBALS["act_post"]) {
+	case "normal":
+	case "recycle":
+		$ajax_attach->ajax_box();
+	break;
+
+	case "gen":
+		$ajax_attach->ajax_gen();
+	break;
+
+	case "empty":
+		$ajax_attach->ajax_empty();
+	break;
+
+	case "clear":
+		$ajax_attach->ajax_clear();
+	break;
+
 	case "submit":
 		$ajax_attach->ajax_submit();
 	break;
@@ -25,6 +42,10 @@ switch ($GLOBALS["act_post"]) {
 
 	default:
 		switch ($GLOBALS["act_get"]) {
+			case "article":
+				$ajax_attach->ajax_article();
+			break;
+
 			case "list":
 				$ajax_attach->ajax_list();
 			break;

@@ -22,19 +22,11 @@ class AJAX_THUMB {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_thumb      = new MODEL_THUMB();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -52,20 +44,22 @@ class AJAX_THUMB {
 
 		$_arr_thumbSubmit = $this->mdl_thumb->input_submit();
 
-		if ($_arr_thumbSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_thumbSubmit["str_alert"]);
+		if ($_arr_thumbSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_thumbSubmit["alert"]);
 		}
 
 		$_arr_thumbRow = $this->mdl_thumb->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_thumbRow["str_alert"]);
+		$_arr_cache = $this->mdl_thumb->mdl_cache();
+
+		$this->obj_ajax->halt_alert($_arr_thumbRow["alert"]);
 	}
 
 
 	function ajax_cache() {
 		$_arr_cache = $this->mdl_thumb->mdl_cache();
 
-		$this->obj_ajax->halt_alert($_arr_cache["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cache["alert"]);
 	}
 
 
@@ -81,13 +75,15 @@ class AJAX_THUMB {
 		}
 
 		$_arr_thumbIds = $this->mdl_thumb->input_ids();
-		if ($_arr_thumbIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_thumbIds["str_alert"]);
+		if ($_arr_thumbIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_thumbIds["alert"]);
 		}
 
 		$_arr_thumbRow = $this->mdl_thumb->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_thumbRow["str_alert"]);
+		$_arr_cache = $this->mdl_thumb->mdl_cache();
+
+		$this->obj_ajax->halt_alert($_arr_thumbRow["alert"]);
 	}
 
 
@@ -104,7 +100,7 @@ class AJAX_THUMB {
 		$_str_thumbType   = fn_getSafe(fn_get("thumb_type"), "txt", "");
 
 		$_arr_tagRow  = $this->mdl_thumb->mdl_check($_num_thumbWidth, $_num_thumbHeight, $_str_thumbType);
-		if ($_arr_tagRow["str_alert"] == "y130102") {
+		if ($_arr_tagRow["alert"] == "y130102") {
 			$this->obj_ajax->halt_re("x130203");
 		}
 

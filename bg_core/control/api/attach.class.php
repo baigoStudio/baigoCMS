@@ -25,24 +25,10 @@ class API_ATTACH {
 
 	function __construct() { //构造函数
 		$this->obj_api    = new CLASS_API();
+		$this->obj_api->chk_install();
 		$this->mdl_app    = new MODEL_APP(); //设置管理组模型
 		$this->mdl_attach = new MODEL_ATTACH();
 		$this->mdl_thumb  = new MODEL_THUMB(); //设置上传信息对象
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"str_alert" => "x030416"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"str_alert" => "x030415"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
 	}
 
 
@@ -59,7 +45,7 @@ class API_ATTACH {
 
 		if ($_num_attachId == 0) {
 			$_arr_return = array(
-				"str_alert" => "x070201",
+				"alert" => "x070201",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
@@ -70,8 +56,12 @@ class API_ATTACH {
 		$_arr_thumbRows   = include(BG_PATH_CACHE . "thumb_list.php");
 		$_arr_attachRow   = $this->mdl_attach->mdl_url($_num_attachId, $_arr_thumbRows);
 
-		if ($_arr_attachRow["str_alert"] != "y070102") {
+		if ($_arr_attachRow["alert"] != "y070102") {
 			$this->obj_api->halt_re($_arr_attachRow);
+		}
+
+		if ($this->attachRow["attach_box"] != "normal") {
+			$this->obj_api->halt_re("x070102");
 		}
 
 		//print_r($_arr_attachRow);
@@ -93,18 +83,18 @@ class API_ATTACH {
 	private function app_check($str_method = "get") {
 		$this->appGet = $this->obj_api->app_get($str_method);
 
-		if ($this->appGet["str_alert"] != "ok") {
+		if ($this->appGet["alert"] != "ok") {
 			$this->obj_api->halt_re($this->appGet);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			$this->obj_api->halt_re($_arr_appRow);
 		}
 		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
-		if ($_arr_appChk["str_alert"] != "ok") {
+		if ($_arr_appChk["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 	}

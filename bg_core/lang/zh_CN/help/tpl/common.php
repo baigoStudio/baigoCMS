@@ -13,10 +13,31 @@ return "<a name=\"tree\"></a>
 	</p>
 	<hr>
 
+	<a name=\"callAttach\"></a>
+	<h3>调用附件</h3>
+	<p>
+		在任何模板内，均可以用函数 <code>{call_attach attach_id=附件 ID}</code> 的方式来显示调用，执行此函数后，模板会生成一个 <code>{\$attachRows}</code> 数组，可以通过遍历 <code>{\$attachRows.附件 ID}</code> 的方式来显示调用结果，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=attach\">附件 / 缩略图</a>。
+	</p>
+	<hr>
+
+	<a name=\"callCate\"></a>
+	<h3>调用栏目</h3>
+	<p>
+		在任何模板内，均可以用函数 <code>{call_cate cate_id=栏目 ID}</code> 的方式来显示调用，执行此函数后，模板会生成一个 <code>{\$cateRows}</code> 数组，可以通过遍历 <code>{\$cateRows.栏目 ID}</code> 的方式来显示调用结果，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=cate\">栏目</a>。
+	</p>
+	<hr>
+
 	<a name=\"include\"></a>
 	<h3>包含</h3>
 	<p>
 		在任何模板内，均可以用 <code>{include \"包含模板路径\"}</code> 的方式来包含并执行文件，您可以在模板目录下，建立一个文件夹，如 <mark>inc</mark>，用来统一存放被包含的模板，如：<code>{include \"inc/head.tpl\"}</code>，关于包含，请查看 Smarty 官方网站 <a href=\"http://www.smarty.net\" target=\"_blank\">http://www.smarty.net</a></a>。
+	</p>
+	<hr>
+
+	<a name=\"ubb\"></a>
+	<h3>部分 UBB 代码支持</h3>
+	<p>
+		在任何模板内，均可以用 Smarty 修饰符 <code>{\$string|ubb}</code> 的方式来实现部分 UBB 代码，被支持的 UBB 代码请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=common#ubb\">管理后台</a>。
 	</p>
 	<hr>
 
@@ -157,6 +178,44 @@ return "<a name=\"tree\"></a>
 					<tr>
 						<td class=\"nowrap\">alert</td>
 						<td>提示信息</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<hr>
+
+	<a name=\"custom\"></a>
+	<h3>自定义字段</h3>
+	<p>
+		在任何模板内，均可以用遍历 <code>{\$tplData.customRows}</code> 的方式来显示所有有效自定义字段的列表。
+	</p>
+	<div class=\"panel panel-default\">
+		<div class=\"panel-heading\">常用语言资源</div>
+		<div class=\"table-responsive\">
+			<table class=\"table\">
+				<thead>
+					<tr>
+						<th class=\"nowrap\">键名</th>
+						<th class=\"nowrap\">类型</th>
+						<th>说明</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class=\"nowrap\">custom_id</td>
+						<td class=\"nowrap\">int</td>
+						<td>自定义字段 ID</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">custom_name</td>
+						<td class=\"nowrap\">string</td>
+						<td>自定义字段名称</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">custom_childs</td>
+						<td class=\"nowrap\">array</td>
+						<td>子字段数组</td>
 					</tr>
 				</tbody>
 			</table>

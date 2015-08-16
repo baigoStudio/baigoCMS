@@ -35,7 +35,7 @@ class MODEL_THUMB {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -74,7 +74,7 @@ class MODEL_THUMB {
 				$_str_alert = "y090101";
 			} else {
 				return array(
-					"str_alert" => "x090101",
+					"alert" => "x090101",
 				);
 				exit;
 			}
@@ -86,7 +86,7 @@ class MODEL_THUMB {
 				$_str_alert = "y090103";
 			} else {
 				return array(
-					"str_alert" => "x090103",
+					"alert" => "x090103",
 				);
 				exit;
 			}
@@ -94,7 +94,7 @@ class MODEL_THUMB {
 
 		return array(
 			"thumb_id"   => $_num_thumbId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -115,12 +115,12 @@ class MODEL_THUMB {
 			$_arr_thumbRow    = $_arr_thumbRows[0];
 		} else {
 			return array(
-				"str_alert" => "x090102", //不存在记录
+				"alert" => "x090102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_thumbRow["str_alert"] = "y090102";
+		$_arr_thumbRow["alert"] = "y090102";
 
 		return $_arr_thumbRow;
 	}
@@ -132,7 +132,7 @@ class MODEL_THUMB {
 				"thumb_width"   => 100,
 				"thumb_height"  => 100,
 				"thumb_type"    => "cut",
-				"str_alert"     => "y090102", //存在记录
+				"alert"     => "y090102", //存在记录
 			);
 			exit;
 		}
@@ -168,12 +168,12 @@ class MODEL_THUMB {
 			$_arr_thumbRow = $_arr_thumbRows[0];
 		} else {
 			return array(
-				"str_alert" => "x090102", //不存在记录
+				"alert" => "x090102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_thumbRow["str_alert"] = "y090102";
+		$_arr_thumbRow["alert"] = "y090102";
 
 		return $_arr_thumbRow;
 	}
@@ -236,7 +236,7 @@ class MODEL_THUMB {
 		}
 
 		return array(
-			"str_alert" => $_str_alert
+			"alert" => $_str_alert
 		);
 	}
 
@@ -264,14 +264,14 @@ class MODEL_THUMB {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 	}
 
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -280,7 +280,7 @@ class MODEL_THUMB {
 
 		if ($this->thumbSubmit["thumb_id"] > 0) {
 			$_arr_thumbRow = $this->mdl_read($this->thumbSubmit["thumb_id"]);
-			if ($_arr_thumbRow["str_alert"] != "y090102") {
+			if ($_arr_thumbRow["alert"] != "y090102") {
 				return $_arr_thumbRow;
 				exit;
 			}
@@ -290,14 +290,14 @@ class MODEL_THUMB {
 		switch ($_arr_thumbWidth["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x090201",
+					"alert" => "x090201",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x090202",
+					"alert" => "x090202",
 				);
 				exit;
 			break;
@@ -312,14 +312,14 @@ class MODEL_THUMB {
 		switch ($_arr_thumbHeight["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x090203",
+					"alert" => "x090203",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x090204",
+					"alert" => "x090204",
 				);
 				exit;
 			break;
@@ -334,7 +334,7 @@ class MODEL_THUMB {
 		switch ($_arr_thumbType["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x090205",
+					"alert" => "x090205",
 				);
 				exit;
 			break;
@@ -346,14 +346,14 @@ class MODEL_THUMB {
 		}
 
 		$_arr_thumbRow = $this->mdl_check($this->thumbSubmit["thumb_width"], $this->thumbSubmit["thumb_height"], $this->thumbSubmit["thumb_type"], $this->thumbSubmit["thumb_id"]);
-		if ($_arr_thumbRow["str_alert"] == "y090102") {
+		if ($_arr_thumbRow["alert"] == "y090102") {
 			return array(
-				"str_alert" => "x090206",
+				"alert" => "x090206",
 			);
 			exit;
 		}
 
-		$this->thumbSubmit["str_alert"] = "ok";
+		$this->thumbSubmit["alert"] = "ok";
 		return $this->thumbSubmit;
 	}
 
@@ -367,7 +367,7 @@ class MODEL_THUMB {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -384,7 +384,7 @@ class MODEL_THUMB {
 		}
 
 		$this->thumbIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"thumb_ids"   => $_arr_thumbIds
 		);
 

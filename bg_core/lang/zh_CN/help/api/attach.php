@@ -1,7 +1,7 @@
 <?php
 return "<h3>附件</h3>
 	<p class=\"text-info\">接口说明</p>
-	<p>用于显示文章列表。</p>
+	<p>用于显示附件详细信息。</p>
 
 	<p class=\"text-info\">URL</p>
 	<p><span class=\"text-primary\">http://www.domain.com/bg_api/api.php?mod=attach</span></p>
@@ -119,7 +119,7 @@ return "<h3>附件</h3>
 	<a name=\"thumb\"></a>
 	<h3>缩略图</h3>
 	<p>
-		在上传图片时，系统会根据缩略图的设置自动生成缩略图，系统生成缩略图以后，需要在适当的地方给予显示，如：文章列表等处，一般缩略图信息包含在 attachRow 对象中。
+		在上传图片时，系统会根据缩略图的设置自动生成缩略图，系统生成缩略图以后，需要在适当的地方给予显示，如：文章列表等处，一般缩略图信息包含在 <code>attachRow</code> 对象中。
 	</p>
 	<p>
 		以文章列表为例，缩略图位于 <code>{articleRows[0].attachRow}</code>，此对象包含了第一篇文章的所有图片信息，包括原始图片、多个缩略图等，如果我们要显示某一个尺寸的缩略图，我们需要得到调用键名，调用键名位于 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=attach#thumb\">附件管理</a> 中的缩略图部分，如果我们要显示系统默认的 100x100 的缩略图，代码为 <code>{articleRows[0].attachRow.thumb_100_100_cut}</code>。

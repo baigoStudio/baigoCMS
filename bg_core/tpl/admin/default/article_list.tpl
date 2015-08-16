@@ -1,6 +1,6 @@
 {* article_list.tpl 文章列表 *}
 {function cate_list arr=""}
-	{foreach $arr as $value}
+	{foreach $arr as $key=>$value}
 		<option {if $tplData.search.cate_id == $value.cate_id}selected{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
@@ -27,119 +27,123 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.article.main.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
-			<ul class="list-inline">
-				<li>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form">
-						<span class="glyphicon glyphicon-plus"></span>
-						{$lang.href.add}
-					</a>
-				</li>
-				<li>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article" {if !$tplData.search.box}class="text-muted"{/if}>
-						{$lang.href.all}
-						<span class="badge">{$tplData.articleCount.all}</span>
-					</a>
-				</li>
-				<li>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&box=draft" {if $tplData.search.box == "draft"}class="text-muted"{/if}>
-						{$lang.href.draft}
-						<span class="badge">{$tplData.articleCount.draft}</span>
-					</a>
-				</li>
-				{if $tplData.articleCount.recycle > 0}
+			<div class="form-group">
+				<ul class="nav nav-pills nav_baigo">
 					<li>
-						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&box=recycle" {if $tplData.search.box == "recycle"}class="text-muted"{/if}>
-							{$lang.href.recycle}
-							<span class="badge">{$tplData.articleCount.recycle}</span>
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form">
+							<span class="glyphicon glyphicon-plus"></span>
+							{$lang.href.add}
 						</a>
 					</li>
-				{/if}
-				<li>
-					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=article" target="_blank">
-						<span class="glyphicon glyphicon-question-sign"></span>
-						{$lang.href.help}
-					</a>
-				</li>
-			</ul>
+					<li {if !$tplData.search.box}class="active"{/if}>
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article">
+							{$lang.href.all}
+							<span class="badge">{$tplData.articleCount.all}</span>
+						</a>
+					</li>
+					<li {if $tplData.search.box == "draft"}class="active"{/if}>
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&box=draft">
+							{$lang.href.draft}
+							<span class="badge">{$tplData.articleCount.draft}</span>
+						</a>
+					</li>
+					{if $tplData.articleCount.recycle > 0}
+						<li {if $tplData.search.box == "recycle"}class="active"{/if}>
+							<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&box=recycle">
+								{$lang.href.recycle}
+								<span class="badge">{$tplData.articleCount.recycle}</span>
+							</a>
+						</li>
+					{/if}
+					<li>
+						<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=article" target="_blank">
+							<span class="glyphicon glyphicon-question-sign"></span>
+							{$lang.href.help}
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="pull-right">
-			{if $tplData.search.box == "recycle"}
-				<form name="article_empty" id="article_empty">
-					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
-					<input type="hidden" id="act_empty" name="act_post" value="empty">
-					<button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.empty}</button>
-				</form>
-			{/if}
+			<form name="article_search" id="article_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
+				<input type="hidden" name="mod" value="article">
+				<input type="hidden" name="act_get" value="list">
+				<div class="form-group">
+					<select name="cate_id" class="form-control input-sm">
+						<option value="">{$lang.option.allCate}</option>
+						{cate_list arr=$tplData.cateRows}
+						<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknown}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="year" class="form-control input-sm">
+						<option value="">{$lang.option.allYear}</option>
+						{foreach $tplData.articleYear as $key=>$value}
+							<option {if $tplData.search.year == $value.article_year}selected{/if} value="{$value.article_year}">{$value.article_year}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="month" class="form-control input-sm">
+						<option value="">{$lang.option.allMonth}</option>
+						{for $_i = 1 to 12}
+							{if $_i<10}
+								{$_str_month=0|cat:$_i|truncate:2}
+							{else}
+								{$_str_month=$_i}
+							{/if}
+							<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
+						{/for}
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="mark_id" class="form-control input-sm">
+						<option value="">{$lang.option.allMark}</option>
+						{foreach $tplData.markRows as $key=>$value}
+							<option {if $tplData.search.mark_id == $value.mark_id}selected{/if} value="{$value.mark_id}">{$value.mark_name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="status" class="form-control input-sm">
+						<option value="">{$lang.option.allStatus}</option>
+						{foreach $status.article as $key=>$value}
+							<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-default btn-sm">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
 		</div>
 		<div class="clearfix"></div>
 	</div>
 
-	<div class="form-group text-right">
-		<form name="article_search" id="article_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
-			<input type="hidden" name="mod" value="article">
-			<input type="hidden" name="act_get" value="list">
+	{if $tplData.search.box == "recycle"}
+		<form name="article_empty" id="article_empty">
+			<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+			<input type="hidden" id="act_empty" name="act_post" value="empty">
 			<div class="form-group">
-				<select name="cate_id" class="form-control input-sm">
-					<option value="">{$lang.option.allCate}</option>
-					{cate_list arr=$tplData.cateRows}
-					<option {if $tplData.search.cate_id == -1}selected{/if} value="-1">{$lang.option.unknown}</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="year" class="form-control input-sm">
-					<option value="">{$lang.option.allYear}</option>
-					{foreach $tplData.articleYear as $value}
-						<option {if $tplData.search.year == $value.article_year}selected{/if} value="{$value.article_year}">{$value.article_year}</option>
-					{/foreach}
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="month" class="form-control input-sm">
-					<option value="">{$lang.option.allMonth}</option>
-					{for $_i = 1 to 12}
-						{if $_i<10}
-							{$_str_month=0|cat:$_i|truncate:2}
-						{else}
-							{$_str_month=$_i}
-						{/if}
-						<option {if $tplData.search.month == $_str_month}selected{/if} value="{$_str_month}">{$_str_month}</option>
-					{/for}
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="mark_id" class="form-control input-sm">
-					<option value="">{$lang.option.allMark}</option>
-					{foreach $tplData.markRows as $value}
-						<option {if $tplData.search.mark_id == $value.mark_id}selected{/if} value="{$value.mark_id}">{$value.mark_name}</option>
-					{/foreach}
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="status" class="form-control input-sm">
-					<option value="">{$lang.option.allStatus}</option>
-					{foreach $status.article as $key=>$value}
-						<option {if $tplData.search.status == $key}selected{/if} value="{$key}">{$value}</option>
-					{/foreach}
-				</select>
-			</div>
-			<div class="form-group">
-				<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-			</div>
-			<div class="form-group">
-				<button type="submit" class="btn btn-default btn-sm">
-					<span class="glyphicon glyphicon-search"></span>
-				</button>
+				<button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.empty}</button>
 			</div>
 		</form>
-	</div>
+	{/if}
 
 	<form name="article_list" id="article_list" class="form-inline">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
@@ -158,12 +162,12 @@
 							<th class="td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.articleTitle}</th>
 							<th class="td_lg">{$lang.label.cate} / {$lang.label.articleMark}</th>
-							<th class="td_md">{$lang.label.admin}</th>
-							<th class="td_sm">{$lang.label.status}</th>
+							<th class="td_md">{$lang.label.admin} / {$lang.label.hits}</th>
+							<th class="td_sm">{$lang.label.status} / {$lang.label.time}</th>
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $tplData.articleRows as $value}
+						{foreach $tplData.articleRows as $key=>$value}
 							{if $value.article_box == "normal"}
 								{if $value.article_time_pub > $smarty.now}
 									{$_css_status = "info"}
@@ -214,10 +218,14 @@
 								<td class="td_lg">
 									<ul class="list-unstyled">
 										<li>
-											{foreach $value.cateRow.cate_trees as $key_tree=>$value_tree}
-												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list&cate_id={$value_tree.cate_id}">{$value_tree.cate_name}</a>
-												{if !$value_tree@last}&raquo;{/if}
-											{/foreach}
+											{if isset($value.cateRow.cate_trees)}
+												{foreach $value.cateRow.cate_trees as $key_tree=>$value_tree}
+													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list&cate_id={$value_tree.cate_id}">{$value_tree.cate_name}</a>
+													{if !$value_tree@last}&raquo;{/if}
+												{/foreach}
+											{else}
+												{$lang.label.unknown}
+											{/if}
 										</li>
 										<li>
 											{if isset($value.markRow.mark_name)}
@@ -229,19 +237,26 @@
 									</ul>
 								</td>
 								<td class="td_md">
-									{if isset($value.adminRow.admin_name)}
-										<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name}</a>
-									{else}
-										{$lang.label.unknown}
-									{/if}
+									<ul class="list-unstyled">
+										<li>
+											{if isset($value.adminRow.admin_name)}
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name}</a>
+											{else}
+												{$lang.label.unknown}
+											{/if}
+										</li>
+										<li>
+											<abbr data-toggle="tooltip" data-placement="bottom" title="{$lang.label.hitsDay} {$value.article_hits_day}<br>{$lang.label.hitsWeek} {$value.article_hits_week}<br>{$lang.label.hitsMonth} {$value.article_hits_month}<br>{$lang.label.hitsYear} {$value.article_hits_year}<br>{$lang.label.hitsAll} {$value.article_hits_all}">{$value.article_hits_all}</abbr>
+										</li>
+									</ul>
 								</td>
 								<td class="td_sm">
 									<ul class="list-unstyled">
-										<li>
+										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$_str_status}</span>
 										</li>
 										<li>
-											<abbr title="{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}">{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</abbr>
+											<abbr data-toggle="tooltip" data-placement="bottom" title="{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}">{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</abbr>
 										</li>
 									</ul>
 								</td>
@@ -250,7 +265,9 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="2"><span id="msg_article_id"></span></td>
+							<td colspan="2">
+								<span id="msg_article_id"></span>
+							</td>
 							<td colspan="4">
 								<div class="form-group">
 									<select name="act_post" id="act_post" class="validate form-control input-sm">
@@ -290,10 +307,10 @@
 	</form>
 
 	<div class="text-right">
-		{include "include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -314,6 +331,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -324,6 +342,7 @@
 		confirm_id: "act_empty",
 		confirm_val: "empty",
 		confirm_msg: "{$lang.confirm.empty}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -331,7 +350,7 @@
 
 	$(document).ready(function(){
 		var obj_validate_list = $("#article_list").baigoValidator(opts_validator_list);
-		var obj_submit_list = $("#article_list").baigoSubmit(opts_submit_list);
+		var obj_submit_list   = $("#article_list").baigoSubmit(opts_submit_list);
 		$("#go_submit").click(function(){
 			if (obj_validate_list.validateSubmit()) {
 				obj_submit_list.formSubmit();
@@ -344,7 +363,11 @@
 		});
 
 		$("#article_list").baigoCheckall();
+
+		$("[data-toggle='tooltip']").tooltip({
+			html: true
+		});
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

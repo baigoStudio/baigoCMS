@@ -7,4 +7,4 @@ return "<h3>服务器环境检查</h3>
 
 	<p>关于 PHP 的扩展库请查看 <a href=\"http://www.php.net/manual/zh/\" target=\"_blank\">PHP 官方网站</a>。</p>
 
-	<p>系统显示检查通过后，点击下一步。</p>";
+	<p>系统显示检查通过后，点击“下一步“。</p>";

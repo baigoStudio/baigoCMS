@@ -20,19 +20,11 @@ class AJAX_CATE {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_cate       = new MODEL_CATE();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -58,8 +50,8 @@ class AJAX_CATE {
 		}
 
 		$_arr_cateRow = $this->mdl_cate->mdl_read($_num_cateId);
-		if ($_arr_cateRow["str_alert"] != "y110102") {
-			$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		if ($_arr_cateRow["alert"] != "y110102") {
+			$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 		}
 
 		$_num_parentId    = fn_getSafe(fn_post("cate_parent_id"), "int", 0);
@@ -69,7 +61,7 @@ class AJAX_CATE {
 
 		$this->mdl_cate->mdl_cache(array($_num_cateId));
 
-		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
 
 
@@ -82,12 +74,12 @@ class AJAX_CATE {
 	function ajax_submit() {
 		$_arr_cateSubmit = $this->mdl_cate->input_submit();
 
-		if ($_arr_cateSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cateSubmit["str_alert"]);
+		if ($_arr_cateSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_cateSubmit["alert"]);
 		}
 
 		if ($_arr_cateSubmit["cate_id"] > 0) {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_cateSubmit["cate_id"]]["cate"])) {
 				$this->obj_ajax->halt_alert("x110303");
 			}
 		} else {
@@ -112,7 +104,7 @@ class AJAX_CATE {
 
 		$this->mdl_cate->mdl_cache($_arr_cateIds); //将树形结构所有的栏目重新生成 cache
 
-		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
 
 
@@ -124,15 +116,15 @@ class AJAX_CATE {
 	 */
 	function ajax_cache() {
 		$_arr_cateIds = $this->mdl_cate->input_ids();
-		if ($_arr_cateIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cateIds["str_alert"]);
+		if ($_arr_cateIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_cateIds["alert"]);
 		}
 
 		$_arr_cache = $this->mdl_cate->mdl_cache($_arr_cateIds["cate_ids"]);
 
 		//print_r($_str_outPut);
 
-		$this->obj_ajax->halt_alert($_arr_cache["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cache["alert"]);
 	}
 
 
@@ -148,8 +140,8 @@ class AJAX_CATE {
 		}
 
 		$_arr_cateIds = $this->mdl_cate->input_ids();
-		if ($_arr_cateIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cateIds["str_alert"]);
+		if ($_arr_cateIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_cateIds["alert"]);
 		}
 
 		$_str_cateStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
@@ -161,7 +153,7 @@ class AJAX_CATE {
 
 		$this->mdl_cate->mdl_cache($_arr_cateIds["cate_ids"]);
 
-		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
 
 
@@ -177,15 +169,15 @@ class AJAX_CATE {
 		}
 
 		$_arr_cateIds = $this->mdl_cate->input_ids();
-		if ($_arr_cateIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_cateIds["str_alert"]);
+		if ($_arr_cateIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_cateIds["alert"]);
 		}
 
 		$_arr_cateRow = $this->mdl_cate->mdl_del();
 
 		$this->mdl_cate->mdl_cache(false, $_arr_cateIds["cate_ids"]);
 
-		$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
 
 
@@ -202,7 +194,7 @@ class AJAX_CATE {
 
 		$_arr_cateRow = $this->mdl_cate->mdl_read($_str_cateName, "cate_name", $_num_cateId, $_num_cateParentId);
 
-		if ($_arr_cateRow["str_alert"] == "y110102") {
+		if ($_arr_cateRow["alert"] == "y110102") {
 			$this->obj_ajax->halt_re("x110203");
 		}
 
@@ -228,7 +220,7 @@ class AJAX_CATE {
 
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_str_cateAlias, "cate_alias", $_num_cateId, $_num_cateParentId);
 
-			if ($_arr_cateRow["str_alert"] == "y110102") {
+			if ($_arr_cateRow["alert"] == "y110102") {
 				$this->obj_ajax->halt_re("x110206");
 			}
 		}

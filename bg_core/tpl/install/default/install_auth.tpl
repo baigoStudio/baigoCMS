@@ -4,12 +4,18 @@
 	mod_help   => "install",
 	act_help   => "admin#auth"
 ]}
-{include "include/install_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_head.tpl" cfg=$cfg}
 
 	<form name="install_form_admin" id="install_form_admin" autocomplete="off">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="auth">
 		<input type="hidden" name="admin_status" value="enable">
+
+		{foreach $adminMod as $key_m=>$value_m}
+			{foreach $value_m.allow as $key_s=>$value_s}
+					<input type="hidden" name="group_allow[{$key_m}][{$key_s}]" value="1">
+			{/foreach}
+		{/foreach}
 
 		<div class="alert alert-warning">
 			<h4>
@@ -33,13 +39,13 @@
 		<div class="form-group">
 			<div class="btn-group">
 				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.complete}</button>
-				{include "include/install_drop.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_drop.tpl" cfg=$cfg}
 			</div>
 		</div>
 	</form>
 
 
-{include "include/install_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -57,6 +63,7 @@
 	};
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_INSTALL}ajax.php?mod=install",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.stepNext}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=over"

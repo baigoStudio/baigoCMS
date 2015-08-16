@@ -21,28 +21,40 @@ return "<h3>栏目显示</h3>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#cateRow\">cateRow</a></td>
+						<td class=\"nowrap\">tplData.cateRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">当前栏目详细信息</td>
-						<td> </td>
+						<td>查看 <a href=\"#cateRow\">tplData.cateRow</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">articleRows</td>
+						<td class=\"nowrap\">tplData.articleRows</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">文章列表</td>
 						<td>隶属于当前栏目的所有文章。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=article#articleRow\" target=\"_blank\">文章</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#search\">search</a></td>
+						<td class=\"nowrap\">tplData.search</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">搜索参数</td>
-						<td>显示文章列表所需要的搜索参数。</td>
+						<td>显示文章列表所需要的搜索参数，查看 <a href=\"#search\">tplData.search</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">pageRow</td>
+						<td class=\"nowrap\">tplData.query</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">搜索参数序列化字符串</td>
+						<td>搜索参数序列化为字符串以后的结果。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">tplData.pageRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">分页参数</td>
 						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=page\" target=\"_blank\">分页参数</a>。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">tplData.customs</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">自定义字段搜索数组</td>
+						<td>多维数组，格式为 <code>\"custom_自定义字段 ID\" => \"关键词\"</code>，多个自定义字段时的例子：<code>array(\"custom_2\" => \"关键词\", \"custom_5\" => \"关键词\")</code></td>
 					</tr>
 				</tbody>
 			</table>
@@ -84,7 +96,7 @@ return "<h3>栏目显示</h3>
 						<td class=\"nowrap\">cate_alias</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">别名</td>
-						<td>栏目的英文别名。此项一般用户 URL，当访问方式设置为伪静态或纯静态，别名会显示在浏览的地址栏，如：http://www.domain.com/cate/<mark>service</mark>/3/，高亮部分既为别名</td>
+						<td>栏目的英文别名。此项一般用户 URL，当 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=opt#visit\">访问方式</a> 设置为伪静态或纯静态，别名会显示在浏览的地址栏，如：http://www.domain.com/cate/<mark>service</mark>/3/，高亮部分既为别名</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_type</td>
@@ -101,14 +113,14 @@ return "<h3>栏目显示</h3>
 					<tr>
 						<td class=\"nowrap\">cate_content</td>
 						<td class=\"nowrap\">text</td>
-						<td class=\"nowrap\">栏目内容</td>
-						<td>栏目的具体内容。<mark>当栏目类型为单页时，此项有效</mark>。</td>
+						<td class=\"nowrap\">栏目介绍</td>
+						<td>栏目的具体介绍。</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_link</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">跳转至</td>
-						<td>该栏目跳转至相应的地址，不会显示栏目内容。<mark>当栏目类型为链接时，此项有效</mark>。</td>
+						<td>该栏目跳转至相应的地址，不会显示栏目介绍。<mark>当栏目类型为链接时，此项有效</mark>。</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_parent_id</td>
@@ -123,19 +135,19 @@ return "<h3>栏目显示</h3>
 						<td>多维数组，按顺序列出当前栏目隶属的树形结构。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">urlRow</td>
-						<td class=\"nowrap\">array</td>
-						<td class=\"nowrap\">当前栏目 URL 数组</td>
-						<td>cate_url 为当前栏目 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
-					</tr>
-					<tr>
 						<td class=\"nowrap\">cate_status</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">栏目状态</td>
 						<td>show 为显示，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">urlRow</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">当前栏目 URL 数组</td>
+						<td>cate_url 为当前栏目 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前栏目的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
@@ -165,16 +177,22 @@ return "<h3>栏目显示</h3>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">动作</td>
-						<td>只能为 show。</td>
-					</tr>
-					<tr>
 						<td class=\"nowrap\">cate_id</td>
 						<td class=\"nowrap\">int</td>
 						<td class=\"nowrap\">栏目 ID</td>
 						<td> </td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">key</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">关键词</td>
+						<td> </td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">customs</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">搜索字符串</td>
+						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=search#customs\" target=\"_blank\">搜索</a></td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">page_ext</td>

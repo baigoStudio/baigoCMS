@@ -1,5 +1,5 @@
 {function cate_list arr=""}
-	{foreach $arr as $value}
+	{foreach $arr as $key=>$value}
 		<option {if $tplData.search.cate_id == $value.cate_id}selected{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
@@ -28,15 +28,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$adminMod.article.sub.tag.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -72,12 +72,14 @@
 					<input type="hidden" name="act_get" value="select">
 					<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 					<div class="form-group">
-						<input type="text" name="key_belong" class="form-control input-sm" value="{$tplData.search.key_belong}" placeholder="{$lang.label.key}">
-					</div>
-					<div class="form-group">
-						<button class="btn btn-default btn-sm" type="submit">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
+						<div class="input-group">
+							<input type="text" name="key_belong" value="{$tplData.search.key}" placeholder="{$lang.label.key_belong}" class="form-control input-sm">
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-default btn-sm">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+							</span>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -102,7 +104,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $tplData.belongRows as $value}
+								{foreach $tplData.belongRows as $key=>$value}
 									{if $value.article_box == "normal"}
 										{if $value.article_time_pub > $smarty.now}
 											{$_css_status = "info"}
@@ -138,7 +140,7 @@
 										</td>
 										<td class="td_md">
 											<ul class="list-unstyled">
-												<li>
+												<li class="label_baigo">
 													<span class="label label-{$_css_status}">{$_str_status}</span>
 												</li>
 												<li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
@@ -187,12 +189,14 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<input type="text" name="key_select" class="form-control input-sm" value="{$tplData.search.key_select}" placeholder="{$lang.label.key}">
-					</div>
-					<div class="form-group">
-						<button class="btn btn-default btn-sm" type="submit">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
+						<div class="input-group">
+							<input type="text" name="key_select" value="{$tplData.search.key_select}" placeholder="{$lang.label.key}" class="form-control input-sm">
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-default btn-sm">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+							</span>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -218,7 +222,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $tplData.articleRows as $value}
+								{foreach $tplData.articleRows as $key=>$value}
 									{if $value.article_box == "normal"}
 										{if $value.article_time_pub > $smarty.now}
 											{$_css_status = "info"}
@@ -290,13 +294,13 @@
 			</form>
 
 			<div class="text-right">
-				{include "include/page.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 			</div>
 
 		</div>
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 
 	<script type="text/javascript">
@@ -318,6 +322,7 @@
 
 	var opts_submit_select = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -325,6 +330,7 @@
 
 	var opts_submit_belong = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -350,5 +356,5 @@
 	});
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

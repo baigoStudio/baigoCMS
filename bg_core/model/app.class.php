@@ -49,7 +49,7 @@ class MODEL_APP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -108,14 +108,14 @@ class MODEL_APP {
 			$_str_alert = "y190103"; //更新成功
 		} else {
 			return array(
-				"str_alert" => "x190103", //更新失败
+				"alert" => "x190103", //更新失败
 			);
 			exit;
 		}
 
 		return array(
 			"app_id"     => $num_appId,
-			"str_alert"  => $_str_alert, //成功
+			"alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -151,7 +151,7 @@ class MODEL_APP {
 				$_str_alert = "y190101"; //更新成功
 			} else {
 				return array(
-					"str_alert" => "x190101", //更新失败
+					"alert" => "x190101", //更新失败
 				);
 				exit;
 
@@ -163,7 +163,7 @@ class MODEL_APP {
 				$_str_alert = "y190103"; //更新成功
 			} else {
 				return array(
-					"str_alert" => "x190103", //更新失败
+					"alert" => "x190103", //更新失败
 				);
 				exit;
 
@@ -172,7 +172,7 @@ class MODEL_APP {
 
 		return array(
 			"app_id"     => $_num_appId,
-			"str_alert"  => $_str_alert, //成功
+			"alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -201,7 +201,7 @@ class MODEL_APP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 	}
 
@@ -250,7 +250,7 @@ class MODEL_APP {
 			$_arr_appRow = $_arr_appRows[0];
 		} else {
 			return array(
-				"str_alert" => "x190102", //不存在记录
+				"alert" => "x190102", //不存在记录
 			);
 			exit;
 		}
@@ -261,7 +261,7 @@ class MODEL_APP {
 			$_arr_appRow["app_allow"] = array();
 
 		}
-		$_arr_appRow["str_alert"] = "y190102";
+		$_arr_appRow["alert"] = "y190102";
 
 		return $_arr_appRow;
 	}
@@ -324,7 +324,7 @@ class MODEL_APP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 	}
 
@@ -365,7 +365,7 @@ class MODEL_APP {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030101",
+				"alert" => "x030101",
 			);
 			exit;
 		}
@@ -375,7 +375,7 @@ class MODEL_APP {
 		if ($this->appSubmit["app_id"] > 0) {
 			//检查用户是否存在
 			$_arr_appRow = $this->mdl_read($this->appSubmit["app_id"]);
-			if ($_arr_appRow["str_alert"] != "y190102") {
+			if ($_arr_appRow["alert"] != "y190102") {
 				return $_arr_appRow;
 				exit;
 			}
@@ -385,14 +385,14 @@ class MODEL_APP {
 		switch ($_arr_appName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x190201",
+					"alert" => "x190201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x190202",
+					"alert" => "x190202",
 				);
 				exit;
 			break;
@@ -407,7 +407,7 @@ class MODEL_APP {
 		switch ($_arr_appNote["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x190205",
+					"alert" => "x190205",
 				);
 				exit;
 			break;
@@ -422,7 +422,7 @@ class MODEL_APP {
 		switch ($_arr_appStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x190206",
+					"alert" => "x190206",
 				);
 				exit;
 			break;
@@ -436,7 +436,7 @@ class MODEL_APP {
 		switch ($_arr_appIpAllow["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x190210",
+					"alert" => "x190210",
 				);
 				exit;
 			break;
@@ -450,7 +450,7 @@ class MODEL_APP {
 		switch ($_arr_appIpBad["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x190211",
+					"alert" => "x190211",
 				);
 				exit;
 			break;
@@ -461,7 +461,7 @@ class MODEL_APP {
 		}
 
 		$this->appSubmit["app_allow"] = fn_jsonEncode(fn_post("app_allow"), "no");
-		$this->appSubmit["str_alert"] = "ok";
+		$this->appSubmit["alert"] = "ok";
 
 		return $this->appSubmit;
 	}
@@ -476,7 +476,7 @@ class MODEL_APP {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030101",
+				"alert" => "x030101",
 			);
 			exit;
 		}
@@ -493,7 +493,7 @@ class MODEL_APP {
 		}
 
 		$this->appIds = array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 			"app_ids"    => $_arr_appIds
 		);
 

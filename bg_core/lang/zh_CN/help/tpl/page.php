@@ -52,13 +52,13 @@ return "<a name=\"page\"></a>
 <pre><code class=\"language-smarty\">&lt;ul&gt;
   {if \$tplData.pageRow.page &gt; 1}
     &lt;li&gt;
-      &lt;a href=&quot;page_1&quot;&gt;&#39318;&#39029;&lt;/a&gt;
+      &lt;a href=&quot;page-1&quot;&gt;&#39318;&#39029;&lt;/a&gt;
     &lt;/li&gt;
   {/if}
 
   {if \$tplData.pageRow.p * 10 &gt; 0}
     &lt;li&gt;
-      &lt;a href=&quot;page_{\$tplData.pageRow.p * 10}&quot;&gt;&#19978;&#21313;&#39029;&lt;/a&gt;
+      &lt;a href=&quot;page-{\$tplData.pageRow.p * 10}&quot;&gt;&#19978;&#21313;&#39029;&lt;/a&gt;
     &lt;/li&gt;
   {/if}
 
@@ -66,7 +66,7 @@ return "<a name=\"page\"></a>
     {if \$tplData.pageRow.page &lt;= 1}
       &lt;span&gt;&amp;laquo;&lt;/span&gt;
     {else}
-      &lt;a href=&quot;page_{\$tplData.pageRow.page - 1}&quot;&gt;&amp;laquo;&lt;/a&gt;
+      &lt;a href=&quot;page-{\$tplData.pageRow.page - 1}&quot;&gt;&amp;laquo;&lt;/a&gt;
     {/if}
   &lt;/li&gt;
 
@@ -75,7 +75,7 @@ return "<a name=\"page\"></a>
       {if \$_iii == \$tplData.pageRow.page}
         &lt;span&gt;{\$_iii}&lt;/span&gt;
       {else}
-        &lt;a href=&quot;page_{\$_iii}&quot;&gt;{\$_iii}&lt;/a&gt;
+        &lt;a href=&quot;page-{\$_iii}&quot;&gt;{\$_iii}&lt;/a&gt;
       {/if}
     &lt;/li&gt;
   {/for}
@@ -84,19 +84,19 @@ return "<a name=\"page\"></a>
     {if \$tplData.pageRow.page &gt;= \$tplData.pageRow.total}
       &lt;span&gt;&amp;raquo;&lt;/span&gt;
     {else}
-      &lt;a href=&quot;page_{\$tplData.pageRow.page + 1}&quot;&gt;&amp;raquo;&lt;/a&gt;
+      &lt;a href=&quot;page-{\$tplData.pageRow.page + 1}&quot;&gt;&amp;raquo;&lt;/a&gt;
     {/if}
   &lt;/li&gt;
 
   {if \$_iii &lt; \$tplData.pageRow.total}
     &lt;li&gt;
-      &lt;a href=&quot;page_{\$_iii}&quot;&gt;&#19979;&#21313;&#39029;&lt;/a&gt;
+      &lt;a href=&quot;page-{\$_iii}&quot;&gt;&#19979;&#21313;&#39029;&lt;/a&gt;
     &lt;/li&gt;
   {/if}
 
   {if \$tplData.pageRow.page &lt; \$tplData.pageRow.total}
     &lt;li&gt;
-      &lt;a href=&quot;page_{\$tplData.pageRow.total}&quot;&gt;&#26411;&#39029;&lt;/a&gt;
+      &lt;a href=&quot;page-{\$tplData.pageRow.total}&quot;&gt;&#26411;&#39029;&lt;/a&gt;
     &lt;/li&gt;
   {/if}
 &lt;/ul&gt;</code></pre>

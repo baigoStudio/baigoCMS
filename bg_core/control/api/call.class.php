@@ -18,6 +18,7 @@ include_once(BG_PATH_MODEL . "articlePub.class.php"); //载入后台用户类
 include_once(BG_PATH_MODEL . "tag.class.php"); //载入后台用户类
 include_once(BG_PATH_MODEL . "attach.class.php"); //载入后台用户类
 include_once(BG_PATH_MODEL . "thumb.class.php"); //载入后台用户类
+include_once(BG_PATH_MODEL . "articleCustom.class.php"); //载入后台用户类
 
 
 class API_CALL {
@@ -30,30 +31,16 @@ class API_CALL {
 	private $callRow;
 
 	function __construct() { //构造函数
-		$this->obj_api        = new CLASS_API();
-		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
-		$this->mdl_call       = new MODEL_CALL();
-		$this->mdl_spec       = new MODEL_SPEC();
-		$this->mdl_cate       = new MODEL_CATE();
-		$this->mdl_articlePub = new MODEL_ARTICLE_PUB();
-		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_attach     = new MODEL_ATTACH();
-		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"str_alert" => "x030416"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"str_alert" => "x030415"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
+		$this->obj_api            = new CLASS_API();
+		$this->obj_api->chk_install();
+		$this->mdl_app            = new MODEL_APP(); //设置管理组模型
+		$this->mdl_call           = new MODEL_CALL();
+		$this->mdl_spec           = new MODEL_SPEC();
+		$this->mdl_cate           = new MODEL_CATE();
+		$this->mdl_articlePub     = new MODEL_ARTICLE_PUB();
+		$this->mdl_tag            = new MODEL_TAG();
+		$this->mdl_attach         = new MODEL_ATTACH();
+		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -64,21 +51,21 @@ class API_CALL {
 
 		if ($_num_callId == 0) {
 			$_arr_return = array(
-				"str_alert" => "x170201",
+				"alert" => "x170201",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
 
 		$this->callRow = $this->mdl_call->mdl_read($_num_callId);
 
-		if ($this->callRow["str_alert"] != "y170102") {
+		if ($this->callRow["alert"] != "y170102") {
 			$this->obj_api->halt_re($this->callRow);
 		}
 
 
 		if ($this->callRow["call_status"] != "enable") {
 			$_arr_return = array(
-				"str_alert" => "x170201",
+				"alert" => "x170201",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
@@ -166,7 +153,7 @@ class API_CALL {
 	 * @return void
 	 */
 	private function call_article() {
-		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_spec_id"], false, $this->callRow["call_attach"], $this->callRow["call_type"]);
+		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_spec_id"], false, false, $this->callRow["call_attach"], $this->callRow["call_type"]);
 
 		if ($_arr_articleRows) {
 			foreach ($_arr_articleRows as $_key=>$_value) {
@@ -192,17 +179,18 @@ class API_CALL {
 				$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
 				if ($_value["article_attach_id"] > 0) {
-					if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
-						$this->mdl_thumb->mdl_cache();
-					}
-					$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
-					$_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_thumbRows);
+					$_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
 
-					if ($_arr_attachRow["str_alert"] == "y070102") {
-						$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
+					if ($_arr_attachRow["alert"] == "y070102") {
+						if ($_arr_attachRow["attach_box"] != "normal") {
+							$_arr_attachRow = array(
+								"alert" => "x070102",
+							);
+						}
 					}
+
+					$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
 				}
-
 			}
 		}
 
@@ -215,19 +203,24 @@ class API_CALL {
 	private function app_check($str_method = "get") {
 		$this->appGet = $this->obj_api->app_get($str_method);
 
-		if ($this->appGet["str_alert"] != "ok") {
+		if ($this->appGet["alert"] != "ok") {
 			$this->obj_api->halt_re($this->appGet);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			$this->obj_api->halt_re($_arr_appRow);
 		}
 		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
-		if ($_arr_appChk["str_alert"] != "ok") {
+		if ($_arr_appChk["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
+
+		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+			$this->mdl_thumb->mdl_cache();
+		}
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
 	}
 }

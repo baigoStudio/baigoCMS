@@ -22,19 +22,11 @@ class AJAX_MIME {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_mime       = new MODEL_MIME();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -52,13 +44,13 @@ class AJAX_MIME {
 
 		$_arr_mimeSubmit = $this->mdl_mime->input_submit();
 
-		if ($_arr_mimeSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_mimeSubmit["str_alert"]);
+		if ($_arr_mimeSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_mimeSubmit["alert"]);
 		}
 
 		$_arr_mimeRow = $this->mdl_mime->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_mimeRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_mimeRow["alert"]);
 	}
 
 
@@ -74,13 +66,13 @@ class AJAX_MIME {
 		}
 
 		$_arr_mimeIds = $this->mdl_mime->input_ids();
-		if ($_arr_mimeIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_mimeIds["str_alert"]);
+		if ($_arr_mimeIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_mimeIds["alert"]);
 		}
 
 		$_arr_mimeRow = $this->mdl_mime->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_mimeRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_mimeRow["alert"]);
 	}
 
 
@@ -95,7 +87,7 @@ class AJAX_MIME {
 		$_str_mimeName    = fn_getSafe(fn_get("mime_name"), "txt", "");
 		$_num_mimeId      = fn_getSafe(fn_get("mime_id"), "int", 0);
 		$_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
-		if ($_arr_mimeRow["str_alert"] == "y080102") {
+		if ($_arr_mimeRow["alert"] == "y080102") {
 			$this->obj_ajax->halt_re("x080206");
 		}
 

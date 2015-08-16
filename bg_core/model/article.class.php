@@ -14,6 +14,7 @@ class MODEL_ARTICLE {
 
 	private $obj_db;
 	private $is_magic;
+	public $custom_columns = array();
 
 	function __construct() { //构造函数
 		$this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
@@ -58,7 +59,6 @@ class MODEL_ARTICLE {
 		$_arr_articleCreat = array(
 			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"article_content"    => "text NOT NULL COMMENT '内容'",
-			"article_custom"     => "text NOT NULL COMMENT '自定义字段'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article_content", $_arr_articleCreat, "article_id", "文章");
@@ -68,7 +68,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -198,7 +198,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -218,7 +218,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -243,8 +243,8 @@ class MODEL_ARTICLE {
 		return $_arr_col;
 	}
 
-	function mdl_submit($num_adminId = 0, $str_status) {
 
+	function mdl_submit($num_adminId = 0, $str_status) {
 		$_arr_articleData = array(
 			"article_title"      => $this->articleSubmit["article_title"],
 			"article_excerpt"    => $this->articleSubmit["article_excerpt"],
@@ -268,37 +268,91 @@ class MODEL_ARTICLE {
 			$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article", $_arr_articleData); //插入数据
 
 			if ($_num_articleId > 0) {
+				$_str_alert     = "y120101";
 				$_arr_contentData = array(
 					"article_id"       => $_num_articleId,
 					"article_content"  => $this->articleSubmit["article_content"],
-					"article_custom"   => $this->articleSubmit["article_custom"],
 				);
-				$_num_articleId = $this->obj_db->insert(BG_DB_TABLE . "article_content", $_arr_contentData); //插入数据
-				$_str_alert     = "y120101";
+				$_num_contentArticleId = $this->obj_db->insert(BG_DB_TABLE . "article_content", $_arr_contentData); //插入数据
+
+				if ($_num_contentArticleId < 0) {
+					$_str_alert     = "x120101";
+				}
+
+				$_arr_contentData = array(
+					"article_id"       => $_num_articleId,
+				);
+
+				foreach ($this->articleSubmit["article_customs"] as $_key=>$_value) {
+					$_arr_customData["custom_" . $_key] = $_value;
+				}
+
+				if ($_arr_customData) {
+					$_num_contentArticleId = $this->obj_db->insert(BG_DB_TABLE . "article_custom", $_arr_customData); //插入数据
+
+					if ($_num_contentArticleId < 0) {
+						$_str_alert     = "x120101";
+					}
+				}
 			} else {
 				return array(
-					"str_alert" => "x120101", //失败
+					"alert" => "x120101", //失败
 				);
 				exit;
 			}
 		} else {
-			$_str_alert          = "x120103";
+			$_str_alert          = "y120103";
 			$_num_articleId      = $this->articleSubmit["article_id"];
 			$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
 
-			if ($_num_mysql > 0) {
-				$_str_alert      = "y120103";
+			if ($_num_mysql < 0) {
+				$_str_alert      = "x120103";
 			}
 
 			$_arr_contentData    = array(
 				"article_content"  => $this->articleSubmit["article_content"],
-				"article_custom"   => $this->articleSubmit["article_custom"],
 			);
-			$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article_content", $_arr_contentData, "article_id=" . $_num_articleId); //更新数据
 
-			if ($_num_mysql > 0) {
-				$_str_alert      = "y120103";
+			$_arr_contentRow = $this->mdl_read_content($_num_articleId);
+			if ($_arr_contentRow["alert"] == "x120102") {
+				$_arr_contentData["article_id"] = $_num_articleId;
+				$_num_contentArticleId                 = $this->obj_db->insert(BG_DB_TABLE . "article_content", $_arr_contentData); //插入数据
+
+				if ($_num_contentArticleId < 0) {
+					$_str_alert      = "x120103";
+				}
+			} else {
+				$_num_mysql     = $this->obj_db->update(BG_DB_TABLE . "article_content", $_arr_contentData, "article_id=" . $_num_articleId); //更新数据
+				if ($_num_mysql < 0) {
+					$_str_alert      = "x120103";
+				}
 			}
+
+			$_arr_customData = array();
+
+			foreach ($this->articleSubmit["article_customs"] as $_key=>$_value) {
+				$_arr_customData["custom_" . $_key] = $_value;
+			}
+
+			if ($_arr_customData) {
+				$_arr_customRow = $this->mdl_read_custom($_num_articleId);
+				if ($_arr_customRow["alert"] == "x120102") {
+					$_arr_customData["article_id"] = $_num_articleId;
+					$_num_customArticleId = $this->obj_db->insert(BG_DB_TABLE . "article_custom", $_arr_customData);
+
+					if ($_num_customArticleId < 0) {
+						$_str_alert      = "x120103";
+					}
+
+				} else {
+					$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article_custom", $_arr_customData, "article_id=" . $_num_articleId); //更新数据
+
+					if ($_num_mysql < 0) {
+						$_str_alert      = "x120103";
+					}
+				}
+			}
+
 		}
 
 		/*print_r($_arr_userRow);
@@ -306,7 +360,33 @@ class MODEL_ARTICLE {
 
 		return array(
 			"article_id" => $_num_articleId,
-			"str_alert"  => $_str_alert,
+			"alert"      => $_str_alert,
+		);
+	}
+
+
+	function mdl_primary() {
+		$_arr_articleData = array(
+			"article_attach_id"  => $this->articlePrimary["article_attach_id"],
+		);
+
+		//print_r($_arr_articleData);
+
+		$_num_articleId      = $this->articlePrimary["article_id"];
+		$_num_mysql          = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "article_id=" . $_num_articleId); //更新数据
+
+		if ($_num_mysql > 0) {
+			$_str_alert  = "y120103";
+		} else {
+			$_str_alert  = "x120103";
+		}
+
+		/*print_r($_arr_userRow);
+		exit;*/
+
+		return array(
+			"article_id" => $_num_articleId,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -402,6 +482,7 @@ class MODEL_ARTICLE {
 			"article_box",
 			"article_link",
 			"article_admin_id",
+			"article_attach_id",
 			"article_hits_day",
 			"article_time_day",
 			"article_hits_week",
@@ -423,13 +504,30 @@ class MODEL_ARTICLE {
 			$_arr_articleRow = $_arr_articleRows[0];
 		} else {
 			return array(
-				"str_alert" => "x120102",
+				"alert" => "x120102",
 			);
 		}
 
+		$_arr_contentRow = $this->mdl_read_content($num_articleId);
+		if ($_arr_contentRow["alert"] == "y120102") {
+			$_arr_articleRow["article_content"]   = $_arr_contentRow["article_content"];
+		}
+
+		$_arr_customRow = $this->mdl_read_custom($num_articleId);
+		//print_r($_arr_customRow);
+		if ($_arr_customRow["alert"] == "y120102") {
+			$_arr_articleRow["article_customs"]   = $_arr_customRow["article_customs"];
+		}
+
+		$_arr_articleRow["alert"]         = "y120102";
+
+		return $_arr_articleRow;
+	}
+
+
+	function mdl_read_content($num_articleId) {
 		$_arr_articleSelect = array(
 			"article_content",
-			"article_custom",
 		);
 
 		$_arr_contentRows = $this->obj_db->select(BG_DB_TABLE . "article_content", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
@@ -438,20 +536,35 @@ class MODEL_ARTICLE {
 			$_arr_contentRow = $_arr_contentRows[0];
 		} else {
 			return array(
-				"str_alert" => "x120102",
+				"alert" => "x120102",
 			);
 		}
 
-		//if (!$this->is_magic) {
-			$_arr_articleRow["article_content"]   = stripslashes($_arr_contentRow["article_content"]);
-		//} else {
-			//$_arr_articleRow["article_content"]   = $_arr_contentRow["article_content"];
-		//}
+		$_arr_articleRow["article_content"]   = stripslashes($_arr_contentRow["article_content"]);
 
-		$_arr_articleRow["article_custom"]    = fn_jsonDecode($_arr_contentRow["article_custom"], "decode");
-		$_arr_articleRow["article_excerpt"]   = html_entity_decode($_arr_articleRow["article_excerpt"]);
+		$_arr_articleRow["alert"]             = "y120102";
 
-		$_arr_articleRow["str_alert"]         = "y120102";
+		return $_arr_articleRow;
+	}
+
+
+	function mdl_read_custom($num_articleId) {
+
+		$_arr_articleSelect = $this->custom_columns;
+
+		$_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "article_custom", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
+
+		if (isset($_arr_customRows[0])) {
+			$_arr_customRow = $_arr_customRows[0];
+		} else {
+			return array(
+				"alert" => "x120102",
+			);
+		}
+
+		$_arr_articleRow["article_customs"]   = $_arr_customRow;
+
+		$_arr_articleRow["alert"]             = "y120102";
 
 		return $_arr_articleRow;
 	}
@@ -490,7 +603,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -533,7 +646,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -561,7 +674,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -603,7 +716,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -640,7 +753,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -669,7 +782,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -699,7 +812,7 @@ class MODEL_ARTICLE {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -786,7 +899,7 @@ class MODEL_ARTICLE {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -795,7 +908,7 @@ class MODEL_ARTICLE {
 
 		if ($this->articleSubmit["article_id"] > 0) {
 			$_arr_articleRow = $this->mdl_read($this->articleSubmit["article_id"]);
-			if ($_arr_articleRow["str_alert"] != "y120102") {
+			if ($_arr_articleRow["alert"] != "y120102") {
 				return $_arr_articleRow;
 				exit;
 			}
@@ -805,14 +918,14 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleTitle["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x120201",
+					"alert" => "x120201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x120202",
+					"alert" => "x120202",
 				);
 				exit;
 			break;
@@ -827,14 +940,14 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleLink["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x120204",
+					"alert" => "x120204",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x120204",
+					"alert" => "x120204",
 				);
 				exit;
 			break;
@@ -848,7 +961,7 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x120208",
+					"alert" => "x120208",
 				);
 				exit;
 			break;
@@ -863,7 +976,7 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleBox["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x120209",
+					"alert" => "x120209",
 				);
 				exit;
 			break;
@@ -879,14 +992,14 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleTimePub["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x120210",
+					"alert" => "x120210",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x120211",
+					"alert" => "x120211",
 				);
 				exit;
 			break;
@@ -900,7 +1013,7 @@ class MODEL_ARTICLE {
 		switch ($_arr_articleCateId["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x120207",
+					"alert" => "x120207",
 				);
 				exit;
 			break;
@@ -910,17 +1023,31 @@ class MODEL_ARTICLE {
 			break;
 		}
 
-		$_arr_cateIds = fn_post("cate_ids");
-		if (isset($_arr_cateIds) && is_array($_arr_cateIds)) {
-			foreach ($_arr_cateIds as $_value) {
-				$this->articleSubmit["cate_ids"][] = fn_getSafe($_value, "int", 0);
+
+		$_is_ids = fn_getSafe(fn_post("cate_ids_checkbox"), "int", 0);
+
+		$this->articleSubmit["cate_ids"] = array();
+
+		if ($_is_ids == 1) {
+			$_arr_cateIds = fn_post("cate_ids");
+			if (isset($_arr_cateIds) && is_array($_arr_cateIds)) {
+				foreach ($_arr_cateIds as $_key=>$_value) {
+					$this->articleSubmit["cate_ids"][] = fn_getSafe($_value, "int", 0);
+				}
 			}
 		}
 
 		$this->articleSubmit["cate_ids"][]        = $this->articleSubmit["article_cate_id"];
 		$this->articleSubmit["cate_ids"]          = array_unique($this->articleSubmit["cate_ids"]);
+
 		$this->articleSubmit["article_content"]   = fn_post("article_content");
-		$this->articleSubmit["article_attach_id"] = fn_getAttach($this->articleSubmit["article_content"]);
+
+		$_arr_attachIds = fn_getAttach($this->articleSubmit["article_content"]);
+		if ($_arr_attachIds) {
+			$this->articleSubmit["article_attach_id"] = $_arr_attachIds[0];
+		} else {
+			$this->articleSubmit["article_attach_id"] = 0;
+		}
 
 		$_str_excerptType = fn_getSafe(fn_post("article_excerpt_type"), "txt", "auto");
 
@@ -943,7 +1070,7 @@ class MODEL_ARTICLE {
 				switch ($_arr_articleExcerpt["status"]) {
 					case "too_long":
 						return array(
-							"str_alert" => "x120205",
+							"alert" => "x120205",
 						);
 						exit;
 					break;
@@ -959,14 +1086,78 @@ class MODEL_ARTICLE {
 			$this->articleSubmit["article_content"]   = addslashes($this->articleSubmit["article_content"]);
 		}
 
-		$_arr_articleCuctom    = fn_post("article_custom");
-		$this->articleSubmit["article_custom"]    = fn_jsonEncode($_arr_articleCuctom, "encode");
 		$this->articleSubmit["article_mark_id"]   = fn_getSafe(fn_post("article_mark_id"), "int", 0);
 		$this->articleSubmit["article_spec_id"]   = fn_getSafe(fn_post("article_spec_id"), "int", 0);
-		$this->articleSubmit["article_tags"]      = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");
-		$this->articleSubmit["str_alert"]         = "ok";
+
+		$_str_articleTags                     = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");
+		$_arr_articleTags                     = explode(",", $_str_articleTags);
+		$this->articleSubmit["article_tags"]  = array();
+
+		foreach ($_arr_articleTags as $_key=>$_value) {
+			$this->articleSubmit["article_tags"][$_key] = fn_getSafe($_value, "txt", "");
+		}
+
+		$_arr_articleCustoms                      = fn_post("article_customs");
+		$this->articleSubmit["article_customs"]   = array();
+
+		if ($_arr_articleCustoms) {
+			foreach ($_arr_articleCustoms as $_key=>$_value) {
+				$this->articleSubmit["article_customs"][$_key] = fn_getSafe($_value, "txt", "");
+			}
+		}
+
+		$this->articleSubmit["alert"]         = "ok";
 
 		return $this->articleSubmit;
+	}
+
+
+	function input_primary() {
+		if (!fn_token("chk")) { //令牌
+			return array(
+				"alert" => "x030102",
+			);
+			exit;
+		}
+
+		$_arr_articleId = validateStr(fn_post("article_id"), 1, 0);
+		switch ($_arr_articleId["status"]) {
+			case "too_short":
+				return array(
+					"alert" => "x120212",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articlePrimary["article_id"] = $_arr_articleId["str"];
+			break;
+		}
+
+		$_arr_articleRow  = $this->mdl_read($this->articlePrimary["article_id"]);
+		if ($_arr_articleRow["alert"] != "y120102") {
+			return $_arr_articleRow;
+			exit;
+		}
+
+		$_arr_attachId = validateStr(fn_post("attach_id"), 1, 0);
+		switch ($_arr_attachId["status"]) {
+			case "too_short":
+				return array(
+					"alert" => "x120214",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->articlePrimary["article_attach_id"] = $_arr_attachId["str"];
+			break;
+		}
+
+		$this->articlePrimary["article_cate_id"]   = $_arr_articleRow["article_cate_id"];
+		$this->articlePrimary["alert"]         = "ok";
+
+		return $this->articlePrimary;
 	}
 
 
@@ -979,7 +1170,7 @@ class MODEL_ARTICLE {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -996,7 +1187,7 @@ class MODEL_ARTICLE {
 		}
 
 		$this->articleIds = array(
-			"str_alert"      => $_str_alert,
+			"alert"      => $_str_alert,
 			"article_ids"    => $_arr_articleIds
 		);
 

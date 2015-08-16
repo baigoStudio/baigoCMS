@@ -60,6 +60,7 @@ var opts_validator_order = {
 
 var opts_submit_order = {
 	ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
+	text_submitting: "{$lang.label.submitting}",
 	btn_text: "{$lang.btn.ok}",
 	btn_url: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate",
 	btn_close: "{$lang.btn.close}"

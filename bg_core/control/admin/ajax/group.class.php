@@ -20,19 +20,11 @@ class AJAX_GROUP {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_group      = new MODEL_GROUP();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -45,8 +37,8 @@ class AJAX_GROUP {
 	 */
 	function ajax_submit() {
 		$_arr_groupSubmit = $this->mdl_group->input_submit();
-		if ($_arr_groupSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_groupSubmit["str_alert"]);
+		if ($_arr_groupSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_groupSubmit["alert"]);
 		}
 
 		if ($_arr_groupSubmit["group_id"] > 0) {
@@ -61,7 +53,7 @@ class AJAX_GROUP {
 
 		$_arr_groupRow = $this->mdl_group->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
 	}
 
 
@@ -77,8 +69,8 @@ class AJAX_GROUP {
 		}
 
 		$_arr_groupIds = $this->mdl_group->input_ids();
-		if ($_arr_groupIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_groupIds["str_alert"]);
+		if ($_arr_groupIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_groupIds["alert"]);
 		}
 
 		$_str_groupStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
@@ -88,7 +80,7 @@ class AJAX_GROUP {
 
 		$_arr_groupRow = $this->mdl_group->mdl_status($_str_groupStatus);
 
-		$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
 	}
 
 
@@ -104,13 +96,13 @@ class AJAX_GROUP {
 		}
 
 		$_arr_groupIds = $this->mdl_group->input_ids();
-		if ($_arr_groupIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_groupIds["str_alert"]);
+		if ($_arr_groupIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_groupIds["alert"]);
 		}
 
 		$_arr_groupRow = $this->mdl_group->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
 	}
 
 
@@ -126,7 +118,7 @@ class AJAX_GROUP {
 
 		$_arr_groupRow = $this->mdl_group->mdl_read($_str_groupName, "group_name", $_num_groupId);
 
-		if ($_arr_groupRow["str_alert"] == "y040102") {
+		if ($_arr_groupRow["alert"] == "y040102") {
 			$this->obj_ajax->halt_re("x040203");
 		}
 

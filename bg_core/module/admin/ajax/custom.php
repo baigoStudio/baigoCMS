@@ -15,8 +15,16 @@ include_once(BG_PATH_CONTROL_ADMIN . "ajax/custom.class.php"); //载入登录控
 $ajax_custom = new AJAX_CUSTOM();
 
 switch ($GLOBALS["act_post"]) {
+	case "order":
+		$ajax_custom->ajax_order();
+	break;
+
 	case "submit":
 		$ajax_custom->ajax_submit();
+	break;
+
+	case "cache":
+		$ajax_custom->ajax_cache();
 	break;
 
 	case "del":

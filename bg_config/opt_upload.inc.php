@@ -8,3 +8,4 @@ define("BG_UPLOAD_FTPPORT", 21);
 define("BG_UPLOAD_FTPUSER", "");
 define("BG_UPLOAD_FTPPASS", "");
 define("BG_UPLOAD_FTPPATH", "");
+define("BG_UPLOAD_FTPPASV", true);

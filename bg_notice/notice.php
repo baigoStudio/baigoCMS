@@ -6,7 +6,7 @@
 $base = $_SERVER["DOCUMENT_ROOT"] . str_replace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
 include_once($base . "bg_config/config.inc.php"); //载入配置
 
-$arr_mod = array("user");
+$arr_mod = array("admin");
 
 if (isset($_GET["mod"])) {
 	$mod = $_GET["mod"];
@@ -18,4 +18,4 @@ if (!in_array($mod, $arr_mod)) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_MODULE_API . "sso/" . $mod . ".php");
+include_once(BG_PATH_MODULE_NOTICE . $mod . ".php");

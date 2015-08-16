@@ -15,14 +15,15 @@ class CONTROL_INDEX {
 	private $obj_tpl;
 
 	function __construct() { //构造函数
-		$this->mdl_cate = new MODEL_CATE(); //设置文章对象
-
 		if(defined("BG_SITE_TPL")) {
 			$_str_tpl = BG_SITE_TPL;
 		} else {
 			$_str_tpl = "default";
 		}
-		$this->obj_tpl = new CLASS_TPL(BG_PATH_TPL_PUB . $_str_tpl); //初始化视图对象
+
+		$this->mdl_cate   = new MODEL_CATE(); //设置文章对象
+		$this->mdl_custom = new MODEL_CUSTOM();
+		$this->obj_tpl    = new CLASS_TPL(BG_PATH_TPL_PUB . $_str_tpl); //初始化视图对象
 	}
 
 
@@ -36,11 +37,16 @@ class CONTROL_INDEX {
 		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
 			$this->mdl_cate->mdl_cache();
 		}
-
 		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
 
+		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+			$this->mdl_custom->mdl_cache();
+		}
+		$_arr_customRows = include(BG_PATH_CACHE . "custom_list.php");
+
 		$_arr_tplData = array(
-			"cateRows" => $_arr_cateRows,
+			"cateRows"   => $_arr_cateRows,
+			"customRows" => $_arr_customRows["custom_list"],
 		);
 
 		$this->obj_tpl->tplDisplay("index.tpl", $_arr_tplData);

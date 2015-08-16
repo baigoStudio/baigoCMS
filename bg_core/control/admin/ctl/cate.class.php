@@ -42,7 +42,7 @@ class CONTROL_CATE {
 	function ctl_order() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
 			return array(
-				"str_alert" => "x110303"
+				"alert" => "x110303"
 			);
 			exit;
 		}
@@ -51,12 +51,12 @@ class CONTROL_CATE {
 
 		if ($_num_cateId == 0) {
 			return array(
-				"str_alert" => "x110217"
+				"alert" => "x110217"
 			);
 		}
 
 		$_arr_cateRow = $this->mdl_cate->mdl_read($_num_cateId);
-		if ($_arr_cateRow["str_alert"] != "y110102") {
+		if ($_arr_cateRow["alert"] != "y110102") {
 			return $_arr_cateRow;
 			exit;
 		}
@@ -70,7 +70,7 @@ class CONTROL_CATE {
 		$this->obj_tpl->tplDisplay("cate_order.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y110102"
+			"alert" => "y110102"
 		);
 	}
 
@@ -85,21 +85,21 @@ class CONTROL_CATE {
 		$_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
 
 		if ($_num_cateId > 0) {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_num_cateId]["cate"])) {
 				return array(
-					"str_alert" => "x110303"
+					"alert" => "x110303"
 				);
 				exit;
 			}
 			$_arr_cateRow = $this->mdl_cate->mdl_read($_num_cateId);
-			if ($_arr_cateRow["str_alert"] != "y110102") {
+			if ($_arr_cateRow["alert"] != "y110102") {
 				return $_arr_cateRow;
 				exit;
 			}
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"])) {
 				return array(
-					"str_alert" => "x110302"
+					"alert" => "x110302"
 				);
 				exit;
 			}
@@ -136,7 +136,7 @@ class CONTROL_CATE {
 		$this->obj_tpl->tplDisplay("cate_form.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y110102"
+			"alert" => "y110102"
 		);
 
 	}
@@ -151,18 +151,17 @@ class CONTROL_CATE {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["browse"])) {
 			return array(
-				"str_alert" => "x110301"
+				"alert" => "x110301"
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"type"       => $_str_type,
 			"status"     => $_str_status,
@@ -185,7 +184,7 @@ class CONTROL_CATE {
 		$this->obj_tpl->tplDisplay("cate_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y110301"
+			"alert" => "y110301"
 		);
 	}
 

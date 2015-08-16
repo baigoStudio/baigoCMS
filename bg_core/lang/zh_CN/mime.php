@@ -11,16 +11,12 @@ if(!defined("IN_BAIGO")) {
 
 /*-------------------------通用-------------------------*/
 return array(
-	"image/jpg" => array(
+	"image/jpeg" => array(
 		"ext"     => "jpg",
 		"note"    => "JPG 图片",
 	),
-	"image/jpeg" => array(
-		"ext"     => "jpeg",
-		"note"    => "JPG 图片",
-	),
 	"image/pjpeg" => array(
-		"ext"     => "pjpeg",
+		"ext"     => "jpg",
 		"note"    => "JPG 图片",
 	),
 	"image/gif" => array(

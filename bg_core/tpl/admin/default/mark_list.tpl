@@ -10,41 +10,45 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mark&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl"}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl"}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$adminMod.article.sub.mark.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
-			<ul class="list-inline">
-				<li>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mark&act_get=list">
-						<span class="glyphicon glyphicon-plus"></span>
-						{$lang.href.add}
-					</a>
-				</li>
-				<li>
-					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=tag#mark" target="_blank">
-						<span class="glyphicon glyphicon-question-sign"></span>
-						{$lang.href.help}
-					</a>
-				</li>
-			</ul>
+			<div class="form-group">
+				<ul class="nav nav-pills nav_baigo">
+					<li>
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mark&act_get=list">
+							<span class="glyphicon glyphicon-plus"></span>
+							{$lang.href.add}
+						</a>
+					</li>
+					<li>
+						<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=tag#mark" target="_blank">
+							<span class="glyphicon glyphicon-question-sign"></span>
+							{$lang.href.help}
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="pull-right">
 			<form name="mark_search" id="mark_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
 				<input type="hidden" name="mod" value="mark">
 				<input type="hidden" name="act_get" value="list">
 				<div class="form-group">
-					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
+					<div class="input-group">
+						<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-default btn-sm">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -98,7 +102,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $tplData.markRows as $value}
+								{foreach $tplData.markRows as $key=>$value}
 									<tr>
 										<td class="td_mn"><input type="checkbox" name="mark_id[]" value="{$value.mark_id}" id="mark_id_{$value.mark_id}" group="mark_id" class="chk_all validate"></td>
 										<td class="td_mn">{$value.mark_id}</td>
@@ -137,10 +141,10 @@
 	</div>
 
 	<div class="text-right">
-		{include "include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "include/admin_foot.tpl"}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl"}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -165,6 +169,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -172,6 +177,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=mark",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -196,5 +202,5 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

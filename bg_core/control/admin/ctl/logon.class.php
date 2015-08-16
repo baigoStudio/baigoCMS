@@ -40,13 +40,13 @@ class CONTROL_LOGON {
 	 */
 	function ctl_login() {
 		$_arr_adminLogin = $this->input_login();
-		if ($_arr_adminLogin["str_alert"] != "ok") {
+		if ($_arr_adminLogin["alert"] != "ok") {
 			return $_arr_adminLogin;
 			exit;
 		}
 
 		$_arr_ssoLogin = $this->obj_sso->sso_login($_arr_adminLogin["admin_name"], $_arr_adminLogin["admin_pass"]); //sso验证
-		if ($_arr_ssoLogin["str_alert"] != "y010401") {
+		if ($_arr_ssoLogin["alert"] != "y010401") {
 			$_arr_ssoLogin["forward"] = $_arr_adminLogin["forward"];
 			return $_arr_ssoLogin;
 			exit;
@@ -54,7 +54,7 @@ class CONTROL_LOGON {
 
 		$_arr_adminRow = $this->mdl_admin->mdl_read($_arr_ssoLogin["user_id"]); //本地数据库处理
 
-		if ($_arr_adminRow["str_alert"] != "y020102") {
+		if ($_arr_adminRow["alert"] != "y020102") {
 			$_arr_adminRow["forward"] = $_arr_adminLogin["forward"];
 			return $_arr_adminRow;
 			exit;
@@ -63,7 +63,7 @@ class CONTROL_LOGON {
 		if ($_arr_adminRow["admin_status"] == "disable") {
 			return array(
 				"forward"   => $_arr_adminLogin["forward"],
-				"str_alert" => "x020401",
+				"alert" => "x020401",
 			);
 			exit;
 		}
@@ -75,10 +75,18 @@ class CONTROL_LOGON {
 		fn_session("admin_ssin_time", "mk", time());
 		fn_session("admin_hash", "mk", fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_rand));
 
+		if(defined("BG_SSO_SYNLOGON") && BG_SSO_SYNLOGON == "on") {
+			$_arr_sync = $this->obj_sso->sso_sync_login($_arr_ssoLogin["user_id"]);
+
+			echo $_arr_sync["html"];
+		}
+
+		exit;
+
 		return array(
 			"admin_id"   => $_arr_ssoLogin["user_id"],
 			"forward"    => $_arr_adminLogin["forward"],
-			"str_alert"  => "y020401",
+			"alert"      => "y020401",
 		);
 	}
 
@@ -138,7 +146,7 @@ class CONTROL_LOGON {
 		if (!fn_seccode()) { //验证码
 			return array(
 				"forward"    => $_arr_adminLogin["forward"],
-				"str_alert"  => "x030101",
+				"alert"  => "x030101",
 			);
 			exit;
 		}
@@ -146,7 +154,7 @@ class CONTROL_LOGON {
 		if (!fn_token("chk")) { //令牌
 			return array(
 				"forward"    => $_arr_adminLogin["forward"],
-				"str_alert"  => "x030102",
+				"alert"  => "x030102",
 			);
 			exit;
 		}
@@ -156,7 +164,7 @@ class CONTROL_LOGON {
 			case "too_short":
 				return array(
 					"forward"   => $_arr_adminLogin["forward"],
-					"str_alert" => "x020201",
+					"alert" => "x020201",
 				);
 				exit;
 			break;
@@ -164,7 +172,7 @@ class CONTROL_LOGON {
 			case "too_long":
 				return array(
 					"forward"   => $_arr_adminLogin["forward"],
-					"str_alert" => "x020202",
+					"alert" => "x020202",
 				);
 				exit;
 			break;
@@ -172,7 +180,7 @@ class CONTROL_LOGON {
 			case "format_err":
 				return array(
 					"forward"   => $_arr_adminLogin["forward"],
-					"str_alert" => "x020203",
+					"alert" => "x020203",
 				);
 				exit;
 			break;
@@ -188,7 +196,7 @@ class CONTROL_LOGON {
 			case "too_short":
 				return array(
 					"forward"   => $_arr_adminLogin["forward"],
-					"str_alert" => "x020208",
+					"alert" => "x020208",
 				);
 				exit;
 			break;
@@ -199,7 +207,7 @@ class CONTROL_LOGON {
 
 		}
 
-		$_arr_adminLogin["str_alert"] = "ok";
+		$_arr_adminLogin["alert"] = "ok";
 		$_arr_adminLogin["view"]      = fn_getSafe(fn_post("view"), "txt", "");
 
 		return $_arr_adminLogin;

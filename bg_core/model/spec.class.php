@@ -25,7 +25,7 @@ class MODEL_SPEC {
 			"spec_id"        => "mediumint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"spec_name"      => "varchar(300) NOT NULL COMMENT '专题名称'",
 			"spec_status"    => "enum('show','hide') NOT NULL COMMENT '状态'",
-			"spec_content"   => "varchar(3000) NOT NULL COMMENT '专题内容'",
+			"spec_content"   => "text NOT NULL COMMENT '专题内容'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "spec", $_arr_specCreat, "spec_id", "专题");
@@ -37,7 +37,7 @@ class MODEL_SPEC {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -79,7 +79,7 @@ class MODEL_SPEC {
 				$_str_alert = "y180101";
 			} else {
 				return array(
-					"str_alert" => "x180101",
+					"alert" => "x180101",
 				);
 				exit;
 			}
@@ -92,7 +92,7 @@ class MODEL_SPEC {
 				$_str_alert = "y180103";
 			} else {
 				return array(
-					"str_alert" => "x180103",
+					"alert" => "x180103",
 				);
 				exit;
 			}
@@ -100,7 +100,7 @@ class MODEL_SPEC {
 
 		return array(
 			"spec_id"    => $_num_specId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -142,13 +142,13 @@ class MODEL_SPEC {
 			$_arr_specRow = $_arr_specRows[0];
 		} else {
 			return array(
-				"str_alert" => "x180102", //不存在记录
+				"alert" => "x180102", //不存在记录
 			);
 			exit;
 		}
 
 		$_arr_specRow["urlRow"]       = $this->url_process($_arr_specRow);
-		$_arr_specRow["str_alert"]    = "y180102";
+		$_arr_specRow["alert"]    = "y180102";
 
 		return $_arr_specRow;
 	}
@@ -172,7 +172,7 @@ class MODEL_SPEC {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 	}
 
@@ -233,7 +233,7 @@ class MODEL_SPEC {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -262,7 +262,7 @@ class MODEL_SPEC {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -271,7 +271,7 @@ class MODEL_SPEC {
 
 		if ($this->specSubmit["spec_id"] > 0) {
 			$_arr_specRow = $this->mdl_read($this->specSubmit["spec_id"]);
-			if ($_arr_specRow["str_alert"] != "y180102") {
+			if ($_arr_specRow["alert"] != "y180102") {
 				return $_arr_specRow;
 				exit;
 			}
@@ -281,14 +281,14 @@ class MODEL_SPEC {
 		switch ($_arr_specName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x180201",
+					"alert" => "x180201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x180202",
+					"alert" => "x180202",
 				);
 				exit;
 			break;
@@ -302,7 +302,7 @@ class MODEL_SPEC {
 		switch ($_arr_specStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x180201",
+					"alert" => "x180201",
 				);
 				exit;
 			break;
@@ -316,7 +316,7 @@ class MODEL_SPEC {
 		switch ($_arr_specContent["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x180202",
+					"alert" => "x180202",
 				);
 				exit;
 			break;
@@ -326,7 +326,7 @@ class MODEL_SPEC {
 			break;
 		}
 
-		$this->specSubmit["str_alert"] = "ok";
+		$this->specSubmit["alert"] = "ok";
 
 		return $this->specSubmit;
 	}
@@ -341,7 +341,7 @@ class MODEL_SPEC {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -358,7 +358,7 @@ class MODEL_SPEC {
 		}
 
 		$this->specIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"spec_ids"    => $_arr_specIds
 		);
 
@@ -368,14 +368,10 @@ class MODEL_SPEC {
 
 	private function url_process($_arr_specRow) {
 		switch (BG_VISIT_TYPE) {
-			case "static":
-				$_str_specUrl       = BG_URL_ROOT . "spec/" . $_arr_specRow["spec_id"] . "/";
-				$_str_pageAttach    = "page_";
-			break;
-
 			case "pstatic":
-				$_str_specUrl       = BG_URL_ROOT . "spec/" . $_arr_specRow["spec_id"] . "/";
-				$_str_pageAttach    = "";
+			case "static":
+				$_str_specUrl       = BG_URL_ROOT . "spec/id-" . $_arr_specRow["spec_id"] . "/";
+				$_str_pageAttach    = "page-";
 			break;
 
 			default:

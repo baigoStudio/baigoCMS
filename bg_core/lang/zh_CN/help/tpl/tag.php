@@ -18,25 +18,31 @@ return "<h3>TAG 显示</h3>
 				<tbody>
 
 					<tr>
-						<td class=\"nowrap\"><a href=\"#tagRow\">tagRow</a></td>
+						<td class=\"nowrap\">tplData.tagRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">当前 TAG 详细信息</td>
-						<td> </td>
+						<td>查看 <a href=\"#tagRow\">tplData.tagRow</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">articleRows</td>
+						<td class=\"nowrap\">tplData.articleRows</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">文章列表</td>
 						<td>所有与此 TAG 关联的文章。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=article#articleRow\" target=\"_blank\">文章</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\"><a href=\"#searchShow\">search</a></td>
+						<td class=\"nowrap\">tplData.search</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">搜索参数</td>
-						<td>显示文章列表所需要的搜索参数。</td>
+						<td>显示文章列表所需要的搜索参数。查看 <a href=\"#searchShow\">tplData.search</a></td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">pageRow</td>
+						<td class=\"nowrap\">tplData.query</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">搜索参数序列化字符串</td>
+						<td>搜索参数序列化为字符串以后的结果。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">tplData.pageRow</td>
 						<td class=\"nowrap\">array</td>
 						<td class=\"nowrap\">分页参数</td>
 						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=page\">分页参数</a></td>
@@ -96,7 +102,7 @@ return "<h3>TAG 显示</h3>
 						<td>pub 为发布，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前 TAG 的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
@@ -125,12 +131,6 @@ return "<h3>TAG 显示</h3>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">动作</td>
-						<td>只能为 show。</td>
-					</tr>
 					<tr>
 						<td class=\"nowrap\">tag_name</td>
 						<td class=\"nowrap\">string</td>

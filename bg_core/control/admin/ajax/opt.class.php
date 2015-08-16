@@ -11,6 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "opt.class.php");
+include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目类
 
 /*-------------管理员控制器-------------*/
 class AJAX_OPT {
@@ -22,19 +23,12 @@ class AJAX_OPT {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //已登录商家信息
 		$this->obj_ajax       = new CLASS_AJAX(); //初始化 AJAX 基对象
+		$this->obj_ajax->chk_install();
 		$this->mdl_opt        = new MODEL_OPT();
+		$this->mdl_cate       = new MODEL_CATE();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -49,7 +43,11 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060302");
 		}
 
-		$this->opt_post("upload");
+		$_arr_return = $this->mdl_opt->mdl_const("upload");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y060402");
 	}
@@ -66,7 +64,11 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060303");
 		}
 
-		$this->opt_post("sso");
+		$_arr_return = $this->mdl_opt->mdl_const("sso");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y060403");
 	}
@@ -83,35 +85,21 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060304");
 		}
 
-		$this->opt_post("visit");
+		$_arr_return = $this->mdl_opt->mdl_const("visit");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$_arr_post = fn_post("opt");
 
 		if ($_arr_post["BG_VISIT_TYPE"] == "pstatic") {
 
-			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
-			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
-				$_str_content .= "RewriteEngine On" . PHP_EOL;
-				$_str_content .= "RewriteBase /" . PHP_EOL;
-				$_str_content .= "RewriteRule ^article/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=article&act_get=show&article_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2&page=$3 [L]" . PHP_EOL;
-				/*$_str_content .= "RewriteRule ^tag/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list&page=$1 [L]" . PHP_EOL;*/
-				$_str_content .= "RewriteRule ^tag/(.*)/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list&page=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/(.*)/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1&page=$2 [L]" . PHP_EOL;
-			$_str_content .= "</IfModule>" . PHP_EOL;
-			$_str_content .= "# END baigo CMS" . PHP_EOL;
+			$_arr_return = $this->mdl_opt->mdl_htaccess();
 
-			file_put_contents(BG_PATH_ROOT . ".htaccess", $_str_content);
+			if ($_arr_return["alert"] != "y060101") {
+				$this->obj_ajax->halt_alert($_arr_return["alert"]);
+			}
 
 		} else {
 			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
@@ -134,7 +122,13 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060301");
 		}
 
-		$this->opt_post("base");
+		$_arr_return = $this->mdl_opt->mdl_const("base");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
+
+		$_arr_cache = $this->mdl_cate->mdl_cache();
 
 		$this->obj_ajax->halt_alert("y060401");
 	}
@@ -151,60 +145,12 @@ class AJAX_OPT {
 			$this->obj_ajax->halt_alert("x060306");
 		}
 
-		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
-		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
-		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
-		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
-		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
-		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
-		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
+		$_arr_return = $this->mdl_opt->mdl_dbconfig();
 
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
-
-		file_put_contents(BG_PATH_CONFIG . "config_db.inc.php", $_str_content);
-
-		$this->obj_ajax->halt_alert("y060405");
-	}
-
-	/**
-	 * opt_post function.
-	 *
-	 * @access private
-	 * @param mixed $str_type
-	 * @return void
-	 */
-	private function opt_post($str_type) {
-		if (!fn_token("chk")) { //令牌
-			$this->obj_ajax->halt_alert("x030102");
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
 		}
 
-		$_arr_opt = fn_post("opt");
-
-		$_str_content = "<?php" . PHP_EOL;
-		foreach ($_arr_opt as $_key=>$_value) {
-			$_arr_optChk = validateStr($_value, 1, 900);
-			$_str_optValue = $_arr_optChk["str"];
-			if (is_numeric($_value)) {
-				$_str_content .= "define(\"" . $_key . "\", " . $_str_optValue . ");" . PHP_EOL;
-			} else {
-				$_str_content .= "define(\"" . $_key . "\", \"" . str_replace(PHP_EOL, "|", $_str_optValue) . "\");" . PHP_EOL;
-			}
-			$this->mdl_opt->mdl_submit($_key, $_str_optValue);
-		}
-
-		if ($str_type == "base") {
-			$_str_content .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
-		}
-
-		$_str_content = str_replace("||", "", $_str_content);
-
-		file_put_contents(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_content);
+		$this->obj_ajax->halt_alert("y060406");
 	}
 }

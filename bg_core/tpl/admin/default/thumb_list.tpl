@@ -6,19 +6,20 @@
 	baigoCheckall  => "true",
 	baigoValidator => "true",
 	baigoSubmit    => "true",
+	baigoClear     => "true",
 	tokenReload    => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=thumb&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=list">{$adminMod.attach.main.title}</a></li>
 	<li>{$adminMod.attach.sub.thumb.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=thumb&act_get=list">
 					<span class="glyphicon glyphicon-plus"></span>
@@ -50,12 +51,12 @@
 					{/if}
 
 					<div class="form-group">
-						<label form="thumb_width" class="control-label">{$lang.label.thumbWidth}<span id="msg_thumb_width">*</span></label>
+						<label class="control-label">{$lang.label.thumbWidth}<span id="msg_thumb_width">*</span></label>
 						<input type="text" name="thumb_width" id="thumb_width" value="{$tplData.thumbRow.thumb_width}" class="validate form-control">
 					</div>
 
 					<div class="form-group">
-						<label form="thumb_height" class="control-label">{$lang.label.thumbHeight}<span id="msg_thumb_height">*</span></label>
+						<label class="control-label">{$lang.label.thumbHeight}<span id="msg_thumb_height">*</span></label>
 						<input type="text" name="thumb_height" id="thumb_height" value="{$tplData.thumbRow.thumb_height}" class="validate form-control">
 					</div>
 
@@ -72,10 +73,45 @@
 					</div>
 
 					<div class="form-group">
-						<button type="button" id="thumb_add" class="btn btn-primary">{$lang.btn.save}</button>
+						<button type="button" id="go_save" class="btn btn-primary">{$lang.btn.save}</button>
 					</div>
 				</form>
 			</div>
+
+			{if $tplData.thumbRow.thumb_id > 0}
+				<div class="well">
+					<form name="thumb_gen" id="thumb_gen">
+						<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+						<input type="hidden" name="thumb_id" value="{$tplData.thumbRow.thumb_id}">
+						<input type="hidden" name="act_post" id="act_gen" value="gen">
+						<div class="form-group">
+							<label class="control-label">{$lang.label.rangeId}</label>
+							<div class="input-group">
+								<input type="text" name="attach_range[begin]" id="attach_range_begin" value="0" class="form-control">
+								<span class="input-group-addon input_range">{$lang.label.to}</span>
+								<input type="text" name="attach_range[end]" id="attach_range_end" value="0" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<button type="button" class="btn btn-warning" id="go_gen">
+								<span class="glyphicon glyphicon-refresh"></span>
+								{$lang.btn.thumbGen}
+							</button>
+						</div>
+						<div class="form-group">
+							<div class="baigoClear progress">
+								<div class="progress-bar progress-bar-info progress-bar-striped active"></div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="baigoClearMsg">
+
+							</div>
+						</div>
+					</form>
+				</div>
+			{/if}
 		</div>
 
 		<div class="col-md-9">
@@ -100,7 +136,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $tplData.thumbRows as $value}
+								{foreach $tplData.thumbRows as $key=>$value}
 									<tr>
 										<td class="td_mn"><input type="checkbox" name="thumb_id[]" value="{$value.thumb_id}" id="thumb_id_{$value.thumb_id}" group="thumb_id" class="chk_all validate"></td>
 										<td class="td_mn">{$value.thumb_id}</td>
@@ -150,11 +186,11 @@
 	</div>
 
 	<div class="text-right">
-		{include "include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 	</div>
 
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -193,6 +229,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -200,28 +237,42 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=thumb",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
 	};
 
+	var opts_gen = {
+		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=attach",
+		confirm_id: "act_gen",
+		confirm_val: "gen",
+		confirm_msg: "{$lang.confirm.gen}",
+		msg_loading: "{$alert.x070409}",
+		msg_complete: "{$alert.y070409}"
+	};
+
 	$(document).ready(function(){
 		var obj_validate_list = $("#thumb_list").baigoValidator(opts_validator_list);
-		var obj_submit_list = $("#thumb_list").baigoSubmit(opts_submit_list);
+		var obj_submit_list   = $("#thumb_list").baigoSubmit(opts_submit_list);
 		$("#go_submit").click(function(){
 			if (obj_validate_list.validateSubmit()) {
 				obj_submit_list.formSubmit();
 			}
 		});
 		var obj_validate_form = $("#thumb_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#thumb_form").baigoSubmit(opts_submit_form);
-		$("#thumb_add").click(function(){
+		var obj_submit_form   = $("#thumb_form").baigoSubmit(opts_submit_form);
+		$("#go_save").click(function(){
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
 			}
+		});
+		var obj_gen = $("#thumb_gen").baigoClear(opts_gen);
+		$("#go_gen").click(function(){
+			obj_gen.clearSubmit();
 		});
 		$("#thumb_list").baigoCheckall();
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

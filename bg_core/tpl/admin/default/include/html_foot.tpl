@@ -24,6 +24,11 @@
 		<script src="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.js" type="text/javascript"></script>
 	{/if}
 
+	{if isset($cfg.baigoClear)}
+		<!--表单 ajax 提交 js-->
+		<script src="{$smarty.const.BG_URL_JS}baigoClear.js" type="text/javascript"></script>
+	{/if}
+
 	{if isset($cfg.reloadImg)}
 		<!--重新载入图片 js-->
 		<script src="{$smarty.const.BG_URL_JS}reloadImg.js" type="text/javascript"></script>

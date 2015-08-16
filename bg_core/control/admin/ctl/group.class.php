@@ -39,7 +39,7 @@ class CONTROL_GROUP {
 	function ctl_show() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
 			return array(
-				"str_alert" => "x040301",
+				"alert" => "x040301",
 			);
 			exit;
 		}
@@ -48,12 +48,12 @@ class CONTROL_GROUP {
 
 		if ($_num_groupId == 0) {
 			return array(
-				"str_alert" => "x040206",
+				"alert" => "x040206",
 			);
 		}
 
 		$_arr_groupRow = $this->mdl_group->mdl_read($_num_groupId);
-		if ($_arr_groupRow["str_alert"] != "y040102") {
+		if ($_arr_groupRow["alert"] != "y040102") {
 			return $_arr_groupRow;
 			exit;
 		}
@@ -67,7 +67,7 @@ class CONTROL_GROUP {
 		$this->obj_tpl->tplDisplay("group_show.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y040102",
+			"alert" => "y040102",
 		);
 	}
 
@@ -84,19 +84,19 @@ class CONTROL_GROUP {
 		if ($_num_groupId > 0) {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
 				return array(
-					"str_alert" => "x040303",
+					"alert" => "x040303",
 				);
 				exit;
 			}
 			$_arr_groupRow = $this->mdl_group->mdl_read($_num_groupId);
-			if ($_arr_groupRow["str_alert"] != "y040102") {
+			if ($_arr_groupRow["alert"] != "y040102") {
 				return $_arr_groupRow;
 				exit;
 			}
 		} else {
 			if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["add"])) {
 				return array(
-					"str_alert" => "x040302",
+					"alert" => "x040302",
 				);
 				exit;
 			}
@@ -119,7 +119,7 @@ class CONTROL_GROUP {
 		$this->obj_tpl->tplDisplay("group_form.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y040102",
+			"alert" => "y040102",
 		);
 	}
 
@@ -133,18 +133,17 @@ class CONTROL_GROUP {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
 			return array(
-				"str_alert" => "x040301",
+				"alert" => "x040301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
 		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 			"key"        => $_str_key,
 			"type"       => $_str_type,
 			"status"     => $_str_status,
@@ -167,7 +166,7 @@ class CONTROL_GROUP {
 		$this->obj_tpl->tplDisplay("group_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y040301",
+			"alert" => "y040301",
 		);
 
 	}

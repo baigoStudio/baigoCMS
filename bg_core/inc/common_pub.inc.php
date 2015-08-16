@@ -13,8 +13,6 @@ include_once(BG_PATH_INC . "common_global.inc.php");
 include_once(BG_PATH_CLASS . "mysqli.class.php"); //载入数据库类
 include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
 
-header("Content-Type: text/html; charset=utf-8");
-
 if (!defined("BG_DB_PORT")) {
 	define("BG_DB_PORT", "3306");
 }
@@ -51,4 +49,11 @@ include_once(BG_PATH_MODEL . "tag.class.php");
 include_once(BG_PATH_MODEL . "call.class.php");
 include_once(BG_PATH_MODEL . "attach.class.php");
 include_once(BG_PATH_MODEL . "thumb.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "custom.class.php"); //载入上传模型
+include_once(BG_PATH_MODEL . "articleCustom.class.php"); //载入上传模型
 include_once(BG_PATH_FUNC . "callDisplay.func.php");
+include_once(BG_PATH_FUNC . "callAttach.func.php");
+include_once(BG_PATH_FUNC . "callCate.func.php");
+include_once(BG_PATH_FUNC . "ubb.func.php");
+
+header("Content-Type: text/html; charset=utf-8");

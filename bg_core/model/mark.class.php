@@ -35,7 +35,7 @@ class MODEL_MARK {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -75,7 +75,7 @@ class MODEL_MARK {
 				$_str_alert = "y140101";
 			} else {
 				return array(
-					"str_alert" => "x140101",
+					"alert" => "x140101",
 				);
 				exit;
 			}
@@ -88,7 +88,7 @@ class MODEL_MARK {
 				$_str_alert = "y140103";
 			} else {
 				return array(
-					"str_alert" => "x140103",
+					"alert" => "x140103",
 				);
 				exit;
 			}
@@ -96,7 +96,7 @@ class MODEL_MARK {
 
 		return array(
 			"mark_id"    => $_num_markId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -136,12 +136,12 @@ class MODEL_MARK {
 			$_arr_markRow = $_arr_markRows[0];
 		} else {
 			return array(
-				"str_alert" => "x140102", //不存在记录
+				"alert" => "x140102", //不存在记录
 			);
 			exit;
 		}
 
-		$_arr_markRow["str_alert"] = "y140102";
+		$_arr_markRow["alert"] = "y140102";
 
 		return $_arr_markRow;
 	}
@@ -194,7 +194,7 @@ class MODEL_MARK {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -219,7 +219,7 @@ class MODEL_MARK {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -228,7 +228,7 @@ class MODEL_MARK {
 
 		if ($this->markSubmit["mark_id"] > 0) {
 			$_arr_markRow = $this->mdl_read($this->markSubmit["mark_id"]);
-			if ($_arr_markRow["str_alert"] != "y140102") {
+			if ($_arr_markRow["alert"] != "y140102") {
 				return $_arr_markRow;
 				exit;
 			}
@@ -238,14 +238,14 @@ class MODEL_MARK {
 		switch ($_arr_markName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x140201",
+					"alert" => "x140201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x140202",
+					"alert" => "x140202",
 				);
 				exit;
 			break;
@@ -257,14 +257,14 @@ class MODEL_MARK {
 		}
 
 		$_arr_markRow = $this->mdl_read($this->markSubmit["mark_name"], "mark_name", $this->markSubmit["mark_id"]);
-		if ($_arr_markRow["str_alert"] == "y140102") {
+		if ($_arr_markRow["alert"] == "y140102") {
 			return array(
-				"str_alert" => "x140203",
+				"alert" => "x140203",
 			);
 			exit;
 		}
 
-		$this->markSubmit["str_alert"] = "ok";
+		$this->markSubmit["alert"] = "ok";
 		return $this->markSubmit;
 	}
 
@@ -278,7 +278,7 @@ class MODEL_MARK {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -295,7 +295,7 @@ class MODEL_MARK {
 		}
 
 		$this->markIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"mark_ids"    => $_arr_markIds
 		);
 

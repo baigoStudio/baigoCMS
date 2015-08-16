@@ -154,7 +154,7 @@ return "<a name=\"list\"></a>
 						<td class=\"nowrap\">cate_alias</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">别名</td>
-						<td>栏目的英文别名。此项一般用户 URL，当访问方式设置为伪静态或纯静态，别名会显示在浏览的地址栏，如：http://www.domain.com/cate/<mark>service</mark>/3/，高亮部分既为别名</td>
+						<td>栏目的英文别名。此项一般用户 URL，当 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=opt#visit\">访问方式</a> 设置为伪静态或纯静态，别名会显示在浏览的地址栏，如：http://www.domain.com/cate/<mark>service</mark>/3/，高亮部分既为别名</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_type</td>
@@ -165,14 +165,14 @@ return "<a name=\"list\"></a>
 					<tr>
 						<td class=\"nowrap\">cate_content</td>
 						<td class=\"nowrap\">text</td>
-						<td class=\"nowrap\">栏目内容</td>
-						<td>栏目的具体内容。<mark>当栏目类型为单页时，此项有效</mark>。</td>
+						<td class=\"nowrap\">栏目介绍</td>
+						<td>栏目的具体介绍。</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_link</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">跳转至</td>
-						<td>该栏目跳转至相应的地址，不会显示栏目内容。<mark>当栏目类型为链接时，此项有效</mark>。</td>
+						<td>该栏目跳转至相应的地址，不会显示栏目介绍。<mark>当栏目类型为链接时，此项有效</mark>。</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">cate_parent_id</td>
@@ -193,7 +193,7 @@ return "<a name=\"list\"></a>
 						<td>show 为显示，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前栏目的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>

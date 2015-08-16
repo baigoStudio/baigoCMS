@@ -19,70 +19,87 @@ class CONTROL_SEARCH {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
-		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
+		$this->mdl_cate           = new MODEL_CATE(); //设置文章对象
+		$this->mdl_custom         = new MODEL_CUSTOM();
+		$this->mdl_attach         = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
 		$this->search_init();
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
-		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
-		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
-		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
+		$this->obj_tpl            = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
+		$this->mdl_tag            = new MODEL_TAG();
+		$this->mdl_articlePub     = new MODEL_ARTICLE_PUB(); //设置文章对象
 	}
 
 
-	/**
-	 * ctl_list function.
-	 *
-	 * @access public
-	 * @return void
-	 */
 	function ctl_show() {
 		$_str_query       = "";
 		$_arr_page        = array();
 		$_arr_articleRows = array();
 
-		if ($this->search["key"]) {
-			$_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search["key"]);
+		$_arr_customSearch = array();
+
+		if ($this->search["key"] || $this->search["customs"]) {
+			$_str_customs = urldecode($this->search["customs"]);
+			$_str_customs = base64_decode($_str_customs);
+			$_str_customs = urldecode($_str_customs);
+			$_arr_customs = explode("&", $_str_customs);
+
+			if ($_arr_customs) {
+				foreach ($_arr_customs as $_key=>$_value) {
+					$_arr_customRow = explode("=", $_value);
+					if ($_arr_customRow && isset($_arr_customRow[1])) {
+						$_arr_customSearch[$_arr_customRow[0]] = $_arr_customRow[1];
+					}
+				}
+			}
+
+			$_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search["key"], "", "", $this->cateIds, false, 0, false, $_arr_customSearch);
 			$_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
 			$_str_query           = http_build_query($this->search);
-			$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $this->search["key"]);
-			if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
-				$this->mdl_thumb->mdl_cache();
-			}
-			$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+			$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $this->search["key"], "", "", $this->cateIds, false, 0, false, $_arr_customSearch);
 
 			foreach ($_arr_articleRows as $_key=>$_value) {
 				$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
 				if ($_value["article_attach_id"] > 0) {
-					$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_thumbRows);
+					$_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
+					if ($_arr_attachRow["alert"] == "y070102") {
+						if ($_arr_attachRow["attach_box"] != "normal") {
+							$_arr_attachRow = array(
+								"alert" => "x070102",
+							);
+						}
+					}
+					$_arr_articleRows[$_key]["attachRow"] = $_arr_attachRow;
 				}
 
 				if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
 					$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
 				}
 
-				$_arr_articleRows[$_key]["cateRow"] = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+				$_arr_cateRow                        = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+				$_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
+
+				if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
+					$_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
+				}
+
 			}
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
-			$this->mdl_cate->mdl_cache();
-		}
-
-		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
-
-		$_arr_tplData = array(
+		$_arr_tpl = array(
 			"query"          => $_str_query,
-			"pageRow"        => $_arr_page,
 			"search"         => $this->search,
+			"pageRow"        => $_arr_page,
+			"customs"        => $_arr_customSearch,
 			"articleRows"    => $_arr_articleRows,
-			"cateRows"       => $_arr_cateRows,
 		);
+
+		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
 		$this->obj_tpl->tplDisplay("search_show.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y130102",
+			"alert" => "y130102",
 		);
 	}
 
@@ -90,12 +107,13 @@ class CONTROL_SEARCH {
 	private function url_process() {
 		switch (BG_VISIT_TYPE) {
 			case "pstatic":
+			case "static":
 				$_str_searchUrl     = BG_URL_ROOT . "search/";
-				$_str_pageAttach    = "";
+				$_str_pageAttach    = "page-";
 			break;
 
 			default:
-				$_str_searchUrl     = BG_URL_ROOT . "index.php?mod=search&act_get=list";
+				$_str_searchUrl     = BG_URL_ROOT . "index.php?mod=search&act_get=" . $GLOBALS["act_get"];
 				$_str_pageAttach    = "&page=";
 			break;
 		}
@@ -113,14 +131,52 @@ class CONTROL_SEARCH {
 		} else {
 			$this->config["tpl"] = "default";
 		}
-		$_act_get = fn_getSafe($GLOBALS["act_get"], "txt", "");
-		$_str_key = fn_getSafe(fn_get("key"), "txt", "");
+
+		$_num_cateId  = fn_getSafe(fn_get("cate_id"), "int", 0);
+		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
+		$_str_customs = fn_getSafe(fn_get("customs"), "txt", "");
+		$_arr_urlRow  = $this->url_process();
 
 		$this->search = array(
-			"act_get"    => $_act_get,
-			"urlRow"     => $this->url_process(),
+			"act_get"    => $GLOBALS["act_get"],
+			"cate_id"    => $_num_cateId,
 			"key"        => $_str_key,
+			"customs"    => $_str_customs,
+			"urlRow"     => $_arr_urlRow,
 		);
 
+		if ($_num_cateId > 0) {
+			if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
+				$this->mdl_cate->mdl_cache(array($_num_cateId));
+			}
+
+			$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
+			if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+				$this->cateIds = $_arr_cateRow["cate_ids"];
+			}
+		} else {
+			$this->cateIds = false;
+		}
+
+		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+			$this->mdl_thumb->mdl_cache();
+		}
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+
+		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+			$this->mdl_cate->mdl_cache();
+		}
+		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
+
+		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+			$this->mdl_custom->mdl_cache();
+		}
+		$_arr_customRows = include(BG_PATH_CACHE . "custom_list.php");
+
+		$this->tplData = array(
+			"customRows" => $_arr_customRows["custom_list"],
+			"cateRows"   => $_arr_cateRows,
+		);
 	}
+
 }

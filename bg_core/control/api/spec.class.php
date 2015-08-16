@@ -22,23 +22,9 @@ class API_SPEC {
 
 	function __construct() { //构造函数
 		$this->obj_api        = new CLASS_API();
+		$this->obj_api->chk_install();
 		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
 		$this->mdl_spec       = new MODEL_SPEC();
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"str_alert" => "x030416"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"str_alert" => "x030415"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
 	}
 
 
@@ -55,19 +41,19 @@ class API_SPEC {
 
 		if ($_num_specId == 0) {
 			$_arr_return = array(
-				"str_alert" => "x180204",
+				"alert" => "x180204",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
 
 		$_arr_specRow = $this->mdl_spec->mdl_read($_num_specId);
-		if ($_arr_specRow["str_alert"] != "y180102") {
+		if ($_arr_specRow["alert"] != "y180102") {
 			$this->obj_api->halt_re($_arr_specRow);
 		}
 
 		if ($_arr_specRow["spec_status"] != "show") {
 			$_arr_return = array(
-				"str_alert" => "x180102",
+				"alert" => "x180102",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
@@ -120,18 +106,18 @@ class API_SPEC {
 	private function app_check($str_method = "get") {
 		$this->appGet = $this->obj_api->app_get($str_method);
 
-		if ($this->appGet["str_alert"] != "ok") {
+		if ($this->appGet["alert"] != "ok") {
 			$this->obj_api->halt_re($this->appGet);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			$this->obj_api->halt_re($_arr_appRow);
 		}
 		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
-		if ($_arr_appChk["str_alert"] != "ok") {
+		if ($_arr_appChk["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 	}

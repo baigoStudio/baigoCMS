@@ -37,7 +37,7 @@ function fn_getIp($str_ipTrue = true) {
 		if ($str_ipTrue) {
 			if (fn_server("HTTP_X_FORWARDED_FOR")) {
 				$_arr_ips = explode(",", fn_server("HTTP_X_FORWARDED_FOR"));
-				foreach ($_arr_ips as $_value) {
+				foreach ($_arr_ips as $_key=>$_value) {
 					$_value = trim($_value);
 					if ($_value != "unknown") {
 						$_str_ip = $_value;
@@ -215,29 +215,14 @@ function fn_getSafe($str_string = "", $str_type = "txt", $str_default = "") {
  * fn_strlen_utf8 function.
  *
  * @access public
- * @param mixed $str
+ * @param mixed $str_string
  * @return void
  */
-function fn_strlen_utf8($str) {
-	$i     = 0;
-	$count = 0;
-	$len   = strlen($str);
-	while ($i < $len) {
-		$chr = ord($str[$i]);
-		$count++;
-		$i++;
-		if ($i >= $len) {
-			break;
-		}
-		if ($chr & 0x80) {
-			$chr <<= 1;
-			while ($chr & 0x80) {
-				$i++;
-				$chr <<= 1;
-			}
-		}
-	}
-	return $count;
+function fn_strlen_utf8($str_string) {
+	// 将字符串分解为单元
+	preg_match_all("/./us", $str_string, $match);
+	// 返回单元个数
+	return count($match[0]);
 }
 
 
@@ -251,39 +236,11 @@ function fn_strlen_utf8($str) {
  * @return void
  */
 function fn_substr_utf8($str_string, $begin, $length) {
-	//對字串做URL Eecode
-	$str_string    = mb_substr($str_string, $begin, mb_strlen($str_string));
-	$iString       = urlencode($str_string);
-	$lstrResult    = "";
-	$ilength       = 0;
-	$k             = 0;
-	do {
-		$lstrChar = substr($iString, $k, 1);
-		if ($lstrChar == "%") {
-			$ThisChr = hexdec(substr($iString, $k+1, 2));
-			if ($ThisChr >= 128) {
-				if ($ilength + 3 < $length) {
-					$lstrResult   .= urldecode(substr($iString, $k, 9));
-					$k             = $k + 9;
-					$ilength      += 3;
-				} else {
-					$k         = $k + 9;
-					$ilength  += 3;
-				}
-			} else {
-				$lstrResult.= urldecode(substr($iString, $k, 3));
-				$k          = $k + 3;
-				$ilength   += 2;
-			}
-		} else {
-			$lstrResult .= urldecode(substr($iString, $k, 1));
-			$k           = $k + 1;
-			$ilength++;
-		}
-	}
-	while ($k < strlen($iString) && $ilength < $length);
-	return $lstrResult;
+	preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/i", $str_string, $_arr);
+
+    return join("", array_slice($_arr[0], $begin, $length));
 }
+
 
 /**
  * fn_page function.
@@ -293,9 +250,17 @@ function fn_substr_utf8($str_string, $begin, $length) {
  * @param mixed $num_per (default: BG_DEFAULT_PERPAGE)
  * @return void
  */
-function fn_page($num_total, $num_per = BG_DEFAULT_PERPAGE) {
+function fn_page($num_total, $num_per = BG_DEFAULT_PERPAGE, $method = "get") {
 
-	$_num_pageThis = fn_getSafe(fn_get("page"), "int", 1);
+	switch ($method) {
+		case "post":
+			$_num_pageThis = fn_getSafe(fn_post("page"), "int", 1);
+		break;
+
+		default:
+			$_num_pageThis = fn_getSafe(fn_get("page"), "int", 1);
+		break;
+	}
 
 	if ($_num_pageThis < 1) {
 		$_num_pageThis = 1;
@@ -307,7 +272,7 @@ function fn_page($num_total, $num_per = BG_DEFAULT_PERPAGE) {
 
 	if (intval($_num_pageTotal) < $_num_pageTotal) {
 		$_num_pageTotal = intval($_num_pageTotal) + 1;
-	} elseif ($_num_pageTotal < 1) {
+	} else if ($_num_pageTotal < 1) {
 		$_num_pageTotal = 1;
 	} else {
 		$_num_pageTotal = intval($_num_pageTotal);
@@ -497,32 +462,40 @@ function fn_getAttach($_str_content) {
 
 	$_pattern_1        = "/<img.*?id=[\"|']?baigo_.*?[\"|']?\s.*?>/i";
 	$_pattern_2        = "/\sid=[\"|']?baigo_.*?[\"|']?\s/i";
-	$_str_attachTemp   = html_entity_decode($_str_content, ENT_QUOTES, "UTF-8");
-	$_str_attachTemp   = str_replace("\\", "", $_str_attachTemp);
+	$_str_contentTemp   = html_entity_decode($_str_content, ENT_QUOTES, "UTF-8");
+	$_str_contentTemp   = str_replace("\\", "", $_str_contentTemp);
 
 	//print_r($_pattern_1);
 	//print_r($_pattern_2);
-	//print_r($_str_attachTemp);
+	//print_r($_str_contentTemp);
 
-	preg_match($_pattern_1, $_str_attachTemp, $_match_1);
+	preg_match_all($_pattern_1, $_str_contentTemp, $_arr_match);
 
-	//print_r($_match_1);
+	//print_r($_arr_match);
 
-	$_num_attachId = 0;
+	$_num_attachId     = 0;
+	$_arr_attachIds    = array();
 
-	if (isset($_match_1[0])) {
-		preg_match($_pattern_2, $_match_1[0], $_match_2);
-		$_str_attach      = trim($_match_2[0]);
-		$_str_attach      = str_replace("id=", "", $_str_attach);
-		$_str_attach      = str_replace("baigo_", "", $_str_attach);
-		$_str_attach      = str_replace("\"", "", $_str_attach);
-		$_str_attach      = trim($_str_attach);
-		$_num_attachId    = str_replace("'", "", $_str_attach);
+	if (isset($_arr_match[0])) {
+		foreach ($_arr_match[0] as $_key=>$_value) {
+			preg_match($_pattern_2, $_value, $_match_2);
+			$_str_attach      = trim($_match_2[0]);
+			$_str_attach      = str_replace("id=", "", $_str_attach);
+			$_str_attach      = str_replace("baigo_", "", $_str_attach);
+			$_str_attach      = str_replace("\"", "", $_str_attach);
+			$_str_attach      = trim($_str_attach);
+			$_num_attachId    = str_replace("'", "", $_str_attach);
+			$_arr_attachIds[] = $_num_attachId;
+		}
 	}
 
-	//print_r($_num_attachId);
+	//print_r($_arr_attachIds);
 
-	return $_num_attachId;
+	if (!$_arr_attachIds) {
+		$_arr_attachIds = array(0);
+	}
+
+	return $_arr_attachIds;
 }
 
 

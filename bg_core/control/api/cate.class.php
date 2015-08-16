@@ -22,23 +22,9 @@ class API_CATE {
 
 	function __construct() { //构造函数
 		$this->obj_api        = new CLASS_API();
+		$this->obj_api->chk_install();
 		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
 		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"str_alert" => "x030416"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"str_alert" => "x030415"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
 	}
 
 
@@ -55,7 +41,7 @@ class API_CATE {
 
 		if ($_num_cateId == 0) {
 			$_arr_return = array(
-				"str_alert" => "x110217",
+				"alert" => "x110217",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
@@ -66,13 +52,13 @@ class API_CATE {
 
 		$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
 
-		if ($_arr_cateRow["str_alert"] != "y110102") {
+		if ($_arr_cateRow["alert"] != "y110102") {
 			$this->obj_api->halt_re($_arr_cateRow);
 		}
 
 		if ($_arr_cateRow["cate_status"] != "show") {
 			$_arr_return = array(
-				"str_alert" => "x110102",
+				"alert" => "x110102",
 			);
 			$this->obj_api->halt_re($_arr_return);
 		}
@@ -81,7 +67,7 @@ class API_CATE {
 
 		if ($_arr_cateRow["cate_type"] == "link" && $_arr_cateRow["cate_link"]) {
 			$_arr_return = array(
-				"str_alert" => "x110218",
+				"alert" => "x110218",
 				"cate_link" => $_arr_cateRow["cate_link"],
 			);
 			$this->obj_api->halt_re($_arr_cateRow);
@@ -112,18 +98,18 @@ class API_CATE {
 	private function app_check($str_method = "get") {
 		$this->appGet = $this->obj_api->app_get($str_method);
 
-		if ($this->appGet["str_alert"] != "ok") {
+		if ($this->appGet["alert"] != "ok") {
 			$this->obj_api->halt_re($this->appGet);
 		}
 
 		$_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-		if ($_arr_appRow["str_alert"] != "y190102") {
+		if ($_arr_appRow["alert"] != "y190102") {
 			$this->obj_api->halt_re($_arr_appRow);
 		}
 		$this->appAllow = $_arr_appRow["app_allow"];
 
 		$_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
-		if ($_arr_appChk["str_alert"] != "ok") {
+		if ($_arr_appChk["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 	}

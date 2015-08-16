@@ -1,6 +1,29 @@
 {* article_form.tpl 文章编辑 *}
+{function custom_list arr=""}
+	{foreach $arr as $key=>$value}
+		{if $value.custom_childs}
+			<div class="col-md-12">
+				<h4>
+					<span class="label label-default">{$value.custom_name}</span>
+				</h4>
+			</div>
+		{else}
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label">{$value.custom_name}<span id="msg_article_custom_{$value.custom_id}"></span></label>
+					<input type="text" name="article_customs[{$value.custom_id}]" value="{if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}{$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}{/if}" class="form-control">
+				</div>
+			</div>
+		{/if}
+
+		{if $value.custom_childs}
+			{custom_list arr=$value.custom_childs}
+		{/if}
+	{/foreach}
+{/function}
+
 {function cate_select arr="" level=""}
-	{foreach $arr as $value}
+	{foreach $arr as $key=>$value}
 		<option {if $value.cate_id == $tplData.articleRow.article_cate_id}selected{/if} {if $value.cate_type != "normal"}disabled{/if} value="{$value.cate_id}">
 			{if $value.cate_level > 1}
 				{for $_i=2 to $value.cate_level}
@@ -18,7 +41,7 @@
 
 {function cate_checkbox arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
-		{foreach $arr as $value}
+		{foreach $arr as $key=>$value}
 			<li>
 				<div class="checkbox_baigo">
 					<label for="cate_ids_{$value.cate_id}">
@@ -57,15 +80,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<ul class="list-inline">
+		<ul class="nav nav-pills nav_baigo">
 			<li>
 				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">
 					<span class="glyphicon glyphicon-chevron-left"></span>
@@ -97,14 +120,21 @@
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label class="control-label">
-								{$lang.label.articleContent}
-								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
+						<div class="form-group" data-spy="affix" data-offset-top="260">
+							<div class="btn-group">
+								<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&article_id={$tplData.articleRow.article_id}&view=iframe" class="btn btn-success" data-toggle="modal" data-target="#attach_modal">
 									<span class="glyphicon glyphicon-picture"></span>
 									{$lang.href.uploadList}
 								</a>
-							</label>
+								{if $tplData.articleRow.article_id > 0}
+									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=article&article_id={$tplData.articleRow.article_id}" class="btn btn-default">
+										{$lang.href.attachArticle}
+									</a>
+								{/if}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label">{$lang.label.articleContent}</label>
 							<textarea name="article_content" id="article_content" class="tinymce text_bg">{$tplData.articleRow.article_content}</textarea>
 						</div>
 
@@ -120,27 +150,14 @@
 						</div>
 
 						<div id="group_article_excerpt">
+							<label class="control-label">{$lang.label.articleExcerpt}</label>
 							<div class="form-group">
-								<label class="control-label">
-									{$lang.label.articleExcerpt}
-									<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=form&view=iframe" class="btn btn-success btn-xs" data-toggle="modal" data-target="#attach_modal">
-										<span class="glyphicon glyphicon-picture"></span>
-										{$lang.href.uploadList}
-									</a>
-								</label>
 								<textarea name="article_excerpt" id="article_excerpt" class="tinymce text_md">{$tplData.articleRow.article_excerpt}</textarea>
 							</div>
 						</div>
 
 						<div class="row">
-							{foreach $tplData.customRows as $key=>$value}
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">{$value.custom_name}<span id="msg_article_custom_{$value.custom_id}"></span></label>
-										<input type="text" name="article_custom[{$value.custom_id}]" value="{if isset($tplData.articleRow.article_custom[{$value.custom_id}])}{$tplData.articleRow.article_custom[{$value.custom_id}]}{/if}" class="form-control">
-									</div>
-								</div>
-							{/foreach}
+							{custom_list arr=$tplData.customRows}
 						</div>
 
 						<label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
@@ -184,7 +201,7 @@
 
 					<div class="checkbox">
 						<label for="cate_ids_checkbox">
-							<input type="checkbox" {if count($tplData.articleRow.cate_ids) > 1}checked{/if} data-toggle="collapse" data-target="#cate_ids_input" id="cate_ids_checkbox">
+							<input type="checkbox" {if count($tplData.articleRow.cate_ids) > 1}checked{/if} data-toggle="collapse" data-target="#cate_ids_input" id="cate_ids_checkbox" name="cate_ids_checkbox" value="1">
 							{$lang.label.articleBelong}
 						</label>
 					</div>
@@ -233,7 +250,7 @@
 						<label class="control-label">{$lang.label.articleMark}</label>
 						<select name="article_mark_id" class="form-control">
 							<option value="">{$lang.option.noMark}</option>
-							{foreach $tplData.markRows as $value}
+							{foreach $tplData.markRows as $key=>$value}
 								<option {if $value.mark_id == $tplData.articleRow.article_mark_id}selected{/if} value="{$value.mark_id}">{$value.mark_name}</option>
 							{/foreach}
 						</select>
@@ -262,7 +279,9 @@
 						<div class="input-group">
 							<input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
 							<span class="input-group-btn">
-								<button type="button" class="btn btn-info" id="spec_search">{$lang.btn.searchSpec}</button>
+								<button type="button" class="btn btn-info" id="spec_search">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
 							</span>
 						</div>
 					</div>
@@ -270,7 +289,7 @@
 					<div class="form-group">
 						<select name="article_spec_id" class="form-control">
 							<option value="">{$lang.option.noSpec}</option>
-							{if $tplData.specRow.spec_name}
+							{if isset($tplData.specRow.spec_name)}
 								<option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
 							{/if}
 							<optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
@@ -289,7 +308,7 @@
 		</div>
 	</div>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	function reload_spec(_key, _page) {
@@ -376,6 +395,7 @@
 
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=article",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -422,11 +442,11 @@
 		$("#article_tag").typeahead({
 			limit: 200,
 			prefetch: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=tag&act_get=list"
-		}).on("typeahead:selected", function (e, d) {
+		}).on("typeahead:selected", function(e, d) {
 			obj_tagMan.tagsManager("pushTag", d.value);
 		});
 
-		$("#tag_add").on("click", function (e) {
+		$("#tag_add").on("click", function(e) {
 			var _str_tag = $("#article_tag").val();
 			obj_tagMan.tagsManager("pushTag", _str_tag);
 		});
@@ -438,5 +458,5 @@
 	});
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

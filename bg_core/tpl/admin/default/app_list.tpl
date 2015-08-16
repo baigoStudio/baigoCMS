@@ -10,29 +10,31 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&{$tplData.query}"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
 	<li>{$adminMod.opt.sub.app.title}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
-			<ul class="list-inline">
-				<li>
-					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=form">
-						<span class="glyphicon glyphicon-plus"></span>
-						{$lang.href.add}
-					</a>
-				</li>
-				<li>
-					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=app" target="_blank">
-						<span class="glyphicon glyphicon-question-sign"></span>
-						{$lang.href.help}
-					</a>
-				</li>
-			</ul>
+			<div class="form-group">
+				<ul class="nav nav-pills nav_baigo">
+					<li>
+						<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=form">
+							<span class="glyphicon glyphicon-plus"></span>
+							{$lang.href.add}
+						</a>
+					</li>
+					<li>
+						<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=app" target="_blank">
+							<span class="glyphicon glyphicon-question-sign"></span>
+							{$lang.href.help}
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="pull-right">
 			<form name="app_search" id="app_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
@@ -47,12 +49,14 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
+					<div class="input-group">
+						<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-default btn-sm">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -79,7 +83,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $tplData.appRows as $value}
+						{foreach $tplData.appRows as $key=>$value}
 							{if $value.app_status == "enable"}
 								{$_css_status = "success"}
 							{else}
@@ -105,7 +109,7 @@
 								</td>
 								<td class="td_sm">
 									<ul class="list-unstyled">
-										<li>
+										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$status.app[$value.app_status]}</span>
 										</li>
 										<li>{$value.app_note}</li>
@@ -143,7 +147,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<form id="app_notice">
@@ -151,7 +155,7 @@
 		<input type="hidden" name="app_id_notice" id="app_id_notice" value="">
 	</form>
 
-{include "include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -172,6 +176,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -179,6 +184,7 @@
 
 	var opts_submit_notice = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -203,4 +209,4 @@
 	})
 	</script>
 
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}

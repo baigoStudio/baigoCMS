@@ -1,7 +1,28 @@
 {* article_form.tpl 文章编辑 *}
+{function custom_list arr=""}
+	{foreach $arr as $key=>$value}
+		{if $value.custom_childs}
+			<label class="control-label static_label">{$value.custom_name}</label>
+		{else}
+			<div class="form-group">
+				<label class="control-label static_label">{$value.custom_name}</label>
+				<p class="form-control-static static_input">
+					{if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}
+						{$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}
+					{/if}
+				</p>
+			</div>
+		{/if}
+
+		{if $value.custom_childs}
+			{custom_list arr=$value.custom_childs}
+		{/if}
+	{/foreach}
+{/function}
+
 {function cate_list arr="" level=""}
 	<ul class="list-unstyled{if $level > 0} list_padding{/if}">
-		{foreach $arr as $value}
+		{foreach $arr as $key=>$value}
 			<li>
 				<div class="checkbox_baigo">
 					<label>
@@ -23,18 +44,22 @@
 	sub_active     => "list"
 ]}
 
-{include "include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$lang.page.show}</li>
 
-	{include "include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
-		<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">
-			<span class="glyphicon glyphicon-chevron-left"></span>
-			{$lang.href.back}
-		</a>
+		<ul class="nav nav-pills nav_baigo">
+			<li>
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+					{$lang.href.back}
+				</a>
+			</li>
+		</ul>
 	</div>
 
 	<div class="row">
@@ -50,27 +75,25 @@
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.articleContent}</label>
-						<p class="form-control-static static_input">
+						<p class="form-control-static static_input content_baigo">
 							{$tplData.articleRow.article_content}
 						</p>
 					</div>
 
-					{foreach $tplData.customRows as $key=>$value}
-						<div class="form-group">
-							<label class="control-label static_label">{$value.custom_name}</label>
-							<p class="form-control-static static_input">
-								{if isset($tplData.articleRow.article_custom[{$value.custom_id}])}
-									{$tplData.articleRow.article_custom[{$value.custom_id}]}
-								{/if}
-							</p>
-						</div>
-					{/foreach}
+					<div class="form-group">
+						<label class="control-label static_label">{$lang.label.articleExcerpt}</label>
+						<p class="form-control-static static_input">
+							{$tplData.articleRow.article_excerpt}
+						</p>
+					</div>
+
+					{custom_list arr=$tplData.customRows}
 
 					<div class="form-group">
 						<label class="control-label static_label">{$lang.label.articleTag}</label>
 						<p class="form-control-static">
 							<ul class="list-inline">
-								{foreach $tplData.tagRows as $value}
+								{foreach $tplData.tagRows as $key=>$value}
 									<li>{$value.tag_name}</li>
 								{/foreach}
 							</ul>
@@ -85,10 +108,14 @@
 					</div>
 
 					<div class="form-group">
-						<label class="control-label static_label">{$lang.label.articleExcerpt}</label>
-						<p class="form-control-static static_input">
-							{$tplData.articleRow.article_excerpt}
-						</p>
+						<label class="control-label static_label">{$lang.label.hits}</label>
+						<ul class="list-inline">
+							<li>{$lang.label.hitsDay} {$tplData.articleRow.article_hits_day}</li>
+							<li>{$lang.label.hitsWeek} {$tplData.articleRow.article_hits_week}</li>
+							<li>{$lang.label.hitsMonth} {$tplData.articleRow.article_hits_month}</li>
+							<li>{$lang.label.hitsYear} {$tplData.articleRow.article_hits_year}</li>
+							<li>{$lang.label.hitsAll} {$tplData.articleRow.article_hits_all}</li>
+						</ul>
 					</div>
 
 					<div class="form-group">
@@ -144,7 +171,7 @@
 
 				<div class="form-group">
 					<label class="control-label static_label">{$lang.label.status}</label>
-					<p class="form-control-static">
+					<p class="form-control-static label_baigo">
 						<span class="label label-{$_css_status}">{$_str_status}</span>
 					</p>
 				</div>
@@ -178,6 +205,6 @@
 	</div>
 
 
-{include "include/admin_foot.tpl" cfg=$cfg}
-{include "include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
 

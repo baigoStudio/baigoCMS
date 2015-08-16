@@ -40,16 +40,15 @@ class CONTROL_THUMB {
 	function ctl_list() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
 			return array(
-				"str_alert" => "x090301",
+				"alert" => "x090301",
 			);
 			exit;
 		}
 
-		$_act_get     = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_num_thumbId = fn_getSafe(fn_get("thumb_id"), "int", 0);
 
 		$_arr_search = array(
-			"act_get"    => $_act_get,
+			"act_get"    => $GLOBALS["act_get"],
 		);
 
 		$_num_thumbCount  = $this->mdl_thumb->mdl_count();
@@ -59,7 +58,7 @@ class CONTROL_THUMB {
 
 		if ($_num_thumbId > 0) {
 			$_arr_thumbRow = $this->mdl_thumb->mdl_read($_num_thumbId);
-			if ($_arr_thumbRow["str_alert"] != "y090102") {
+			if ($_arr_thumbRow["alert"] != "y090102") {
 				return $_arr_thumbRow;
 				exit;
 			}
@@ -85,7 +84,7 @@ class CONTROL_THUMB {
 		$this->obj_tpl->tplDisplay("thumb_list.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y090301",
+			"alert" => "y090301",
 		);
 	}
 }

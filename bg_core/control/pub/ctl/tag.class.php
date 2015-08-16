@@ -19,13 +19,14 @@ class CONTROL_TAG {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
-		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
+		$this->mdl_cate           = new MODEL_CATE(); //设置文章对象
+		$this->mdl_custom         = new MODEL_CUSTOM();
 		$this->tag_init();
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
-		$this->mdl_tag        = new MODEL_TAG();
-		$this->mdl_articlePub = new MODEL_ARTICLE_PUB();
-		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
-		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
+		$this->obj_tpl            = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
+		$this->mdl_tag            = new MODEL_TAG();
+		$this->mdl_articlePub     = new MODEL_ARTICLE_PUB();
+		$this->mdl_attach         = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -40,21 +41,21 @@ class CONTROL_TAG {
 
 		if (!$_str_tagName) {
 			return array(
-				"str_alert" => "x130201",
+				"alert" => "x130201",
 			);
 			exit;
 		}
 
 		$_arr_tagRow = $this->mdl_tag->mdl_read($_str_tagName, "tag_name");
 
-		if ($_arr_tagRow["str_alert"] != "y130102") {
+		if ($_arr_tagRow["alert"] != "y130102") {
 			return $_arr_tagRow;
 			exit;
 		}
 
 		if ($_arr_tagRow["tag_status"] != "show") {
 			return array(
-				"str_alert" => "x130102",
+				"alert" => "x130102",
 			);
 		}
 
@@ -69,20 +70,33 @@ class CONTROL_TAG {
 		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$_arr_thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
 
 			if ($_value["article_attach_id"] > 0) {
-				$_arr_articleRows[$_key]["attachRow"]   = $this->mdl_attach->mdl_url($_value["article_attach_id"], $_arr_thumbRows);
+				$_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
+				if ($_arr_attachRow["alert"] == "y070102") {
+					if ($_arr_attachRow["attach_box"] != "normal") {
+						$_arr_attachRow = array(
+							"alert" => "x070102",
+						);
+					}
+				}
+				$_arr_articleRows[$_key]["attachRow"]   = $_arr_attachRow;
 			}
 
 			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
 				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
 			}
 
-			$_arr_articleRows[$_key]["cateRow"] = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+			$_arr_cateRow                        = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+			$_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
+
+			if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
+				$_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
+			}
 		}
 
 		//统计 tag 文章数
@@ -95,12 +109,13 @@ class CONTROL_TAG {
 			"tagRow"         => $_arr_tagRow,
 			"articleRows"    => $_arr_articleRows,
 			"cateRows"       => $this->cateRows,
+			"customRows"     => $this->customRows["custom_list"],
 		);
 
 		$this->obj_tpl->tplDisplay("tag_show.tpl", $_arr_tplData);
 
 		return array(
-			"str_alert" => "y130102",
+			"alert" => "y130102",
 		);
 	}
 
@@ -111,11 +126,9 @@ class CONTROL_TAG {
 		} else {
 			$this->config["tpl"] = "default";
 		}
-		$_act_get = fn_getSafe($GLOBALS["act_get"], "txt", "");
 
 		$this->search = array(
-			"act_get"    => $_act_get,
-			//"urlRow"     => $this->url_process(),
+			"act_get"    => $GLOBALS["act_get"],
 		);
 
 		if (BG_VISIT_TYPE == "static") {
@@ -127,8 +140,11 @@ class CONTROL_TAG {
 		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
 			$this->mdl_cate->mdl_cache();
 		}
-
 		$this->cateRows = include(BG_PATH_CACHE . "cate_trees.php");
-		//$this->cateRows = $this->mdl_cate->mdl_list(1000, 0, "show");
+
+		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+			$this->mdl_custom->mdl_cache();
+		}
+		$this->customRows = include(BG_PATH_CACHE . "custom_list.php");
 	}
 }

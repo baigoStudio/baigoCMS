@@ -1,7 +1,7 @@
 {* cate_show.tpl 栏目显示 *}
 {$cfg = [
 	title      => $tplData.cateRow.cate_name,
-	str_url    => "{$tplData.cateRow.urlRow.cate_url}{$tplData.cateRow.urlRow.page_attach}",
+	str_url    => "{$tplData.cateRow.urlRow.cate_url}key-{$tplData.search.key}/customs-{$tplData.search.customs}/{$tplData.cateRow.urlRow.page_attach}",
 	page_ext   => $tplData.search.page_ext
 ]}
 

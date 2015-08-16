@@ -24,7 +24,7 @@ class CLASS_TPL {
 	public $alert; //语言 返回代码
 	public $adminMod; //语言 后台
 	public $opt; //语言 设置
-	public $allow; //语言 权限
+	public $appMod; //语言 权限
 
 	function __construct($str_pathTpl) { //构造函数
 		$this->obj_base                   = $GLOBALS["obj_base"];
@@ -41,7 +41,7 @@ class CLASS_TPL {
 		$this->alert      = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入返回代码
 		$this->install    = include_once(BG_PATH_LANG . $this->config["lang"] . "/install.php"); //载入安装代码
 		$this->opt        = include_once(BG_PATH_LANG . $this->config["lang"] . "/opt.php"); //载入设置配置
-		$this->allow      = include_once(BG_PATH_LANG . $this->config["lang"] . "/allow.php"); //载入权限配置
+		$this->appMod     = include_once(BG_PATH_LANG . $this->config["lang"] . "/appMod.php"); //载入权限配置
 		$this->adminMod   = include_once(BG_PATH_LANG . $this->config["lang"] . "/adminMod.php"); //载入管理权限配置
 	}
 
@@ -71,7 +71,7 @@ class CLASS_TPL {
 		$this->obj_smarty->assign("alert", $this->alert);
 		$this->obj_smarty->assign("install", $this->install);
 		$this->obj_smarty->assign("opt", $this->opt);
-		$this->obj_smarty->assign("allow", $this->allow);
+		$this->obj_smarty->assign("appMod", $this->appMod);
 		$this->obj_smarty->assign("adminMod", $this->adminMod);
 		$this->obj_smarty->assign("tplData", $arr_tplData);
 

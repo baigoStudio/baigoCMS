@@ -22,19 +22,11 @@ class AJAX_MARK {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->mdl_mark       = new MODEL_MARK();
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -52,13 +44,13 @@ class AJAX_MARK {
 
 		$_arr_markSubmit = $this->mdl_mark->input_submit();
 
-		if ($_arr_markSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_markSubmit["str_alert"]);
+		if ($_arr_markSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_markSubmit["alert"]);
 		}
 
 		$_arr_markRow = $this->mdl_mark->mdl_submit();
 
-		$this->obj_ajax->halt_alert($_arr_markRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_markRow["alert"]);
 	}
 
 
@@ -74,13 +66,13 @@ class AJAX_MARK {
 		}
 
 		$_arr_markIds = $this->mdl_mark->input_ids();
-		if ($_arr_markIds["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_markIds["str_alert"]);
+		if ($_arr_markIds["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_markIds["alert"]);
 		}
 
 		$_arr_markRow = $this->mdl_mark->mdl_del();
 
-		$this->obj_ajax->halt_alert($_arr_markRow["str_alert"]);
+		$this->obj_ajax->halt_alert($_arr_markRow["alert"]);
 	}
 
 
@@ -94,7 +86,7 @@ class AJAX_MARK {
 		$_str_markName    = fn_getSafe(fn_get("mark_name"), "txt", "");
 		$_num_markId      = fn_getSafe(fn_get("mark_id"), "int", 0);
 		$_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, "mark_name", $_num_markId);
-		if ($_arr_markRow["str_alert"] == "y140102") {
+		if ($_arr_markRow["alert"] == "y140102") {
 			$this->obj_ajax->halt_re("x140203");
 		}
 

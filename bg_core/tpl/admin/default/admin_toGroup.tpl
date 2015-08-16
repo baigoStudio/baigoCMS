@@ -1,3 +1,7 @@
+{$cfg = [
+	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin"
+]}
+
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	{$adminMod.admin.main.title} - {$lang.href.toGroup}
@@ -25,7 +29,7 @@
 			<select name="group_id" id="group_id" class="validate form-control">
 				<option value="">{$lang.option.pleaseSelect}</option>
 				<option {if $tplData.adminRow.admin_group_id == 0}selected{/if} value="0">{$lang.option.noGroup}</option>
-				{foreach $tplData.groupRows as $value}
+				{foreach $tplData.groupRows as $key=>$value}
 					<option {if $tplData.adminRow.admin_group_id == $value.group_id}selected{/if} value="{$value.group_id}">{$value.group_name}</option>
 				{/foreach}
 			</select>
@@ -50,6 +54,7 @@ var opts_validator_form = {
 
 var opts_submit_form = {
 	ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin",
+		text_submitting: "{$lang.label.submitting}",
 	btn_text: "{$lang.btn.ok}",
 	btn_close: "{$lang.btn.close}",
 	btn_url: "{$cfg.str_url}"

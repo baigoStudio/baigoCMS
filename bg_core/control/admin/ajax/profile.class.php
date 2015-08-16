@@ -24,20 +24,12 @@ class AJAX_PROFILE {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_ajax       = new CLASS_AJAX();
+		$this->obj_ajax->chk_install();
 		$this->obj_sso        = new CLASS_SSO();
 		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
 
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030416");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030415");
-		}
-
-		if ($this->adminLogged["str_alert"] != "y020102") { //未登录，抛出错误信息
-			$this->obj_ajax->halt_alert($this->adminLogged["str_alert"]);
+		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
+			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
@@ -55,23 +47,23 @@ class AJAX_PROFILE {
 
 		$_arr_adminProfile = $this->mdl_admin->input_profile();
 
-		if ($_arr_adminProfile["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminProfile["str_alert"]);
+		if ($_arr_adminProfile["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminProfile["alert"]);
 		}
 
 		//检验MAIL是否重复
 		$_arr_ssoChk = $this->obj_sso->sso_chkmail($_arr_adminProfile["admin_mail"], $this->adminLogged["admin_id"]);
-		if ($_arr_ssoChk["str_alert"] != "y010211") {
-			$this->obj_ajax->halt_alert($_arr_ssoChk["str_alert"]);
+		if ($_arr_ssoChk["alert"] != "y010211") {
+			$this->obj_ajax->halt_alert($_arr_ssoChk["alert"]);
 		}
 
 		$_arr_ssoEdit     = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], "", "", $_arr_adminProfile["admin_mail"], $_arr_adminProfile["admin_nick"], "user_id");
 		$_arr_adminRow    = $this->mdl_admin->mdl_profile($this->adminLogged["admin_id"]);
 
-		if ($_arr_adminRow["str_alert"] == "y020103" || $_arr_ssoEdit["str_alert"] == "y010103") {
+		if ($_arr_adminRow["alert"] == "y020103" || $_arr_ssoEdit["alert"] == "y010103") {
 			$_str_alert = "y020108";
 		} else {
-			$_str_alert = $_arr_adminRow["str_alert"];
+			$_str_alert = $_arr_adminRow["alert"];
 		}
 
 		$this->obj_ajax->halt_alert($_str_alert);
@@ -91,16 +83,16 @@ class AJAX_PROFILE {
 
 		$_arr_adminPass = $this->input_pass();
 
-		if ($_arr_adminPass["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminPass["str_alert"]);
+		if ($_arr_adminPass["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminPass["alert"]);
 		}
 
 		$_arr_ssoEdit = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], $_arr_adminPass["admin_pass"], $_arr_adminPass["admin_pass_new"], "", "", "user_id", true);
 
-		if ($_arr_ssoEdit["str_alert"] == "y010103") {
+		if ($_arr_ssoEdit["alert"] == "y010103") {
 			$_str_alert = "y020109";
 		} else {
-			$_str_alert = $_arr_ssoEdit["str_alert"];
+			$_str_alert = $_arr_ssoEdit["alert"];
 		}
 
 		$this->obj_ajax->halt_alert($_str_alert);
@@ -116,7 +108,7 @@ class AJAX_PROFILE {
 	private function input_pass() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -125,7 +117,7 @@ class AJAX_PROFILE {
 		switch ($_arr_adminPassOld["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020210",
+					"alert" => "x020210",
 				);
 				exit;
 			break;
@@ -139,7 +131,7 @@ class AJAX_PROFILE {
 		switch ($_arr_adminPassNew["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020217",
+					"alert" => "x020217",
 				);
 				exit;
 			break;
@@ -153,7 +145,7 @@ class AJAX_PROFILE {
 		switch ($_arr_adminPassConfirm["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020215",
+					"alert" => "x020215",
 				);
 				exit;
 			break;
@@ -165,12 +157,12 @@ class AJAX_PROFILE {
 
 		if ($_arr_adminPass["admin_pass_new"] != $_arr_adminPass["admin_pass_confirm"]) {
 			return array(
-				"str_alert" => "x020211",
+				"alert" => "x020211",
 			);
 			exit;
 		}
 
-		$_arr_adminPass["str_alert"] = "ok";
+		$_arr_adminPass["alert"] = "ok";
 
 		return $_arr_adminPass;
 	}

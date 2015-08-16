@@ -25,7 +25,7 @@ class MODEL_ADMIN {
 			"admin_note"             => "varchar(30) NOT NULL COMMENT '备注'",
 			"admin_nick"             => "varchar(30) NOT NULL COMMENT '昵称'",
 			"admin_rand"             => "char(6) NOT NULL COMMENT '随机码'",
-			"admin_allow_cate"       => "varchar(1000) NOT NULL COMMENT '栏目权限'",
+			"admin_allow_cate"       => "text NOT NULL COMMENT '栏目权限'",
 			"admin_group_id"         => "smallint NOT NULL COMMENT '从属用户组ID'",
 			"admin_time"             => "int NOT NULL COMMENT '登录时间'",
 			"admin_time_login"       => "int NOT NULL COMMENT '最后登录'",
@@ -43,7 +43,7 @@ class MODEL_ADMIN {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -83,7 +83,7 @@ class MODEL_ADMIN {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -102,7 +102,7 @@ class MODEL_ADMIN {
 		}
 
 		return array(
-			"str_alert"  => $_str_alert, //成功
+			"alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -130,7 +130,7 @@ class MODEL_ADMIN {
 			"admin_allow_profile"    => $this->adminSubmit["admin_allow_profile"],
 		);
 
-		if ($_arr_adminRow["str_alert"] == "x020102") {
+		if ($_arr_adminRow["alert"] == "x020102") {
 			$_arr_insert = array(
 				"admin_id"      => $num_adminId,
 				"admin_rand"    => fn_rand(6),
@@ -143,7 +143,7 @@ class MODEL_ADMIN {
 				$_str_alert = "y020101"; //插入成功
 			} else {
 				return array(
-					"str_alert" => "x020101", //更新失败
+					"alert" => "x020101", //更新失败
 				);
 				exit;
 			}
@@ -154,7 +154,7 @@ class MODEL_ADMIN {
 				$_str_alert = "y020103"; //更新成功
 			} else {
 				return array(
-					"str_alert" => "x020103", //更新失败
+					"alert" => "x020103", //更新失败
 				);
 				exit;
 			}
@@ -162,7 +162,7 @@ class MODEL_ADMIN {
 
 		return array(
 			"admin_id"   => $_num_adminId,
-			"str_alert"  => $_str_alert, //成功
+			"alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -186,14 +186,14 @@ class MODEL_ADMIN {
 			$_str_alert = "y020103"; //更新成功
 		} else {
 			return array(
-				"str_alert" => "x020103", //更新失败
+				"alert" => "x020103", //更新失败
 			);
 			exit;
 		}
 
 		return array(
 			"admin_id"   => $num_adminId,
-			"str_alert"  => $_str_alert, //成功
+			"alert"  => $_str_alert, //成功
 		);
 	}
 
@@ -224,7 +224,7 @@ class MODEL_ADMIN {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 
 	}
@@ -259,7 +259,7 @@ class MODEL_ADMIN {
 			$_arr_adminRow = $_arr_adminRows[0];
 		} else {
 			return array(
-				"str_alert" => "x020102", //不存在记录
+				"alert" => "x020102", //不存在记录
 			);
 			exit;
 		}
@@ -284,7 +284,7 @@ class MODEL_ADMIN {
 			$_arr_adminRow["admin_allow"]["pass"] = 0;
 		}
 
-		$_arr_adminRow["str_alert"]           = "y020102";
+		$_arr_adminRow["alert"]           = "y020102";
 
 		return $_arr_adminRow;
 
@@ -387,7 +387,7 @@ class MODEL_ADMIN {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 
 	}
@@ -396,7 +396,7 @@ class MODEL_ADMIN {
 	function input_profile() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -406,7 +406,7 @@ class MODEL_ADMIN {
 		switch ($_arr_adminNick["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x020216",
+					"alert" => "x020216",
 				);
 				exit;
 			break;
@@ -420,14 +420,14 @@ class MODEL_ADMIN {
 		switch ($_arr_adminMail["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x020208",
+					"alert" => "x020208",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x020209",
+					"alert" => "x020209",
 				);
 				exit;
 			break;
@@ -437,7 +437,7 @@ class MODEL_ADMIN {
 			break;
 		}
 
-		$this->adminProfile["str_alert"] = "ok";
+		$this->adminProfile["alert"] = "ok";
 
 		return $this->adminProfile;
 	}
@@ -452,7 +452,7 @@ class MODEL_ADMIN {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -461,7 +461,7 @@ class MODEL_ADMIN {
 
 		if ($this->adminSubmit["admin_id"] > 0) {
 			$_arr_adminRow = $this->mdl_read($this->adminSubmit["admin_id"]);
-			if ($_arr_adminRow["str_alert"] != "y020102") {
+			if ($_arr_adminRow["alert"] != "y020102") {
 				return $_arr_adminRow;
 				exit;
 			}
@@ -471,21 +471,21 @@ class MODEL_ADMIN {
 		switch ($_arr_adminName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020201",
+					"alert" => "x020201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x020202",
+					"alert" => "x020202",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x020203",
+					"alert" => "x020203",
 				);
 				exit;
 			break;
@@ -499,14 +499,14 @@ class MODEL_ADMIN {
 		switch ($_arr_adminMail["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x020208",
+					"alert" => "x020208",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x020209",
+					"alert" => "x020209",
 				);
 				exit;
 			break;
@@ -521,7 +521,7 @@ class MODEL_ADMIN {
 		switch ($_arr_adminNick["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x020216",
+					"alert" => "x020216",
 				);
 				exit;
 			break;
@@ -535,7 +535,7 @@ class MODEL_ADMIN {
 		switch ($_arr_adminNote["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x020212",
+					"alert" => "x020212",
 				);
 				exit;
 			break;
@@ -549,7 +549,7 @@ class MODEL_ADMIN {
 		switch ($_arr_adminStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020213",
+					"alert" => "x020213",
 				);
 				exit;
 			break;
@@ -562,7 +562,7 @@ class MODEL_ADMIN {
 
 		$this->adminSubmit["admin_allow_cate"]    = fn_jsonEncode(fn_post("admin_allow_cate"), "no");
 		$this->adminSubmit["admin_allow_profile"] = fn_jsonEncode(fn_post("admin_allow_profile"), "no");
-		$this->adminSubmit["str_alert"]           = "ok";
+		$this->adminSubmit["alert"]           = "ok";
 
 		return $this->adminSubmit;
 	}
@@ -577,7 +577,7 @@ class MODEL_ADMIN {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -594,7 +594,7 @@ class MODEL_ADMIN {
 		}
 
 		$this->adminIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"admin_ids"   => $_arr_adminIds
 		);
 

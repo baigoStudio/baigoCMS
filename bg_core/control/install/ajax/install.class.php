@@ -12,6 +12,7 @@ if(!defined("IN_BAIGO")) {
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "sso.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
+include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 
 class AJAX_INSTALL {
 
@@ -25,6 +26,7 @@ class AJAX_INSTALL {
 			$this->obj_ajax->halt_alert("x030403");
 		}
 		$this->install_init();
+		$this->mdl_opt = new MODEL_OPT();
 	}
 
 
@@ -35,28 +37,11 @@ class AJAX_INSTALL {
 	 * @return void
 	 */
 	function ajax_dbconfig() {
-		if (!fn_token("chk")) { //令牌
-			$this->obj_ajax->halt_alert("x030102");
+		$_arr_return = $this->mdl_opt->mdl_dbconfig();
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
 		}
-
-		$_str_dbHost      = fn_getSafe(fn_post("db_host"), "txt", "localhost");
-		$_str_dbPort      = fn_getSafe(fn_post("db_port"), "txt", "3306");
-		$_str_dbName      = fn_getSafe(fn_post("db_name"), "txt", "baigo_cms");
-		$_str_dbUser      = fn_getSafe(fn_post("db_user"), "txt", "baigo_cms");
-		$_str_dbPass      = fn_getSafe(fn_post("db_pass"), "txt", "");
-		$_str_dbCharset   = fn_getSafe(fn_post("db_charset"), "txt", "utf8");
-		$_str_dbTable     = fn_getSafe(fn_post("db_table"), "txt", "cms_");
-
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_HOST\", \"" . $_str_dbHost . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_PORT\", \"" . $_str_dbPort . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_NAME\", \"" . $_str_dbName . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_USER\", \"" . $_str_dbUser . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_PASS\", \"" . $_str_dbPass . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $_str_dbCharset . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_TABLE\", \"" . $_str_dbTable . "\");" . PHP_EOL;
-
-		file_put_contents(BG_PATH_CONFIG . "config_db.inc.php", $_str_content);
 
 		$this->obj_ajax->halt_alert("y030404");
 	}
@@ -79,7 +64,6 @@ class AJAX_INSTALL {
 		$this->table_group();
 		$this->table_mark();
 		$this->table_mime();
-		$this->table_opt();
 		$this->table_tag();
 		$this->table_tag_belong();
 		$this->table_thumb();
@@ -89,6 +73,7 @@ class AJAX_INSTALL {
 		$this->table_custom();
 		$this->view_article();
 		$this->view_tag();
+		//$this->view_custom();
 
 		$this->obj_ajax->halt_alert("y030103");
 	}
@@ -102,9 +87,12 @@ class AJAX_INSTALL {
 	 */
 	function ajax_base() {
 		$this->check_db();
-		$this->check_opt();
 
-		$_arr_optPost = $this->opt_post("base");
+		$_arr_return = $this->mdl_opt->mdl_const("base");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y030405");
 	}
@@ -118,36 +106,22 @@ class AJAX_INSTALL {
 	 */
 	function ajax_visit() {
 		$this->check_db();
-		$this->check_opt();
 
-		$_arr_optPost = $this->opt_post("visit");
+		$_arr_return = $this->mdl_opt->mdl_const("visit");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$_arr_opt = fn_post("opt");
 
 		if ($_arr_opt["BG_VISIT_TYPE"] == "pstatic") {
 
-			$_str_content = "# BEGIN baigo CMS" . PHP_EOL;
-			$_str_content .= "<IfModule mod_rewrite.c>" . PHP_EOL;
-				$_str_content .= "RewriteEngine On" . PHP_EOL;
-				$_str_content .= "RewriteBase /" . PHP_EOL;
-				$_str_content .= "RewriteRule ^article/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=article&act_get=show&article_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^cate/(.*/)([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=cate&act_get=show&cate_id=$2&page=$3 [L]" . PHP_EOL;
-				/*$_str_content .= "RewriteRule ^tag/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=list&page=$1 [L]" . PHP_EOL;*/
-				$_str_content .= "RewriteRule ^tag/(.*)/$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^tag/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=list&page=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^spec/([0-9]*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=spec&act_get=show&spec_id=$1&page=$2 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/(.*)/$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1 [L]" . PHP_EOL;
-				$_str_content .= "RewriteRule ^search/(.*)/([0-9]*)$ " . BG_URL_ROOT . "index.php?mod=search&act_get=show&key=$1&page=$2 [L]" . PHP_EOL;			$_str_content .= "</IfModule>" . PHP_EOL;
-			$_str_content .= "# END baigo CMS" . PHP_EOL;
+			$_arr_return = $this->mdl_opt->mdl_htaccess();
 
-			file_put_contents(BG_PATH_ROOT . ".htaccess", $_str_content);
+			if ($_arr_return["alert"] != "y060101") {
+				$this->obj_ajax->halt_alert($_arr_return["alert"]);
+			}
 
 		} else {
 			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
@@ -167,9 +141,12 @@ class AJAX_INSTALL {
 	 */
 	function ajax_upload() {
 		$this->check_db();
-		$this->check_opt();
 
-		$_arr_optPost = $this->opt_post("upload");
+		$_arr_return = $this->mdl_opt->mdl_const("upload");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y030407");
 	}
@@ -183,9 +160,12 @@ class AJAX_INSTALL {
 	 */
 	function ajax_sso() {
 		$this->check_db();
-		$this->check_opt();
 
-		$_arr_optPost = $this->opt_post("sso");
+		$_arr_return = $this->mdl_opt->mdl_const("sso");
+
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y030408");
 	}
@@ -203,7 +183,6 @@ class AJAX_INSTALL {
 		}
 
 		$this->check_db();
-		$this->check_opt();
 
 		$this->sso_dbconfig();
 		$this->sso_base();
@@ -221,30 +200,53 @@ class AJAX_INSTALL {
 	 */
 	function ajax_admin() {
 		$this->check_db();
-		$this->check_opt();
 
 		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
+		include_once(BG_PATH_MODEL . "group.class.php"); //载入管理帐号模型
 		$_mdl_admin  = new MODEL_ADMIN(); //设置管理组模型
+		$_mdl_group  = new MODEL_GROUP(); //设置管理组模型
 
 		$_arr_adminSubmit = $_mdl_admin->input_submit();
-		if ($_arr_adminSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminSubmit["str_alert"]);
+		if ($_arr_adminSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminSubmit["alert"]);
 		}
 
 		$_arr_adminInput = $this->input_admin();
 
-		if ($_arr_adminInput["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminInput["str_alert"]);
+		if ($_arr_adminInput["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminInput["alert"]);
 		}
 
 		$this->obj_sso = new CLASS_SSO();
 
 		$_arr_ssoReg = $this->obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
-		if ($_arr_ssoReg["str_alert"] != "y010101") {
-			$this->obj_ajax->halt_alert($_arr_ssoReg["str_alert"]);
+		if ($_arr_ssoReg["alert"] != "y010101") {
+			$this->obj_ajax->halt_alert($_arr_ssoReg["alert"]);
 		}
 
 		$_mdl_admin->mdl_submit($_arr_ssoReg["user_id"]);
+
+		$_arr_groupRow    = $_mdl_group->mdl_read(1);
+
+		$_str_grouAllow   = json_encode($_arr_adminSubmit["group_allow"]);
+
+		$_arr_groupData   = array(
+			"group_name"     => "超级管理组",
+			"group_note"     => "拥有所有权限",
+			"group_allow"    => $_str_grouAllow,
+			"group_type"     => "admin",
+			"group_status"   => "enable",
+		);
+
+		if ($_arr_groupRow["alert"] == "y040102") {
+			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=1");
+		} else {
+			$_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
+			if ($_num_groupId <= 0 || !$_num_groupId) {
+				$this->obj_ajax->halt_alert("x040101");
+			}
+		}
+
 		$_mdl_admin->mdl_toGroup($_arr_ssoReg["user_id"], 1);
 
 		$this->obj_ajax->halt_alert("y030409");
@@ -253,30 +255,53 @@ class AJAX_INSTALL {
 
 	function ajax_auth() {
 		$this->check_db();
-		$this->check_opt();
 
 		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
+		include_once(BG_PATH_MODEL . "group.class.php"); //载入管理帐号模型
 		$_mdl_admin  = new MODEL_ADMIN(); //设置管理组模型
+		$_mdl_group  = new MODEL_GROUP(); //设置管理组模型
 
 		$_arr_adminSubmit = $_mdl_admin->input_submit();
-		if ($_arr_adminSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminSubmit["str_alert"]);
+		if ($_arr_adminSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminSubmit["alert"]);
 		}
 
 		$_arr_adminAuth = $this->input_auth();
 
-		if ($_arr_adminAuth["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminAuth["str_alert"]);
+		if ($_arr_adminAuth["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminAuth["alert"]);
 		}
 
 		$this->obj_sso = new CLASS_SSO();
 
 		$_arr_ssoLogin = $this->obj_sso->sso_login($_arr_adminSubmit["admin_name"], $this->adminAuth["admin_pass"]);
-		if ($_arr_ssoLogin["str_alert"] != "y010401") {
-			$this->obj_ajax->halt_alert($_arr_ssoLogin["str_alert"]);
+		if ($_arr_ssoLogin["alert"] != "y010401") {
+			$this->obj_ajax->halt_alert($_arr_ssoLogin["alert"]);
 		}
 
 		$_mdl_admin->mdl_submit($_arr_ssoLogin["user_id"]);
+
+		$_arr_groupRow    = $_mdl_group->mdl_read(1);
+
+		$_str_grouAllow   = json_encode($_arr_adminSubmit["group_allow"]);
+
+		$_arr_groupData   = array(
+			"group_name"     => "超级管理组",
+			"group_note"     => "拥有所有权限",
+			"group_allow"    => $_str_grouAllow,
+			"group_type"     => "admin",
+			"group_status"   => "enable",
+		);
+
+		if ($_arr_groupRow["alert"] == "y040102") {
+			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=1");
+		} else {
+			$_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
+			if ($_num_groupId <= 0 || !$_num_groupId) {
+				$this->obj_ajax->halt_alert("x040101");
+			}
+		}
+
 		$_mdl_admin->mdl_toGroup($_arr_ssoLogin["user_id"], 1);
 
 		$this->obj_ajax->halt_alert("y030409");
@@ -285,27 +310,26 @@ class AJAX_INSTALL {
 
 	function ajax_ssoAdmin() {
 		$this->check_db();
-		$this->check_opt();
 
 		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
 		$_mdl_admin  = new MODEL_ADMIN(); //设置管理组模型
 
 		$_arr_adminSubmit = $_mdl_admin->input_submit();
-		if ($_arr_adminSubmit["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminSubmit["str_alert"]);
+		if ($_arr_adminSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminSubmit["alert"]);
 		}
 
 		$_arr_adminInput = $this->input_admin();
 
-		if ($_arr_adminInput["str_alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_adminInput["str_alert"]);
+		if ($_arr_adminInput["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_adminInput["alert"]);
 		}
 
 		$this->obj_sso = new CLASS_SSO();
 
 		$_arr_ssoReg = $this->obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
-		if ($_arr_ssoReg["str_alert"] != "y010101") {
-			$this->obj_ajax->halt_alert($_arr_ssoReg["str_alert"]);
+		if ($_arr_ssoReg["alert"] != "y010101") {
+			$this->obj_ajax->halt_alert($_arr_ssoReg["alert"]);
 		}
 
 		$_mdl_admin->mdl_submit($_arr_ssoReg["user_id"]);
@@ -317,8 +341,8 @@ class AJAX_INSTALL {
 
 				$_arr_ssoAdmin = $this->obj_sso->sso_admin($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"]);
 
-				if ($_arr_ssoAdmin["str_alert"] != "y020101" && $_arr_ssoAdmin["str_alert"] != "y020103") {
-					$this->obj_ajax->halt_alert($_arr_ssoAdmin["str_alert"]);
+				if ($_arr_ssoAdmin["alert"] != "y020101" && $_arr_ssoAdmin["alert"] != "y020103") {
+					$this->obj_ajax->halt_alert($_arr_ssoAdmin["alert"]);
 				}
 
 				$this->install_sso_over();
@@ -331,14 +355,12 @@ class AJAX_INSTALL {
 
 	function ajax_over() {
 		$this->check_db();
-		$this->check_opt();
 
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_INSTALL_VER\", \"" . PRD_CMS_VER . "\");" . PHP_EOL;
-		$_str_content .= "define(\"BG_INSTALL_PUB\", " . PRD_CMS_PUB . ");" . PHP_EOL;
-		$_str_content .= "define(\"BG_INSTALL_TIME\", " . time() . ");" . PHP_EOL;
+		$_arr_return = $this->mdl_opt->mdl_over();
 
-		file_put_contents(BG_PATH_CONFIG . "is_install.php", $_str_content);
+		if ($_arr_return["alert"] != "y060101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
 
 		$this->obj_ajax->halt_alert("y030411");
 	}
@@ -352,16 +374,16 @@ class AJAX_INSTALL {
 		$_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
 		$_arr_ssoGet      = $this->obj_sso->sso_get($_str_adminName, "user_name");
 
-		if ($_arr_ssoGet["str_alert"] != "y010102") {
-			if ($_arr_ssoGet["str_alert"] == "x010102") {
+		if ($_arr_ssoGet["alert"] != "y010102") {
+			if ($_arr_ssoGet["alert"] == "x010102") {
 				$this->obj_ajax->halt_re("x020205");
 			} else {
-				$this->obj_ajax->halt_re($_arr_ssoGet["str_alert"]);
+				$this->obj_ajax->halt_re($_arr_ssoGet["alert"]);
 			}
 		} else {
 			//检验用户是否存在
 			$_arr_adminRow = $this->mdl_admin->mdl_read($_arr_ssoGet["user_id"]);
-			if ($_arr_adminRow["str_alert"] == "y020102") {
+			if ($_arr_adminRow["alert"] == "y020102") {
 				$this->obj_ajax->halt_re("x020206");
 			}
 		}
@@ -371,41 +393,6 @@ class AJAX_INSTALL {
 		);
 
 		exit(json_encode($arr_re));
-	}
-
-
-	/**
-	 * opt_post function.
-	 *
-	 * @access private
-	 * @param mixed $str_type
-	 * @return void
-	 */
-	private function opt_post($str_type) {
-		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
-		$_mdl_opt    = new MODEL_OPT();
-
-		$_arr_opt = fn_post("opt");
-
-		$_str_content = "<?php" . PHP_EOL;
-		foreach ($_arr_opt as $_key=>$_value) {
-			$_arr_optChk = validateStr($_value, 1, 900);
-			$_str_optValue = $_arr_optChk["str"];
-			if (is_numeric($_value)) {
-				$_str_content .= "define(\"" . $_key . "\", " . $_str_optValue . ");" . PHP_EOL;
-			} else {
-				$_str_content .= "define(\"" . $_key . "\", \"" . str_replace(PHP_EOL, "|", $_str_optValue) . "\");" . PHP_EOL;
-			}
-			$_arr_optRow = $_mdl_opt->mdl_submit($_key, $_str_optValue);
-		}
-
-		if ($str_type == "base") {
-			$_str_content .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
-		}
-
-		$_str_content = str_replace("||", "", $_str_content);
-
-		file_put_contents(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_content);
 	}
 
 
@@ -420,8 +407,8 @@ class AJAX_INSTALL {
 		$_mdl_admin  = new MODEL_ADMIN();
 
 		$_arr_adminRow    = $_mdl_admin->mdl_create_table();
-		if ($_arr_adminRow["str_alert"] != "y020105") {
-			$this->obj_ajax->halt_alert($_arr_adminRow["str_alert"]);
+		if ($_arr_adminRow["alert"] != "y020105") {
+			$this->obj_ajax->halt_alert($_arr_adminRow["alert"]);
 		}
 	}
 
@@ -437,13 +424,13 @@ class AJAX_INSTALL {
 		$_mdl_article     = new MODEL_ARTICLE();
 
 		$_arr_articleRow  = $_mdl_article->mdl_create_table();
-		if ($_arr_articleRow["str_alert"] != "y120105") {
-			$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
+		if ($_arr_articleRow["alert"] != "y120105") {
+			$this->obj_ajax->halt_alert($_arr_articleRow["alert"]);
 		}
 
 		$_arr_articleRow  = $_mdl_article->mdl_create_index();
-		if ($_arr_articleRow["str_alert"] != "y120109") {
-			$this->obj_ajax->halt_alert($_arr_articleRow["str_alert"]);
+		if ($_arr_articleRow["alert"] != "y120109") {
+			$this->obj_ajax->halt_alert($_arr_articleRow["alert"]);
 		}
 	}
 
@@ -459,8 +446,8 @@ class AJAX_INSTALL {
 		$_mdl_call  = new MODEL_CALL();
 
 		$_arr_callRow    = $_mdl_call->mdl_create_table();
-		if ($_arr_callRow["str_alert"] != "y170105") {
-			$this->obj_ajax->halt_alert($_arr_callRow["str_alert"]);
+		if ($_arr_callRow["alert"] != "y170105") {
+			$this->obj_ajax->halt_alert($_arr_callRow["alert"]);
 		}
 	}
 
@@ -476,13 +463,13 @@ class AJAX_INSTALL {
 		$_mdl_cate  = new MODEL_CATE();
 
 		$_arr_cateRow    = $_mdl_cate->mdl_create_table();
-		if ($_arr_cateRow["str_alert"] != "y110105") {
-			$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		if ($_arr_cateRow["alert"] != "y110105") {
+			$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 		}
 
 		$_arr_cateRow  = $_mdl_cate->mdl_create_index();
-		if ($_arr_cateRow["str_alert"] != "y110109") {
-			$this->obj_ajax->halt_alert($_arr_cateRow["str_alert"]);
+		if ($_arr_cateRow["alert"] != "y110109") {
+			$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 		}
 	}
 
@@ -498,8 +485,8 @@ class AJAX_INSTALL {
 		$_mdl_cateBelong = new MODEL_CATE_BELONG();
 
 		$_arr_belongRow       = $_mdl_cateBelong->mdl_create_table();
-		if ($_arr_belongRow["str_alert"] != "y150105") {
-			$this->obj_ajax->halt_alert($_arr_belongRow["str_alert"]);
+		if ($_arr_belongRow["alert"] != "y150105") {
+			$this->obj_ajax->halt_alert($_arr_belongRow["alert"]);
 		}
 	}
 
@@ -509,14 +496,19 @@ class AJAX_INSTALL {
 		$_mdl_articlePub  = new MODEL_ARTICLE_PUB();
 
 		$_arr_articlePubRow  = $_mdl_articlePub->mdl_create_cate_view();
-		if ($_arr_articlePubRow["str_alert"] != "y120108") {
-			$this->obj_ajax->halt_alert($_arr_articlePubRow["str_alert"]);
+		if ($_arr_articlePubRow["alert"] != "y150108") {
+			$this->obj_ajax->halt_alert($_arr_articlePubRow["alert"]);
 		}
 
 		$_arr_articlePubRow  = $_mdl_articlePub->mdl_create_tag_view();
-		if ($_arr_articlePubRow["str_alert"] != "y120108") {
-			$this->obj_ajax->halt_alert($_arr_articlePubRow["str_alert"]);
+		if ($_arr_articlePubRow["alert"] != "y160108") {
+			$this->obj_ajax->halt_alert($_arr_articlePubRow["alert"]);
 		}
+
+		/*$_arr_articlePubRow  = $_mdl_articlePub->mdl_create_custom_view();
+		if ($_arr_articlePubRow["alert"] != "y210108") {
+			$this->obj_ajax->halt_alert($_arr_articlePubRow["alert"]);
+		}*/
 	}
 
 
@@ -528,87 +520,11 @@ class AJAX_INSTALL {
 	 */
 	private function table_group() {
 		include_once(BG_PATH_MODEL . "group.class.php"); //载入管理帐号模型
-		$_mdl_group  = new MODEL_GROUP();
+		$_mdl_group       = new MODEL_GROUP();
 
 		$_arr_groupRow    = $_mdl_group->mdl_create_table();
-		if ($_arr_groupRow["str_alert"] != "y040105") {
-			$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
-		}
-
-		$_arr_groupRow = $_mdl_group->mdl_read(1);
-
-		$_arr_grouAllow   = array(
-			"article"        => array(
-				"browse"        => 1,
-				"add"           => 1,
-				"edit"          => 1,
-				"del"           => 1,
-				"approve"       => 1,
-				"spec"          => 1,
-				"tag"           => 1,
-				"mark"          => 1,
-			),
-			"cate"           => array(
-				"browse"        => 1,
-				"add"           => 1,
-				"edit"          => 1,
-				"del"           => 1,
-			),
-			"attach"         => array(
-				"browse"        => 1,
-				"del"           => 1,
-				"upload"        => 1,
-				"mime"          => 1,
-				"thumb"         => 1,
-			),
-			"call"           => array(
-				"browse"        => 1,
-				"add"           => 1,
-				"edit"          => 1,
-				"del"           => 1,
-				"gen"           => 1,
-			),
-			"admin"          => array(
-				"browse"        => 1,
-				"add"           => 1,
-				"edit"          => 1,
-				"del"           => 1,
-				"toGroup"       => 1,
-			),
-			"group"          => array(
-				"browse"        => 1,
-				"add"           => 1,
-				"edit"          => 1,
-				"del"           => 1,
-			),
-			"opt"            => array(
-				"db"            => 1,
-				"base"          => 1,
-				"visit"         => 1,
-				"upload"        => 1,
-				"sso"           => 1,
-				"gen"           => 1,
-				"api"           => 1,
-			),
-		);
-
-		$_str_grouAllow = json_encode($_arr_grouAllow);
-
-		$_arr_groupData = array(
-			"group_name"     => "超级管理组",
-			"group_note"     => "拥有所有权限",
-			"group_allow"    => $_str_grouAllow,
-			"group_type"     => "admin",
-			"group_status"   => "enable",
-		);
-
-		if ($_arr_groupRow["str_alert"] == "y040102") {
-			$_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=1");
-		} else {
-			$_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
-			if ($_num_groupId <= 0 || !$_num_groupId) {
-				$this->obj_ajax->halt_alert("x040101");
-			}
+		if ($_arr_groupRow["alert"] != "y040105") {
+			$this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
 		}
 	}
 
@@ -624,8 +540,8 @@ class AJAX_INSTALL {
 		$_mdl_mark    = new MODEL_MARK();
 
 		$_arr_markRow = $_mdl_mark->mdl_create_table();
-		if ($_arr_markRow["str_alert"] != "y140105") {
-			$this->obj_ajax->halt_alert($_arr_markRow["str_alert"]);
+		if ($_arr_markRow["alert"] != "y140105") {
+			$this->obj_ajax->halt_alert($_arr_markRow["alert"]);
 		}
 	}
 
@@ -635,8 +551,8 @@ class AJAX_INSTALL {
 		$_mdl_spec    = new MODEL_SPEC();
 
 		$_arr_specRow = $_mdl_spec->mdl_create_table();
-		if ($_arr_specRow["str_alert"] != "y180105") {
-			$this->obj_ajax->halt_alert($_arr_specRow["str_alert"]);
+		if ($_arr_specRow["alert"] != "y180105") {
+			$this->obj_ajax->halt_alert($_arr_specRow["alert"]);
 		}
 	}
 
@@ -651,25 +567,8 @@ class AJAX_INSTALL {
 		$_mdl_mime    = new MODEL_MIME();
 
 		$_arr_mimeRow = $_mdl_mime->mdl_create_table();
-		if ($_arr_mimeRow["str_alert"] != "y080105") {
-			$this->obj_ajax->halt_alert($_arr_mimeRow["str_alert"]);
-		}
-	}
-
-
-	/**
-	 * table_opt function.
-	 *
-	 * @access private
-	 * @return void
-	 */
-	private function table_opt() {
-		include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
-		$_mdl_opt     = new MODEL_OPT();
-
-		$_arr_optRow  = $_mdl_opt->mdl_create_table();
-		if ($_arr_optRow["str_alert"] != "y060105") {
-			$this->obj_ajax->halt_alert($_arr_optRow["str_alert"]);
+		if ($_arr_mimeRow["alert"] != "y080105") {
+			$this->obj_ajax->halt_alert($_arr_mimeRow["alert"]);
 		}
 	}
 
@@ -685,8 +584,8 @@ class AJAX_INSTALL {
 		$_mdl_tag     = new MODEL_TAG();
 
 		$_arr_tagRow  = $_mdl_tag->mdl_create_table();
-		if ($_arr_tagRow["str_alert"] != "y130105") {
-			$this->obj_ajax->halt_alert($_arr_tagRow["str_alert"]);
+		if ($_arr_tagRow["alert"] != "y130105") {
+			$this->obj_ajax->halt_alert($_arr_tagRow["alert"]);
 		}
 	}
 
@@ -702,13 +601,13 @@ class AJAX_INSTALL {
 		$_mdl_tagBelong   = new MODEL_TAG_BELONG();
 
 		$_arr_belongRow   = $_mdl_tagBelong->mdl_create_table();
-		if ($_arr_belongRow["str_alert"] != "y160105") {
-			$this->obj_ajax->halt_alert($_arr_belongRow["str_alert"]);
+		if ($_arr_belongRow["alert"] != "y160105") {
+			$this->obj_ajax->halt_alert($_arr_belongRow["alert"]);
 		}
 
 		$_arr_belongRow   = $_mdl_tagBelong->mdl_create_index();
-		if ($_arr_belongRow["str_alert"] != "y160109") {
-			$this->obj_ajax->halt_alert($_arr_belongRow["str_alert"]);
+		if ($_arr_belongRow["alert"] != "y160109") {
+			$this->obj_ajax->halt_alert($_arr_belongRow["alert"]);
 		}
 	}
 
@@ -718,8 +617,8 @@ class AJAX_INSTALL {
 		$_mdl_tagBelong  = new MODEL_TAG_BELONG();
 
 		$_arr_tagBelongRow  = $_mdl_tagBelong->mdl_create_view();
-		if ($_arr_tagBelongRow["str_alert"] != "y160108") {
-			$this->obj_ajax->halt_alert($_arr_tagBelongRow["str_alert"]);
+		if ($_arr_tagBelongRow["alert"] != "y160108") {
+			$this->obj_ajax->halt_alert($_arr_tagBelongRow["alert"]);
 		}
 	}
 
@@ -734,8 +633,8 @@ class AJAX_INSTALL {
 		$_mdl_thumb  = new MODEL_THUMB();
 
 		$_arr_thumbRow    = $_mdl_thumb->mdl_create_table();
-		if ($_arr_thumbRow["str_alert"] != "y090105") {
-			$this->obj_ajax->halt_alert($_arr_thumbRow["str_alert"]);
+		if ($_arr_thumbRow["alert"] != "y090105") {
+			$this->obj_ajax->halt_alert($_arr_thumbRow["alert"]);
 		}
 	}
 
@@ -751,8 +650,8 @@ class AJAX_INSTALL {
 		$_mdl_attach  = new MODEL_ATTACH();
 
 		$_arr_attachRow    = $_mdl_attach->mdl_create_table();
-		if ($_arr_attachRow["str_alert"] != "y070105") {
-			$this->obj_ajax->halt_alert($_arr_attachRow["str_alert"]);
+		if ($_arr_attachRow["alert"] != "y070105") {
+			$this->obj_ajax->halt_alert($_arr_attachRow["alert"]);
 		}
 	}
 
@@ -762,8 +661,8 @@ class AJAX_INSTALL {
 		$_mdl_app     = new MODEL_APP();
 
 		$_arr_appRow  = $_mdl_app->mdl_create_table();
-		if ($_arr_appRow["str_alert"] != "y190105") {
-			$this->obj_ajax->halt_alert($_arr_appRow["str_alert"]);
+		if ($_arr_appRow["alert"] != "y190105") {
+			$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
 		}
 	}
 
@@ -773,10 +672,17 @@ class AJAX_INSTALL {
 		$_mdl_custom     = new MODEL_CUSTOM();
 
 		$_arr_customRow  = $_mdl_custom->mdl_create_table();
-		if ($_arr_customRow["str_alert"] != "y200105") {
-			$this->obj_ajax->halt_alert($_arr_customRow["str_alert"]);
+		if ($_arr_customRow["alert"] != "y200105") {
+			$this->obj_ajax->halt_alert($_arr_customRow["alert"]);
 		}
 	}
+
+
+
+	private function view_custom() {
+
+	}
+
 
 	/**
 	 * sso_dbconfig function.
@@ -786,7 +692,6 @@ class AJAX_INSTALL {
 	 */
 	private function sso_dbconfig() {
 		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"BG_DB_DRIVER\", \"" . BG_DB_DRIVER . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_HOST\", \"" . BG_DB_HOST . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_PORT\", \"" . BG_DB_PORT . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_NAME\", \"" . BG_DB_NAME . "\");" . PHP_EOL;
@@ -845,7 +750,7 @@ class AJAX_INSTALL {
 		switch ($_arr_adminPass["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020210",
+					"alert" => "x020210",
 				);
 				exit;
 			break;
@@ -859,7 +764,7 @@ class AJAX_INSTALL {
 		switch ($_arr_adminPassConfirm["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020215",
+					"alert" => "x020215",
 				);
 				exit;
 			break;
@@ -871,12 +776,14 @@ class AJAX_INSTALL {
 
 		if ($this->adminSubmit["admin_pass"] != $this->adminSubmit["admin_pass_confirm"]) {
 			return array(
-				"str_alert" => "x020211",
+				"alert" => "x020211",
 			);
 			exit;
 		}
 
-		$this->adminSubmit["str_alert"] = "ok";
+		$this->adminSubmit["group_allow"] = fn_post("group_allow");
+
+		$this->adminSubmit["alert"]       = "ok";
 
 		return $this->adminSubmit;
 	}
@@ -887,7 +794,7 @@ class AJAX_INSTALL {
 		switch ($_arr_adminPass["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x020210",
+					"alert" => "x020210",
 				);
 				exit;
 			break;
@@ -897,7 +804,7 @@ class AJAX_INSTALL {
 			break;
 		}
 
-		$this->adminAuth["str_alert"] = "ok";
+		$this->adminAuth["alert"] = "ok";
 
 		return $this->adminAuth;
 	}
@@ -916,10 +823,6 @@ class AJAX_INSTALL {
 
 
 	private function check_db() {
-		if (!fn_token("chk")) { //令牌
-			$this->obj_ajax->halt_alert("x030102");
-		}
-
 		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
 			$this->obj_ajax->halt_alert("x030404");
 		} else {
@@ -951,41 +854,14 @@ class AJAX_INSTALL {
 	}
 
 
-	private function check_opt() {
-		$_arr_tableRows = $this->obj_db->show_tables();
-
-		foreach ($_arr_tableRows as $_key=>$_value) {
-			$_arr_tables[] = $_value["Tables_in_" . BG_DB_NAME];
-		}
-
-		if (!in_array(BG_DB_TABLE . "opt", $_arr_tables)) {
-			$this->obj_ajax->halt_alert("x030412");
-		}
-	}
-
-
 	private function install_init() {
-		$_arr_extRow      = get_loaded_extensions();
+		$_arr_extRow     = get_loaded_extensions();
 		$_num_errCount   = 0;
 
-		if (!in_array("mysqli", $_arr_extRow)) {
-			$_num_errCount++;
-		}
-
-		if (!in_array("gd", $_arr_extRow)) {
-			$_num_errCount++;
-		}
-
-		if (!in_array("mbstring", $_arr_extRow)) {
-			$_num_errCount++;
-		}
-
-		if (!in_array("curl", $_arr_extRow)) {
-			$_num_errCount++;
-		}
-
-		if (!in_array("ftp", $_arr_extRow)) {
-			$_num_errCount++;
+		foreach ($this->obj_ajax->type["ext"] as $_key=>$_value) {
+			if (!in_array($_key, $_arr_extRow)) {
+				$_num_errCount++;
+			}
 		}
 
 		if ($_num_errCount > 0) {

@@ -1,6 +1,6 @@
 <?php
 return "<h3>概述</h3>
-	<p>将下载到的程序包解压，然后将所有文件上传到服务器，假设网站 URL 为 <span class=\"text-primary\">http://www.domain.com</span> 上传到根目录 /，以下说明均以此为例。</p>
+	<p>将下载到的程序包解压，然后将所有文件上传到服务器，假设网站 URL 为 <span class=\"text-primary\">http://www.domain.com</span> 上传到根目录 <mark>/</mark>，以下说明均以此为例。</p>
 	<div class=\"panel panel-default\">
 		<div class=\"panel-heading\">目录结构说明</div>
 		<div class=\"table-responsive\">

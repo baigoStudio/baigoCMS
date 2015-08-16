@@ -38,7 +38,7 @@ class MODEL_GROUP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -82,7 +82,7 @@ class MODEL_GROUP {
 				$_str_alert = "y040101";
 			} else {
 				return array(
-					"str_alert" => "x040101",
+					"alert" => "x040101",
 				);
 				exit;
 			}
@@ -94,7 +94,7 @@ class MODEL_GROUP {
 				$_str_alert = "y040103";
 			} else {
 				return array(
-					"str_alert" => "x040103",
+					"alert" => "x040103",
 				);
 				exit;
 			}
@@ -102,7 +102,7 @@ class MODEL_GROUP {
 
 		return array(
 			"group_id"   => $_num_groupId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 
 	}
@@ -147,7 +147,7 @@ class MODEL_GROUP {
 			$_arr_groupRow = $_arr_groupRows[0];
 		} else {
 			return array(
-				"str_alert" => "x040102", //不存在记录
+				"alert" => "x040102", //不存在记录
 			);
 			exit;
 		}
@@ -158,7 +158,7 @@ class MODEL_GROUP {
 			$_arr_groupRow["group_allow"] = array();
 		}
 
-		$_arr_groupRow["str_alert"]   = "y040102";
+		$_arr_groupRow["alert"]   = "y040102";
 
 		return $_arr_groupRow;
 	}
@@ -182,7 +182,7 @@ class MODEL_GROUP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 
 	}
@@ -278,7 +278,7 @@ class MODEL_GROUP {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 		exit;
 
@@ -288,7 +288,7 @@ class MODEL_GROUP {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -297,8 +297,8 @@ class MODEL_GROUP {
 
 		if ($this->groupSubmit["group_id"]) {
 			$_arr_groupRow = $this->mdl_read($this->groupSubmit["group_id"]);
-			if ($_arr_groupRow["str_alert"] != "y040102") {
-				$this->obj_ajax->halt_alert($_arr_groupRow["str_alert"]);
+			if ($_arr_groupRow["alert"] != "y040102") {
+				$this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
 			}
 		}
 
@@ -306,14 +306,14 @@ class MODEL_GROUP {
 		switch ($_arr_groupName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x040201",
+					"alert" => "x040201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x040202",
+					"alert" => "x040202",
 				);
 				exit;
 			break;
@@ -324,11 +324,20 @@ class MODEL_GROUP {
 
 		}
 
+		$_arr_groupRow = $this->mdl_read($this->groupSubmit["group_name"], "group_name", $this->groupSubmit["group_id"]);
+
+		if ($_arr_groupRow["alert"] == "y040102") {
+			return array(
+				"alert" => "x040203",
+			);
+			exit;
+		}
+
 		$_arr_groupNote = validateStr(fn_post("group_note"), 0, 30);
 		switch ($_arr_groupNote["status"]) {
 			case "too_long":
 				return array(
-					"str_alert" => "x040204",
+					"alert" => "x040204",
 				);
 				exit;
 			break;
@@ -342,7 +351,7 @@ class MODEL_GROUP {
 		switch ($_arr_groupType["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x040205",
+					"alert" => "x040205",
 				);
 				exit;
 			break;
@@ -356,7 +365,7 @@ class MODEL_GROUP {
 		switch ($_arr_groupStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x040207",
+					"alert" => "x040207",
 				);
 				exit;
 			break;
@@ -367,7 +376,7 @@ class MODEL_GROUP {
 		}
 
 		$this->groupSubmit["group_allow"] = fn_jsonEncode(fn_post("group_allow"), "no");
-		$this->groupSubmit["str_alert"]   = "ok";
+		$this->groupSubmit["alert"]   = "ok";
 
 		return $this->groupSubmit;
 	}
@@ -382,7 +391,7 @@ class MODEL_GROUP {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -399,7 +408,7 @@ class MODEL_GROUP {
 		}
 
 		$this->groupIds = array(
-			"str_alert"   => $_str_alert,
+			"alert"   => $_str_alert,
 			"group_ids"   => $_arr_groupIds
 		);
 

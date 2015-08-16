@@ -11,7 +11,6 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "dir.class.php"); //载入模板类
 include_once(BG_PATH_CLASS . "tpl_admin.class.php");
-include_once(BG_PATH_MODEL . "opt.class.php");
 
 /*-------------管理员控制器-------------*/
 class CONTROL_OPT {
@@ -20,7 +19,6 @@ class CONTROL_OPT {
 	private $obj_base;
 	private $config; //配置
 	private $obj_tpl;
-	private $mdl_opt;
 	private $tplData;
 
 	function __construct() { //构造函数
@@ -28,7 +26,6 @@ class CONTROL_OPT {
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->obj_dir        = new CLASS_DIR(); //初始化目录对象
-		$this->mdl_opt        = new MODEL_OPT();
 		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
@@ -45,25 +42,19 @@ class CONTROL_OPT {
 	function ctl_upload() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"])) {
 			return array(
-				"str_alert" => "x060302",
+				"alert" => "x060302",
 			);
 			exit;
 		}
 
 		if(BG_MODULE_FTP == false) {
-			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_URL"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"]);
+			unset($this->obj_tpl->opt["upload"]["BG_UPLOAD_URL"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPHOST"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPORT"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPUSER"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASS"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPATH"], $this->obj_tpl->opt["upload"]["BG_UPLOAD_FTPPASV"]);
 		}
-
-		foreach ($this->obj_tpl->opt["upload"] as $_key=>$_value) {
-			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
-		}
-
-		$this->tplData["optRows"] = $_arr_optRows;
 
 		$this->obj_tpl->tplDisplay("opt_upload.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y060302",
+			"alert" => "y060302",
 		);
 	}
 
@@ -77,21 +68,15 @@ class CONTROL_OPT {
 	function ctl_sso() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"])) {
 			return array(
-				"str_alert" => "x060303",
+				"alert" => "x060303",
 			);
 			exit;
 		}
 
-		foreach ($this->obj_tpl->opt["sso"] as $_key=>$_value) {
-			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
-		}
-
-		$this->tplData["optRows"] = $_arr_optRows;
-
 		$this->obj_tpl->tplDisplay("opt_sso.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y060303",
+			"alert" => "y060303",
 		);
 	}
 
@@ -105,7 +90,7 @@ class CONTROL_OPT {
 	function ctl_visit() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"])) {
 			return array(
-				"str_alert" => "x060304",
+				"alert" => "x060304",
 			);
 			exit;
 		}
@@ -114,16 +99,10 @@ class CONTROL_OPT {
 			unset($this->obj_tpl->opt["visit"]["BG_VISIT_TYPE"]["option"]["static"], $this->obj_tpl->opt["visit"]["BG_VISIT_FILE"]);
 		}
 
-		foreach ($this->obj_tpl->opt["visit"] as $_key=>$_value) {
-			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
-		}
-
-		$this->tplData["optRows"] = $_arr_optRows;
-
 		$this->obj_tpl->tplDisplay("opt_visit.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y060304",
+			"alert" => "y060304",
 		);
 	}
 
@@ -137,7 +116,7 @@ class CONTROL_OPT {
 	function ctl_db() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"])) {
 			return array(
-				"str_alert" => "x060306",
+				"alert" => "x060306",
 			);
 			exit;
 		}
@@ -145,7 +124,7 @@ class CONTROL_OPT {
 		$this->obj_tpl->tplDisplay("opt_db.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y060305",
+			"alert" => "y060306",
 		);
 	}
 
@@ -159,25 +138,21 @@ class CONTROL_OPT {
 	function ctl_base() {
 		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"])) {
 			return array(
-				"str_alert" => "x060301",
+				"alert" => "x060301",
 			);
 			exit;
 		}
 
-		foreach ($this->obj_tpl->opt["base"] as $_key=>$_value) {
-			$_arr_optRows[$_key] = $this->mdl_opt->mdl_read($_key);
-		}
-
-		$_arr_optRows["BG_SITE_TPL"]  = $this->mdl_opt->mdl_read("BG_SITE_TPL");
 		$_arr_tplRows                 = $this->obj_dir->list_dir(BG_PATH_TPL_PUB);
+		$_arr_excerptType             = $this->obj_tpl->type["excerpt"];
 
-		$this->tplData["optRows"]     = $_arr_optRows;
 		$this->tplData["tplRows"]     = $_arr_tplRows;
+		$this->tplData["excerptType"] = $_arr_excerptType;
 
 		$this->obj_tpl->tplDisplay("opt_base.tpl", $this->tplData);
 
 		return array(
-			"str_alert" => "y060301",
+			"alert" => "y060301",
 		);
 	}
 }

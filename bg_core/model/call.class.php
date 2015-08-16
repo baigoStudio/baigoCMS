@@ -31,7 +31,7 @@ class MODEL_CALL {
 			"call_file"      => "enum('html','js','xml','json') NOT NULL COMMENT '静态文件类型'",
 			"call_amount"    => "varchar(300) NOT NULL COMMENT '显示数选项'",
 			"call_attach"    => "enum('all','attach','none') NOT NULL COMMENT '含有附件'",
-			"call_trim"      => "smallint NOT NULL COMMENT '标题字数'",
+			//"call_trim"      => "smallint NOT NULL COMMENT '标题字数'",
 			"call_status"    => "enum('enable','disable') NOT NULL COMMENT '状态'",
 		);
 
@@ -44,7 +44,7 @@ class MODEL_CALL {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -79,7 +79,7 @@ class MODEL_CALL {
 			"call_file"      => $this->callSubmit["call_file"],
 			"call_status"    => $this->callSubmit["call_status"],
 			"call_amount"    => $this->callSubmit["call_amount"],
-			"call_trim"      => $this->callSubmit["call_trim"],
+			//"call_trim"      => $this->callSubmit["call_trim"],
 			"call_cate_ids"  => $this->callSubmit["call_cate_ids"],
 			"call_cate_id"   => $this->callSubmit["call_cate_id"],
 			"call_mark_ids"  => $this->callSubmit["call_mark_ids"],
@@ -94,7 +94,7 @@ class MODEL_CALL {
 				$_str_alert = "y170101";
 			} else {
 				return array(
-					"str_alert" => "x170101",
+					"alert" => "x170101",
 				);
 				exit;
 			}
@@ -106,7 +106,7 @@ class MODEL_CALL {
 				$_str_alert = "y170103";
 			} else {
 				return array(
-					"str_alert" => "x170103",
+					"alert" => "x170103",
 				);
 				exit;
 			}
@@ -114,9 +114,8 @@ class MODEL_CALL {
 
 		return array(
 			"call_id"    => $_num_callId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
-
 	}
 
 
@@ -138,7 +137,7 @@ class MODEL_CALL {
 			"call_file",
 			"call_status",
 			"call_amount",
-			"call_trim",
+			//"call_trim",
 			"call_cate_ids",
 			"call_cate_id",
 			"call_spec_id",
@@ -165,7 +164,7 @@ class MODEL_CALL {
 			$_arr_callRow = $_arr_callRows[0];
 		} else {
 			return array(
-				"str_alert" => "x170102", //不存在记录
+				"alert" => "x170102", //不存在记录
 			);
 			exit;
 		}
@@ -188,7 +187,7 @@ class MODEL_CALL {
 			$_arr_callRow["call_mark_ids"] = array();
 		}
 
-		$_arr_callRow["str_alert"]        = "y170102";
+		$_arr_callRow["alert"]        = "y170102";
 
 		return $_arr_callRow;
 	}
@@ -213,7 +212,7 @@ class MODEL_CALL {
 			"call_file",
 			"call_status",
 			"call_amount",
-			"call_trim",
+			//"call_trim",
 			"call_cate_ids",
 			"call_cate_id",
 			"call_spec_id",
@@ -296,7 +295,7 @@ class MODEL_CALL {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -321,7 +320,7 @@ class MODEL_CALL {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		);
 		exit;
 	}
@@ -330,7 +329,7 @@ class MODEL_CALL {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -339,7 +338,7 @@ class MODEL_CALL {
 
 		if ($this->callSubmit["call_id"] > 0) {
 			$_arr_callRow = $this->mdl_read($this->callSubmit["call_id"]);
-			if ($_arr_callRow["str_alert"] != "y170102") {
+			if ($_arr_callRow["alert"] != "y170102") {
 				return $_arr_callRows;
 				exit;
 			}
@@ -349,14 +348,14 @@ class MODEL_CALL {
 		switch ($_arr_callName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x170201",
+					"alert" => "x170201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x170202",
+					"alert" => "x170202",
 				);
 				exit;
 			break;
@@ -371,7 +370,7 @@ class MODEL_CALL {
 		switch ($_arr_callType["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x170204",
+					"alert" => "x170204",
 				);
 				exit;
 			break;
@@ -385,7 +384,7 @@ class MODEL_CALL {
 		switch ($_arr_callStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x170206",
+					"alert" => "x170206",
 				);
 				exit;
 			break;
@@ -395,18 +394,18 @@ class MODEL_CALL {
 			break;
 		}
 
-		$_arr_callTrim = validateStr(fn_post("call_trim"), 1, 0);
+		/*$_arr_callTrim = validateStr(fn_post("call_trim"), 1, 0);
 		switch ($_arr_callTrim["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x170211",
+					"alert" => "x170211",
 				);
 				exit;
 			break;
 
 			case "format_err":
 				return array(
-					"str_alert" => "x170212",
+					"alert" => "x170212",
 				);
 				exit;
 			break;
@@ -414,7 +413,7 @@ class MODEL_CALL {
 			case "ok":
 				$this->callSubmit["call_trim"] = $_arr_callTrim["str"];
 			break;
-		}
+		}*/
 
 		$this->callSubmit["call_file"]        = fn_getSafe(fn_post("call_file"), "txt", "");
 		$this->callSubmit["call_attach"]      = fn_getSafe(fn_post("call_attach"), "txt", "");
@@ -425,7 +424,7 @@ class MODEL_CALL {
 		$this->callSubmit["call_mark_ids"]    = fn_jsonEncode(fn_post("call_mark_ids"), "no");
 		$this->callSubmit["call_amount"]      = fn_jsonEncode(fn_post("call_amount"), "no");
 
-		$this->callSubmit["str_alert"]        = "ok";
+		$this->callSubmit["alert"]        = "ok";
 
 		return $this->callSubmit;
 	}
@@ -440,7 +439,7 @@ class MODEL_CALL {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -457,7 +456,7 @@ class MODEL_CALL {
 		}
 
 		$this->callIds = array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 			"call_ids"   => $_arr_callIds
 		);
 

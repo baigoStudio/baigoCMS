@@ -72,8 +72,8 @@
 							<table class="table">
 								<thead>
 									<tr>
-										<th class="nowrap">代码</th>
-										<th>具体描述</th>
+										<th class="nowrap">{$lang.label.alert}</th>
+										<th>{$lang.label.desc}</th>
 									</tr>
 								</thead>
 								<tbody>

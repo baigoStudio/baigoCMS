@@ -72,7 +72,7 @@ return "<a name=\"list\"></a>
 						<td class=\"nowrap\">mark_ids</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">false</td>
-						<td>标记 ID，多个 ID 请使用 | 分隔。</td>
+						<td>标记 ID，多个 ID 请使用 <kbd>|</kbd> 分隔。</td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">spec_id</td>
@@ -84,7 +84,13 @@ return "<a name=\"list\"></a>
 						<td class=\"nowrap\">tag_ids</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">false</td>
-						<td>TAG ID，多个 ID 请使用 | 分隔。</td>
+						<td>TAG ID，多个 ID 请使用 <kbd>|</kbd> 分隔。此参数与下一项参数 <mark>customs</mark> 为二选一，当本参数不为空时，自动忽略 <mark>customs</mark> 参数。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">customs</td>
+						<td class=\"nowrap\">string</td>
+						<td class=\"nowrap\">false</td>
+						<td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=search#customs\" target=\"_blank\">搜索</a></td>
 					</tr>
 					<tr>
 						<td class=\"nowrap\">per_page</td>
@@ -318,16 +324,16 @@ return "<a name=\"list\"></a>
 						<td>pub 为发布，wait 为待审，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">str_alert</td>
+						<td class=\"nowrap\">article_customs</td>
+						<td class=\"nowrap\">array</td>
+						<td class=\"nowrap\">自定义字段</td>
+						<td>自定义字段的内容。用 <code>article_customs[\"custom_自定义字段 ID\"]</code> 的方法便可获取自定义字段的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
+					</tr>
+					<tr>
+						<td class=\"nowrap\">alert</td>
 						<td class=\"nowrap\">string</td>
 						<td class=\"nowrap\">返回代码</td>
 						<td>显示当前文章的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">article_custom</td>
-						<td class=\"nowrap\">array</td>
-						<td class=\"nowrap\">自定义表单</td>
-						<td>自定义表单的内容。用 <code>article_custom.自定义表单 ID</code> 的方法便可获取自定义表单的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义表单</a>。</td>
 					</tr>
 				</tbody>
 			</table>

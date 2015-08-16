@@ -1,14 +1,14 @@
 <?php
 return "<a name=\"list\"></a>
 	<h3>API 授权设置</h3>
-	<p>点左侧菜单系统设置的 API 授权设置子菜单，进入如下界面，可以对应用进行编辑、删除、改变状态等操作。API 主要用于二次开发，当程序员需要使用本系统的 API 接口时，必须创建响应的应用，并将响应的权限赋予应用，API 接口才能够正常读取。</p>
+	<p>点左侧菜单系统设置的“API 授权设置”子菜单，进入如下界面，可以对应用进行编辑、删除、改变状态等操作。API 主要用于二次开发，当程序员需要使用本系统的 API 接口时，必须创建响应的应用，并将响应的权限赋予应用，API 接口才能够正常读取。</p>
 	<p><img src=\"{images}app_list.jpg\" class=\"img-responsive thumbnail\"></p>
 
 	<hr>
 
 	<a name=\"form\"></a>
 	<h3>创建（编辑）应用</h3>
-	<p>点创建或者点击应用列表的编辑菜单，进入如下界面，在此，您可以对应用进行各项操作。</p>
+	<p>点“创建”或者点击应用列表的“编辑”菜单，进入如下界面，在此，您可以对应用进行各项操作。</p>
 	<p><img src=\"{images}app_form.jpg\" class=\"img-responsive thumbnail\"></p>
 
 	<div class=\"panel panel-default\">
@@ -35,6 +35,6 @@ return "<a name=\"list\"></a>
 
 	<a name=\"show\"></a>
 	<h3>查看应用</h3>
-	<p>应用列表的查看菜单，进入如下界面。在此，您获取调用 API 接口所需要的信息。如果 APP KEY 泄露，可以在此点击重置 APP KEY 按钮来进行更换，原 APP KEY 将作废。</p>
+	<p>点应用列表的“查看”菜单，进入如下界面。在此，您获取调用 API 接口所需要的信息。如果 APP KEY 泄露，可以在此点击“重置 APP KEY”按钮来进行更换，原 APP KEY 将作废。</p>
 
 	<p><img src=\"{images}app_show.jpg\" class=\"img-responsive thumbnail\"></p>";

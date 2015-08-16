@@ -17,14 +17,14 @@ $ctl_article = new CONTROL_ARTICLE();
 switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_articleRow = $ctl_article->ctl_show();
-		if ($arr_articleRow["str_alert"] != "y120102") {
+		if ($arr_articleRow["alert"] != "y120102") {
 			if ($arr_articleRow["cate_type"] == "link" && $arr_articleRow["cate_link"]) {
 				$_str_linkUrl = $arr_articleRow["cate_link"];
 			} else {
 				if ($arr_articleRow["article_link"]) {
 					$_str_linkUrl = $arr_articleRow["article_link"];
 				} else {
-					$_str_linkUrl = BG_URL_ROOT . "index.php?mod=alert&act_get=display&alert=" . $arr_articleRow["str_alert"];
+					$_str_linkUrl = BG_URL_ROOT . "index.php?mod=alert&act_get=show&alert=" . $arr_articleRow["alert"];
 				}
 			}
 			header("Location: " . $_str_linkUrl);

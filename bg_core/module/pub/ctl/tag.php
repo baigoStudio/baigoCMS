@@ -17,8 +17,8 @@ $ctl_tag = new CONTROL_TAG();
 switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_tagRow = $ctl_tag->ctl_show();
-		if ($arr_tagRow["str_alert"] != "y130102") {
-			header("Location: " . BG_URL_ROOT . "index.php?mod=alert&act_get=display&alert=" . $arr_tagRow["str_alert"]);
+		if ($arr_tagRow["alert"] != "y130102") {
+			header("Location: " . BG_URL_ROOT . "index.php?mod=alert&act_get=show&alert=" . $arr_tagRow["alert"]);
 			exit;
 		}
 	break;

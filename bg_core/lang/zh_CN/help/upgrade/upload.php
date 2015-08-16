@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"upload\"></a>
-	<h3>上传设置</h3>
+return "<h3>上传设置</h3>
 
 	<p><img src=\"{images}upload.jpg\" class=\"img-responsive\"></p>
 
@@ -35,6 +34,8 @@ return "<a name=\"upload\"></a>
 			<p>请按照服务器提供商所提供的资料填写。</p>
 		</div>
 	</div>
+
+	<p>填写完毕，点击“保存“，保存成功后点击“下一步“。</p>
 
 	<hr>
 
@@ -71,6 +72,4 @@ return "<a name=\"upload\"></a>
 			<h4 class=\"text-info\">附件最终 URL</h4>
 			<p class=\"text_break\">http://image.domain.com/upfile/2014/05/2504.jpg</p>
 		</div>
-	</div>
-
-	<p>填写完毕，点击保存，提交成功后点击下一步。</p>";
+	</div>";

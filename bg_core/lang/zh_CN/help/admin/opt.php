@@ -2,7 +2,7 @@
 return "<a name=\"base\"></a>
 	<h3>基本设置</h3>
 	<p>
-		点左侧菜单系统设置，进入如下界面，可以对系统进行设置。
+		点左侧菜单“系统设置“，进入如下界面，可以对系统进行设置。
 	</p>
 	<p>
 		<img src=\"{images}opt_base.jpg\" class=\"img-responsive thumbnail\">
@@ -21,7 +21,13 @@ return "<a name=\"base\"></a>
 			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前网站 URL，末尾请勿加 <mark>/</mark>。</p>
 
 			<h4 class=\"text-info\">每页显示数</h4>
-			<p>管理后台以及前台页面，在对文章、TAG 等进行分页管理的时候，每一页所显示的数量，默认为 30.</p>
+			<p>前台页面、API 接口，在对文章、TAG 等进行分页的时候，每一页所显示的数量，默认为 30。其中 API 接口可利用参数来设定每页的显示数，详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article\" target=\"_blank\">API 接口文档</a></p>
+
+			<h4 class=\"text-info\">关联文章显示数</h4>
+			<p>关联文章可以在文章显示页显示，文章 TAG 方式关联，既与当前显示的文章拥有同样 TAG 的文章将会被显示，默认为 10.</p>
+
+			<h4 class=\"text-info\">文章摘要截取字数</h4>
+			<p>文章摘要现在可以选择类型，其中自动截取方式将会由系统自己截取文章内容的最前面部分的文字，默认为 100.</p>
 
 			<h4 class=\"text-info\">时区</h4>
 			<p>请根据当地实际情况填写，默认为 Etc/GMT+8，即北京时间。</p>
@@ -45,7 +51,7 @@ return "<a name=\"base\"></a>
 	<a name=\"db\"></a>
 	<h3>数据库设置</h3>
 	<p>
-		点左侧子菜单数据库设置，进入如下界面，可以对数据库进行设置。
+		点左侧子菜单“数据库设置“，进入如下界面，可以对数据库进行设置。
 	</p>
 	<p>
 		<img src=\"{images}opt_db.jpg\" class=\"img-responsive thumbnail\">
@@ -79,7 +85,7 @@ return "<a name=\"base\"></a>
 	<a name=\"visit\"></a>
 	<h3>访问方式</h3>
 	<p>
-		点左侧子菜单访问方式，进入如下界面，可以对访问方式进行设置。
+		点左侧子菜单“访问方式“，进入如下界面，可以对访问方式进行设置。
 	</p>
 	<p>
 		<img src=\"{images}opt_visit.jpg\" class=\"img-responsive thumbnail\">
@@ -191,7 +197,7 @@ return "<a name=\"base\"></a>
 	<a name=\"sso\"></a>
 	<h3>SSO 设置</h3>
 	<p>
-		点左侧子菜单SSO 设置，进入如下界面，可以对 SSO 设置进行设置。baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/Products/baigoSSO/\" target=\"_blank\">baigo SSO 官方网站</a>。
+		点左侧子菜单“SSO 设置“，进入如下界面，可以对 SSO 设置进行设置。baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/Products/baigoSSO/\" target=\"_blank\">baigo SSO 官方网站</a>。
 	</p>
 
 	<p>

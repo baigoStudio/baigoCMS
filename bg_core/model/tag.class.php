@@ -36,7 +36,7 @@ class MODEL_TAG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -66,7 +66,7 @@ class MODEL_TAG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert, //更新成功
+			"alert" => $_str_alert, //更新成功
 		);
 	}
 
@@ -105,7 +105,7 @@ class MODEL_TAG {
 				$_str_alert = "y130101";
 			} else {
 				return array(
-					"str_alert" => "x130101",
+					"alert" => "x130101",
 				);
 				exit;
 			}
@@ -117,7 +117,7 @@ class MODEL_TAG {
 				$_str_alert = "y130103";
 			} else {
 				return array(
-					"str_alert" => "x130103",
+					"alert" => "x130103",
 				);
 				exit;
 			}
@@ -125,7 +125,7 @@ class MODEL_TAG {
 
 		return array(
 			"tag_id"     => $_num_tagId,
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -149,13 +149,13 @@ class MODEL_TAG {
 			$_str_alert = "y130103";
 		} else {
 			return array(
-				"str_alert" => "x130103",
+				"alert" => "x130103",
 			);
 			exit;
 		}
 
 		return array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 		);
 	}
 
@@ -197,13 +197,13 @@ class MODEL_TAG {
 			$_arr_tagRow  = $_arr_tagRows[0];
 		} else {
 			return array(
-				"str_alert" => "x130102", //不存在记录
+				"alert" => "x130102", //不存在记录
 			);
 			exit;
 		}
 
 		$_arr_tagRow["urlRow"]    = $this->url_process($_arr_tagRow);
-		$_arr_tagRow["str_alert"] = "y130102";
+		$_arr_tagRow["alert"] = "y130102";
 
 		return $_arr_tagRow;
 	}
@@ -301,7 +301,7 @@ class MODEL_TAG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -327,7 +327,7 @@ class MODEL_TAG {
 		}
 
 		return array(
-			"str_alert" => $_str_alert,
+			"alert" => $_str_alert,
 		); //成功
 	}
 
@@ -356,7 +356,7 @@ class MODEL_TAG {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -365,7 +365,7 @@ class MODEL_TAG {
 
 		if ($this->tagSubmit["tag_id"] > 0) {
 			$_arr_tagRow = $this->mdl_read($this->tagSubmit["tag_id"]);
-			if ($_arr_tagRow["str_alert"] != "y130102") {
+			if ($_arr_tagRow["alert"] != "y130102") {
 				return $_arr_tagRow;
 				exit;
 			}
@@ -375,14 +375,14 @@ class MODEL_TAG {
 		switch ($_arr_tagName["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x130201",
+					"alert" => "x130201",
 				);
 				exit;
 			break;
 
 			case "too_long":
 				return array(
-					"str_alert" => "x130202",
+					"alert" => "x130202",
 				);
 				exit;
 			break;
@@ -393,9 +393,9 @@ class MODEL_TAG {
 		}
 
 		$_arr_tagRow = $this->mdl_read($this->tagSubmit["tag_name"], "tag_name", $this->tagSubmit["tag_id"]);
-		if ($_arr_tagRow["str_alert"] == "y130102") {
+		if ($_arr_tagRow["alert"] == "y130102") {
 			return array(
-				"str_alert" => "x130203",
+				"alert" => "x130203",
 			);
 			exit;
 		}
@@ -404,7 +404,7 @@ class MODEL_TAG {
 		switch ($_arr_tagStatus["status"]) {
 			case "too_short":
 				return array(
-					"str_alert" => "x130204",
+					"alert" => "x130204",
 				);
 				exit;
 			break;
@@ -414,7 +414,7 @@ class MODEL_TAG {
 			break;
 		}
 
-		$this->tagSubmit["str_alert"] = "ok";
+		$this->tagSubmit["alert"] = "ok";
 		return $this->tagSubmit;
 	}
 
@@ -428,7 +428,7 @@ class MODEL_TAG {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"str_alert" => "x030102",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -445,7 +445,7 @@ class MODEL_TAG {
 		}
 
 		$this->tagIds = array(
-			"str_alert"  => $_str_alert,
+			"alert"  => $_str_alert,
 			"tag_ids"    => $_arr_tagIds
 		);
 
@@ -455,14 +455,10 @@ class MODEL_TAG {
 
 	private function url_process($_arr_tagRow) {
 		switch (BG_VISIT_TYPE) {
-			case "static":
-				$_str_tagUrl        = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
-				$_str_pageAttach    = "page_";
-			break;
-
 			case "pstatic":
-				$_str_tagUrl        = BG_URL_ROOT . "tag/" . $_arr_tagRow["tag_name"] . "/";
-				$_str_pageAttach    = "";
+			case "static":
+				$_str_tagUrl        = BG_URL_ROOT . "tag/tag-" . $_arr_tagRow["tag_name"] . "/";
+				$_str_pageAttach    = "page-";
 			break;
 
 			default:
