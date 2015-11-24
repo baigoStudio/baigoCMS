@@ -29,26 +29,12 @@ class API_SYNC {
 
 	function __construct() { //构造函数
 		$this->obj_sync       = new CLASS_SYNC();
+		$this->obj_sync->chk_install();
 		$this->log            = $this->obj_sync->log; //初始化 AJAX 基对象
 		$this->mdl_user       = new MODEL_USER(); //设置管理组模型
 		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
 		$this->mdl_appBelong  = new MODEL_APP_BELONG();
 		$this->mdl_log        = new MODEL_LOG(); //设置管理员模型
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_SSO_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"alert" => "x030411"
-				);
-				$this->obj_sync->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"alert" => "x030410"
-			);
-			$this->obj_sync->halt_re($_arr_return);
-		}
 	}
 
 
@@ -61,7 +47,7 @@ class API_SYNC {
 	function api_login() {
 		$this->app_check("get");
 
-		if (!isset($this->appAllow["user"]["login"])) {
+		if (!isset($this->appRow["app_allow"]["user"]["login"])) {
 			$_arr_return = array(
 				"alert" => "x050306",
 			);
@@ -109,11 +95,15 @@ class API_SYNC {
 
 		unset($_arr_userRow["user_pass"], $_arr_userRow["user_mail"], $_arr_userRow["user_nick"], $_arr_userRow["user_note"], $_arr_userRow["user_rand"], $_arr_userRow["user_status"], $_arr_userRow["user_time"], $_arr_userRow["user_time_login"], $_arr_userRow["user_ip"]);
 
-		$_str_key     = fn_rand(6);
-		$_str_code    = $this->obj_sync->sync_encode($_arr_userRow, $_str_key);
-		$_str_sync    = "";
+		$_arr_urlRows = array();
 
 		foreach ($this->appRows as $_key=>$_value) {
+    		$_arr_userRow["app_id"]   = $_value["app_id"];
+    		$_arr_userRow["app_key"]  = $_value["app_key"];
+
+    		$_str_key     = fn_rand(6);
+    		$_str_code    = $this->obj_sync->sync_encode($_arr_userRow, $_str_key);
+
 			$_tm_time    = time();
 			$_str_rand   = fn_rand();
 			$_str_sign   = fn_baigoSignMk($_tm_time, $_str_rand);
@@ -123,24 +113,36 @@ class API_SYNC {
 			} else {
 				$_str_conn = "?";
 			}
-			$_str_url = $_value["app_notice"] . $_str_conn . "act_get=login&time=" . $_tm_time . "&random=" . $_str_rand . "&signature=" . $_str_sign . "&code=" . $_str_code . "&key=" . $_str_key;
+			$_str_url = $_value["app_notice"] . $_str_conn . "mod=sync";
 
-			$_str_sync .= "<script type=\"text/javascript\" src=\"" . $_str_url . "\"></script>";
+			$_arr_data = array(
+    			"act_post"   => "login",
+    			"time"       => $_tm_time,
+    			"random"     => $_str_rand,
+    			"signature"  => $_str_sign,
+    			"code"       => $_str_code,
+    			"key"        => $_str_key,
+			);
+
+			$_arr_urlRows[] = array(
+    			"url"    => urlencode($_str_url),
+    			"data"   => urlencode(http_build_query($_arr_data)),
+			);
 		}
 
 		$_arr_return = array(
-			"alert"  => "y100401",
-			"html"   => base64_encode($_str_sync),
+			"alert"      => "y100401",
+			"urlRows"    => $_arr_urlRows,
 		);
 
-		exit(fn_jsonEncode($_arr_return, "no"));
+		$this->obj_sync->halt_re($_arr_return);
 	}
 
 
 	function api_logout() {
 		$this->app_check("get");
 
-		if (!isset($this->appAllow["user"]["login"])) {
+		if (!isset($this->appRow["app_allow"]["user"]["login"])) {
 			$_arr_return = array(
 				"alert" => "x050306",
 			);
@@ -190,7 +192,7 @@ class API_SYNC {
 
 		$_str_key     = fn_rand(6);
 		$_arr_code    = $_arr_userRow;
-		$_str_sync    = "";
+		$_arr_urlRows = array();
 
 		foreach ($this->appRows as $_key=>$_value) {
 			$_tm_time                = time();
@@ -205,17 +207,29 @@ class API_SYNC {
 			} else {
 				$_str_conn = "?";
 			}
-			$_str_url = $_value["app_notice"] . $_str_conn . "act_get=logout&time=" . $_tm_time . "&random=" . $_str_rand . "&signature=" . $_str_sign . "&code=" . $_str_code . "&key=" . $_str_key;
+			$_str_url = $_value["app_notice"] . $_str_conn . "mod=sync";
 
-			$_str_sync .= "<script type=\"text/javascript\" src=\"" . $_str_url . "\"></script>";
+			$_arr_data = array(
+    			"act_post"   => "logout",
+    			"time"       => $_tm_time,
+    			"random"     => $_str_rand,
+    			"signature"  => $_str_sign,
+    			"code"       => $_str_code,
+    			"key"        => $_str_key,
+			);
+
+			$_arr_urlRows[] = array(
+    			"url"    => urlencode($_str_url),
+    			"data"   => urlencode(http_build_query($_arr_data)),
+			);
 		}
 
 		$_arr_return = array(
-			"alert"  => "y100402",
-			"html"   => base64_encode($_str_sync),
+			"alert"      => "y100402",
+			"urlRows"    => $_arr_urlRows,
 		);
 
-		exit(fn_jsonEncode($_arr_return, "no"));
+		$this->obj_sync->halt_re($_arr_return);
 	}
 
 
@@ -238,15 +252,14 @@ class API_SYNC {
 			"app_id" => $this->appGet["app_id"]
 		);
 
-		$_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-		if ($_arr_appRow["alert"] != "y050102") {
+		$this->appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
+		if ($this->appRow["alert"] != "y050102") {
 			$_arr_logType = array("app", "read");
-			$this->log_do($_arr_logTarget, "app", $_arr_appRow, $_arr_logType);
-			$this->obj_sync->halt_re($_arr_appRow);
+			$this->log_do($_arr_logTarget, "app", $this->appRow, $_arr_logType);
+			$this->obj_sync->halt_re($this->appRow);
 		}
-		$this->appAllow = $_arr_appRow["app_allow"];
 
-		$_arr_appChk = $this->obj_sync->app_chk($this->appGet, $_arr_appRow);
+		$_arr_appChk = $this->obj_sync->app_chk($this->appGet, $this->appRow);
 		if ($_arr_appChk["alert"] != "ok") {
 			$_arr_logType = array("app", "check");
 			$this->log_do($_arr_logTarget, "app", $_arr_appChk, $_arr_logType);

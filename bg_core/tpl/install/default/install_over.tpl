@@ -5,9 +5,9 @@
 	act_help   => "over"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_head.tpl" cfg=$cfg}
 
-	<form name="install_form_dbtable" id="install_form_dbtable">
+	<form name="install_form_over" id="install_form_over">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="over">
 
@@ -21,13 +21,13 @@
 		<div class="form-group">
 			<div class="btn-group">
 				<button type="button" id="go_next" class="btn btn-primary btn-lg">{$lang.btn.over}</button>
-				{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_drop.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_drop.tpl" cfg=$cfg}
 			</div>
 		</div>
 	</form>
 
 
-{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_submit_form = {
@@ -39,11 +39,11 @@
 	};
 
 	$(document).ready(function(){
-		var obj_submit_form = $("#install_form_dbtable").baigoSubmit(opts_submit_form);
+		var obj_submit_form = $("#install_form_over").baigoSubmit(opts_submit_form);
 		$("#go_next").click(function(){
 			obj_submit_form.formSubmit();
 		});
 	})
 	</script>
 
-</html>
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/html_foot.tpl" cfg=$cfg}

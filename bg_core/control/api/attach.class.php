@@ -50,10 +50,10 @@ class API_ATTACH {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$_arr_thumbRows   = include(BG_PATH_CACHE . "thumb_list.php");
+		$_arr_thumbRows   = include(BG_PATH_CACHE . "sys/thumb_list.php");
 		$_arr_attachRow   = $this->mdl_attach->mdl_url($_num_attachId, $_arr_thumbRows);
 
 		if ($_arr_attachRow["alert"] != "y070102") {

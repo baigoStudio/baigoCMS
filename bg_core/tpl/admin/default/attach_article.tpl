@@ -7,16 +7,17 @@
 	baigoValidator => "true",
 	baigoSubmit    => "true",
 	tokenReload    => "true",
+	tooltip        => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=article&article_id={$tplData.articleRow.article_id}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$tplData.articleRow.article_id}">{$tplData.articleRow.article_title}</a></li>
 	<li>{$lang.page.attachArticle}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -122,13 +123,13 @@
 						<table class="table table-striped table-hover">
 							<thead>
 								<tr>
-									<th class="td_mn">
+									<th class="text-nowrap td_mn">
 
 									</th>
-									<th class="td_mn">{$lang.label.id}</th>
-									<th class="td_sm">{$lang.label.attachThumb}</th>
+									<th class="text-nowrap td_mn">{$lang.label.id}</th>
+									<th class="text-nowrap td_sm">{$lang.label.attachThumb}</th>
 									<th>{$lang.label.attachInfo}</th>
-									<th class="td_md">{$lang.label.status} / {$lang.label.admin}</th>
+									<th class="text-nowrap td_md">{$lang.label.status} / {$lang.label.admin}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -139,15 +140,15 @@
 										{$_css_status = "default"}
 									{/if}
 									<tr>
-										<td class="td_mn">
+										<td class="text-nowrap td_mn">
 											<input type="radio" name="attach_id" value="{$value.attach_id}" {if $value.attach_id == $tplData.articleRow.article_attach_id}checked{/if} id="attach_id_{$value.attach_id}" group="attach_id" class="validate">
 										</td>
-										<td class="td_mn">{$value.attach_id}</td>
-										<td class="td_sm">
+										<td class="text-nowrap td_mn">{$value.attach_id}</td>
+										<td class="text-nowrap td_sm">
 											{if $value.attach_type == "image"}
 												<a href="{$value.attach_url}" target="_blank"><img src="{$value.attach_thumb.0.thumb_url}" alt="{$value.attach_name}" width="100"></a>
 											{else}
-												<a href="{$value.attach_url}" target="_blank"><img src="{$smarty.const.BG_URL_IMAGE}file_{$value.attach_ext}.png" alt="{$value.attach_name}" width="50"></a>
+												<a href="{$value.attach_url}" target="_blank"><img src="{$smarty.const.BG_URL_STATIC}image/file_{$value.attach_ext}.png" alt="{$value.attach_name}" width="50"></a>
 											{/if}
 										</td>
 										<td>
@@ -187,7 +188,7 @@
 												</li>
 											</ul>
 										</td>
-										<td class="td_md">
+										<td class="text-nowrap td_md">
 											<ul class="list-unstyled">
 												<li class="label_baigo">
 													<span class="label label-{$_css_status}">{$lang.label[$value.attach_box]}</span>
@@ -221,12 +222,12 @@
 			</form>
 
 			<div class="text-right">
-				{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 			</div>
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -254,8 +255,7 @@
 			}
 		});
 		$("#attach_list").baigoCheckall();
-		$("[data-toggle='tooltip']").tooltip();
 	});
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

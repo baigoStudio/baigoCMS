@@ -186,6 +186,34 @@ class MODEL_MIME {
 	}
 
 
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("mime_id", $_arr_col)) {
+			$_arr_alert["mime_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mime_id");
+		}
+
+		if (in_array("mime_ext", $_arr_col)) {
+			$_arr_alert["mime_ext"] = array("CHANGE", "char(4) NOT NULL COMMENT '扩展名'", "mime_ext");
+		}
+
+		$_str_alert = "x080106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "mime", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y080106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+	}
+
+
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(

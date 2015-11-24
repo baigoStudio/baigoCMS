@@ -9,14 +9,16 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ctl.inc.php"); //管理员通用
+include_once(BG_PATH_FUNC . "include.func.php"); //管理员通用
+fn_include(true, true, "Content-Type: text/html; charset=utf-8", true, "ctl", true);
+
 include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_ADMIN . "ctl/alert.class.php"); //载入消息类
+include_once(BG_PATH_CONTROL . "admin/ctl/alert.class.php"); //载入消息类
 
 $ctl_alert = new CONTROL_ALERT(); //初始化消息对象
 
 switch ($GLOBALS["act_get"]) {
-	case "display":
-		$ctl_alert->ctl_display(); //显示消息
+	case "show":
+		$ctl_alert->ctl_show(); //显示消息
 	break;
 }

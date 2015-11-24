@@ -124,7 +124,7 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 				break;
 			}
 
-			if (BG_SWITCH_TOKEN == true) {
+			if (BG_SWITCH_TOKEN == 1) {
 				 if ($_str_tokenSession != fn_session("token_session") || $_str_tokenCookie != fn_session("token_cookie")) {
 					$_str_return = false;
 				 } else {
@@ -136,7 +136,7 @@ function fn_token($token_action = "mk", $session_method = "post", $cookie_method
 		break;
 
 		default:
-			if (BG_SWITCH_TOKEN == true) {
+			if (BG_SWITCH_TOKEN == 1) {
 				$_num_tokenSessionDiff = fn_session("token_session_time") + 300; //session有效期
 				if (!fn_session("token_session") || !fn_session("token_session_time") || $_num_tokenSessionDiff < time()) {
 					$_str_tokenSession                 = fn_rand();
@@ -288,9 +288,9 @@ function fn_page($num_total, $num_per = BG_DEFAULT_PERPAGE, $method = "get") {
 		$_num_except = ($_num_pageThis - 1) * $num_per;
 	}
 
-	$_p = intval(($_num_pageThis - 1) / 10); //是否存在上十页、下十页参数
-	$_begin = $_p * 10 + 1; //列表起始页
-	$_end = $_p * 10 + 10; //列表结束页
+	$_p        = intval(($_num_pageThis - 1) / 10); //是否存在上十页、下十页参数
+	$_begin    = $_p * 10 + 1; //列表起始页
+	$_end      = $_p * 10 + 10; //列表结束页
 
 	if ($_end >= $_num_pageTotal) {
 		$_end = $_num_pageTotal;
@@ -499,6 +499,13 @@ function fn_getAttach($_str_content) {
 }
 
 
+/**
+ * fn_get function.
+ *
+ * @access public
+ * @param mixed $key
+ * @return void
+ */
 function fn_get($key) {
 	if (isset($_GET[$key])) {
 		return $_GET[$key];
@@ -508,6 +515,13 @@ function fn_get($key) {
 }
 
 
+/**
+ * fn_post function.
+ *
+ * @access public
+ * @param mixed $key
+ * @return void
+ */
 function fn_post($key) {
 	if (isset($_POST[$key])) {
 		return $_POST[$key];
@@ -517,14 +531,23 @@ function fn_post($key) {
 }
 
 
+/**
+ * fn_cookie function.
+ *
+ * @access public
+ * @param mixed $key
+ * @param string $method (default: "get")
+ * @param string $value (default: "")
+ * @return void
+ */
 function fn_cookie($key, $method = "get", $value = "") {
 	switch ($method) {
 		case "mk":
-			setcookie($key . "_" . BG_SITE_SSIN, $value, time()+300);
+			setcookie($key . "_" . BG_SITE_SSIN, $value);
 		break;
 
 		case "unset":
-			setcookie($key . "_" . BG_SITE_SSIN, "", time() - 3600);
+			unset($_COOKIE[$key . "_" . BG_SITE_SSIN]);
 		break;
 
 		default:
@@ -538,6 +561,15 @@ function fn_cookie($key, $method = "get", $value = "") {
 }
 
 
+/**
+ * fn_session function.
+ *
+ * @access public
+ * @param mixed $key
+ * @param string $method (default: "get")
+ * @param string $value (default: "")
+ * @return void
+ */
 function fn_session($key, $method = "get", $value = "") {
 	switch ($method) {
 		case "mk":
@@ -559,6 +591,13 @@ function fn_session($key, $method = "get", $value = "") {
 }
 
 
+/**
+ * fn_request function.
+ *
+ * @access public
+ * @param mixed $key
+ * @return void
+ */
 function fn_request($key) {
 	if (isset($_REQUEST[$key])) {
 		return $_REQUEST[$key];
@@ -568,6 +607,13 @@ function fn_request($key) {
 }
 
 
+/**
+ * fn_server function.
+ *
+ * @access public
+ * @param mixed $key
+ * @return void
+ */
 function fn_server($key) {
 	if (isset($_SERVER[$key])) {
 		return $_SERVER[$key];

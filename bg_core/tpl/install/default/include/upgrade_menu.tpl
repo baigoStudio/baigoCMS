@@ -1,12 +1,16 @@
 	<ul class="dropdown-menu">
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=ext">{$lang.page.installExt}</a></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=dbconfig">{$lang.page.installDbconfig}</a></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=dbtable">{$lang.page.upgradeTable}</a></li>
+		<li{if $tplData.act_get == "ext"} class="active"{/if}><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=ext">{$lang.page.installExt}</a></li>
+
 		<li class="divider"></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=base">{$lang.page.installBase}</a></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=visit">{$lang.page.installVisit}</a></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=upload">{$lang.page.installUpload}</a></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=sso">{$lang.page.installSso}</a></li>
+		<li{if $tplData.act_get == "dbconfig"} class="active"{/if}><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=dbconfig">{$lang.page.installDbConfig}</a></li>
+		<li{if $tplData.act_get == "dbtable"} class="active"{/if}><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=dbtable">{$lang.page.upgradeDbTable}</a></li>
 		<li class="divider"></li>
-		<li><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=over">{$lang.page.upgradeOver}</a></li>
+
+        {foreach $opt as $key_opt=>$value_opt}
+    		<li{if $tplData.act_get == $key_opt} class="active"{/if}><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get={$key_opt}">{$value_opt.title}</a></li>
+		{/foreach}
+
+		<li class="divider"></li>
+
+		<li{if $tplData.act_get == "over"} class="active"{/if}><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=over">{$lang.page.upgradeOver}</a></li>
 	</ul>

@@ -11,47 +11,47 @@ return "<h3>图片、附件</h3>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">键名</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">说明</th>
+						<th class=\"text-nowrap\">键名</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">说明</th>
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">attach_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">附件 ID</td>
+						<td class=\"text-nowrap\">attach_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">附件 ID</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">attach_name</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">原始文件名</td>
+						<td class=\"text-nowrap\">attach_name</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">原始文件名</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">attach_time</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">上传时间戳</td>
+						<td class=\"text-nowrap\">attach_time</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">上传时间戳</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">attach_ext</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">扩展名</td>
+						<td class=\"text-nowrap\">attach_ext</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">扩展名</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">attach_size</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">附件大小</td>
+						<td class=\"text-nowrap\">attach_size</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">附件大小</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">attach_url</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">附件 URL 地址</td>
+						<td class=\"text-nowrap\">attach_url</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">附件 URL 地址</td>
 						<td> </td>
 					</tr>
 				</tbody>
@@ -68,4 +68,26 @@ return "<h3>图片、附件</h3>
 	</p>
 	<p>
 		以栏目主页的文章列表数组为例，缩略图位于 <code>{\$tplData.articleRows[0].attachRow}</code>，此数组包含了第一篇文章的所有图片信息，包括原始图片、多个缩略图等，如果我们要显示某一个尺寸的缩略图，我们需要得到调用键名，调用键名位于 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=attach#thumb\">附件管理</a> 中的缩略图部分，如果我们要显示系统默认的 100x100 的缩略图，代码为 <code>{\$tplData.articleRows[0].attachRow.thumb_100_100_cut}</code>。
+	</p>
+
+	<p>&nbsp;</p>
+
+	<h4>附件数据示例</h4>
+	<code>{\$tplData.articleRows[0].attachRow|@print_r}</code>
+	<p>
+<pre><code class=\"language-php\">Array (
+    [attach_id] =&gt; 2662 //附件 ID
+    [attach_name] =&gt; 20080228_765bd81512e1d286d713fnYZzWPWCwbf.jpg //原始文件名
+    [attach_time] =&gt; 1438308616  //上传时间
+    [attach_ext] =&gt; jpg  //扩展名
+    [attach_mime] =&gt; image/jpeg  //MIME
+    [attach_size] =&gt; 42996 //大小
+    [attach_type] =&gt; image //附件类型
+    [attach_url] =&gt; /cms/bg_attach/2015/07/2662.jpg  //附件 URL
+    [thumb_100_100_cut] =&gt; /cms/bg_attach/2015/07/2662_100_100_cut.jpg //缩略图
+    [thumb_150_2000_ratio] =&gt; /cms/bg_attach/2015/07/2662_150_2000_ratio.jpg
+    [thumb_200_200_ratio] =&gt; /cms/bg_attach/2015/07/2662_200_200_ratio.jpg
+    [thumb_500_500_cut] =&gt; /cms/bg_attach/2015/07/2662_500_500_cut.jpg
+    [alert] =&gt; y070102
+)</code></pre>
 	</p>";

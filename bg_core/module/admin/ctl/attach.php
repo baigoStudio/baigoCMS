@@ -9,9 +9,12 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ctl.inc.php"); //载入全局通用
+include_once(BG_PATH_FUNC . "include.func.php");
+fn_include(true, true, "Content-Type: text/html; charset=utf-8", true, "ctl", true);
+
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "is_admin.inc.php"); //载入后台通用
-include_once(BG_PATH_CONTROL_ADMIN . "ctl/attach.class.php"); //载入模板类
+include_once(BG_PATH_CONTROL . "admin/ctl/attach.class.php"); //载入模板类
 
 $ctl_attach = new CONTROL_ATTACH(); //初始化设置对象
 
@@ -35,7 +38,7 @@ switch ($GLOBALS["act_get"]) {
 	default:
 		$arr_attachRow = $ctl_attach->ctl_list();
 		if ($arr_attachRow["alert"] != "y070301") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_attachRow["alert"] . $_url_attach);
+			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_attachRow["alert"]);
 			exit;
 		}
 	break;

@@ -3,7 +3,6 @@
 	title  => "提示信息"
 ]}
 
-{include "include/html_head.tpl"}
 {include "include/pub_head.tpl" cfg=$cfg}
 
 	<div class="page-header">

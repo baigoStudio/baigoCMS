@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
 include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "cateBelong.class.php");
@@ -32,18 +32,19 @@ class CONTROL_ARTICLE {
 	private $mdl_admin;
 
 	function __construct() { //构造函数
-		$this->obj_base           = $GLOBALS["obj_base"];
-		$this->config             = $this->obj_base->config;
-		$this->adminLogged        = $GLOBALS["adminLogged"]; //获取已登录信息
-		$this->obj_tpl            = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
-		$this->mdl_article        = new MODEL_ARTICLE(); //设置文章对象
-		$this->mdl_cate           = new MODEL_CATE(); //设置栏目对象
-		$this->mdl_cateBelong     = new MODEL_CATE_BELONG(); //设置栏目从属对象
-		$this->mdl_tag            = new MODEL_TAG();
-		$this->mdl_mark           = new MODEL_MARK(); //设置标记对象
-		$this->mdl_spec           = new MODEL_SPEC();
-		$this->mdl_admin          = new MODEL_ADMIN(); //设置管理员对象
-		$this->mdl_custom         = new MODEL_CUSTOM();
+		$this->obj_base       = $GLOBALS["obj_base"];
+		$this->config         = $this->obj_base->config;
+		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
+		$_arr_cfg["admin"]    = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
+		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
+		$this->mdl_cateBelong = new MODEL_CATE_BELONG(); //设置栏目从属对象
+		$this->mdl_tag        = new MODEL_TAG();
+		$this->mdl_mark       = new MODEL_MARK(); //设置标记对象
+		$this->mdl_spec       = new MODEL_SPEC();
+		$this->mdl_admin      = new MODEL_ADMIN(); //设置管理员对象
+		$this->mdl_custom     = new MODEL_CUSTOM();
 		$this->article_init();
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
@@ -114,8 +115,6 @@ class CONTROL_ARTICLE {
 			);
 			$_arr_specRow = array();
 		}
-
-		//print_r($_arr_articleRow);
 
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
 		$_arr_markRows    = $this->mdl_mark->mdl_list(100);
@@ -305,14 +304,20 @@ class CONTROL_ARTICLE {
 
 
 	private function article_init() {
-		$this->customRows = $this->mdl_custom->mdl_list(100, 0, "", "article", "enable");
+		$this->customRows = $this->mdl_custom->mdl_list(100, 0, "", "enable");
 
-		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+		/*foreach ($this->customRows as $_key=>$_value) {
+    		$this->customRows[$_key]["custom_opt"] = explode(",", $_value["custom_opt"]);
+		}*/
+
+		if (!file_exists(BG_PATH_CACHE . "sys/custom_list.php")) {
 			$this->mdl_custom->mdl_cache();
 		}
 
-		$_arr_customRows = include(BG_PATH_CACHE . "custom_list.php");
+		//$_arr_column_custom  = $this->mdl_custom->mdl_column_custom();
 
-		$this->mdl_article->custom_columns = $_arr_customRows["article_custom"];
+		//$_arr_customRows = include(BG_PATH_CACHE . "custom_list.php");
+
+		$this->mdl_article->custom_columns = $this->mdl_custom->mdl_column_custom();
 	}
 }

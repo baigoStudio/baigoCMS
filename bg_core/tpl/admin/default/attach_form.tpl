@@ -66,13 +66,13 @@
 
 <div class="modal-body">
 
-	<div class="tab-content attach_modal">
+	<div class="tab-content">
 		<div class="tab-pane active" id="pane_insert">
 			<div id="attach_list" class="row"></div>
 		</div>
 
 		<div class="tab-pane" id="pane_upload">
-			{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/upload.tpl" cfg=$cfg}
+			{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/upload.tpl" cfg=$cfg}
 		</div>
 
 		<div class="tab-pane active" id="pane_article">
@@ -168,14 +168,14 @@ function get_list(_value) {
 			if (_value.attach_type == "image") {
 				_str_url = _value.attach_thumb[0].thumb_url;
 			} else {
-				_str_url = "{$smarty.const.BG_URL_IMAGE}file_" + _value.attach_ext + ".png";
+				_str_url = "{$smarty.const.BG_URL_STATIC}image/file_" + _value.attach_ext + ".png";
 			}
 			_str_appent_attach += "<a href=\"" + _value.attach_url + "\" target=\"_blank\">" +
 				"<img src=\"" + _str_url + "\" alt=\"" + _value.attach_name + "\" class=\"img-responsive\" alt=\"" + _value.attach_name + "\" title=\"" + _value.attach_name + "\">" +
 			"</a>" +
 
 			"<div class=\"caption\">" +
-				"<p class=\"attach_overflow\" title=\"" + _value.attach_name + "\">" + _value.attach_name + "</p>" +
+				"<p class=\"attach_overflow text-nowrap\" title=\"" + _value.attach_name + "\">" + _value.attach_name + "</p>" +
 				"<div class=\"dropdown\">" +
 					"<button type=\"button\" class=\"btn btn-success btn-block btn-sm dropdown-toggle\" data-toggle=\"dropdown\">"+
 						"{$lang.href.insertThumb}" +
@@ -246,7 +246,7 @@ function insertAttach(src, name, id, type, ext) {
 		break;
 
 		default:
-			_str = "<img src='{$smarty.const.BG_URL_IMAGE}file_" + ext + ".png'> <a href='" + src + "'>" + name + "</a>"
+			_str = "<img src='{$smarty.const.BG_URL_STATIC}image/file_" + ext + ".png'> <a href='" + src + "'>" + name + "</a>"
 		break;
 	}
 

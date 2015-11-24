@@ -19,35 +19,35 @@ return "<a name=\"get\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">名称</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">必须</th>
+						<th class=\"text-nowrap\">名称</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">必须</th>
 						<th>具体描述</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">act_get</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>接口调用动作，值只能为 get。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_key</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_key</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">tag_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">tag_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>TAG ID</td>
 					</tr>
 				</tbody>
@@ -65,44 +65,61 @@ return "<a name=\"get\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">名称</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">说明</th>
+						<th class=\"text-nowrap\">名称</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">说明</th>
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">tag_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">TAG ID</td>
+						<td class=\"text-nowrap\">tag_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">TAG ID</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">tag_name</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">TAG 名称</td>
+						<td class=\"text-nowrap\">tag_name</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">TAG 名称</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">tag_article_count</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">文章计数</td>
+						<td class=\"text-nowrap\">tag_article_count</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">文章计数</td>
 						<td>与当前 TAG 关联的文章计数。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">tag_status</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">TAG 状态</td>
+						<td class=\"text-nowrap\">tag_status</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">TAG 状态</td>
 						<td>pub 为发布，hide 为隐藏。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">alert</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">返回代码</td>
+						<td class=\"text-nowrap\">alert</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">返回代码</td>
 						<td>显示当前 TAG 的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-	</div>";
+	</div>
+
+	<p>&nbsp;</p>
+
+	<h4>返回结果示例</h4>
+	<p>
+<pre><code class=\"language-javascript\">{
+    &quot;tag_id&quot;: &quot;94&quot;, //TAG ID
+    &quot;tag_name&quot;: &quot;asp&quot;, //TAG 名称
+    &quot;tag_status&quot;: &quot;show&quot;, //状态
+    &quot;tag_article_count&quot;: &quot;0&quot;, //关联文章数
+    &quot;urlRow&quot;: {
+        &quot;tag_url&quot;: &quot;/cms/tag/tag-asp/&quot;, //URL
+        &quot;page_attach&quot;: &quot;page-&quot; //分页附加
+    }
+    &quot;alert&quot;: &quot;y130102&quot;
+}</code></pre>
+	</p>";

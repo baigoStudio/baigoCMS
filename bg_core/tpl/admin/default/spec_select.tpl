@@ -28,12 +28,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$adminMod.article.sub.tag.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -73,7 +73,7 @@
 					<input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 					<div class="form-group">
 						<div class="input-group">
-							<input type="text" name="key_belong" value="{$tplData.search.key}" placeholder="{$lang.label.key_belong}" class="form-control input-sm">
+							<input type="text" name="key_belong" value="{$tplData.search.key_belong}" placeholder="{$lang.label.key}" class="form-control input-sm">
 							<span class="input-group-btn">
 								<button type="submit" class="btn btn-default btn-sm">
 									<span class="glyphicon glyphicon-search"></span>
@@ -92,15 +92,15 @@
 						<table class="table table-striped table-hover">
 							<thead>
 								<tr>
-									<th class="td_mn">
+									<th class="text-nowrap td_mn">
 										<label for="belong_all" class="checkbox-inline">
 											<input type="checkbox" name="belong_all" id="belong_all" class="first">
 											{$lang.label.all}
 										</label>
 									</th>
-									<th class="td_mn">{$lang.label.id}</th>
+									<th class="text-nowrap td_mn">{$lang.label.id}</th>
 									<th>{$lang.label.articleTitle}</th>
-									<th class="td_md">{$lang.label.status}</th>
+									<th class="text-nowrap td_md">{$lang.label.status}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -129,8 +129,8 @@
 										{$_str_status = $lang.label[$value.article_box]}
 									{/if}
 									<tr>
-										<td class="td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="belong_id_{$value.article_id}" group="belong_id" class="belong_all validate"></td>
-										<td class="td_mn">{$value.article_id}</td>
+										<td class="text-nowrap td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="belong_id_{$value.article_id}" group="belong_id" class="belong_all validate"></td>
+										<td class="text-nowrap td_mn">{$value.article_id}</td>
 										<td>
 											{if $value.article_title}
 												{$value.article_title}
@@ -138,7 +138,7 @@
 												{$lang.label.noname}
 											{/if}
 										</td>
-										<td class="td_md">
+										<td class="text-nowrap td_md">
 											<ul class="list-unstyled">
 												<li class="label_baigo">
 													<span class="label label-{$_css_status}">{$_str_status}</span>
@@ -210,15 +210,15 @@
 						<table class="table table-striped table-hover">
 							<thead>
 								<tr>
-									<th class="td_mn">
+									<th class="text-nowrap td_mn">
 										<label for="select_all" class="checkbox-inline">
 											<input type="checkbox" name="select_all" id="select_all" class="first">
 											{$lang.label.all}
 										</label>
 									</th>
-									<th class="td_mn">{$lang.label.id}</th>
+									<th class="text-nowrap td_mn">{$lang.label.id}</th>
 									<th>{$lang.label.articleTitle} / {$lang.label.articleSpec}</th>
-									<th class="td_md">{$lang.label.status}</th>
+									<th class="text-nowrap td_md">{$lang.label.status}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -247,8 +247,8 @@
 										{$_str_status = $lang.label[$value.article_box]}
 									{/if}
 									<tr>
-										<td class="td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="select_id_{$value.article_id}" group="select_id" class="select_all validate"></td>
-										<td class="td_mn">{$value.article_id}</td>
+										<td class="text-nowrap td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="select_id_{$value.article_id}" group="select_id" class="select_all validate"></td>
+										<td class="text-nowrap td_mn">{$value.article_id}</td>
 										<td>
 											<ul class="list-unstyled">
 												<li>
@@ -267,7 +267,7 @@
 												</li>
 											</ul>
 										</td>
-										<td class="td_md">
+										<td class="text-nowrap td_md">
 											<ul class="list-unstyled">
 												<li>
 													<span class="label label-{$_css_status}">{$_str_status}</span>
@@ -294,13 +294,13 @@
 			</form>
 
 			<div class="text-right">
-				{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+				{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 			</div>
 
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 
 	<script type="text/javascript">
@@ -356,5 +356,5 @@
 	});
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

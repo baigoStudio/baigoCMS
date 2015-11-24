@@ -8,9 +8,9 @@
 	<title>{if $cfg.title}{$cfg.title} - {/if}{$smarty.const.BG_SITE_NAME}</title>
 
 	<!--jQuery 库-->
-	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
-	<script src="{$smarty.const.BG_URL_JS}base64.js" type="text/javascript"></script>
-	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<script src="{$smarty.const.BG_URL_STATIC}js/jquery.min.js" type="text/javascript"></script>
+	<script src="{$smarty.const.BG_URL_STATIC}js/base64.js" type="text/javascript"></script>
+	<link href="{$smarty.const.BG_URL_STATIC}js/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="{$smarty.const.BG_URL_STATIC_PUB}{$smarty.const.BG_SITE_TPL}/css/common.css" type="text/css" rel="stylesheet">
 
 </head>

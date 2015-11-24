@@ -4,6 +4,38 @@ return "<a name=\"tree\"></a>
 	<p>
 		在任何模板内，均可以用遍历 <code>{\$tplData.cateRows}</code> 的方式来显示网站所有栏目的树形结构，详细字段请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=cate#cateRow\">栏目</a>。
 	</p>
+
+	<p>&nbsp;</p>
+
+	<h4>栏目树数据示例</h4>
+	<code>{\$tplData.cateRows|@print_r}</code>
+	<p>
+<pre><code class=\"language-php\">Array (
+    [7] =&gt; Array (
+        [cate_id] =&gt; 7 //栏目 ID
+        [cate_name] =&gt; baigo CMS //名称
+        [cate_alias] =&gt; baigocms //别名
+        [cate_parent_id] =&gt; 0 //隶属栏目 ID
+        [urlRow] =&gt; Array (
+            [cate_url] =&gt; /cate/baigocms/id-7/ //URL
+            [page_attach] =&gt; page- //分页附加
+        )
+        [cate_childs] =&gt; Array ( //子栏目
+            [13] =&gt; Array (
+                [cate_id] =&gt; 13
+                [cate_name] =&gt; test
+                [cate_alias] =&gt; test
+                [cate_parent_id] =&gt; 7
+                [urlRow] =&gt; Array (
+                    [cate_url] =&gt; /cate/baigocms/test/id-13/
+                    [page_attach] =&gt; page-
+                )
+            )
+        )
+    )
+)</code></pre>
+	</p>
+
 	<hr>
 
 	<a name=\"call\"></a>
@@ -30,7 +62,7 @@ return "<a name=\"tree\"></a>
 	<a name=\"include\"></a>
 	<h3>包含</h3>
 	<p>
-		在任何模板内，均可以用 <code>{include \"包含模板路径\"}</code> 的方式来包含并执行文件，您可以在模板目录下，建立一个文件夹，如 <mark>inc</mark>，用来统一存放被包含的模板，如：<code>{include \"inc/head.tpl\"}</code>，关于包含，请查看 Smarty 官方网站 <a href=\"http://www.smarty.net\" target=\"_blank\">http://www.smarty.net</a></a>。
+		在任何模板内，均可以用 <code>{include \"包含模板路径\"}</code> 的方式来包含并执行文件，您可以在模板目录下，建立一个目录，如 <mark>inc</mark>，用来统一存放被包含的模板，如：<code>{include \"inc/head.tpl\"}</code>，关于包含，请查看 Smarty 官方网站 <a href=\"http://www.smarty.net\" target=\"_blank\">http://www.smarty.net</a></a>。
 	</p>
 	<hr>
 
@@ -52,101 +84,81 @@ return "<a name=\"tree\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">常量名</th>
+						<th class=\"text-nowrap\">常量名</th>
 						<th>说明</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">BG_URL_ROOT</td>
+						<td class=\"text-nowrap\">BG_URL_ROOT</td>
 						<td>网站根目录</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_HELP</td>
+						<td class=\"text-nowrap\">BG_URL_HELP</td>
 						<td>帮助信息路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_ARTICLE</td>
+						<td class=\"text-nowrap\">BG_URL_ARTICLE</td>
 						<td>文章路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_ATTACH</td>
+						<td class=\"text-nowrap\">BG_URL_ATTACH</td>
 						<td>附件路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_SSO</td>
+						<td class=\"text-nowrap\">BG_URL_SSO</td>
 						<td>baigo SSO 路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_PUB</td>
+						<td class=\"text-nowrap\">BG_URL_PUB</td>
 						<td>前台路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_ADMIN</td>
+						<td class=\"text-nowrap\">BG_URL_ADMIN</td>
 						<td>管理后台路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_INSTALL</td>
+						<td class=\"text-nowrap\">BG_URL_INSTALL</td>
 						<td>安装程序路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_STATIC</td>
+						<td class=\"text-nowrap\">BG_URL_STATIC</td>
 						<td>静态文件路径</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_URL_STATIC_ADMIN</td>
-						<td>管理后台所用的静态文件路径</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">BG_URL_STATIC_INSTALL</td>
-						<td>安装程序所用的静态文件路径</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">BG_URL_STATIC_PUB</td>
-						<td>前台所用的静态文件路径</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">BG_URL_IMAGE</td>
-						<td>通用图片存放路径</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">BG_URL_JS</td>
-						<td>JavaScript 文件路径</td>
-					</tr>
-					<tr>
-						<td class=\"nowrap\">BG_SITE_NAME</td>
+						<td class=\"text-nowrap\">BG_SITE_NAME</td>
 						<td>网站名称</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_DOMAIN</td>
+						<td class=\"text-nowrap\">BG_SITE_DOMAIN</td>
 						<td>网站域名</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_URL</td>
+						<td class=\"text-nowrap\">BG_SITE_URL</td>
 						<td>网站首页 URL</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_PERPAGE</td>
+						<td class=\"text-nowrap\">BG_SITE_PERPAGE</td>
 						<td>每页显示数</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_TIMEZONE</td>
+						<td class=\"text-nowrap\">BG_SITE_TIMEZONE</td>
 						<td>所处时区</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_DATE</td>
+						<td class=\"text-nowrap\">BG_SITE_DATE</td>
 						<td>日期格式</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_DATESHORT</td>
+						<td class=\"text-nowrap\">BG_SITE_DATESHORT</td>
 						<td>短日期格式</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_TIME</td>
+						<td class=\"text-nowrap\">BG_SITE_TIME</td>
 						<td>时间格式</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">BG_SITE_TIMESHORT</td>
+						<td class=\"text-nowrap\">BG_SITE_TIMESHORT</td>
 						<td>短时间格式</td>
 					</tr>
 				</tbody>
@@ -166,17 +178,17 @@ return "<a name=\"tree\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">数组名</th>
+						<th class=\"text-nowrap\">数组名</th>
 						<th>说明</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">lang</td>
+						<td class=\"text-nowrap\">lang</td>
 						<td>通用信息，包含系统中常用的语言内容。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">alert</td>
+						<td class=\"text-nowrap\">alert</td>
 						<td>提示信息</td>
 					</tr>
 				</tbody>
@@ -196,28 +208,51 @@ return "<a name=\"tree\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">键名</th>
-						<th class=\"nowrap\">类型</th>
+						<th class=\"text-nowrap\">键名</th>
+						<th class=\"text-nowrap\">类型</th>
 						<th>说明</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">custom_id</td>
-						<td class=\"nowrap\">int</td>
+						<td class=\"text-nowrap\">custom_id</td>
+						<td class=\"text-nowrap\">int</td>
 						<td>自定义字段 ID</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">custom_name</td>
-						<td class=\"nowrap\">string</td>
+						<td class=\"text-nowrap\">custom_name</td>
+						<td class=\"text-nowrap\">string</td>
 						<td>自定义字段名称</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">custom_childs</td>
-						<td class=\"nowrap\">array</td>
+						<td class=\"text-nowrap\">custom_childs</td>
+						<td class=\"text-nowrap\">array</td>
 						<td>子字段数组</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-	</div>";
+	</div>
+
+	<p>&nbsp;</p>
+
+	<h4>自定义字段数据示例</h4>
+	<code>{\$tplData.customRows|@print_r}</code>
+	<p>
+<pre><code class=\"language-php\">Array (
+    [0] =&gt; Array (
+        [custom_id] =&gt; 4 //字段 ID
+        [custom_name] =&gt; 尺寸 //名称
+        [custom_parent_id] =&gt; 0 //隶属字段 ID
+        [custom_cate_id] =&gt; 0 //隶属栏目 ID
+        [custom_childs] =&gt; Array ( //子字段
+            [0] =&gt; Array (
+                [custom_id] =&gt; 5
+                [custom_name] =&gt; 长
+                [custom_parent_id] =&gt; 4
+                [custom_cate_id] =&gt; 2
+            )
+        )
+    )
+)</code></pre>
+	</p>";

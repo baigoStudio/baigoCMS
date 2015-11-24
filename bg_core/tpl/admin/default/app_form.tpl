@@ -1,7 +1,7 @@
 {* app_form.tpl 管理员编辑界面 *}
 {$cfg = [
-	title          => "{$adminMod.opt.main.title} - {$adminMod.opt.sub.app.title}",
-	menu_active    => "opt",
+	title          => "{$adminMod.more.main.title} - {$adminMod.more.sub.app.title}",
+	menu_active    => "more",
 	sub_active     => "app",
 	baigoCheckall  => "true",
 	baigoValidator => "true",
@@ -10,12 +10,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
-	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
-	<li>{$adminMod.opt.sub.app.title}</li>
+	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=custom">{$adminMod.more.main.title}</a></li>
+	<li>{$adminMod.more.sub.app.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -135,7 +135,7 @@
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -180,8 +180,8 @@
 	};
 
 	$(document).ready(function(){
-		var obj_validator_form = $("#app_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#app_form").baigoSubmit(opts_submit_form);
+		var obj_validator_form    = $("#app_form").baigoValidator(opts_validator_form);
+		var obj_submit_form       = $("#app_form").baigoSubmit(opts_submit_form);
 		$(".go_form").click(function(){
 			if (obj_validator_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
@@ -191,4 +191,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

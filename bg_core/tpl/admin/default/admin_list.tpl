@@ -10,11 +10,11 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.admin.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -77,16 +77,16 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.admin}</th>
-							<th class="td_md">{$lang.label.adminGroup} / {$lang.label.note}</th>
-							<th class="td_sm">{$lang.label.status}</th>
+							<th class="text-nowrap td_md">{$lang.label.adminGroup} / {$lang.label.note}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -97,8 +97,8 @@
 								{$_css_status = "danger"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="admin_id[]" value="{$value.admin_id}" id="admin_id_{$value.admin_id}" class="chk_all validate" group="admin_id"></td>
-								<td class="td_mn">{$value.admin_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="admin_id[]" value="{$value.admin_id}" id="admin_id_{$value.admin_id}" class="chk_all validate" group="admin_id"></td>
+								<td class="text-nowrap td_mn">{$value.admin_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>
@@ -138,7 +138,7 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_md">
+								<td class="text-nowrap td_md">
 									<ul class="list-unstyled">
 										<li>
 											{if isset($value.groupRow.group_name)}
@@ -185,7 +185,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<div class="modal fade" id="group_modal">
@@ -194,7 +194,7 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -212,7 +212,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -236,4 +236,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

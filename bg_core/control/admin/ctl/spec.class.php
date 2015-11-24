@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "spec.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "article.class.php"); //载入文章模型类
@@ -28,7 +28,8 @@ class CONTROL_SPEC {
 		$this->mdl_spec       = new MODEL_SPEC();
 		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
 		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);

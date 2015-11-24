@@ -10,12 +10,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl"}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl"}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$adminMod.article.sub.spec.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -71,15 +71,15 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.spec}</th>
-							<th class="td_sm">{$lang.label.status}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -90,8 +90,8 @@
 								{$_css_status = "danger"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="spec_id[]" value="{$value.spec_id}" id="spec_id_{$value.spec_id}" group="spec_id" class="chk_all validate"></td>
-								<td class="td_mn">{$value.spec_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="spec_id[]" value="{$value.spec_id}" id="spec_id_{$value.spec_id}" group="spec_id" class="chk_all validate"></td>
+								<td class="text-nowrap td_mn">{$value.spec_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>
@@ -148,10 +148,10 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl"}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl"}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -169,7 +169,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -190,5 +190,5 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

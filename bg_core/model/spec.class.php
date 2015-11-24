@@ -147,7 +147,7 @@ class MODEL_SPEC {
 			exit;
 		}
 
-		$_arr_specRow["urlRow"]       = $this->url_process($_arr_specRow);
+		$_arr_specRow["urlRow"]   = $this->url_process($_arr_specRow);
 		$_arr_specRow["alert"]    = "y180102";
 
 		return $_arr_specRow;
@@ -256,6 +256,38 @@ class MODEL_SPEC {
 		exit;*/
 
 		return $_num_specCount;
+	}
+
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("spec_id", $_arr_col)) {
+			$_arr_alert["spec_id"] = array("CHANGE", "mediumint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "spec_id");
+		}
+
+		if (in_array("spec_status", $_arr_col)) {
+			$_arr_alert["spec_status"] = array("CHANGE", "enum('show','hide') NOT NULL COMMENT '状态'", "spec_status");
+		}
+
+		if (in_array("spec_content", $_arr_col)) {
+			$_arr_alert["spec_content"] = array("CHANGE", "text NOT NULL COMMENT '专题内容'", "spec_content");
+		}
+
+		$_str_alert = "x180106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "spec", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y180106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
 	}
 
 

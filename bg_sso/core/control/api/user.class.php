@@ -29,26 +29,12 @@ class API_USER {
 
 	function __construct() { //构造函数
 		$this->obj_api        = new CLASS_API();
+		$this->obj_api->chk_install();
 		$this->log            = $this->obj_api->log; //初始化 AJAX 基对象
 		$this->mdl_user       = new MODEL_USER(); //设置管理组模型
 		$this->mdl_app        = new MODEL_APP(); //设置管理组模型
 		$this->mdl_appBelong  = new MODEL_APP_BELONG();
 		$this->mdl_log        = new MODEL_LOG(); //设置管理员模型
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_SSO_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"alert" => "x030411"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"alert" => "x030410"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
 	}
 
 	/**
@@ -59,6 +45,13 @@ class API_USER {
 	 */
 	function api_reg() {
 		$this->app_check("post");
+
+		if (defined(BG_REG_ACC) && BG_REG_ACC != "enable") {
+			$_arr_return = array(
+				"alert" => "x050316",
+			);
+			$this->obj_api->halt_re($_arr_return);
+		}
 
 		if (!isset($this->appAllow["user"]["reg"])) {
 			$_arr_return = array(
@@ -72,7 +65,7 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userReg = $this->mdl_user->api_reg(); //获取数据
+		$_arr_userReg = $this->mdl_user->api_input_reg(); //获取数据
 		if ($_arr_userReg["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userReg);
 		}
@@ -82,7 +75,7 @@ class API_USER {
 		$_str_userPass    = fn_baigoEncrypt($_arr_userReg["user_pass"], $_str_rand, true);
 		$_arr_userRow     = $this->mdl_user->mdl_submit($_str_userPass, $_str_rand);
 
-		$_str_key        = fn_rand(6);
+		$_str_key         = fn_rand(6);
 		$_str_code        = $this->obj_api->api_encode($_arr_userRow, $_str_key);
 		$this->mdl_appBelong->mdl_submit($_arr_userRow["user_id"], $this->appGet["app_id"]);
 
@@ -123,7 +116,7 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userLogin = $this->mdl_user->api_login();
+		$_arr_userLogin = $this->mdl_user->api_input_login();
 		if ($_arr_userLogin["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userLogin);
 		}
@@ -235,7 +228,7 @@ class API_USER {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_userEdit = $this->mdl_user->api_edit();
+		$_arr_userEdit = $this->mdl_user->api_input_edit();
 
 		if ($_arr_userEdit["alert"] != "ok") {
 			$this->obj_api->halt_re($_arr_userEdit);

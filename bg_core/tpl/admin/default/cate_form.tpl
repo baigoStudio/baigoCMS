@@ -36,12 +36,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=list">{$adminMod.cate.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -63,11 +63,7 @@
 	<form name="cate_form" id="cate_form">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" id="act_post" value="submit">
-		<input type="hidden" name="cate_id" value="{$tplData.cateRow.cate_id}">
-
-		<input type="hidden" name="aaa" id="aaa" value="AAA">
-		<input type="hidden" name="bbb" id="bbb" value="BBB">
-		<input type="hidden" name="ccc" id="ccc" value="CCC">
+		<input type="hidden" name="cate_id" id="cate_id" value="{$tplData.cateRow.cate_id}">
 
 		<div class="row">
 			<div class="col-md-9">
@@ -122,7 +118,7 @@
 							</div>
 						</div>
 
-						{if $smarty.const.BG_MODULE_GEN == true && $smarty.const.BG_MODULE_FTP == true && $tplData.cateRow.cate_parent_id <= 0}
+						{if $smarty.const.BG_MODULE_GEN == 1 && $smarty.const.BG_MODULE_FTP == 1 && $tplData.cateRow.cate_parent_id <= 0}
 							<div class="form-group">
 								<label for="more_checkbox" class="checkbox-inline">
 									<input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_host}checked{/if}>
@@ -190,7 +186,7 @@
 							<option {if $tplData.cateRow.cate_tpl == "inherit"}selected{/if} value="inherit">{$lang.option.tplInherit}</option>
 							{foreach $tplData.tplRows as $key=>$value}
 								{if $value["type"] == "dir"}
-								<option {if $tplData.cateRow.cate_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
+									<option {if $tplData.cateRow.cate_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
 								{/if}
 							{/foreach}
 						</select>
@@ -230,7 +226,7 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -238,13 +234,13 @@
 			length: { min: 1, max: 300 },
 			validate: { type: "ajax", format: "text", group: "group_cate_name" },
 			msg: { id: "msg_cate_name", too_short: "{$alert.x110201}", too_long: "{$alert.x110202}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkname", key: "cate_name", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}", attach_id: "cate_parent_id", attach_key: "cate_parent_id" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkname", key: "cate_name", type: "str", attach_selectors: ["#cate_id","#cate_parent_id"], attach_keys: ["cate_id","cate_parent_id"] }
 		},
 		cate_alias: {
 			length: { min: 0, max: 300 },
 			validate: { type: "ajax", format: "alphabetDigit", group: "group_cate_alias" },
 			msg: { id: "msg_cate_alias", too_long: "{$alert.x110204}", format_err: "{$alert.x110205}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkalias", key: "cate_alias", type: "str", attach: "cate_id={$tplData.cateRow.cate_id}", attach_id: "cate_parent_id", attach_key: "cate_parent_id" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkalias", key: "cate_alias", type: "str", attach_selectors: ["#cate_id","#cate_parent_id"], attach_keys: ["cate_id","cate_parent_id"] }
 		},
 		cate_link: {
 			length: { min: 0, max: 3000 },
@@ -361,5 +357,5 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

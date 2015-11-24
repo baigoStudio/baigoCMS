@@ -19,29 +19,29 @@ return "<a name=\"get\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">名称</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">必须</th>
+						<th class=\"text-nowrap\">名称</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">必须</th>
 						<th>具体描述</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">act_get</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>接口调用动作，值只能为 list。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_key</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_key</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 				</tbody>
@@ -59,32 +59,56 @@ return "<a name=\"get\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">名称</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">说明</th>
+						<th class=\"text-nowrap\">名称</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">说明</th>
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">custom_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">自定义字段 ID</td>
+						<td class=\"text-nowrap\">custom_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">自定义字段 ID</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">custom_name</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">自定义字段名称</td>
+						<td class=\"text-nowrap\">custom_name</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">自定义字段名称</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">alert</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">返回代码</td>
+						<td class=\"text-nowrap\">alert</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">返回代码</td>
 						<td>显示当前 TAG 的状态，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-	</div>";
+	</div>
+
+	<p>&nbsp;</p>
+
+	<h4>返回结果示例</h4>
+	<p>
+<pre><code class=\"language-javascript\">[
+    {
+        &quot;custom_id&quot;: &quot;4&quot;, //字段 ID
+        &quot;custom_name&quot;: &quot;尺寸&quot;, //名称
+        &quot;custom_parent_id&quot;: &quot;0&quot;, //隶属字段 ID
+        &quot;custom_cate_id&quot;: &quot;0&quot;, //隶属栏目 ID
+        &quot;custom_childs&quot;: { //子字段
+            [
+                {
+                    &quot;custom_id&quot;: &quot;5&quot;,
+                    &quot;custom_name&quot;: &quot;长&quot;,
+                    &quot;custom_parent_id&quot;: &quot;4&quot;,
+                    &quot;custom_cate_id&quot;: &quot;2&quot;
+                }
+            ]
+        }
+    }
+]</code></pre>
+	</p>";

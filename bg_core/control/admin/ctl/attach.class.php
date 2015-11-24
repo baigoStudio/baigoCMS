@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php");
+include_once(BG_PATH_CLASS . "tpl.class.php");
 include_once(BG_PATH_MODEL . "article.class.php");
 include_once(BG_PATH_MODEL . "attach.class.php");
 include_once(BG_PATH_MODEL . "thumb.class.php");
@@ -29,17 +29,18 @@ class CONTROL_ATTACH {
 	private $mdl_admin;
 
 	function __construct() { //构造函数
-		$this->obj_base           = $GLOBALS["obj_base"];
-		$this->config             = $this->obj_base->config;
-		$this->adminLogged        = $GLOBALS["adminLogged"];
-		$this->obj_tpl            = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
-		$this->mdl_attach         = new MODEL_ATTACH(); //设置上传信息对象
-		$this->mdl_thumb          = new MODEL_THUMB();
-		$this->mdl_mime           = new MODEL_MIME();
-		$this->mdl_admin          = new MODEL_ADMIN();
-		$this->mdl_article        = new MODEL_ARTICLE(); //设置文章对象
-		$this->mdl_cate           = new MODEL_CATE(); //设置栏目对象
-		$this->mdl_mark           = new MODEL_MARK(); //设置标记对象
+		$this->obj_base       = $GLOBALS["obj_base"];
+		$this->config         = $this->obj_base->config;
+		$this->adminLogged    = $GLOBALS["adminLogged"];
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+		$this->mdl_attach     = new MODEL_ATTACH(); //设置上传信息对象
+		$this->mdl_thumb      = new MODEL_THUMB();
+		$this->mdl_mime       = new MODEL_MIME();
+		$this->mdl_admin      = new MODEL_ADMIN();
+		$this->mdl_article    = new MODEL_ARTICLE(); //设置文章对象
+		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
+		$this->mdl_mark       = new MODEL_MARK(); //设置标记对象
 		$this->setUpload();
 		$this->tplData = array(
 			"adminLogged"    => $this->adminLogged,
@@ -199,7 +200,7 @@ class CONTROL_ATTACH {
 		$_num_attachCount = $this->mdl_attach->mdl_count($_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId, $_str_box, $_arr_attachIds);
 		$_arr_page        = fn_page($_num_attachCount);
 		$_str_query       = http_build_query($_arr_search);
-		$_arr_pathRows    = $this->mdl_attach->mdl_year(100);
+		$_arr_yearRows    = $this->mdl_attach->mdl_year(100);
 		$_arr_extRows     = $this->mdl_attach->mdl_ext();
 		$_arr_attachRows  = $this->mdl_attach->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_year, $_str_month, $_str_ext, $_num_adminId, $_str_box, $_arr_attachIds);
 
@@ -222,7 +223,7 @@ class CONTROL_ATTACH {
 			"search"         => $_arr_search,
 			"attachCount"    => $_arr_attachCount,
 			"attachRows"     => $_arr_attachRows, //上传信息
-			"pathRows"       => $_arr_pathRows, //目录列表
+			"yearRows"       => $_arr_yearRows, //目录列表
 			"extRows"        => $_arr_extRows, //扩展名列表
 		);
 

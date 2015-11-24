@@ -64,7 +64,7 @@ class MODEL_ARTICLE {
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article_content", $_arr_articleCreat, "article_id", "文章");
 
 		if ($_num_mysql < 1) {
-			$_str_alert = "x120105";
+			$_str_alert = "x120111";
 		}
 
 		return array(
@@ -204,17 +204,23 @@ class MODEL_ARTICLE {
 
 
 	function mdl_copy_table() {
-		$_arr_articleCreat = array(
-			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"article_content"    => "text NOT NULL COMMENT '内容'",
-		);
+        $_arr_col   = $this->mdl_column();
 
-		$_num_mysql = $this->obj_db->copy_table(BG_DB_TABLE . "article_content", BG_DB_TABLE . "article", $_arr_articleCreat, "article_id", "文章内容");
+		$_str_alert = "x120114";
 
-		if ($_num_mysql > 0) {
-			$_str_alert = "y120105"; //更新成功
-		} else {
-			$_str_alert = "x120105"; //更新成功
+		if (in_array("article_content", $_arr_col)) {
+    		$_arr_articleCreat = array(
+    			"article_id"         => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+    			"article_content"    => "text NOT NULL COMMENT '内容'",
+    		);
+
+    		$_num_mysql = $this->obj_db->copy_table(BG_DB_TABLE . "article_content", BG_DB_TABLE . "article", $_arr_articleCreat, "article_id", "文章内容");
+
+    		if ($_num_mysql > 0) {
+    			$_str_alert = "y120112"; //更新成功
+    		} else {
+        		$_str_alert = "x120112"; //更新成功
+    		}
 		}
 
 		return array(
@@ -618,8 +624,6 @@ class MODEL_ARTICLE {
 	 * @return void
 	 */
 	function mdl_status($str_status, $arr_cateIds = false, $num_adminId = 0) {
-
-
 		$_arr_articleUpdate = array(
 			"article_status" => $str_status,
 		);
@@ -652,7 +656,6 @@ class MODEL_ARTICLE {
 
 
 	function mdl_toSpec($str_act, $num_specId = 0) {
-
 		if ($str_act != "to") {
 			$num_specId = 0;
 		}
@@ -896,6 +899,116 @@ class MODEL_ARTICLE {
 	}
 
 
+	function mdl_alert_table() {
+        $_arr_col   = $this->mdl_column();
+        $_arr_alert = array();
+
+		if (in_array("article_tag", $_arr_col)) {
+			$_arr_alert["article_tag"] = array("DROP");
+		}
+
+		if (in_array("article_upfile_id", $_arr_col)) {
+			$_arr_alert["article_upfile_id"] = array("CHANGE", "int NOT NULL COMMENT '附件ID'", "article_attach_id");
+		}
+
+		if (in_array("article_spec_id", $_arr_col)) {
+			$_arr_alert["article_spec_id"] = array("CHANGE", "mediumint NOT NULL COMMENT '专题ID'", "article_spec_id");
+		} else {
+			$_arr_alert["article_spec_id"] = array("ADD", "mediumint NOT NULL COMMENT '专题ID'");
+		}
+
+		if (in_array("article_cate_id", $_arr_col)) {
+			$_arr_alert["article_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '隶属栏目ID'", "article_cate_id");
+		}
+
+		if (in_array("article_mark_id", $_arr_col)) {
+			$_arr_alert["article_mark_id"] = array("CHANGE", "smallint NOT NULL COMMENT '标记ID'", "article_mark_id");
+		}
+
+		if (in_array("article_top", $_arr_col)) {
+			$_arr_alert["article_top"] = array("CHANGE", "tinyint NOT NULL COMMENT '置顶'", "article_top");
+		}
+
+		if (in_array("article_status", $_arr_col)) {
+			$_arr_alert["article_status"] = array("CHANGE", "enum('pub','wait','hide') NOT NULL COMMENT '状态'", "article_status");
+		}
+
+		if (in_array("article_box", $_arr_col)) {
+			$_arr_alert["article_box"] = array("CHANGE", "enum('normal','draft','recycle') NOT NULL COMMENT '盒子'", "article_box");
+		}
+
+		if (in_array("article_hits_day", $_arr_col)) {
+			$_arr_alert["article_hits_day"] = array("CHANGE", "mediumint NOT NULL COMMENT '日点击'", "article_hits_day");
+		}
+
+		if (in_array("article_hits_week", $_arr_col)) {
+			$_arr_alert["article_hits_week"] = array("CHANGE", "mediumint NOT NULL COMMENT '周点击'", "article_hits_week");
+		}
+
+		if (in_array("article_hits_month", $_arr_col)) {
+			$_arr_alert["article_hits_month"] = array("CHANGE", "mediumint NOT NULL COMMENT '月点击'", "article_hits_month");
+		}
+
+		if (in_array("article_hits_year", $_arr_col)) {
+			$_arr_alert["article_hits_year"] = array("CHANGE", "mediumint NOT NULL COMMENT '年点击'", "article_hits_year");
+		}
+
+		if (!in_array("article_time_day", $_arr_col)) {
+			$_arr_alert["article_time_day"] = array("ADD", "int NOT NULL COMMENT '日点击重置时间'");
+		}
+
+		if (!in_array("article_time_week", $_arr_col)) {
+			$_arr_alert["article_time_week"] = array("ADD", "int NOT NULL COMMENT '周点击重置时间'");
+		}
+
+		if (!in_array("article_time_month", $_arr_col)) {
+			$_arr_alert["article_time_month"] = array("ADD", "int NOT NULL COMMENT '月点击重置时间'");
+		}
+
+		if (!in_array("article_time_year", $_arr_col)) {
+			$_arr_alert["article_time_year"] = array("ADD", "int NOT NULL COMMENT '年点击重置时间'");
+		}
+
+		$_str_alert = "x120106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y120106";
+    		}
+		}
+
+        return array(
+            "alert" => $_str_alert,
+        );
+    }
+
+
+	function mdl_drop() {
+        $_arr_col   = $this->mdl_column();
+        $_arr_alert = array();
+
+		$_str_alert = "x120115";
+
+		if (in_array("article_content", $_arr_col)) {
+			$_arr_alert["article_content"] = array("DROP");
+		}
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y120113";
+    		}
+		}
+
+        return array(
+            "alert" => $_str_alert,
+        );
+	}
+
+
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
@@ -1105,6 +1218,8 @@ class MODEL_ARTICLE {
 				$this->articleSubmit["article_customs"][$_key] = fn_getSafe($_value, "txt", "");
 			}
 		}
+
+		//print_r($_arr_articleCustoms);
 
 		$this->articleSubmit["alert"]         = "ok";
 

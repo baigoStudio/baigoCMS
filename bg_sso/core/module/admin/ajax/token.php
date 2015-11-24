@@ -9,8 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ajax.inc.php"); //管理员通用
-include_once(BG_PATH_CONTROL_ADMIN . "ajax/token.class.php"); //载入令牌 ajax 控制器
+include_once(BG_PATH_FUNC . "include.func.php"); //管理员通用
+fn_include(true, true, "Content-type: application/json", true, "ajax", true);
+
+include_once(BG_PATH_CONTROL . "admin/ajax/token.class.php"); //载入令牌 ajax 控制器
 
 $ajax_token = new AJAX_TOKEN();
 

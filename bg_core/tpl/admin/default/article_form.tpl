@@ -2,22 +2,60 @@
 {function custom_list arr=""}
 	{foreach $arr as $key=>$value}
 		{if $value.custom_childs}
-			<div class="col-md-12">
+			<div class="custom_group custom_group_{$value.custom_cate_id} col-md-12">
 				<h4>
 					<span class="label label-default">{$value.custom_name}</span>
 				</h4>
 			</div>
 		{else}
-			<div class="col-md-6">
+			<div class="custom_group custom_group_{$value.custom_cate_id} col-md-6">
+				<label class="control-label">{$value.custom_name}<span id="msg_article_custom_{$value.custom_id}"></span></label>
 				<div class="form-group">
-					<label class="control-label">{$value.custom_name}<span id="msg_article_custom_{$value.custom_id}"></span></label>
-					<input type="text" name="article_customs[{$value.custom_id}]" value="{if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}{$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}{/if}" class="form-control">
+					{if $value.custom_type == "radio"}
+    					{foreach $value.custom_opt as $key_option=>$value_option}
+        					<div class="radio_baigo">
+            					<label for="article_customs_{$value.custom_id}_{$key_option}">
+                					<input type="radio" id="article_customs_{$value.custom_id}_{$key_option}" {if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"]) && $tplData.articleRow.article_customs["custom_{$value.custom_id}"] == $value_option}checked{/if} name="article_customs[{$value.custom_id}]" value="{$value_option}" class="validate" group="article_customs_{$value.custom_id}">
+                					{$value_option}
+            					</label>
+        					</div>
+    					{/foreach}
+					{else if $value.custom_type == "select"}
+    					<select id="article_customs_{$value.custom_id}" name="article_customs[{$value.custom_id}]" class="validate form-control">
+        					<option value="">{$lang.option.pleaseSelect}</option>
+        					{foreach $value.custom_opt as $key_option=>$value_option}
+            					<option {if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"]) && $tplData.articleRow.article_customs["custom_{$value.custom_id}"] == $value_option}selected{/if} value="{$value_option}">
+                					{$value_option}
+            					</option>
+        					{/foreach}
+    					</select>
+    				{else if $value.custom_type == "textarea"}
+    					<textarea id="article_customs_{$value.custom_id}" name="article_customs[{$value.custom_id}]" class="validate form-control text_md">{if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}{$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}{/if}</textarea>
+					{else}
+    					<input type="text" id="article_customs_{$value.custom_id}" name="article_customs[{$value.custom_id}]" value="{if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}{$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}{/if}" class="validate form-control">
+					{/if}
 				</div>
 			</div>
 		{/if}
 
 		{if $value.custom_childs}
 			{custom_list arr=$value.custom_childs}
+		{/if}
+	{/foreach}
+{/function}
+
+{function custom_validataJson arr=""}
+	{foreach $arr as $key=>$value}
+		{if !$value.custom_childs}
+    		article_customs_{$value.custom_id}: {
+    			length: { min: {$value.custom_require}, max: 90 },
+    			validate: { type: "{$value.custom_type}"{if $value.custom_type != "radio" && $value.custom_type != "select"}, format: "{$value.custom_format}"{/if} },
+    			msg: { id: "msg_article_custom_{$value.custom_id}", {if $value.custom_type != "radio" && $value.custom_type != "select"}too_short: "{$alert.x120216}{$value.custom_name}"{else}too_few: "{$alert.x120218}{$value.custom_name}"{/if}{if $value.custom_type != "radio" && $value.custom_type != "select"}, too_long: "{$value.custom_name}{$alert.x120217}"{/if} }
+    		},
+		{/if}
+
+		{if $value.custom_childs}
+			{custom_validataJson arr=$value.custom_childs}
 		{/if}
 	{/foreach}
 {/function}
@@ -80,12 +118,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -163,7 +201,7 @@
 						<label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
 
 						<div class="form-group form-inline">
-							<input type="text" name="article_tag" id="article_tag" class="form-control tm-input tm-input-success">
+							<input type="text" name="article_tag" id="article_tag" class="validate form-control tm-input tm-input-success">
 							<button type="button" class="btn btn-info tm-btn" id="tag_add">{$lang.btn.add}</button>
 						</div>
 
@@ -201,13 +239,13 @@
 
 					<div class="checkbox">
 						<label for="cate_ids_checkbox">
-							<input type="checkbox" {if count($tplData.articleRow.cate_ids) > 1}checked{/if} data-toggle="collapse" data-target="#cate_ids_input" id="cate_ids_checkbox" name="cate_ids_checkbox" value="1">
+							<input type="checkbox" {if count($tplData.articleRow.cate_ids) > 1}checked{/if} id="cate_ids_checkbox" name="cate_ids_checkbox" value="1">
 							{$lang.label.articleBelong}
 						</label>
 					</div>
 
 					<div class="form-group">
-						<div class="collapse{if count($tplData.articleRow.cate_ids) > 1} in{/if}" id="cate_ids_input">
+						<div id="cate_ids_input">
 							{cate_checkbox arr=$tplData.cateRows}
 						</div>
 					</div>
@@ -259,14 +297,14 @@
 					<div class="form-group">
 						<div class="checkbox">
 							<label for="deadline_checkbox">
-								<input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} data-toggle="collapse" data-target="#deadline_input" id="deadline_checkbox">
+								<input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} id="deadline_checkbox">
 								{$lang.label.deadline}
 								<span id="msg_article_time_pub"></span>
 							</label>
 						</div>
 					</div>
 
-					<div id="deadline_input" class="collapse{if $tplData.articleRow.article_time_pub > $smarty.now} in{/if}">
+					<div id="deadline_input">
 						<div class="form-group">
 							<input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" class="validate form-control input_date">
 							<p class="help-block">{$lang.label.timeNote}</p>
@@ -308,7 +346,7 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	function reload_spec(_key, _page) {
@@ -356,8 +394,9 @@
 	}
 
 	var opts_validator_form = {
+		{custom_validataJson arr=$tplData.customRows}
 		article_title: {
-			length: { min: 1, max: 300},
+			length: { min: 1, max: 300 },
 			validate: { type: "str", format: "text", group: "group_article_title" },
 			msg: { id: "msg_article_title", too_short: "{$alert.x120201}", too_long: "{$alert.x120202}" }
 		},
@@ -370,6 +409,11 @@
 			length: { min: 0, max: 900 },
 			validate: { type: "str", format: "text" },
 			msg: { id: "msg_article_excerpt", too_long: "{$alert.x120206}" }
+		},
+		article_tag: {
+			length: { min: 0, max: 0 },
+			validate: { type: "str", format: "strDigit" },
+			msg: { id: "msg_article_tag", format_err: "{$alert.x120215}" }
 		},
 		article_cate_id: {
 			length: { min: 1, max: 0 },
@@ -401,6 +445,12 @@
 		btn_url: "{$cfg.str_url}"
 	};
 
+	function article_cate_id(_cate_id) {
+        $(".custom_group").hide();
+        $(".custom_group_0").show();
+        $(".custom_group_" + _cate_id).show();
+	}
+
 	function excerpt_type(_excerpt_type) {
 		if (_excerpt_type == "manual") {
 			$("#group_article_excerpt").show();
@@ -409,9 +459,28 @@
 		}
 	}
 
+	function cate_ids_check(_is_checked) {
+		if (_is_checked) {
+			$("#cate_ids_input").show();
+		} else {
+			$("#cate_ids_input").hide();
+		}
+	}
+
+	function deadline_check(_is_checked) {
+		if (_is_checked) {
+			$("#deadline_input").show();
+		} else {
+			$("#deadline_input").hide();
+		}
+	}
+
 	$(document).ready(function(){
+		article_cate_id("{$tplData.articleRow.article_cate_id}");
 		reload_spec("", 1);
 		excerpt_type("{$tplData.articleRow.article_excerpt_type}");
+		cate_ids_check({if count($tplData.articleRow.cate_ids) > 1}true{else}false{/if});
+		deadline_check({if $tplData.articleRow.article_time_pub > $smarty.now}true{else}false{/if});
 		$("#attach_modal").on("hidden.bs.modal", function() {
 		    $(this).removeData("bs.modal");
 		});
@@ -419,6 +488,11 @@
 		$(".article_excerpt_type").click(function(){
 			var _excerpt_type = $(this).val();
 			excerpt_type(_excerpt_type);
+		});
+
+		$("#article_cate_id").change(function(){
+			var _cate_id = $(this).val();
+			article_cate_id(_cate_id);
 		});
 
 		var obj_validate_form = $("#article_form").baigoValidator(opts_validator_form);
@@ -430,6 +504,16 @@
 			}
 		});
 		$(".input_date").datetimepicker(opts_datetimepicker);
+
+		$("#cate_ids_checkbox").click(function(){
+			var _is_checked = $(this).prop("checked");
+			cate_ids_check(_is_checked);
+		});
+
+		$("#deadline_checkbox").click(function(){
+			var _is_checked = $(this).prop("checked");
+			deadline_check(_is_checked);
+		});
 
 		var obj_tagMan = jQuery("#article_tag").tagsManager({
 			{if $tplData.articleRow.article_tags}
@@ -458,5 +542,5 @@
 	});
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

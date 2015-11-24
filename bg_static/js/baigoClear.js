@@ -1,6 +1,6 @@
 /*
-v0.0.9 jQuery baigoClear plugin 表单 ajax 提交插件
-(c) 2013 baigo studio - http://www.baigo.net/baigoClear/
+v1.0 jQuery baigoClear plugin 表单 ajax 清理插件
+(c) 2013 baigo studio - http://www.baigo.net/
 License: http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -27,7 +27,7 @@ License: http://www.opensource.org/licenses/mit-license.php
 			msg_selector: ".baigoClearMsg",
 			msg_loading: "Loading...",
 			msg_complete: "Complete"
-		};
+		}
 
 		var opts = $.extend(defaults, options);
 
@@ -39,10 +39,10 @@ License: http://www.opensource.org/licenses/mit-license.php
 
 		//确认消息
 		var clearConfirm = function() {
-			if (typeof opts.confirm_id == "undefined") {
+			if (typeof opts.confirm_selector == "undefined") {
 				return true;
 			} else {
-				var _form_action = $("#" + opts.confirm_id).val();
+				var _form_action = $(opts.confirm_selector).val();
 				if (_form_action == opts.confirm_val) {
 					if (confirm(opts.confirm_msg)) {
 						return true;

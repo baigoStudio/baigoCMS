@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "app.class.php"); //载入管理帐号模型
 
 /*-------------管理员控制器-------------*/
@@ -29,7 +29,8 @@ class CONTROL_APP {
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
 		$this->mdl_app        = new MODEL_APP(); //设置管理员模型
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -39,7 +40,7 @@ class CONTROL_APP {
 	返回提示
 	*/
 	function ctl_show() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["app"])) {
 			return array(
 				"alert" => "x190301",
 			);
@@ -76,7 +77,7 @@ class CONTROL_APP {
 		$_num_appId = fn_getSafe(fn_get("app_id"), "int", 0);
 
 		if ($_num_appId > 0) {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["app"])) {
 				return array(
 					"alert" => "x190303",
 				);
@@ -88,7 +89,7 @@ class CONTROL_APP {
 				exit;
 			}
 		} else {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
+			if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["app"])) {
 				return array(
 					"alert" => "x190302",
 				);
@@ -120,7 +121,7 @@ class CONTROL_APP {
 	无返回
 	*/
 	function ctl_list() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["app"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["app"])) {
 			return array(
 				"alert" => "x190301",
 			);

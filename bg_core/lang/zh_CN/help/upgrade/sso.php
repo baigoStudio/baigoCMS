@@ -1,6 +1,6 @@
 <?php
 return "<h3>SSO 设置</h3>
-	<p>baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/Products/baigoSSO/\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击“SSO 自动部署“。</p>
+	<p>baigo CMS 的用户以及后台登录需要 baigo SSO 支持。</p>
 
 	<p><img src=\"{images}sso.jpg\" class=\"img-responsive\"></p>
 

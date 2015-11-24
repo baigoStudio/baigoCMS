@@ -25,7 +25,6 @@ class CLASS_UPLOAD {
 	private $attachPath; //路径
 	private $attachName; //文件名
 	private $fileTmp;
-	private $mime;
 	public $config;
 	public $mime_image = array();
 	public $thumbRows  = array();
@@ -35,8 +34,7 @@ class CLASS_UPLOAD {
 		$this->obj_base           = $GLOBALS["obj_base"]; //获取界面类型
 		$this->config             = $this->obj_base->config;
 		$this->obj_dir            = new CLASS_DIR();
-		$this->mime               = include_once(BG_PATH_LANG . $this->config["lang"] . "/mime.php");
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
 			$this->obj_ftp        = new CLASS_FTP(); //设置 FTP 对象
 		}
 	}
@@ -69,7 +67,7 @@ class CLASS_UPLOAD {
 			break;
 		}
 		$this->uploadSize = BG_UPLOAD_SIZE * $_num_sizeUnit;
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
 			$this->ftp_status_conn   = $this->obj_ftp->ftp_conn(BG_UPLOAD_FTPHOST, BG_UPLOAD_FTPPORT);
 			$this->ftp_status_login  = $this->obj_ftp->ftp_login(BG_UPLOAD_FTPUSER, BG_UPLOAD_FTPPASS);
 
@@ -184,7 +182,7 @@ class CLASS_UPLOAD {
 
 		$this->attachPath    = BG_PATH_ATTACH . date("Y", $tm_time) . "/" . date("m", $tm_time) . "/";
 
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1 && defined("BG_UPLOAD_URL")) { //如果定义了FTP服务器，则加上 URL 前缀
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1 && defined("BG_UPLOAD_URL")) { //如果定义了FTP服务器，则加上 URL 前缀
 			$_str_attachPre      = BG_UPLOAD_URL . "/";
 		} else {
 			$_str_attachPre      = BG_URL_ATTACH;
@@ -204,7 +202,7 @@ class CLASS_UPLOAD {
 
 		move_uploaded_file($this->attachFiles["tmp_name"], $this->attachPath . $this->attachName . "." . $this->attachFiles["ext"]); //将上传的文件移到指定路径
 
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传到FTP
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传到FTP
 			if (!$this->ftp_status_conn) {
 				return array(
 					"alert" => "x030301",
@@ -237,7 +235,7 @@ class CLASS_UPLOAD {
 			$_str_attachType = "file";
 		}
 
-		/*if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1 && file_exists($this->attachPath . $this->attachName . "." . $this->attachFiles["ext"])) { //如果FTP上传成功，且文件存在，在上传完成后删除
+		/*if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1 && file_exists($this->attachPath . $this->attachName . "." . $this->attachFiles["ext"])) { //如果FTP上传成功，且文件存在，在上传完成后删除
 			unlink($this->attachPath . $this->attachName . "." . $this->attachFiles["ext"]);
 		}*/
 
@@ -268,7 +266,7 @@ class CLASS_UPLOAD {
 				unlink(BG_PATH_ATTACH . $_str_filePath);
 			}
 
-			if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //是否定义FTP服务器
+			if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //是否定义FTP服务器
 				if (!$this->ftp_status_conn) {
 					return array(
 						"alert" => "x030301",
@@ -292,7 +290,7 @@ class CLASS_UPLOAD {
 						unlink(BG_PATH_ATTACH . $_str_thumbPath);
 					}
 
-					if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+					if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
 						if (!$this->ftp_status_conn) {
 							return array(
 								"alert" => "x030301",
@@ -329,7 +327,7 @@ class CLASS_UPLOAD {
 			$this->attachPath            = BG_PATH_ATTACH . date("Y", $arr_attachRow["attach_time"]) . "/" . date("m", $arr_attachRow["attach_time"]) . "/";
 			$this->attachFiles["ext"]    = $arr_attachRow["attach_ext"];
 			$this->attachFiles["mime"]   = $arr_attachRow["attach_mime"];
-			if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
+			if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
 				$this->attachFtp             = "/" . date("Y", $arr_attachRow["attach_time"]) . "/" . date("m", $arr_attachRow["attach_time"]) . "/";
 				$this->ftp_status_conn       = $this->obj_ftp->ftp_conn(BG_UPLOAD_FTPHOST, BG_UPLOAD_FTPPORT);
 				$this->ftp_status_login      = $this->obj_ftp->ftp_login(BG_UPLOAD_FTPUSER, BG_UPLOAD_FTPPASS);
@@ -364,12 +362,12 @@ class CLASS_UPLOAD {
 
 		$_width_src       = imagesx($_src_image); //取得源图片的尺寸
 		$_height_src      = imagesy($_src_image);
-		$_arr_thumb_size  = $this->size_progress($num_width, $num_height, $_width_src, $_height_src, $str_type); //计算缩略图尺寸
+		$_arr_thumb_size  = $this->size_process($num_width, $num_height, $_width_src, $_height_src, $str_type); //计算缩略图尺寸
 
 		if ($_arr_thumb_size["width_dst"] >= $_width_src && $_arr_thumb_size["height_dst"] >= $_height_src) { //如果源图片小于目标缩略图，则只是拷贝
 			copy($_str_srcPath, $_str_dstPath);
 
-			if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
+			if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
 				if (!$this->ftp_status_conn) {
 					return array(
 						"alert" => "x030301",
@@ -401,12 +399,12 @@ class CLASS_UPLOAD {
 		}
 
 		$_dst_image = imagecreatetruecolor($_arr_thumb_size["width_dst"], $_arr_thumb_size["height_dst"]); //根据计算结果生成毛图片
-		$_dst_image = $this->transparent_progress($_dst_image);
+		$_dst_image = $this->transparent_process($_dst_image);
 
 		switch ($str_type) {
 			case "cut": //裁切
 				$_tmp_image = imagecreatetruecolor($_arr_thumb_size["width_tmp"], $_arr_thumb_size["height_tmp"]);
-				$_tmp_image = $this->transparent_progress($_tmp_image);
+				$_tmp_image = $this->transparent_process($_tmp_image);
 
 				imagecopyresampled($_tmp_image, $_src_image, 0, 0, 0, 0, $_arr_thumb_size["width_tmp"], $_arr_thumb_size["height_tmp"], $_width_src, $_height_src); //先缩小
 				imagecopy($_dst_image, $_tmp_image, 0, 0, $_arr_thumb_size["width_cut"], $_arr_thumb_size["height_cut"], $_arr_thumb_size["width_dst"], $_arr_thumb_size["height_dst"]); //合成
@@ -442,7 +440,7 @@ class CLASS_UPLOAD {
 		imagedestroy($_src_image); //清空对象
 		imagedestroy($_dst_image);
 
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) { //如果定义了FTP服务器，则上传
 			if (!$this->ftp_status_conn) {
 				return array(
 					"alert" => "x030301",
@@ -474,7 +472,7 @@ class CLASS_UPLOAD {
 
 
 	/** 计算缩略图尺寸
-	 * size_progress function.
+	 * size_process function.
 	 *
 	 * @access public
 	 * @param mixed $num_width 宽度
@@ -484,7 +482,7 @@ class CLASS_UPLOAD {
 	 * @param string $str_type (default: "ratio") 类型（默认等比例）
 	 * @return void
 	 */
-	private function size_progress($num_width, $num_height, $width_src, $height_src, $str_type = "ratio") {
+	private function size_process($num_width, $num_height, $width_src, $height_src, $str_type = "ratio") {
 
 		switch ($str_type) {
 			case "cut": //裁切
@@ -550,7 +548,7 @@ class CLASS_UPLOAD {
 	}
 
 
-	private function transparent_progress($_res_image) {
+	private function transparent_process($_res_image) {
 		switch ($this->attachFiles["mime"]) { //创建图片对象
 
 			case "image/gif":
@@ -578,7 +576,7 @@ class CLASS_UPLOAD {
 	 * @return void
 	 */
 	function __destruct() { //析构函数
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
 			$this->obj_ftp->close();
 		}
 	}

@@ -46,11 +46,18 @@ class API_CATE {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
-			$this->mdl_cate->mdl_cache(array($_num_cateId));
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php")) {
+			$this->mdl_cate->mdl_cache();
 		}
 
-		$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_arr_articleRow["article_cate_id"] . ".php")) {
+    		$_arr_return = array(
+				"alert" => "x110102",
+			);
+			$this->obj_api->halt_re($_arr_cateRow);
+		}
+
+		$_arr_cateRow = include(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php");
 
 		if ($_arr_cateRow["alert"] != "y110102") {
 			$this->obj_api->halt_re($_arr_cateRow);
@@ -81,7 +88,7 @@ class API_CATE {
 		$this->app_check("get");
 		$_str_type        = fn_getSafe(fn_get("type"), "txt", "");
 		$_num_parentId    = fn_getSafe(fn_get("parent_id"), "int", 0);
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show", $_str_type, $_num_parentId);
+		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show", $_str_type, false, $_num_parentId);
 
 		$this->obj_api->halt_re($_arr_cateRows, true);
 	}

@@ -29,7 +29,7 @@ class CLASS_BASE {
 	 */
 	function getLang() {
 		//print_r("test");
-		if (defined("BG_SWITCH_LANG") && BG_SWITCH_LANG == true) { //语言开关为开
+		if (defined("BG_SWITCH_LANG") && BG_SWITCH_LANG == 1) { //语言开关为开
 			$str_lang = fn_getSafe(fn_get("lang"), "txt", "");
 
 			if ($str_lang) { //查询串指定
@@ -51,12 +51,10 @@ class CLASS_BASE {
 
 				//}
 			}
-
 		} else { //语言开关为关
 			$_str_return = BG_DEFAULT_LANG; //默认语言
 		}
 
-		//setcookie("cookie_lang", $_str_return); //客户端是英文
 		$this->config["lang"] = $_str_return;
 	}
 
@@ -77,29 +75,12 @@ class CLASS_BASE {
 				/*if (fn_cookie("cookie_ui")) { //cookie 指定
 					$_str_return = fn_cookie("cookie_ui");
 				} else { //系统识别*/
-					if (fn_server("HTTP_USER_AGENT")) {
-						$_str_agentUser   = strtolower(fn_server("HTTP_USER_AGENT")); //客户端信息
-						$_str_agentMobile = "/(symbian|symbos|phone|mobile|320x320|240x320|176x220|android|MicroMessenger)/i"; //移动设备界定串
-						$_str_agentPad    = "/(ipad|honeycomb)/i"; //平板电脑界定串
-
-						if (preg_match($_str_agentMobile, $_str_agentUser)) {
-							if (preg_match($_str_agentPad, $_str_agentUser)) { //客户端是平板
-								$_str_return = BG_DEFAULT_UI;
-							} else {
-								$_str_return = "mobile"; //客户端是移动设备
-							}
-						} else {
-							$_str_return = BG_DEFAULT_UI; //客户端是 pc
-						}
-					} else {
-						$_str_return = BG_DEFAULT_UI; //客户端是 pc
-					}
+					$_str_return = BG_DEFAULT_UI; //客户端是 pc
 				//}
 			}
 		} else { //界面开关为关
 			$_str_return = BG_DEFAULT_UI; //默认界面
 		}
-		//setcookie("cookie_ui", $_str_return); //客户端是移动设备
 		$this->config["ui"] = $_str_return;
 	}
 

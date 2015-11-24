@@ -18,12 +18,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">{$adminMod.group.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -45,7 +45,7 @@
 	<form name="group_form" id="group_form">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
-		<input type="hidden" name="group_id" value="{$tplData.groupRow.group_id}">
+		<input type="hidden" name="group_id" id="group_id" value="{$tplData.groupRow.group_id}">
 
 		<div class="row">
 			<div class="col-md-9">
@@ -69,6 +69,7 @@
 										</label>
 									</div>
 								</dd>
+
 								{foreach $adminMod as $key_m=>$value_m}
 									<dt>{$value_m.main.title}</dt>
 									<dd>
@@ -84,6 +85,24 @@
 										{/foreach}
 									</dd>
 								{/foreach}
+
+								<dt>{$lang.label.opt}</dt>
+								<dd>
+									<label for="allow_opt" class="checkbox-inline">
+										<input type="checkbox" id="allow_opt" class="chk_all">
+										{$lang.label.all}
+									</label>
+									<label for="allow_opt_dbconfig" class="checkbox-inline">
+										<input type="checkbox" name="group_allow[opt][dbconfig]" value="1" id="allow_opt_dbconfig" class="allow_opt" {if isset($tplData.groupRow.group_allow.opt.dbconfig)}checked{/if}>
+										{$lang.page.installDbConfig}
+									</label>
+    								{foreach $opt as $key_s=>$value_s}
+										<label for="allow_opt_{$key_s}" class="checkbox-inline">
+											<input type="checkbox" name="group_allow[opt][{$key_s}]" value="1" id="allow_opt_{$key_s}" class="allow_opt" {if isset($tplData.groupRow.group_allow.opt[$key_s])}checked{/if}>
+											{$value_s.title}
+										</label>
+									{/foreach}
+								</dd>
 							</dl>
 						</div>
 
@@ -143,7 +162,7 @@
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -151,7 +170,7 @@
 			length: { min: 1, max: 30 },
 			validate: { type: "ajax", format: "text", group: "group_group_name" },
 			msg: { id: "msg_group_name", too_short: "{$alert.x040201}", too_long: "{$alert.x040202}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=group&act_get=chkname", key: "group_name", type: "str", attach: "group_id={$tplData.groupRow.group_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=group&act_get=chkname", key: "group_name", type: "str", attach_selectors: ["#group_id"], attach_keys: ["group_id"] }
 		},
 		group_note: {
 			length: { min: 0, max: 30 },
@@ -194,7 +213,7 @@
 
 	$(document).ready(function(){
 		var obj_validate_form = $("#group_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#group_form").baigoSubmit(opts_submit_form);
+		var obj_submit_form   = $("#group_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
@@ -209,5 +228,5 @@
 	});
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

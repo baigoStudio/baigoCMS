@@ -1,29 +1,4 @@
-<!DOCTYPE html>
-<html lang="{$config.lang|truncate:2:''}">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>{$lang.page.install}</title>
-
-	<!--jQuery 库-->
-	<script src="{$smarty.const.BG_URL_JS}jquery.min.js" type="text/javascript"></script>
-	<link href="{$smarty.const.BG_URL_STATIC_INSTALL}{$config.ui}/css/install.css" type="text/css" rel="stylesheet">
-
-	<!--bootstrap-->
-	<link href="{$smarty.const.BG_URL_JS}bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-	<script src="{$smarty.const.BG_URL_JS}bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-
-	<!--表单验证 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet">
-	<script src="{$smarty.const.BG_URL_JS}baigoValidator/baigoValidator.js" type="text/javascript"></script>
-
-	<!--表单 ajax 提交 js-->
-	<link href="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
-	<script src="{$smarty.const.BG_URL_JS}baigoSubmit/baigoSubmit.js" type="text/javascript"></script>
-</head>
-
-<body>
+{include "{$smarty.const.BG_PATH_TPL}install/default/include/html_head.tpl" cfg=$cfg}
 
 	<div class="container global">
 
@@ -32,11 +7,11 @@
 				<div class="navbar-header">
 					{if $config.ui == "default"}
 						<a class="navbar-brand" href="{$smarty.const.PRD_SSO_URL}" target="_blank">
-							<img src="{$smarty.const.BG_URL_STATIC_ADMIN}{$config.ui}/image/admin_logo.png">
+							<img src="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/image/admin_logo.png">
 						</a>
 					{else}
 						<a class="navbar-brand" href="#">
-							<img src="{$smarty.const.BG_URL_STATIC_ADMIN}{$config.ui}/image/admin_logo.png">
+							<img src="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/image/admin_logo.png">
 						</a>
 					{/if}
 				</div>
@@ -46,7 +21,7 @@
 							{$lang.btn.jump}
 							<span class="caret"></span>
 						</a>
-						{include "{$smarty.const.BG_PATH_TPL_INSTALL}default/include/install_menu.tpl" cfg=$cfg}
+						{include "{$smarty.const.BG_PATH_TPL}install/default/include/install_menu.tpl" cfg=$cfg}
 					</li>
 				</ul>
 			</div>

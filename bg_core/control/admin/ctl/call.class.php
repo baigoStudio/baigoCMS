@@ -9,7 +9,7 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "call.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php");
 include_once(BG_PATH_MODEL . "mark.class.php");
@@ -27,7 +27,8 @@ class CONTROL_CALL {
 		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 		$this->mdl_call       = new MODEL_CALL();
 		$this->mdl_cate       = new MODEL_CATE();
 		$this->mdl_mark       = new MODEL_MARK();
@@ -68,21 +69,21 @@ class CONTROL_CALL {
 				exit;
 			}
 			$_arr_callRow = array(
-				"call_id"       => 0,
-				"call_name"     => "",
-				"call_file"     => "html",
-				"call_amount"   => array(
-					"top"          => 10,
-					"except"       => 0,
+				"call_id"           => 0,
+				"call_name"         => "",
+				"call_file"         => "html",
+				"call_amount"       => array(
+					"top"              => 10,
+					"except"           => 0,
 				),
-				"call_attach"   => "",
-				"call_cate_id"  => "",
-				//"call_trim"     => 100,
-				"call_cate_ids" => array(),
-				"call_mark_ids" => array(),
-				"call_spec_id"  => 0,
-				"call_type"     => "",
-				"call_status"   => "enable",
+				"call_attach"       => "",
+				"call_cate_id"      => "",
+				"call_cate_ids"     => array(),
+				"call_cate_excepts" => array(),
+				"call_mark_ids"     => array(),
+				"call_spec_id"      => 0,
+				"call_type"         => "",
+				"call_status"       => "enable",
 			);
 		}
 

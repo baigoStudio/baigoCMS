@@ -32,125 +32,73 @@ class AJAX_OPT {
 		}
 	}
 
-	/**
-	 * ajax_upload function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_upload() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["upload"])) {
-			$this->obj_ajax->halt_alert("x060302");
-		}
 
-		$_arr_return = $this->mdl_opt->mdl_const("upload");
-
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$this->obj_ajax->halt_alert("y060402");
-	}
-
-
-	/**
-	 * ajax_sso function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_sso() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["sso"])) {
-			$this->obj_ajax->halt_alert("x060303");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const("sso");
-
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$this->obj_ajax->halt_alert("y060403");
-	}
-
-
-	/**
-	 * ajax_visit function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_visit() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["visit"])) {
-			$this->obj_ajax->halt_alert("x060304");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const("visit");
-
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$_arr_post = fn_post("opt");
-
-		if ($_arr_post["BG_VISIT_TYPE"] == "pstatic") {
-
-			$_arr_return = $this->mdl_opt->mdl_htaccess();
-
-			if ($_arr_return["alert"] != "y060101") {
-				$this->obj_ajax->halt_alert($_arr_return["alert"]);
-			}
-
-		} else {
-			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-				unlink(BG_PATH_ROOT . ".htaccess");
-			}
-		}
-
-		$this->obj_ajax->halt_alert("y060404");
-	}
-
-
-	/**
-	 * ajax_base function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_base() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["base"])) {
-			$this->obj_ajax->halt_alert("x060301");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const("base");
-
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$_arr_cache = $this->mdl_cate->mdl_cache();
-
-		$this->obj_ajax->halt_alert("y060401");
-	}
-
-
-	/**
-	 * ajax_db function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_db() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["db"])) {
+	function ajax_dbconfig() {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["dbconfig"])) {
 			$this->obj_ajax->halt_alert("x060306");
+		}
+
+		$_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
+
+		if ($_arr_dbconfigSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_dbconfigSubmit["alert"]);
 		}
 
 		$_arr_return = $this->mdl_opt->mdl_dbconfig();
 
+		$this->obj_ajax->halt_alert($_arr_return["alert"]);
+    }
+
+
+	function ajax_submit() {
+		$_act_post = fn_getSafe($GLOBALS["act_post"], "txt", "base");
+
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"][$_act_post])) {
+			$this->obj_ajax->halt_alert("x060301");
+		}
+
+		$_num_countSrc = 0;
+
+		foreach ($this->obj_ajax->opt[$_act_post]["list"] as $_key=>$_value) {
+			if ($_value["min"] > 0) {
+				$_num_countSrc++;
+			}
+		}
+
+		$_arr_const = $this->mdl_opt->input_const($_act_post);
+
+		$_num_countInput = count(array_filter($_arr_const));
+
+		if ($_num_countInput < $_num_countSrc) {
+			$this->obj_ajax->halt_alert("x030212");
+		}
+
+		$_arr_return = $this->mdl_opt->mdl_const($_act_post);
+
 		if ($_arr_return["alert"] != "y060101") {
 			$this->obj_ajax->halt_alert($_arr_return["alert"]);
 		}
 
-		$this->obj_ajax->halt_alert("y060406");
+		if ($_act_post == "base") {
+    		$_arr_cache = $this->mdl_cate->mdl_cache();
+		}
+
+		if ($_act_post == "visit") {
+    		if ($_arr_const["BG_VISIT_TYPE"] == "pstatic") {
+
+    			$_arr_return = $this->mdl_opt->mdl_htaccess();
+
+    			if ($_arr_return["alert"] != "y060101") {
+    				$this->obj_ajax->halt_alert($_arr_return["alert"]);
+    			}
+
+    		} else {
+    			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
+    				unlink(BG_PATH_ROOT . ".htaccess");
+    			}
+    		}
+		}
+
+		$this->obj_ajax->halt_alert("y060401");
 	}
 }

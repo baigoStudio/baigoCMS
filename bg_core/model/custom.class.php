@@ -29,12 +29,14 @@ class MODEL_CUSTOM {
 		$_arr_customCreat = array(
 			"custom_id"          => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
 			"custom_name"        => "varchar(90) NOT NULL COMMENT '名称'",
-			"custom_target"      => "enum('article','cate') NOT NULL COMMENT '目标'",
-			"custom_type"        => "enum('int','decimal','varchar','text','enum') NOT NULL COMMENT '类型'",
-			"custom_opt"         => "varchar(90) NOT NULL COMMENT '选项'",
+			"custom_type"        => "enum('text','textarea','radio','select','date','decimal') NOT NULL COMMENT '类型'",
+			"custom_opt"         => "varchar(1000) NOT NULL COMMENT '选项'",
 			"custom_status"      => "enum('enable','disable') NOT NULL COMMENT '状态'",
 			"custom_order"       => "smallint NOT NULL COMMENT '排序'",
 			"custom_parent_id"   => "smallint NOT NULL COMMENT '父字段'",
+			"custom_cate_id"     => "smallint NOT NULL COMMENT '栏目 ID'",
+			"custom_format"      => "enum('text','date','datetime','int','digit','url','email') NOT NULL COMMENT '格式'",
+			"custom_require"     => "tinyint(1) NOT NULL COMMENT '是否必须'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "custom", $_arr_customCreat, "custom_id", "自定义字段");
@@ -125,11 +127,13 @@ class MODEL_CUSTOM {
 
 		$_arr_customData = array(
 			"custom_name"        => $this->customSubmit["custom_name"],
-			"custom_target"      => $this->customSubmit["custom_target"],
 			"custom_type"        => $this->customSubmit["custom_type"],
 			"custom_opt"         => $this->customSubmit["custom_opt"],
 			"custom_status"      => $this->customSubmit["custom_status"],
 			"custom_parent_id"   => $this->customSubmit["custom_parent_id"],
+			"custom_cate_id"     => $this->customSubmit["custom_cate_id"],
+			"custom_format"      => $this->customSubmit["custom_format"],
+			"custom_require"     => $this->customSubmit["custom_require"],
 		);
 
 		if ($this->customSubmit["custom_id"] == 0) {
@@ -176,15 +180,17 @@ class MODEL_CUSTOM {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_read($str_custom, $str_readBy = "custom_id", $num_notId = 0, $str_target = "") {
+	function mdl_read($str_custom, $str_readBy = "custom_id", $num_notId = 0) {
 		$_arr_customSelect = array(
 			"custom_id",
 			"custom_name",
-			"custom_target",
 			"custom_type",
 			"custom_opt",
 			"custom_status",
 			"custom_parent_id",
+			"custom_cate_id",
+			"custom_format",
+			"custom_require",
 		);
 
 		switch ($str_readBy) {
@@ -200,10 +206,6 @@ class MODEL_CUSTOM {
 			$_str_sqlWhere .= " AND custom_id<>" . $num_notId;
 		}
 
-		if ($str_type) {
-			$_str_sqlWhere .= " AND custom_target='" . $str_target . "'";
-		}
-
 		$_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "custom",  $_arr_customSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
 		if (isset($_arr_customRows[0])) {
@@ -215,7 +217,8 @@ class MODEL_CUSTOM {
 			exit;
 		}
 
-		$_arr_customRow["alert"] = "y200102";
+		$_arr_customRow["custom_opt"] = fn_jsonDecode($_arr_customRow["custom_opt"], "decode");
+		$_arr_customRow["alert"]      = "y200102";
 
 		return $_arr_customRow;
 	}
@@ -226,11 +229,11 @@ class MODEL_CUSTOM {
 	 *
 	 * @access public
 	 * @param string $str_status (default: "")
-	 * @param string $str_type (default: "")
+	 * @param string $str_target (default: "")
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_target = "", $str_status = "", $num_parentId = 0, $num_level = 1, $is_tree = true) {
+	function mdl_list($num_no, $num_except = 0, $str_key = "", $str_status = "", $num_parentId = 0, $num_level = 1, $is_tree = true) {
 		$_arr_updateData = array(
 			"custom_order" => "custom_id",
 		);
@@ -240,38 +243,39 @@ class MODEL_CUSTOM {
 		$_arr_customSelect = array(
 			"custom_id",
 			"custom_name",
-			"custom_target",
 			"custom_type",
 			"custom_opt",
 			"custom_status",
 			"custom_parent_id",
+			"custom_cate_id",
+			"custom_format",
+			"custom_require",
 		);
 
-		$_str_sqlWhere = "1=1";
+		if ($is_tree) {
+    		$_str_sqlWhere = "custom_parent_id=" . $num_parentId;
+		} else {
+    		$_str_sqlWhere = "1=1";
+		}
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND custom_name LIKE '%" . $str_key . "%'";
-		}
-
-		if ($str_target) {
-			$_str_sqlWhere .= " AND custom_target='" . $str_target . "'";
 		}
 
 		if ($str_status) {
 			$_str_sqlWhere .= " AND custom_status='" . $str_status . "'";
 		}
 
-		if ($is_tree) {
-			$_str_sqlWhere .= " AND custom_parent_id=" . $num_parentId;
-		}
+		//print_r($_str_sqlWhere);
 
 		$_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "custom",  $_arr_customSelect, $_str_sqlWhere, "", "custom_order ASC, custom_id ASC", $num_no, $num_except);
 
-		if ($is_tree) {
-			foreach ($_arr_customRows as $_key=>$_value) {
-				$_arr_customRows[$_key]["custom_level"]  = $num_level;
-				$_arr_customRows[$_key]["custom_childs"] = $this->mdl_list(1000, 0, $str_key, $str_target, $str_status, $_value["custom_id"], $num_level + 1);
-			}
+        foreach ($_arr_customRows as $_key=>$_value) {
+			$_arr_customRows[$_key]["custom_opt"]    = fn_jsonDecode($_value["custom_opt"], "decode");
+			$_arr_customRows[$_key]["custom_level"]  = $num_level;
+    		if ($is_tree) {
+    			$_arr_customRows[$_key]["custom_childs"] = $this->mdl_list(1000, 0, $str_key, $str_status, $_value["custom_id"], $num_level + 1);
+    		}
 		}
 
 		return $_arr_customRows;
@@ -283,26 +287,20 @@ class MODEL_CUSTOM {
 	 *
 	 * @access public
 	 * @param string $str_key (default: "")
-	 * @param string $str_type (default: "")
+	 * @param string $str_target (default: "")
 	 * @return void
 	 */
-	function mdl_count($str_key = "", $str_target = "", $str_status = "", $num_parentId = 0) {
+	function mdl_count($str_key = "", $str_status = "", $num_parentId = 0) {
 
-		$_str_sqlWhere = "1=1";
+		$_str_sqlWhere = "custom_parent_id=" . $num_parentId;
 
 		if ($str_key) {
 			$_str_sqlWhere .= " AND custom_name LIKE '%" . $str_key . "%'";
 		}
 
-		if ($str_target) {
-			$_str_sqlWhere .= " AND custom_target='" . $str_target . "'";
-		}
-
 		if ($str_status) {
 			$_str_sqlWhere .= " AND custom_status='" . $str_status . "'";
 		}
-
-		$_str_sqlWhere .= " AND custom_parent_id=" . $num_parentId;
 
 		$_num_customCount = $this->obj_db->count(BG_DB_TABLE . "custom", $_str_sqlWhere); //查询数据
 
@@ -314,7 +312,6 @@ class MODEL_CUSTOM {
 
 
 	function mdl_order($str_orderType = "", $num_doId = 0, $num_targetId = 0, $num_parentId = 0) {
-
 		//处理重复排序号
 		$_str_sqlDistinct = "SELECT custom_id FROM " . BG_DB_TABLE . "custom WHERE custom_order IN (SELECT custom_order FROM " . BG_DB_TABLE . "custom GROUP BY custom_order HAVING COUNT(custom_order) > 1) ORDER BY custom_id DESC" ;
 		$_obj_reselt      = $this->obj_db->query($_str_sqlDistinct);
@@ -365,7 +362,7 @@ class MODEL_CUSTOM {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"alert" => "x110217",
+						"alert" => "x200217",
 					);
 					exit;
 				}
@@ -408,7 +405,7 @@ class MODEL_CUSTOM {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"alert" => "x110217",
+						"alert" => "x200217",
 					);
 					exit;
 				}
@@ -442,7 +439,7 @@ class MODEL_CUSTOM {
 					$_arr_targetRow     = $_arr_targetRows[0];
 				} else {
 					return array(
-						"alert" => "x110220",
+						"alert" => "x200220",
 					);
 					exit;
 				}
@@ -456,7 +453,7 @@ class MODEL_CUSTOM {
 					$_arr_doRow     = $_arr_doRows[0];
 				} else {
 					return array(
-						"alert" => "x110217",
+						"alert" => "x200217",
 					);
 					exit;
 				}
@@ -500,7 +497,7 @@ class MODEL_CUSTOM {
 		}
 
 		return array(
-			"alert" => "y110103",
+			"alert" => "y200103",
 		);
 	}
 
@@ -558,11 +555,11 @@ class MODEL_CUSTOM {
 
 		$_arr_column_custom  = $this->mdl_column_custom();
 
-		$_arr_customRows  = $this->mdl_list(1000, 0, "", "", "enable");
+		$_arr_customRows  = $this->mdl_list(1000, 0, "", "enable");
 
 		$_str_outPut      = "<?php" . PHP_EOL;
 		$_str_outPut     .= "return array(" . PHP_EOL;
-			$_str_outPut     .= "\"article_custom\" => array(" . PHP_EOL;
+			$_str_outPut     .= "\"article_customs\" => array(" . PHP_EOL;
 
 			foreach ($_arr_column_custom as $_key=>$_value) {
 				$_str_outPut .= "\"" . $_value . "\",";
@@ -574,7 +571,7 @@ class MODEL_CUSTOM {
 			$_str_outPut     .= "),";
 		$_str_outPut     .= ");";
 
-		$_num_size        = file_put_contents(BG_PATH_CACHE . "custom_list.php", $_str_outPut);
+		$_num_size        = file_put_contents(BG_PATH_CACHE . "sys/custom_list.php", $_str_outPut);
 
 		if (!$_num_size) {
 			$_str_alert = "x200110";
@@ -582,6 +579,73 @@ class MODEL_CUSTOM {
 
 		return array(
 			"alert" => $_str_alert,
+		);
+	}
+
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (!in_array("custom_order", $_arr_col)) {
+			$_arr_alert["custom_order"] = array("ADD", "smallint NOT NULL COMMENT '排序'");
+		}
+
+		if (!in_array("custom_parent_id", $_arr_col)) {
+			$_arr_alert["custom_parent_id"] = array("ADD", "smallint NOT NULL COMMENT '父字段'");
+		}
+
+		if (!in_array("custom_cate_id", $_arr_col)) {
+			$_arr_alert["custom_cate_id"] = array("ADD", "smallint NOT NULL COMMENT '栏目 ID'");
+		}
+
+		if (!in_array("custom_opt", $_arr_col)) {
+			$_arr_alert["custom_opt"] = array("ADD", "varchar(1000) NOT NULL COMMENT '选项'");
+		}
+
+		if (!in_array("custom_format", $_arr_col)) {
+			$_arr_alert["custom_format"] = array("ADD", "enum('text','date','datetime','int','digit','url','email') NOT NULL COMMENT '格式'");
+		}
+
+		if (!in_array("custom_require", $_arr_col)) {
+			$_arr_alert["custom_require"] = array("ADD", "tinyint(1) NOT NULL COMMENT '是否必须'");
+		}
+
+		if (in_array("custom_target", $_arr_col)) {
+			$_arr_alert["custom_target"] = array("DROP");
+		}
+
+		if (in_array("custom_type", $_arr_col)) {
+            $_arr_customData = array(
+                "custom_type" => "decimal"
+            );
+			$this->obj_db->update(BG_DB_TABLE . "custom", $_arr_customData, "custom_type='int'");
+
+            $_arr_customData = array(
+                "custom_type" => "text"
+            );
+			$this->obj_db->update(BG_DB_TABLE . "custom", $_arr_customData, "custom_type='varchar'");
+
+            $_arr_customData = array(
+                "custom_type" => "text"
+            );
+			$this->obj_db->update(BG_DB_TABLE . "custom", $_arr_customData, "custom_type='enum'");
+
+			$_arr_alert["custom_type"] = array("CHANGE", "enum('text','textarea','radio','select','date','decimal') NOT NULL COMMENT '选项'", "custom_type");
+		}
+
+		$_str_alert = "x200106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "custom", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y200106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
 		);
 	}
 
@@ -639,6 +703,21 @@ class MODEL_CUSTOM {
 			break;
 		}
 
+		$_arr_customCateId = validateStr(fn_post("custom_cate_id"), 1, 0);
+		switch ($_arr_customCateId["status"]) {
+			case "too_short":
+				return array(
+					"alert" => "x200213",
+				);
+				exit;
+			break;
+
+			case "ok":
+				$this->customSubmit["custom_cate_id"] = $_arr_customCateId["str"];
+			break;
+		}
+
+
 		if ($this->customSubmit["custom_parent_id"] > 0 && $this->customSubmit["custom_parent_id"] == $this->customSubmit["custom_id"]) {
 			return array(
 				"alert" => "x200208",
@@ -646,22 +725,8 @@ class MODEL_CUSTOM {
 			exit;
 		}
 
-		$_arr_customTarget = validateStr(fn_post("custom_target"), 1, 0);
-		switch ($_arr_customTarget["status"]) {
-			case "too_short":
-				return array(
-					"alert" => "x200205",
-				);
-				exit;
-			break;
 
-			case "ok":
-				$this->customSubmit["custom_target"] = $_arr_customTarget["str"];
-			break;
-		}
-
-
-		$_arr_customRow = $this->mdl_read($this->customSubmit["custom_name"], "custom_name", $this->customSubmit["custom_id"], $this->customSubmit["custom_target"]);
+		$_arr_customRow = $this->mdl_read($this->customSubmit["custom_name"], "custom_name", $this->customSubmit["custom_id"]);
 		if ($_arr_customRow["alert"] == "y200102") {
 			return array(
 				"alert" => "x200203",
@@ -683,17 +748,17 @@ class MODEL_CUSTOM {
 			break;
 		}
 
-		$_arr_customOpt = validateStr(fn_post("custom_opt"), 0, 900);
-		switch ($_arr_customOpt["status"]) {
-			case "too_long":
+		$_arr_customFormat = validateStr(fn_post("custom_format"), 1, 0);
+		switch ($_arr_customFormat["status"]) {
+			case "too_short":
 				return array(
-					"alert" => "x200212",
+					"alert" => "x200205",
 				);
 				exit;
 			break;
 
 			case "ok":
-				$this->customSubmit["custom_opt"] = $_arr_customOpt["str"];
+				$this->customSubmit["custom_format"] = $_arr_customFormat["str"];
 			break;
 		}
 
@@ -711,7 +776,17 @@ class MODEL_CUSTOM {
 			break;
 		}
 
-		$this->customSubmit["alert"] = "ok";
+		$this->customSubmit["custom_require"] = fn_getSafe(fn_post("custom_require"), "int", 0);
+
+		$_arr_customOpt = fn_post("custom_opt");
+
+		if ($this->customSubmit["custom_type"] == "radio" || $this->customSubmit["custom_type"] == "select") {
+    		$this->customSubmit["custom_opt"]     = fn_jsonEncode($_arr_customOpt[$this->customSubmit["custom_type"]], "encode");
+		} else {
+    		$this->customSubmit["custom_opt"]     = "";
+		}
+
+		$this->customSubmit["alert"]          = "ok";
 
 		return $this->customSubmit;
 	}
@@ -759,6 +834,7 @@ class MODEL_CUSTOM {
 				$_str_outPut .= "\"custom_id\" => " . $_value["custom_id"] . "," . PHP_EOL;
 				$_str_outPut .= "\"custom_name\" => \"" . $_value["custom_name"] . "\"," . PHP_EOL;
 				$_str_outPut .= "\"custom_parent_id\" => " . $_value["custom_parent_id"] . "," . PHP_EOL;
+				$_str_outPut .= "\"custom_cate_id\" => " . $_value["custom_cate_id"] . "," . PHP_EOL;
 
 				if ($_value["custom_childs"]) {
 					$_str_childs = $this->cache_process($_value["custom_childs"]);

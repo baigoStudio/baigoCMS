@@ -8,7 +8,7 @@
 			{$_css_status = "danger"}
 		{/if}
 		<tr{if $value.cate_level == 1} class="active"{/if}>
-			<td class="td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
+			<td class="text-nowrap td_mn"><input type="checkbox" name="cate_id[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" group="cate_id" class="chk_all validate"></td>
 			<td>{$value.cate_id}</td>
 			<td class="child_{$value.cate_level}">
 				<ul class="list-unstyled">
@@ -44,7 +44,7 @@
 					{$value.cate_id}
 				{/if}
 			</td>
-			<td class="td_sm">
+			<td class="text-nowrap td_sm">
 				<ul class="list-unstyled">
 					<li class="label_baigo">
 						<span class="label label-{$_css_status}">{$status.cate[$value.cate_status]}</span>
@@ -72,11 +72,11 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.cate.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -140,16 +140,16 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.cateName}</th>
 							<th>{$lang.label.cateAlias}</th>
-							<th class="td_sm">{$lang.label.status} / {$lang.label.type}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.type}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -185,7 +185,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<div class="modal fade" id="cate_modal">
@@ -194,7 +194,7 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -212,7 +212,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -236,5 +236,5 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

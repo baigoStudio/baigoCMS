@@ -37,7 +37,7 @@ class AJAX_CUSTOM {
 
 
 	function ajax_order() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["custom"])) {
 			$this->obj_ajax->halt_alert("x200303");
 		}
 		if (!fn_token("chk")) { //令牌
@@ -82,7 +82,7 @@ class AJAX_CUSTOM {
 	 * @return void
 	 */
 	function ajax_submit() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["custom"])) {
 			$this->obj_ajax->halt_alert("x200302");
 		}
 
@@ -101,7 +101,7 @@ class AJAX_CUSTOM {
 
 
 	function ajax_status() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["custom"])) {
 			$this->obj_ajax->halt_alert("x170303");
 		}
 
@@ -130,7 +130,7 @@ class AJAX_CUSTOM {
 	 * @return void
 	 */
 	function ajax_del() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+		if (!isset($this->adminLogged["groupRow"]["group_allow"]["more"]["custom"])) {
 			$this->obj_ajax->halt_alert("x200304");
 		}
 
@@ -156,8 +156,7 @@ class AJAX_CUSTOM {
 	function ajax_chkname() {
 		$_str_customName      = fn_getSafe(fn_get("custom_name"), "txt", "");
 		$_num_customId        = fn_getSafe(fn_get("custom_id"), "int", 0);
-		$_str_customTarget    = fn_getSafe(fn_get("custom_target"), "txt", "");
-		$_arr_customRow       = $this->mdl_custom->mdl_read($_str_customName, "custom_name", $_num_customId, $_str_customTarget);
+		$_arr_customRow       = $this->mdl_custom->mdl_read($_str_customName, "custom_name", $_num_customId);
 		if ($_arr_customRow["alert"] == "y200102") {
 			$this->obj_ajax->halt_re("x200203");
 		}
@@ -171,7 +170,7 @@ class AJAX_CUSTOM {
 
 
 	function misc_process() {
-		$_arr_customRows = $this->mdl_custom->mdl_list(1000, 0, "", "", "enable", 0, 0, false);
+		$_arr_customRows = $this->mdl_custom->mdl_list(1000, 0, "", "enable", 0, 0, false);
 		$this->mdl_articleCustom->mdl_create_table($_arr_customRows);
 		$this->mdl_articlePub->mdl_create_custom_view($_arr_customRows);
 		$this->mdl_custom->mdl_cache();

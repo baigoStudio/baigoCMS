@@ -1,7 +1,8 @@
 <?php
 return array(
-	"title" => "模板文档",
-	"menu" => array(
+	"title"    => "模板文档",
+	"active"   => "doc",
+	"menu"     => array(
 		"outline"     => "模板概述",
 		"common"      => "通用资源",
 		"index_alert" => "主页 / 提示信息",

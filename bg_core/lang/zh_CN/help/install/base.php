@@ -12,8 +12,8 @@ return "<h3>基本设置</h3>
 			<h4 class=\"text-info\">网站域名</h4>
 			<p>请根据实际情况填写，如：<mark>www.domain.com</mark>，默认为当前网站域名。</p>
 
-			<h4 class=\"text-info\">网站 URL</h4>
-			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前网站 URL，末尾请勿加 <mark>/</mark>。</p>
+			<h4 class=\"text-info\">首页 URL</h4>
+			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前首页 URL，末尾请勿加 <mark>/</mark>。</p>
 
 			<h4 class=\"text-info\">每页显示数</h4>
 			<p>前台页面、API 接口，在对文章、TAG 等进行分页的时候，每一页所显示的数量，默认为 30。其中 API 接口可利用参数来设定每页的显示数，详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article\" target=\"_blank\">API 接口文档</a></p>

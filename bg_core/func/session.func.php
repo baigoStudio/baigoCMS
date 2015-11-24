@@ -57,6 +57,34 @@ function fn_ssin_begin() {
 }
 
 
+function fn_ssin_login($num_adminId) {
+	$_mdl_admin    = new MODEL_ADMIN(); //设置管理员对象
+	$_arr_adminRow = $_mdl_admin->mdl_read($num_adminId); //本地数据库处理
+
+	if ($_arr_adminRow["alert"] != "y020102") {
+		return $_arr_adminRow;
+		exit;
+	}
+
+	if ($_arr_adminRow["admin_status"] == "disable") {
+		return array(
+			"alert" => "x020401",
+		);
+		exit;
+	}
+
+	$_str_rand = fn_rand(6);
+	$_mdl_admin->mdl_login($num_adminId, $_str_rand);
+
+	fn_session("admin_id", "mk", $num_adminId);
+	fn_session("admin_ssin_time", "mk", time());
+	fn_session("admin_hash", "mk", fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_rand));
+
+	return array(
+		"alert" => "ok",
+	);
+}
+
 /**
  * fn_ssin_end function.
  *

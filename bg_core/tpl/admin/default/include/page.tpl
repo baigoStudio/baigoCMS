@@ -38,7 +38,7 @@
 			{/if}
 		</li>
 
-		{if $_iii < $tplData.pageRow.total}
+		{if $tplData.pageRow.end < $tplData.pageRow.total}
 			<li>
 				<a href="{$cfg.str_url}&page={$_iii}" title="{$lang.href.pageNextList}">{$lang.href.pageNextList}</a>
 			</li>

@@ -59,7 +59,7 @@ class AJAX_CATE {
 		$_num_targetId    = fn_getSafe(fn_post("order_target"), "int", 0);
 		$_arr_cateRow     = $this->mdl_cate->mdl_order($_str_orderType, $_num_cateId, $_num_targetId, $_num_parentId);
 
-		$this->mdl_cate->mdl_cache(array($_num_cateId));
+		$this->mdl_cate->mdl_cache();
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
@@ -102,7 +102,7 @@ class AJAX_CATE {
 
 		$_arr_cateIds = array_unique($_arr_cateIds); //去除重复
 
-		$this->mdl_cate->mdl_cache($_arr_cateIds); //将树形结构所有的栏目重新生成 cache
+		$this->mdl_cate->mdl_cache(); //将树形结构所有的栏目重新生成 cache
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
@@ -120,7 +120,7 @@ class AJAX_CATE {
 			$this->obj_ajax->halt_alert($_arr_cateIds["alert"]);
 		}
 
-		$_arr_cache = $this->mdl_cate->mdl_cache($_arr_cateIds["cate_ids"]);
+		$_arr_cache = $this->mdl_cate->mdl_cache();
 
 		//print_r($_str_outPut);
 
@@ -151,7 +151,7 @@ class AJAX_CATE {
 
 		$_arr_cateRow = $this->mdl_cate->mdl_status($_str_cateStatus);
 
-		$this->mdl_cate->mdl_cache($_arr_cateIds["cate_ids"]);
+		$this->mdl_cate->mdl_cache();
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}
@@ -175,7 +175,7 @@ class AJAX_CATE {
 
 		$_arr_cateRow = $this->mdl_cate->mdl_del();
 
-		$this->mdl_cate->mdl_cache(false, $_arr_cateIds["cate_ids"]);
+		$this->mdl_cate->mdl_cache($_arr_cateIds["cate_ids"]);
 
 		$this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
 	}

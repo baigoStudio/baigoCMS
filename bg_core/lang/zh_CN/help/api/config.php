@@ -1,7 +1,8 @@
 <?php
 return array(
-	"title" => "API 接口文档",
-	"menu" => array(
+	"title"    => "API 接口文档",
+	"active"   => "doc",
+	"menu"     => array(
 		"outline" => "API 概述",
 		"page"    => "分页参数",
 		"cate"    => "栏目",

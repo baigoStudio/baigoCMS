@@ -418,7 +418,7 @@ class MODEL_CATE {
 		$_arr_cateRow["cate_trees"]   = $this->trees_process($_arr_cateRow["cate_id"]);
 		unset($this->cateTrees);
 		$_arr_cateRow["urlRow"]       = $this->url_process($_arr_cateRow);
-		$_arr_cateRow["alert"]    = "y110102";
+		$_arr_cateRow["alert"]        = "y110102";
 
 		return $_arr_cateRow;
 	}
@@ -489,7 +489,7 @@ class MODEL_CATE {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_list($num_no, $num_except = 0, $str_status = "", $str_type = "", $num_parentId = 0, $num_level = 1) {
+	function mdl_list($num_no, $num_except = 0, $str_status = "", $str_type = "", $arr_excepts = false, $num_parentId = 0, $num_level = 1) {
 		$_arr_updateData = array(
 			"cate_order" => "cate_id",
 		);
@@ -517,6 +517,11 @@ class MODEL_CATE {
 			$_str_sqlWhere .= " AND cate_type='" . $str_type . "'";
 		}
 
+		if ($arr_excepts) {
+			$_str_excepts    = implode(",", $arr_excepts);
+			$_str_sqlWhere  .= " AND cate_id NOT IN (" . $_str_excepts . ")";
+		}
+
 		$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
 
 		$_arr_cateRows = $this->obj_db->select(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, "", "cate_order ASC, cate_id ASC", $num_no, $num_except);
@@ -528,7 +533,7 @@ class MODEL_CATE {
 			$_value["cate_trees"]                = $this->trees_process($_value["cate_id"]);
 			unset($this->cateTrees);
 			$_arr_cateRows[$_key]["urlRow"]      = $this->url_process($_value);
-			$_arr_cateRows[$_key]["cate_childs"] = $this->mdl_list(1000, 0, $str_status, $str_type, $_value["cate_id"], $num_level + 1);
+			$_arr_cateRows[$_key]["cate_childs"] = $this->mdl_list(1000, 0, $str_status, $str_type, $arr_excepts, $_value["cate_id"], $num_level + 1);
 		}
 
 		return $_arr_cateRows;
@@ -536,7 +541,7 @@ class MODEL_CATE {
 
 
 	function mdl_ids($num_cateId) {
-		$_arr_cateRows    = $this->mdl_list(1000, 0, "show", "", $num_cateId);
+		$_arr_cateRows    = $this->mdl_list(1000, 0, "show", "", false, $num_cateId);
 		$_arr_cates       = $this->ids_process($_arr_cateRows);
 		return $_arr_cates;
 	}
@@ -633,7 +638,7 @@ class MODEL_CATE {
 	 * @param int $num_parentId (default: 0)
 	 * @return void
 	 */
-	function mdl_count($str_status = "", $str_type = "", $num_parentId = 0) {
+	function mdl_count($str_status = "", $str_type = "", $arr_excepts = false, $num_parentId = 0) {
 
 		$_str_sqlWhere = "1=1";
 
@@ -643,6 +648,11 @@ class MODEL_CATE {
 
 		if ($str_type) {
 			$_str_sqlWhere .= " AND cate_type='" . $str_type . "'";
+		}
+
+		if ($arr_excepts) {
+			$_str_excepts    = implode(",", $arr_excepts);
+			$_str_sqlWhere  .= " AND cate_id IN (" . $_str_excepts . ")";
 		}
 
 		$_str_sqlWhere .= " AND cate_parent_id=" . $num_parentId;
@@ -662,8 +672,8 @@ class MODEL_CATE {
 	 * @access public
 	 * @return void
 	 */
-	function mdl_cache($arr_cateIds = false, $arr_cateDels = false) {
-		$_str_alert = "y110110";
+	function mdl_cache($arr_cateDels = false) {
+		$_str_alert       = "y110110";
 
 		$_arr_cateRows    = $this->mdl_list(1000, 0, "show");
 
@@ -672,15 +682,13 @@ class MODEL_CATE {
 		$_str_outPut     .= $this->cache_process($_arr_cateRows);
 		$_str_outPut     .= ");";
 
-		$_num_size        = file_put_contents(BG_PATH_CACHE . "cate_trees.php", $_str_outPut);
+		$_num_size        = file_put_contents(BG_PATH_CACHE . "sys/cate_trees.php", $_str_outPut);
 
 		if (!$_num_size) {
 			$_str_alert = "x110110";
 		}
 
-		if (!$arr_cateIds) {
-			$arr_cateIds = $this->mdl_list_id();
-		}
+		$arr_cateIds = $this->mdl_list_id();
 
 		foreach ($arr_cateIds as $_key=>$_value) {
 			$_str_outPut = "<?php" . PHP_EOL;
@@ -755,7 +763,7 @@ class MODEL_CATE {
 			}
 			$_str_outPut .= ");";
 
-			$_num_size = file_put_contents(BG_PATH_CACHE . "cate_" . $_value . ".php", $_str_outPut);
+			$_num_size = file_put_contents(BG_PATH_CACHE . "sys/cate_" . $_value . ".php", $_str_outPut);
 
 			if (!$_num_size) {
 				$_str_alert = "x110110";
@@ -763,9 +771,9 @@ class MODEL_CATE {
 		}
 
 		if ($arr_cateDels) {
-			foreach ($arr_cateIds as $_key=>$_value) {
-				if (file_exists(BG_PATH_CACHE . "cate_" . $_value . ".php")) {
-					unlink(BG_PATH_CACHE . "cate_" . $_value . ".php");
+			foreach ($arr_cateDels as $_key=>$_value) {
+				if (file_exists(BG_PATH_CACHE . "sys/cate_" . $_value . ".php")) {
+					unlink(BG_PATH_CACHE . "sys/cate_" . $_value . ".php");
 				}
 			}
 		}
@@ -775,6 +783,53 @@ class MODEL_CATE {
 		);
 	}
 
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("cate_id", $_arr_col)) {
+			$_arr_alert["cate_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "cate_id");
+		}
+
+		if (in_array("cate_type", $_arr_col)) {
+			$_arr_alert["cate_type"] = array("CHANGE", "enum('normal','single','link') NOT NULL COMMENT '类型'", "cate_type");
+		}
+
+		if (in_array("cate_parent_id", $_arr_col)) {
+			$_arr_alert["cate_parent_id"] = array("CHANGE", "smallint NOT NULL COMMENT '父栏目'", "cate_parent_id");
+		}
+
+		if (in_array("cate_ftp_port", $_arr_col)) {
+			$_arr_alert["cate_ftp_port"] = array("CHANGE", "char(5) NOT NULL COMMENT 'FTP端口'", "cate_ftp_port");
+		}
+
+		if (in_array("cate_status", $_arr_col)) {
+			$_arr_alert["cate_status"] = array("CHANGE", "enum('show','hide') NOT NULL COMMENT '状态'", "cate_status");
+		}
+
+		if (in_array("cate_order", $_arr_col)) {
+			$_arr_alert["cate_order"] = array("CHANGE", "smallint NOT NULL COMMENT '排序'", "cate_order");
+		}
+
+		if (!in_array("cate_perpage", $_arr_col)) {
+			$_arr_alert["cate_perpage"] = array("ADD", "tinyint NOT NULL COMMENT '每页文章数'");
+		}
+
+		$_str_alert = "x110106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "cate", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y110106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+    }
 
 	/**
 	 * input_submit function.
@@ -966,7 +1021,7 @@ class MODEL_CATE {
 		$this->cateSubmit["cate_content"]     = fn_post("cate_content");
 
 		if (!$this->is_magic) {
-			$this->cateSubmit["cate_content"]   = addslashes($this->cateSubmit["cate_content"]);
+			$this->cateSubmit["cate_content"]    = addslashes($this->cateSubmit["cate_content"]);
 		}
 
 		$this->cateSubmit["cate_perpage"]     = fn_getSafe(fn_post("cate_perpage"), "int", BG_SITE_PERPAGE);
@@ -976,7 +1031,7 @@ class MODEL_CATE {
 		$this->cateSubmit["cate_ftp_pass"]    = fn_getSafe(fn_post("cate_ftp_pass"), "txt", "");
 		$this->cateSubmit["cate_ftp_path"]    = fn_getSafe(fn_post("cate_ftp_path"), "txt", "");
 
-		$this->cateSubmit["alert"]        = "ok";
+		$this->cateSubmit["alert"]            = "ok";
 
 		return $this->cateSubmit;
 	}

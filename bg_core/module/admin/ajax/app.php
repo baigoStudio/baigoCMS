@@ -9,8 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ajax.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_ADMIN . "ajax/app.class.php"); //载入应用 ajax 控制器
+include_once(BG_PATH_FUNC . "include.func.php"); //验证是否已登录
+fn_include(true, true, "Content-type: application/json; charset=utf-8", true, "ajax", true);
+
+include_once(BG_PATH_CONTROL . "admin/ajax/app.class.php"); //载入应用 ajax 控制器
 
 $ajax_app = new AJAX_APP(); //初始化应用对象
 

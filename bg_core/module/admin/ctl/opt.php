@@ -9,39 +9,18 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ctl.inc.php"); //载入全局通用
+include_once(BG_PATH_FUNC . "include.func.php");
+fn_include(true, true, "Content-Type: text/html; charset=utf-8", true, "ctl", true);
+
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "is_admin.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_ADMIN . "ctl/opt.class.php"); //载入栏目控制器
+include_once(BG_PATH_CONTROL . "admin/ctl/opt.class.php"); //载入栏目控制器
 
 $ctl_opt = new CONTROL_OPT(); //初始化设置对象
 
 switch ($GLOBALS["act_get"]) {
-	case "upload":
-		$arr_optRow = $ctl_opt->ctl_upload();
-		if ($arr_optRow["alert"] != "y060302") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_optRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "sso":
-		$arr_optRow = $ctl_opt->ctl_sso();
-		if ($arr_optRow["alert"] != "y060303") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_optRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "visit":
-		$arr_optRow = $ctl_opt->ctl_visit();
-		if ($arr_optRow["alert"] != "y060304") {
-			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_optRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "db":
-		$arr_optRow = $ctl_opt->ctl_db();
+	case "dbconfig":
+		$arr_optRow = $ctl_opt->ctl_dbconfig();
 		if ($arr_optRow["alert"] != "y060306") {
 			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_optRow["alert"]);
 			exit;
@@ -49,7 +28,7 @@ switch ($GLOBALS["act_get"]) {
 	break;
 
 	default:
-		$arr_optRow = $ctl_opt->ctl_base();
+		$arr_optRow = $ctl_opt->ctl_form();
 		if ($arr_optRow["alert"] != "y060301") {
 			header("Location: " . BG_URL_ADMIN . "ctl.php?mod=alert&act_get=show&alert=" . $arr_optRow["alert"]);
 			exit;

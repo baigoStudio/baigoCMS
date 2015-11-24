@@ -34,15 +34,16 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$lang.page.profile}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<form name="profile_form" id="profile_form" autocomplete="off">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="info">
+		<input type="hidden" name="admin_id" id="admin_id" value="{$tplData.userRow.user_id}">
 
 		<div class="row">
 			<div class="col-md-9">
@@ -79,12 +80,12 @@
 				</div>
 			</div>
 
-			{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/profile_left.tpl" cfg=$cfg}
+			{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/profile_left.tpl" cfg=$cfg}
 		</div>
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -92,7 +93,7 @@
 			length: { min: 0, max: 0 },
 			validate: { type: "ajax", format: "email", group: "group_admin_mail" },
 			msg: { id: "msg_admin_mail", too_short: "{$alert.x020207}", too_long: "{$alert.x020208}", format_err: "{$alert.x020209}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin&act_get=chkmail", key: "admin_mail", type: "str", attach: "admin_id={$tplData.adminLogged.admin_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin&act_get=chkmail", key: "admin_mail", type: "str", attach_selectors: ["#admin_id"], attach_keys: ["admin_id"] }
 		},
 		admin_nick: {
 			length: { min: 0, max: 30 },
@@ -111,7 +112,7 @@
 
 	$(document).ready(function(){
 		var obj_validate_form = $("#profile_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#profile_form").baigoSubmit(opts_submit_form);
+		var obj_submit_form   = $("#profile_form").baigoSubmit(opts_submit_form);
 		$("#go_submit").click(function(){
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
@@ -120,4 +121,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

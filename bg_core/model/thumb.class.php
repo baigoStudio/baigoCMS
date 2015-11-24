@@ -240,6 +240,7 @@ class MODEL_THUMB {
 		);
 	}
 
+
 	function mdl_cache() {
 		$_str_alert = "y090110";
 
@@ -257,7 +258,7 @@ class MODEL_THUMB {
 			}
 		$_str_outPut .= ");";
 
-		$_num_size = file_put_contents(BG_PATH_CACHE . "thumb_list.php", $_str_outPut);
+		$_num_size = file_put_contents(BG_PATH_CACHE . "sys/thumb_list.php", $_str_outPut);
 
 		if (!$_num_size) {
 			$_str_alert = "x090110";
@@ -267,6 +268,43 @@ class MODEL_THUMB {
 			"alert" => $_str_alert,
 		);
 	}
+
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("thumb_id", $_arr_col)) {
+			$_arr_alert["thumb_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "thumb_id");
+		}
+
+		if (in_array("thumb_width", $_arr_col)) {
+			$_arr_alert["thumb_width"] = array("CHANGE", "smallint NOT NULL COMMENT '宽度'", "thumb_width");
+		}
+
+		if (in_array("thumb_height", $_arr_col)) {
+			$_arr_alert["thumb_height"] = array("CHANGE", "smallint NOT NULL COMMENT '高度'", "thumb_height");
+		}
+
+		if (in_array("thumb_type", $_arr_col)) {
+			$_arr_alert["thumb_type"] = array("CHANGE", "enum('ratio','cut') NOT NULL COMMENT '类型'", "thumb_type");
+		}
+
+		$_str_alert = "x090106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "thumb", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y090106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+	}
+
 
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌

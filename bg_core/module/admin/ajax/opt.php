@@ -9,29 +9,19 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ajax.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_ADMIN . "ajax/opt.class.php"); //载入栏目控制器
+include_once(BG_PATH_FUNC . "include.func.php"); //验证是否已登录
+fn_include(true, true, "Content-type: application/json; charset=utf-8", true, "ajax", true);
+
+include_once(BG_PATH_CONTROL . "admin/ajax/opt.class.php"); //载入栏目控制器
 
 $ajax_opt = new AJAX_OPT(); //初始化设置对象
 
 switch ($GLOBALS["act_post"]) {
-	case "upload":
-		$ajax_opt->ajax_upload();
-	break;
+    case "dbconfig":
+		$ajax_opt->ajax_dbconfig();
+    break;
 
-	case "sso":
-		$ajax_opt->ajax_sso();
-	break;
-
-	case "visit":
-		$ajax_opt->ajax_visit();
-	break;
-
-	case "base":
-		$ajax_opt->ajax_base();
-	break;
-
-	case "db":
-		$ajax_opt->ajax_db();
+	default:
+		$ajax_opt->ajax_submit();
 	break;
 }

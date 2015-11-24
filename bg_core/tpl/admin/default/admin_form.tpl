@@ -46,12 +46,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=admin&act_get=list">{$adminMod.admin.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -73,7 +73,7 @@
 	<form name="admin_form" id="admin_form" autocomplete="off">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
-		<input type="hidden" name="admin_id" value="{$tplData.adminRow.admin_id}">
+		<input type="hidden" name="admin_id" id="admin_id" value="{$tplData.adminRow.admin_id}">
 
 		<div class="row">
 			<div class="col-md-9">
@@ -87,8 +87,8 @@
 
 							<div class="form-group">
 								<div id="group_admin_pass">
-									<label class="control-label">{$lang.label.password}{$lang.label.modOnly}</label>
-									<input type="text" name="admin_pass" id="admin_pass" class="form-control">
+									<label class="control-label">{$lang.label.password}</label>
+									<input type="text" name="admin_pass" id="admin_pass" class="form-control" placeholder="{$lang.label.modOnly}">
 								</div>
 							</div>
 						{else}
@@ -188,7 +188,7 @@
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_form = {
@@ -207,7 +207,7 @@
 			length: { min: 0, max: 0 },
 			validate: { type: "ajax", format: "email", group: "group_admin_mail" },
 			msg: { id: "msg_admin_mail", too_short: "{$alert.x020207}", too_long: "{$alert.x020208}", format_err: "{$alert.x020209}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin&act_get=chkmail", key: "admin_mail", type: "str", attach: "admin_id={$tplData.adminRow.admin_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=admin&act_get=chkmail", key: "admin_mail", type: "str", attach_selectors: ["#admin_id"], attach_keys: ["admin_id"] }
 		},
 		admin_nick: {
 			length: { min: 0, max: 30 },
@@ -246,4 +246,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

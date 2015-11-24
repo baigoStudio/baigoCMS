@@ -10,18 +10,22 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=log&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.log.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
-			<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=log" target="_blank">
-				<span class="glyphicon glyphicon-question-sign"></span>
-				{$lang.href.help}
-			</a>
+			<ul class="nav nav-pills nav_baigo">
+				<li>
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod=admin&act_get=log" target="_blank">
+						<span class="glyphicon glyphicon-question-sign"></span>
+						{$lang.href.help}
+					</a>
+				</li>
+			</ul>
 		</div>
 		<div class="pull-right">
 			<form name="log_search" id="log_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
@@ -44,12 +48,14 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
+                    <div class="input-group">
+    					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+    					<span class="input-group-btn">
+        					<button type="submit" class="btn btn-default btn-sm">
+        						<span class="glyphicon glyphicon-search"></span>
+        					</button>
+    					</span>
+                    </div>
 				</div>
 			</form>
 		</div>
@@ -64,16 +70,16 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.title}</th>
-							<th class="td_bg">{$lang.label.operator}</th>
-							<th class="td_sm">{$lang.label.status} / {$lang.label.type}</th>
+							<th class="text-nowrap td_bg">{$lang.label.operator}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.type}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -84,8 +90,8 @@
 								{$_css_status = "warning"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="log_id[]" value="{$value.log_id}" id="log_id_{$value.log_id}" group="log_id" class="validate chk_all"></td>
-								<td class="td_mn">{$value.log_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="log_id[]" value="{$value.log_id}" id="log_id_{$value.log_id}" group="log_id" class="validate chk_all"></td>
+								<td class="text-nowrap td_mn">{$value.log_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>
@@ -96,10 +102,10 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_bg">
+								<td class="text-nowrap td_bg">
 									<ul class="list-unstyled">
 										<li>
-											{if $value.log_type != "system"}
+											{if $value.log_type != "system" && isset($value.log_operator_name)}
 												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=log&act_get=log&operator_id={$value.log_operator_id}">{$value.log_operator_name}</a>
 											{else}
 												{$type.log[$value.log_type]}
@@ -108,9 +114,9 @@
 										<li>{$value.log_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIME}"}</li>
 									</ul>
 								</td>
-								<td class="td_sm">
+								<td class="text-nowrap td_sm">
 									<ul class="list-unstyled">
-										<li>
+										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$status.log[$value.log_status]}</span>
 										</li>
 										<li>{$type.log[$value.log_type]}</li>
@@ -148,7 +154,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPL}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<div class="modal fade" id="log_modal">
@@ -157,7 +163,7 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -177,6 +183,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -197,4 +204,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/html_foot.tpl" cfg=$cfg}

@@ -2,7 +2,7 @@
 return "<a name=\"base\"></a>
 	<h3>基本设置</h3>
 	<p>
-		点左侧菜单“系统设置“，进入如下界面，可以对系统进行设置。
+		点右上角菜单“系统设置“，进入如下界面，可以对系统进行设置。
 	</p>
 	<p>
 		<img src=\"{images}opt_base.jpg\" class=\"img-responsive thumbnail\">
@@ -17,8 +17,8 @@ return "<a name=\"base\"></a>
 			<h4 class=\"text-info\">网站域名</h4>
 			<p>请根据实际情况填写，如：<mark>www.domain.com</mark>，默认为当前网站域名。</p>
 
-			<h4 class=\"text-info\">网站 URL</h4>
-			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前网站 URL，末尾请勿加 <mark>/</mark>。</p>
+			<h4 class=\"text-info\">首页 URL</h4>
+			<p>请根据实际情况填写，如：<mark>http://www.domain.com</mark>，默认为当前首页 URL，末尾请勿加 <mark>/</mark>。</p>
 
 			<h4 class=\"text-info\">每页显示数</h4>
 			<p>前台页面、API 接口，在对文章、TAG 等进行分页的时候，每一页所显示的数量，默认为 30。其中 API 接口可利用参数来设定每页的显示数，详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article\" target=\"_blank\">API 接口文档</a></p>
@@ -48,13 +48,13 @@ return "<a name=\"base\"></a>
 
 	<hr>
 
-	<a name=\"db\"></a>
+	<a name=\"dbconfig\"></a>
 	<h3>数据库设置</h3>
 	<p>
-		点左侧子菜单“数据库设置“，进入如下界面，可以对数据库进行设置。
+		点右上角子菜单“数据库设置“，进入如下界面，可以对数据库进行设置。
 	</p>
 	<p>
-		<img src=\"{images}opt_db.jpg\" class=\"img-responsive thumbnail\">
+		<img src=\"{images}opt_dbconfig.jpg\" class=\"img-responsive thumbnail\">
 	</p>
 
 	<div class=\"panel panel-default\">
@@ -72,7 +72,7 @@ return "<a name=\"base\"></a>
 			<h4 class=\"text-info\">数据库密码</h4>
 			<p>请按照服务器提供商所提供的资料填写。</p>
 
-			<h4 class=\"text-info\">数据库字符编码</h4>
+			<h4 class=\"text-info\">数据库编码</h4>
 			<p>一般为 <mark>utf8</mark>，请按照服务器提供商所提供的资料填写。</p>
 
 			<h4 class=\"text-info\">数据表名前缀</h4>
@@ -85,7 +85,7 @@ return "<a name=\"base\"></a>
 	<a name=\"visit\"></a>
 	<h3>访问方式</h3>
 	<p>
-		点左侧子菜单“访问方式“，进入如下界面，可以对访问方式进行设置。
+		点右上角子菜单“访问方式“，进入如下界面，可以对访问方式进行设置。
 	</p>
 	<p>
 		<img src=\"{images}opt_visit.jpg\" class=\"img-responsive thumbnail\">
@@ -98,7 +98,7 @@ return "<a name=\"base\"></a>
 			<p>此方式为 PHP 最常用的访问方式，使用查询串的方式访问网站，URL 的形式为 <span class=\"text-primary\">http://www.domain.com/index.php?mod=article&act_get=show&article_id=123</span>；优点是效率较高，兼容性好；缺点是 URL 友好度较差，对于搜索引擎的收录有一定影响。</p>
 
 			<h4 class=\"text-info\">伪静态</h4>
-			<p>此方式目前较为流行，使用友好的 URL 方式访问网站，URL 的形式为 <span class=\"text-primary\">http://www.domain.com/article/123</span>，此方式需要服务器支持 URL 重写 (URL Rewriting)，具体请查看 <a href=\"http://zh.wikipedia.org/wiki/URL_Rewriting\" target=\"_blank\">维基百科</a>；优点是 URL 较为友好，有利于搜索引擎的收录；缺点是效率相对较低，兼容性差，且需要重新配置服务器；在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，是否支持 URL 重写，请咨询服务器提供商。Nginx 环境下，需下载相关的配置文件，重新配置服务器，<a href=\"http://www.baigo.net/Products/baigoCMS/download.php\">点此下载配置文件</a>；IIS 环境暂不支持伪静态模式。</p>
+			<p>此方式目前较为流行，使用友好的 URL 方式访问网站，URL 的形式为 <span class=\"text-primary\">http://www.domain.com/article/123</span>，此方式需要服务器支持 URL 重写 (URL Rewriting)，具体请查看 <a href=\"http://www.baike.com/wiki/URL重写\" target=\"_blank\">互动百科</a>；优点是 URL 较为友好，有利于搜索引擎的收录；缺点是效率相对较低，兼容性差，且需要重新配置服务器；在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，是否支持 URL 重写，请咨询服务器提供商。Nginx 环境下，需下载相关的配置文件，重新配置服务器，<a href=\"http://www.baigo.net/cms/\">点此下载配置文件</a>；IIS 环境暂不支持伪静态模式。</p>
 
 			<h4 class=\"text-info\">纯静态</h4>
 			<p><mark>根据不同系统，有可能无此选项。</mark>此方式为效率最高的访问方式，利用静态页面生成模块，将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 <span class=\"text-primary\">http://www.domain.com/article/123.html</span>，此方式需要额外安装静态页面生成模块；此方式的有点是效率最高，无数据库服务器压力，兼容性好，有利于搜索引擎的收录；缺点是占用硬盘空间相对较多，页面需要定时生成。</p>
@@ -197,7 +197,7 @@ return "<a name=\"base\"></a>
 	<a name=\"sso\"></a>
 	<h3>SSO 设置</h3>
 	<p>
-		点左侧子菜单“SSO 设置“，进入如下界面，可以对 SSO 设置进行设置。baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/Products/baigoSSO/\" target=\"_blank\">baigo SSO 官方网站</a>。
+		点右上角子菜单“SSO 设置“，进入如下界面，可以对 SSO 设置进行设置。baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a>。
 	</p>
 
 	<p>

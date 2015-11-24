@@ -353,6 +353,34 @@ class MODEL_TAG {
 	}
 
 
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("tag_status", $_arr_col)) {
+			$_arr_alert["tag_status"] = array("CHANGE", "enum('show','hide') NOT NULL COMMENT '状态'", "tag_status");
+		}
+
+		if (in_array("tag_article_count", $_arr_col)) {
+			$_arr_alert["tag_article_count"] = array("CHANGE", "smallint NOT NULL COMMENT '文章数'", "tag_article_count");
+		}
+
+		$_str_alert = "x130106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "tag", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y130106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+	}
+
+
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
@@ -457,12 +485,12 @@ class MODEL_TAG {
 		switch (BG_VISIT_TYPE) {
 			case "pstatic":
 			case "static":
-				$_str_tagUrl        = BG_URL_ROOT . "tag/tag-" . $_arr_tagRow["tag_name"] . "/";
+				$_str_tagUrl        = BG_URL_ROOT . "tag/tag-" . urlencode($_arr_tagRow["tag_name"]) . "/";
 				$_str_pageAttach    = "page-";
 			break;
 
 			default:
-				$_str_tagUrl        = BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=" . $_arr_tagRow["tag_name"];
+				$_str_tagUrl        = BG_URL_ROOT . "index.php?mod=tag&act_get=show&tag_name=" . urlencode($_arr_tagRow["tag_name"]);
 				$_str_pageAttach    = "&page=";
 			break;
 		}

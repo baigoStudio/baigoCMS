@@ -71,17 +71,23 @@ return array(
 		"cut"     => "裁切", //裁切
 	),
 
-	/*------自定义字段------*/
-	"target" => array(
-		"article" => "文章",
-		//"cate"    => "栏目",
-	),
-
+	/*------摘要类型------*/
 	"excerpt" => array(
 		"auto"    => "自动截取",
 		"txt"     => "仅截取文本",
 		"none"    => "不要摘要",
 		"manual"  => "手工编辑",
+	),
+
+	/*------自定义字段格式------*/
+	"custom" => array(
+    	"text"     => "文本",
+    	"date"     => "日期",
+    	"datetime" => "日期时间",
+    	"int"      => "整数",
+    	"digit"    => "数字（含小数点）",
+    	"url"      => "URL",
+    	"email"    => "电子邮箱",
 	),
 
 	"ext" => array(

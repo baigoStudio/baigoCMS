@@ -3,7 +3,7 @@
 .modal { z-index: 999999!important; }
 
 .alert_overflow { overflow: hidden; }
-.attach_overflow { overflow: hidden; white-space: nowrap; }
+.attach_overflow { overflow: hidden; }
 
 .page_baigo .pagination { margin: 0 0 15px 0; }
 .content_baigo { max-width: 100%!important; }
@@ -13,20 +13,17 @@
 
 .label_baigo { margin-bottom: 5px; }
 .label_baigo .label { font-size: 12px; }
-
-.list_left { width: 50%; padding-right: 10px; }
-.list_right { width: 50%; padding-left: 10px;  }
-
+.tooltip_baigo .tooltip-inner { max-width: 500px; }
 .page_foot { height: 40px; }
 
 .foot_logo > a { display: block; width: 150px; height: 0px; padding-top: 40px; overflow: hidden; background: url(../image/admin_foot.png); }
 .foot_power { padding: 10px 20px; }
 
-.td_mn { width: 50px; white-space: nowrap; text-align: center; }
-.td_sm { width: 110px; white-space: nowrap; }
-.td_md { width: 150px; white-space: nowrap; }
-.td_bg { width: 200px; white-space: nowrap; }
-.td_lg { width: 250px; white-space: nowrap; }
+.td_mn { width: 50px; text-align: center; }
+.td_sm { width: 110px; }
+.td_md { width: 150px; }
+.td_bg { width: 200px; }
+.td_lg { width: 250px; }
 
 .text_bg { height: 500px!important; }
 .text_md { height: 300px!important; }
@@ -100,6 +97,7 @@ table td.child_6 { padding-left: 83px!important; }
 	display: inline;
 	font-weight: normal;
 	cursor: pointer;
+	margin-right: 5px;
 }
 
 .dl_baigo { margin-bottom: 5px!important; }

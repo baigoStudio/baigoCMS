@@ -366,6 +366,57 @@ class MODEL_ADMIN {
 	}
 
 
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (!in_array("admin_allow_profile", $_arr_col)) {
+			$_arr_alert["admin_allow_profile"] = array("ADD", "varchar(1000) NOT NULL COMMENT '个人权限'");
+		}
+
+		if (!in_array("admin_nick", $_arr_col)) {
+			$_arr_alert["admin_nick"] = array("ADD", "varchar(30) NOT NULL COMMENT '昵称'");
+		}
+
+		if (in_array("admin_id", $_arr_col)) {
+			$_arr_alert["admin_id"] = array("CHANGE", "int NOT NULL AUTO_INCREMENT COMMENT 'ID'", "admin_id");
+		}
+
+		if (in_array("admin_group_id", $_arr_col)) {
+			$_arr_alert["admin_group_id"] = array("CHANGE", "smallint NOT NULL COMMENT '从属用户组 ID'", "admin_group_id");
+		}
+
+		if (in_array("admin_status", $_arr_col)) {
+			$_arr_alert["admin_status"] = array("CHANGE", "enum('enable','disable') NOT NULL COMMENT '状态'", "admin_status");
+		}
+
+		if (in_array("admin_rand", $_arr_col)) {
+			$_arr_alert["admin_rand"] = array("CHANGE", "char(6) NOT NULL COMMENT '随机码'", "admin_rand");
+		}
+
+		if (in_array("admin_ip", $_arr_col)) {
+			$_arr_alert["admin_ip"] = array("CHANGE", "char(15) NOT NULL COMMENT 'IP'", "admin_ip");
+		}
+
+		if (in_array("admin_allow_cate", $_arr_col)) {
+			$_arr_alert["admin_allow_cate"] = array("CHANGE", "text NOT NULL COMMENT '栏目权限'", "admin_allow_cate");
+		}
+
+		$_str_alert = "x020106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "admin", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y020106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+	}
+
 	/**
 	 * mdl_del function.
 	 *

@@ -100,9 +100,9 @@ class MODEL_TAG_BELONG {
 		$_num_mysql = $this->obj_db->create_view(BG_DB_TABLE . "tag_view", $_arr_viewCreat, BG_DB_TABLE . "tag", $_str_sqlJoin);
 
 		if ($_num_mysql > 0) {
-			$_str_alert = "y160108"; //更新成功
+			$_str_alert = "y160109"; //更新成功
 		} else {
-			$_str_alert = "x160108"; //更新成功
+			$_str_alert = "x160109"; //更新成功
 		}
 
 		return array(

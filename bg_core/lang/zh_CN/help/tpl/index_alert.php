@@ -18,19 +18,19 @@ return "<a name=\"index\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">键名</th>
+						<th class=\"text-nowrap\">键名</th>
 						<th>说明</th>
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">alert</td>
+						<td class=\"text-nowrap\">alert</td>
 						<td>返回代码</td>
 						<td> </td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">status</td>
+						<td class=\"text-nowrap\">status</td>
 						<td>状态</td>
 						<td>x 为出错信息，y 为成功信息。</td>
 					</tr>

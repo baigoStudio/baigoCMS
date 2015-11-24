@@ -356,6 +356,42 @@ class MODEL_APP {
 	}
 
 
+	function mdl_alert_table() {
+        $_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("app_id", $_arr_col)) {
+			$_arr_alert["app_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "app_id");
+		}
+
+		if (in_array("app_key", $_arr_col)) {
+			$_arr_alert["app_key"] = array("CHANGE", "char(64) NOT NULL COMMENT '校验码'", "app_key");
+		}
+
+		if (in_array("app_token", $_arr_col)) {
+			$_arr_alert["app_token"] = array("CHANGE", "char(64) NOT NULL COMMENT '访问口令'", "app_token");
+		}
+
+		if (in_array("app_status", $_arr_col)) {
+			$_arr_alert["app_status"] = array("CHANGE", "enum('enable','disable') NOT NULL COMMENT '状态'", "app_status");
+		}
+
+		$_str_alert = "x190106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "app", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y190106";
+    		}
+		}
+
+    	return array(
+        	"alert" => $_str_alert,
+    	);
+	}
+
+
 	/** 表单验证
 	 * input_submit function.
 	 *
@@ -365,7 +401,7 @@ class MODEL_APP {
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"alert" => "x030101",
+				"alert" => "x030102",
 			);
 			exit;
 		}
@@ -476,7 +512,7 @@ class MODEL_APP {
 	function input_ids() {
 		if (!fn_token("chk")) { //令牌
 			return array(
-				"alert" => "x030101",
+				"alert" => "x030102",
 			);
 			exit;
 		}

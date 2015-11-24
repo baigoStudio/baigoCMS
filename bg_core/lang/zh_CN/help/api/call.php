@@ -18,35 +18,35 @@ return "<h3>调用显示</h3>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">名称</th>
-						<th class=\"nowrap\">类型</th>
-						<th class=\"nowrap\">必须</th>
+						<th class=\"text-nowrap\">名称</th>
+						<th class=\"text-nowrap\">类型</th>
+						<th class=\"text-nowrap\">必须</th>
 						<th>具体描述</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">act_get</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">act_get</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>接口调用动作，值只能为 get。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">app_key</td>
-						<td class=\"nowrap\">string</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">app_key</td>
+						<td class=\"text-nowrap\">string</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">call_id</td>
-						<td class=\"nowrap\">int</td>
-						<td class=\"nowrap\">true</td>
+						<td class=\"text-nowrap\">call_id</td>
+						<td class=\"text-nowrap\">int</td>
+						<td class=\"text-nowrap\">true</td>
 						<td>调用 ID</td>
 					</tr>
 				</tbody>
@@ -59,4 +59,4 @@ return "<h3>调用显示</h3>
 	<a name=\"result\"></a>
 	<h4>返回结果</h4>
 
-	<p>返回结果会根据不同的调用类型有所不同，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article#result\">文章</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=cate#result\">栏目</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=tag#result\">TAG</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=spec#result\">专题</a> 等有关信息。关于调用以及调用 ID 请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=call\">调用管理</a>。<p>";
+	<p>返回结果会根据不同的调用类型有所不同，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article#result\">文章</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=cate#result\">栏目</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=tag#result\">TAG</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=spec#result\">专题</a> 等有关信息。关于调用以及调用 ID 请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=call\">调用管理</a>。</p>";

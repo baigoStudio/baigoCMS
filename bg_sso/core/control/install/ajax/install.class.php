@@ -11,7 +11,6 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
-include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
 
 class AJAX_INSTALL {
 
@@ -30,46 +29,43 @@ class AJAX_INSTALL {
 	}
 
 
-	/**
-	 * install_1_do function.
-	 *
-	 * @access public
-	 * @return void
-	 */
 	function ajax_dbconfig() {
-		$_arr_return = $this->mdl_opt->mdl_dbconfig();
+		$_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
 
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		if ($_arr_dbconfigSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_dbconfigSubmit["alert"]);
 		}
 
-		$this->obj_ajax->halt_alert("y030404");
+		$_arr_return = $this->mdl_opt->mdl_dbconfig();
+
+		$this->obj_ajax->halt_alert($_arr_return["alert"]);
 	}
 
 
-	function ajax_dbtable() {
-		$this->check_db();
+	function ajax_submit() {
+    	$_act_post = fn_getSafe($GLOBALS["act_post"], "txt", "base");
 
-		$this->table_admin();
-		$this->table_user();
-		$this->table_app();
-		$this->table_app_belong();
-		$this->table_log();
+		if ($_act_post != "dbconfig") {
+    		$this->check_db();
+		}
 
-		$this->obj_ajax->halt_alert("y030103");
-	}
+		$_num_countSrc = 0;
 
+		foreach ($this->obj_ajax->opt[$_act_post]["list"] as $_key=>$_value) {
+			if ($_value["min"] > 0) {
+				$_num_countSrc++;
+			}
+		}
 
-	/**
-	 * install_2_do function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_base() {
-		$this->check_db();
+		$_arr_const = $this->mdl_opt->input_const($_act_post);
 
-		$_arr_return = $this->mdl_opt->mdl_const("base");
+		$_num_countInput = count(array_filter($_arr_const));
+
+		if ($_num_countInput < $_num_countSrc) {
+			$this->obj_ajax->halt_alert("x030212");
+		}
+
+		$_arr_return = $this->mdl_opt->mdl_const($_act_post);
 
 		if ($_arr_return["alert"] != "y040101") {
 			$this->obj_ajax->halt_alert($_arr_return["alert"]);
@@ -79,31 +75,7 @@ class AJAX_INSTALL {
 	}
 
 
-	/**
-	 * install_3_do function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_reg() {
-		$this->check_db();
-
-		$_arr_return = $this->mdl_opt->mdl_const("reg");
-
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$this->obj_ajax->halt_alert("y030406");
-	}
-
-
 	function ajax_admin() {
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
-			$this->install_over();
-			$this->obj_ajax->halt_alert("y030407");
-		}
-
 		$this->check_db();
 
 		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
@@ -150,30 +122,6 @@ class AJAX_INSTALL {
 	}
 
 
-	function ajax_auto() {
-		$this->check_db();
-
-		$_str_pathParent  = fn_getSafe(fn_post("pathParent"), "txt", "");
-		$this->target     = fn_getSafe(fn_post("target"), "txt", "");
-		$this->pathParent = base64_decode($_str_pathParent);
-
-		if (!file_exists($this->pathParent)) {
-			$this->obj_ajax->halt_alert("x030103");
-		}
-
-		$this->table_admin();
-		$this->table_user();
-		$this->table_app();
-		$this->table_app_belong();
-		$this->table_log();
-		$this->view_user();
-
-		$this->record_app();
-
-		$this->obj_ajax->halt_alert("y030104");
-	}
-
-
 	function ajax_over() {
 		$this->check_db();
 
@@ -184,144 +132,6 @@ class AJAX_INSTALL {
 		}
 
 		$this->obj_ajax->halt_alert("y030408");
-	}
-
-
-	private function table_admin() {
-		include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
-		$_mdl_admin       = new MODEL_ADMIN();
-		$_arr_adminRow    = $_mdl_admin->mdl_create_table();
-
-		if ($_arr_adminRow["alert"] != "y020105") {
-			$this->obj_ajax->halt_alert($_arr_adminRow["alert"]);
-		}
-	}
-
-
-	private function table_user() {
-		include_once(BG_PATH_MODEL . "user.class.php"); //载入管理帐号模型
-		$_mdl_user    = new MODEL_USER();
-		$_arr_userRow = $_mdl_user->mdl_create_table();
-
-		if ($_arr_userRow["alert"] != "y010105") {
-			$this->obj_ajax->halt_alert($_arr_userRow["alert"]);
-		}
-	}
-
-
-	private function table_app() {
-		include_once(BG_PATH_MODEL . "app.class.php"); //载入管理帐号模型
-		$_mdl_app     = new MODEL_APP();
-		$_arr_appRow  = $_mdl_app->mdl_create_table();
-
-		if ($_arr_appRow["alert"] != "y050105") {
-			$this->obj_ajax->halt_alert($_arr_appRow["alert"]);
-		}
-	}
-
-
-	private function table_app_belong() {
-		include_once(BG_PATH_MODEL . "appBelong.class.php"); //载入管理帐号模型
-		$_mdl_appBelong       = new MODEL_APP_BELONG();
-		$_arr_appBelongRow    = $_mdl_appBelong->mdl_create_table();
-
-		if ($_arr_appBelongRow["alert"] != "y070105") {
-			$this->obj_ajax->halt_alert($_arr_appBelongRow["alert"]);
-		}
-	}
-
-
-	private function table_log() {
-		include_once(BG_PATH_MODEL . "log.class.php"); //载入管理帐号模型
-		$_mdl_log     = new MODEL_LOG();
-		$_arr_logRow  = $_mdl_log->mdl_create_table();
-
-		if ($_arr_logRow["alert"] != "y060105") {
-			$this->obj_ajax->halt_alert($_arr_logRow["alert"]);
-		}
-	}
-
-
-	private function view_user() {
-		include_once(BG_PATH_MODEL . "user.class.php"); //载入管理帐号模型
-		$_mdl_user       = new MODEL_USER();
-		$_arr_user    = $_mdl_user->mdl_create_view();
-
-		if ($_arr_user["alert"] != "y070108") {
-			$this->obj_ajax->halt_alert($_arr_user["alert"]);
-		}
-	}
-
-
-	private function record_app() {
-
-		$_arr_appAllow = array(
-			"user" => array(
-				"reg"       => 1,
-				"login"     => 1,
-				"get"       => 1,
-				"edit"      => 1,
-				"del"       => 1,
-				"chkname"   => 1,
-				"chkmail"   => 1,
-			),
-			"code" => array(
-				"signature" => 1,
-				"verify"    => 1,
-				"encode"    => 1,
-				"decode"    => 1,
-			),
-		);
-
-		$_str_appAllow    = json_encode($_arr_appAllow);
-		$_str_appKey      = fn_rand(64);
-
-		switch ($this->target) {
-			case "cms":
-				$_str_appName = "baigo CMS";
-				$_str_const   = "BG_";
-			break;
-
-			case "im":
-				$_str_appName = "iWee Museum";
-				$_str_const   = "IW_";
-			break;
-
-			case "ib":
-				$_str_appName = "iWee Book";
-				$_str_const   = "IW_";
-			break;
-		}
-
-		$_arr_appInsert = array(
-			"app_name"           => $_str_appName,
-			"app_key"            => $_str_appKey,
-			"app_notice"         => "sso_note.php",
-			"app_token"          => "",
-			"app_token_expire"   => 604800,
-			"app_token_time"     => time(),
-			"app_status"         => "enable",
-			"app_note"           => $_str_appName,
-			"app_time"           => time(),
-			"app_ip_allow"       => "",
-			"app_ip_bad"         => "",
-			"app_sync"           => "on",
-			"app_allow"          => $_str_appAllow,
-		);
-
-		$_num_appId = $this->obj_db->insert(BG_DB_TABLE . "app", $_arr_appInsert);
-
-		if ($_num_appId <= 0 || !$_num_appId) {
-			$this->obj_ajax->halt_alert("x050101");
-		}
-
-		$_str_content = "<?php" . PHP_EOL;
-		$_str_content .= "define(\"" . $_str_const . "SSO_URL\", \"" . BG_SITE_URL . BG_URL_API . "api.php\");" . PHP_EOL;
-		$_str_content .= "define(\"" . $_str_const . "SSO_APPID\", " . $_num_appId . ");" . PHP_EOL;
-		$_str_content .= "define(\"" . $_str_const . "SSO_APPKEY\", \"" . $_str_appKey . "\");" . PHP_EOL;
-		$_str_content .= "define(\"" . $_str_const . "SSO_SYNLOGON\", \"on\");" . PHP_EOL;
-
-		file_put_contents($this->pathParent . "opt_sso.inc.php", $_str_content);
 	}
 
 
@@ -343,7 +153,7 @@ class AJAX_INSTALL {
 				"user"      => BG_DB_USER,
 				"pass"      => BG_DB_PASS,
 				"charset"   => BG_DB_CHARSET,
-				"debug"     => BG_DB_DEBUG,
+				"debug"     => BG_DEBUG_DB,
 				"port"      => BG_DB_PORT,
 			);
 
@@ -375,5 +185,4 @@ class AJAX_INSTALL {
 			$this->obj_ajax->halt_alert("x030417");
 		}
 	}
-
 }

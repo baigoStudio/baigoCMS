@@ -215,6 +215,28 @@ class MODEL_MARK {
 		return $_num_markCount;
 	}
 
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("mark_id", $_arr_col)) {
+			$_arr_alert["mark_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mark_id");
+		}
+
+		$_str_alert = "x140106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "mark", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y140106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+    }
 
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌

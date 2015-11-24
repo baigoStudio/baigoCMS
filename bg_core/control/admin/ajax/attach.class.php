@@ -11,7 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "dir.class.php"); //载入文件操作类
-if (BG_MODULE_FTP == true) {
+if (BG_MODULE_FTP == 1) {
 	include_once(BG_PATH_CLASS . "ftp.class.php"); //载入 FTP 类
 }
 include_once(BG_PATH_CLASS . "upload.class.php"); //载入上传类

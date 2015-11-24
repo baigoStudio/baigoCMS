@@ -238,4 +238,28 @@ class MODEL_CATE_BELONG {
 			"alert" => $_str_alert,
 		); //成功
 	}
+
+
+    function mdl_alert_table() {
+        $_arr_col         = $this->mdl_column();
+        $_arr_alert       = array();
+
+		if (in_array("belong_cate_id", $_arr_col)) {
+			$_arr_alert["belong_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目 ID'", "belong_cate_id");
+		}
+
+		$_str_alert = "x150106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "cate_belong", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y150106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+    }
 }

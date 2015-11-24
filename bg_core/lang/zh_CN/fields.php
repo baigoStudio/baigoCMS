@@ -11,24 +11,27 @@ if(!defined("IN_BAIGO")) {
 
 /*-------------------------通用-------------------------*/
 return array(
-	"int"     => array(
-		"note" => "int 整数",
-		"opt"  => "11",
+	"text" => array(
+		"label"   => "文本输入",
 	),
-	"decimal" => array(
-		"note" => "decimal 数字（含小数）",
-		"opt"  => "10,2",
+	"textarea" => array(
+		"label"   => "多行文本",
 	),
-	"varchar" => array(
-		"note" => "varchar 字符",
-		"opt"  => "90",
+	"radio" => array(
+		"label"   => "单选框",
+		"option"  => array("选项一", "选项二", "选项三"),
 	),
-	"text"    => array(
-		"note" => "text 文本",
-		"opt"  => "",
+	"select" => array(
+		"label"   => "下拉菜单",
+		"option"  => array("选项一", "选项二", "选项三"),
 	),
-	"enum"    => array(
-		"note" => "enum 单项选择",
-		"opt"  => "option-1,option-2",
+	"date" => array(
+		"label"   => "日期",
+	),
+	"datetime" => array(
+		"label"   => "日期时间",
+	),
+	"digit" => array(
+		"label"   => "数字",
 	),
 );

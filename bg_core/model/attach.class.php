@@ -38,7 +38,7 @@ class MODEL_ATTACH {
 		);
 
 
-		if (BG_MODULE_FTP == true && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
+		if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
 			$this->attachPre = BG_UPLOAD_URL . "/";
 		} else {
 			$this->attachPre = BG_URL_ATTACH;
@@ -555,6 +555,67 @@ class MODEL_ATTACH {
 		return array(
 			"alert" => $_str_alert,
 		); //成功
+	}
+
+
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (in_array("upfile_id", $_arr_col)) {
+			$_arr_alert["upfile_id"] = array("CHANGE", "int NOT NULL AUTO_INCREMENT COMMENT 'ID'", "attach_id");
+		}
+
+		if (in_array("upfile_ext", $_arr_col)) {
+			$_arr_alert["upfile_ext"] = array("CHANGE", "char(5) NOT NULL COMMENT '扩展名'", "attach_ext");
+		}
+
+		if (in_array("upfile_time", $_arr_col)) {
+			$_arr_alert["upfile_time"] = array("CHANGE", "int NOT NULL COMMENT '时间'", "attach_time");
+		}
+
+		if (in_array("upfile_size", $_arr_col)) {
+			$_arr_alert["upfile_size"] = array("CHANGE", "mediumint NOT NULL COMMENT '大小'", "attach_size");
+		}
+
+		if (in_array("attach_size", $_arr_col)) {
+			$_arr_alert["attach_size"] = array("CHANGE", "mediumint NOT NULL COMMENT '大小'", "attach_size");
+		}
+
+		if (in_array("upfile_name", $_arr_col)) {
+			$_arr_alert["upfile_name"] = array("CHANGE", "varchar(1000) NOT NULL COMMENT '原始文件名'", "attach_name");
+		}
+
+		if (in_array("upfile_admin_id", $_arr_col)) {
+			$_arr_alert["upfile_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户 ID'", "attach_admin_id");
+		}
+
+		if (in_array("attach_admin_id", $_arr_col)) {
+			$_arr_alert["attach_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户 ID'", "attach_admin_id");
+		}
+
+		if (!in_array("attach_box", $_arr_col)) {
+			$_arr_alert["attach_box"] = array("ADD", "enum('normal','recycle') NOT NULL COMMENT '盒子'");
+		}
+
+		if (!in_array("attach_mime", $_arr_col)) {
+			$_arr_alert["attach_mime"] = array("ADD", "varchar(30) NOT NULL COMMENT 'MIME'");
+		}
+
+		$_str_alert = "x070106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "attach", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y070106";
+    		}
+		}
+
+    	return array(
+        	"alert" => $_str_alert,
+    	);
 	}
 
 

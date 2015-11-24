@@ -26,6 +26,11 @@
 						<input type="radio" {if $tplData.callRow.call_cate_id == $value.cate_id}checked{/if} value="{$value.cate_id}" name="call_cate_id" id="call_cate_id_{$value.cate_id}" {if !$value.cate_childs}disabled{/if}>
 						{$value.cate_name}
 					</label>
+
+					<label for="call_cate_excepts_{$value.cate_id}">
+						<input type="checkbox" {if $value.cate_id|in_array:$tplData.callRow.call_cate_excepts}checked{/if} value="{$value.cate_id}" name="call_cate_excepts[]" id="call_cate_excepts_{$value.cate_id}">
+						{$lang.label.except}
+					</label>
 				</div>
 
 				{if $value.cate_childs}
@@ -57,12 +62,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=list">{$adminMod.call.main.title}</a></li>
 	<li>{$title_sub}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -84,7 +89,7 @@
 	<form name="call_form" id="call_form">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 		<input type="hidden" name="act_post" value="submit">
-		<input type="hidden" name="call_id" value="{$tplData.callRow.call_id}">
+		<input type="hidden" name="call_id" id="call_id" value="{$tplData.callRow.call_id}">
 
 		<div class="row">
 			<div class="col-md-9">
@@ -199,7 +204,7 @@
 						</select>
 					</div>
 
-					{if $smarty.const.BG_MODULE_GEN == true}
+					{if $smarty.const.BG_MODULE_GEN == 1}
 						<div class="form-group">
 							<label for="call_file" class="control-label">{$lang.label.callFile}<span id="msg_call_file">*</span></label>
 							<select name="call_file" id="call_file" class="validate form-control">
@@ -250,7 +255,7 @@
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	function reload_spec(_key, _page) {
@@ -302,7 +307,7 @@
 			length: { min: 1, max: 300 },
 			validate: { type: "ajax", format: "text", group: "group_call_name" },
 			msg: { id: "msg_call_name", too_short: "{$alert.x170201}", too_long: "{$alert.x170202}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
-			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=call&act_get=chkname", key: "call_name", type: "str", attach: "call_id={$tplData.callRow.call_id}" }
+			ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=call&act_get=chkname", key: "call_name", type: "str", attach_selectors: ["#call_id"], attach_keys: ["call_id"] }
 		},
 		call_type: {
 			length: { min: 1, max: 0 },
@@ -374,7 +379,7 @@
 		call_type("{$tplData.callRow.call_type}");
 		reload_spec("", 1);
 		var obj_validate_form = $("#call_form").baigoValidator(opts_validator_form);
-		var obj_submit_form = $("#call_form").baigoSubmit(opts_submit_form);
+		var obj_submit_form   = $("#call_form").baigoSubmit(opts_submit_form);
 		$(".go_submit").click(function(){
 			if (obj_validate_form.validateSubmit()) {
 				obj_submit_form.formSubmit();
@@ -396,5 +401,5 @@
 	});
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

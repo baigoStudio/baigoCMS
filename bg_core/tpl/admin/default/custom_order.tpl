@@ -1,9 +1,11 @@
 {*custom_order.php 栏目编辑界面*}
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	{$adminMod.opt.sub.custom.title} - {$lang.page.order}
+	{$adminMod.more.sub.custom.title} - {$lang.page.order}
 </div>
 <div class="modal-body">
+
+	<div id="msg_submitting"></div>
 
 	<form name="custom_order" id="custom_order" class="form_input">
 		<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
@@ -42,7 +44,6 @@
 			</div>
 		</div>
 	</form>
-
 </div>
 <div class="modal-footer">
 	<button type="button" class="btn btn-primary" id="go_order">{$lang.btn.save}</button>
@@ -53,7 +54,7 @@
 var opts_validator_order = {
 	order_type: {
 		length: { min: 1, max: 0 },
-		validate: { type: "radio",  },
+		validate: { type: "radio" },
 		msg: { id: "msg_order_type", too_few: "{$alert.x200210}" }
 	}
 };
@@ -63,7 +64,8 @@ var opts_submit_order = {
 	text_submitting: "{$lang.label.submitting}",
 	btn_text: "{$lang.btn.ok}",
 	btn_url: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=custom",
-	btn_close: "{$lang.btn.close}"
+	btn_close: "{$lang.btn.close}",
+	msg_box: "#msg_submitting"
 };
 
 $(document).ready(function(){
@@ -71,7 +73,7 @@ $(document).ready(function(){
 	var obj_submit_order   = $("#custom_order").baigoSubmit(opts_submit_order);
 	$("#go_order").click(function(){
 		if (obj_validate_order.validateSubmit()) {
-			obj_submit_order.formSubmit();
+			obj_submit_order.formSubmit("#go_order");
 		}
 	});
 });

@@ -9,8 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_api.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_API . "mark.class.php"); //载入商家控制器
+include_once(BG_PATH_FUNC . "include.func.php");
+fn_include(true, true, "Content-type: application/json; charset=utf-8", true, "ajax");
+
+include_once(BG_PATH_CONTROL . "api/mark.class.php"); //载入商家控制器
 
 $api_mark = new API_MARK();
 

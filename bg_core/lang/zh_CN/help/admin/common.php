@@ -10,60 +10,60 @@ return "<a name=\"ubb\"></a>
 			<table class=\"table\">
 				<thead>
 					<tr>
-						<th class=\"nowrap\">代码</th>
-						<th class=\"nowrap\">对应 HTML</th>
+						<th class=\"text-nowrap\">代码</th>
+						<th class=\"text-nowrap\">对应 HTML</th>
 						<th>说明</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class=\"nowrap\">[b]字符[/b]</td>
-						<td class=\"nowrap\">&lt;b&gt;字符&lt;/b&gt;</td>
+						<td class=\"text-nowrap\">[b]字符[/b]</td>
+						<td class=\"text-nowrap\">&lt;b&gt;字符&lt;/b&gt;</td>
 						<td>加粗</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[code]代码[/code]</td>
-						<td class=\"nowrap\">&lt;code&gt;代码&lt;/code&gt;</td>
+						<td class=\"text-nowrap\">[code]代码[/code]</td>
+						<td class=\"text-nowrap\">&lt;code&gt;代码&lt;/code&gt;</td>
 						<td>计算机代码文本</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[del]字符[/del]</td>
-						<td class=\"nowrap\">&lt;del&gt;字符&lt;/del&gt;</td>
+						<td class=\"text-nowrap\">[del]字符[/del]</td>
+						<td class=\"text-nowrap\">&lt;del&gt;字符&lt;/del&gt;</td>
 						<td>被删除文本</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[em]字符[/em]</td>
-						<td class=\"nowrap\">&lt;em&gt;字符&lt;/em&gt;</td>
+						<td class=\"text-nowrap\">[em]字符[/em]</td>
+						<td class=\"text-nowrap\">&lt;em&gt;字符&lt;/em&gt;</td>
 						<td>强调文本</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[i]字符[/i]</td>
-						<td class=\"nowrap\">&lt;i&gt;字符&lt;/i&gt;</td>
+						<td class=\"text-nowrap\">[i]字符[/i]</td>
+						<td class=\"text-nowrap\">&lt;i&gt;字符&lt;/i&gt;</td>
 						<td>斜体字</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[kbd]字符[/kbd]</td>
-						<td class=\"nowrap\">&lt;kbd&gt;字符&lt;/kbd&gt;</td>
+						<td class=\"text-nowrap\">[kbd]字符[/kbd]</td>
+						<td class=\"text-nowrap\">&lt;kbd&gt;字符&lt;/kbd&gt;</td>
 						<td>定义键盘文本</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[s]字符[/s]</td>
-						<td class=\"nowrap\">&lt;s&gt;字符&lt;/s&gt;</td>
+						<td class=\"text-nowrap\">[s]字符[/s]</td>
+						<td class=\"text-nowrap\">&lt;s&gt;字符&lt;/s&gt;</td>
 						<td>加删除线的文本</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[u]字符[/u]</td>
-						<td class=\"nowrap\">&lt;u&gt;字符&lt;/u&gt;</td>
+						<td class=\"text-nowrap\">[u]字符[/u]</td>
+						<td class=\"text-nowrap\">&lt;u&gt;字符&lt;/u&gt;</td>
 						<td>下划线</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[br]</td>
-						<td class=\"nowrap\">&lt;br&gt;</td>
+						<td class=\"text-nowrap\">[br]</td>
+						<td class=\"text-nowrap\">&lt;br&gt;</td>
 						<td>换行</td>
 					</tr>
 					<tr>
-						<td class=\"nowrap\">[hr]</td>
-						<td class=\"nowrap\">&lt;hr&gt;</td>
+						<td class=\"text-nowrap\">[hr]</td>
+						<td class=\"text-nowrap\">&lt;hr&gt;</td>
 						<td>横线</td>
 					</tr>
 				</tbody>

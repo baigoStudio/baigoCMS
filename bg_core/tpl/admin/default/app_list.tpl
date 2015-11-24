@@ -1,7 +1,7 @@
 {* admin_list.tpl 管理员列表 *}
 {$cfg = [
-	title          => "{$adminMod.opt.main.title} - {$adminMod.opt.sub.app.title}",
-	menu_active    => "opt",
+	title          => "{$adminMod.more.main.title} - {$adminMod.more.sub.app.title}",
+	menu_active    => "more",
 	sub_active     => "app",
 	baigoCheckall  => "true",
 	baigoValidator => "true",
@@ -10,12 +10,12 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
-	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
-	<li>{$adminMod.opt.sub.app.title}</li>
+	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=custom">{$adminMod.more.main.title}</a></li>
+	<li>{$adminMod.more.sub.app.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -71,15 +71,15 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.appName}</th>
-							<th class="td_sm">{$lang.label.status} / {$lang.label.note}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.note}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -90,8 +90,8 @@
 								{$_css_status = "danger"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="app_id[]" value="{$value.app_id}" id="app_id_{$value.app_id}" group="app_id" class="validate chk_all"></td>
-								<td class="td_mn">{$value.app_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="app_id[]" value="{$value.app_id}" id="app_id_{$value.app_id}" group="app_id" class="validate chk_all"></td>
+								<td class="text-nowrap td_mn">{$value.app_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>{$value.app_name}</li>
@@ -107,7 +107,7 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_sm">
+								<td class="text-nowrap td_sm">
 									<ul class="list-unstyled">
 										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$status.app[$value.app_status]}</span>
@@ -147,7 +147,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<form id="app_notice">
@@ -155,7 +155,7 @@
 		<input type="hidden" name="app_id_notice" id="app_id_notice" value="">
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -173,7 +173,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -191,8 +191,8 @@
 	};
 
 	$(document).ready(function(){
-		var obj_validator_list = $("#app_list").baigoValidator(opts_validator_list);
-		var obj_submit_list = $("#app_list").baigoSubmit(opts_submit_list);
+		var obj_validator_list    = $("#app_list").baigoValidator(opts_validator_list);
+		var obj_submit_list       = $("#app_list").baigoSubmit(opts_submit_list);
 		$("#go_list").click(function(){
 			if (obj_validator_list.validateSubmit()) {
 				obj_submit_list.formSubmit();
@@ -209,4 +209,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

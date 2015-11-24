@@ -9,7 +9,7 @@
 					{/if}
 				</div>
 				<div class="pull-right">
-					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod={$cfg.mod_help}&act_get={$cfg.act_help}" target="_blank">
+					<a href="{$smarty.const.BG_URL_HELP}ctl.php?mod={$cfg.mod_help}&act_get={$tplData.act_get}" target="_blank">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						{$lang.href.help}
 					</a>
@@ -18,5 +18,3 @@
 			</div>
 		</div>
 	</div>
-
-</body>

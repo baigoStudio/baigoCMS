@@ -25,121 +25,29 @@ class AJAX_OPT {
 	function __construct() { //构造函数
 		$this->adminLogged    = $GLOBALS["adminLogged"]; //已登录商家信息
 		$this->obj_ajax       = new CLASS_AJAX(); //初始化 AJAX 基对象
+		$this->obj_ajax->chk_install();
 		$this->log            = $this->obj_ajax->log; //初始化 AJAX 基对象
 		$this->mdl_opt        = new MODEL_OPT(); //设置管理组模型
 		$this->mdl_log        = new MODEL_LOG(); //设置管理员模型
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_SSO_PUB > BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030411");
-			}
-		} else {
-			$this->obj_ajax->halt_alert("x030410");
-		}
 
 		if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
 			$this->obj_ajax->halt_alert($this->adminLogged["alert"]);
 		}
 	}
 
-	/**
-	 * ajax_reg function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_reg() {
-		if (!isset($this->adminLogged["admin_allow"]["opt"]["reg"])) {
+
+	function ajax_dbconfig() {
+		if (!isset($this->adminLogged["admin_allow"]["opt"]["dbconfig"])) {
 			$this->obj_ajax->halt_alert("x040301");
 		}
 
-		$_arr_return = $this->mdl_opt->mdl_const("reg");
+		$_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
 
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$_arr_targets[]   = "reg";
-		$_str_targets     = json_encode($_arr_targets);
-		$_str_return      = json_encode($_arr_return);
-
-		$this->mdl_log->mdl_submit($_str_targets, "opt", $this->log["opt"]["edit"], $_str_return, "admin", $this->adminLogged["admin_id"]);
-
-		$this->obj_ajax->halt_alert("y040402");
-	}
-
-
-	/**
-	 * ajax_mail function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_mail() {
-		if (!isset($this->adminLogged["admin_allow"]["opt"]["mail"])) {
-			$this->obj_ajax->halt_alert("x040301");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const("mail");
-
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$_arr_mail    = array(BG_MAIL_FROM);
-		$_arr_mailRow = fn_mailsend($_arr_mail, "test", "test", false);
-
-		if ($_arr_mailRow["alert"] != "y030201") {
-			$this->obj_ajax->halt_alert("x040403");
-		}
-
-		$this->obj_ajax->halt_alert("y040403");
-	}
-
-	/**
-	 * ajax_base function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_base() {
-		if (!isset($this->adminLogged["admin_allow"]["opt"]["base"])) {
-			$this->obj_ajax->halt_alert("x040301");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const("base");
-
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		$_arr_targets[]   = "base";
-		$_str_targets     = json_encode($_arr_targets);
-		$_str_return      = json_encode($_arr_return);
-
-		$this->mdl_log->mdl_submit($_str_targets, "opt", $this->log["opt"]["edit"], $_str_return, "admin", $this->adminLogged["admin_id"]);
-
-		$this->obj_ajax->halt_alert("y040401");
-	}
-
-
-	/**
-	 * ajax_db function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ajax_db() {
-		if (!isset($this->adminLogged["admin_allow"]["opt"]["db"])) {
-			$this->obj_ajax->halt_alert("x040304");
+		if ($_arr_dbconfigSubmit["alert"] != "ok") {
+			$this->obj_ajax->halt_alert($_arr_dbconfigSubmit["alert"]);
 		}
 
 		$_arr_return = $this->mdl_opt->mdl_dbconfig();
-
-		if ($_arr_return["alert"] != "y040101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
 
 		$_arr_targets[]   = "dbconfig";
 		$_str_targets     = json_encode($_arr_targets);
@@ -147,7 +55,45 @@ class AJAX_OPT {
 
 		$this->mdl_log->mdl_submit($_str_targets, "opt", $this->log["opt"]["edit"], $_str_return, "admin", $this->adminLogged["admin_id"]);
 
-		$this->obj_ajax->halt_alert("y040404");
+		$this->obj_ajax->halt_alert($_arr_return["alert"]);
 	}
 
+
+	function ajax_submit() {
+		$_act_post = fn_getSafe($GLOBALS["act_post"], "txt", "base");
+
+		if (!isset($this->adminLogged["admin_allow"]["opt"][$_act_post])) {
+			$this->obj_ajax->halt_alert("x040301");
+		}
+
+		$_num_countSrc = 0;
+
+		foreach ($this->obj_ajax->opt[$_act_post]["list"] as $_key=>$_value) {
+			if ($_value["min"] > 0) {
+				$_num_countSrc++;
+			}
+		}
+
+		$_arr_const = $this->mdl_opt->input_const($_act_post);
+
+		$_num_countInput = count(array_filter($_arr_const));
+
+		if ($_num_countInput < $_num_countSrc) {
+			$this->obj_ajax->halt_alert("x030212");
+		}
+
+		$_arr_return = $this->mdl_opt->mdl_const($_act_post);
+
+		if ($_arr_return["alert"] != "y040101") {
+			$this->obj_ajax->halt_alert($_arr_return["alert"]);
+		}
+
+		$_arr_targets[]   = $_act_post;
+		$_str_targets     = json_encode($_arr_targets);
+		$_str_return      = json_encode($_arr_return);
+
+		$this->mdl_log->mdl_submit($_str_targets, "opt", $this->log["opt"]["edit"], $_str_return, "admin", $this->adminLogged["admin_id"]);
+
+		$this->obj_ajax->halt_alert("y040401");
+	}
 }

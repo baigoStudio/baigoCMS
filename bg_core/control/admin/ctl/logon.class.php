@@ -11,8 +11,7 @@ if(!defined("IN_BAIGO")) {
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "sso.class.php"); //载入 SSO
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 
 /*-------------用户类-------------*/
 class CONTROL_LOGON {
@@ -29,6 +28,8 @@ class CONTROL_LOGON {
 		$this->config     = $this->obj_base->config;
 		$this->obj_sso    = new CLASS_SSO(); //SSO
 		$this->mdl_admin  = new MODEL_ADMIN(); //设置管理员对象
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 	}
 
 
@@ -52,40 +53,28 @@ class CONTROL_LOGON {
 			exit;
 		}
 
-		$_arr_adminRow = $this->mdl_admin->mdl_read($_arr_ssoLogin["user_id"]); //本地数据库处理
-
-		if ($_arr_adminRow["alert"] != "y020102") {
-			$_arr_adminRow["forward"] = $_arr_adminLogin["forward"];
-			return $_arr_adminRow;
+		$_arr_ssin = fn_ssin_login($_arr_ssoLogin["user_id"]);
+		if ($_arr_ssin["alert"] != "ok") {
+			$_arr_ssin["forward"] = $_arr_adminLogin["forward"];
+			return $_arr_ssin;
 			exit;
 		}
 
-		if ($_arr_adminRow["admin_status"] == "disable") {
-			return array(
-				"forward"   => $_arr_adminLogin["forward"],
-				"alert" => "x020401",
-			);
-			exit;
-		}
+		$_arr_sync = array();
 
-		$_str_rand = fn_rand(6);
-		$this->mdl_admin->mdl_login($_arr_ssoLogin["user_id"], $_str_rand);
-
-		fn_session("admin_id", "mk", $_arr_ssoLogin["user_id"]);
-		fn_session("admin_ssin_time", "mk", time());
-		fn_session("admin_hash", "mk", fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_rand));
-
-		if(defined("BG_SSO_SYNLOGON") && BG_SSO_SYNLOGON == "on") {
+		if(defined("BG_SSO_SYNC") && BG_SSO_SYNC == "on") {
 			$_arr_sync = $this->obj_sso->sso_sync_login($_arr_ssoLogin["user_id"]);
-
-			echo $_arr_sync["html"];
 		}
 
-		exit;
+		$_arr_tplData = array(
+			"admin_id"   => $_arr_ssoLogin["user_id"],
+			"forward"    => base64_decode($_arr_adminLogin["forward"]),
+			"sync"       => $_arr_sync,
+		);
+
+		$this->obj_tpl->tplDisplay("login.tpl", $_arr_tplData);
 
 		return array(
-			"admin_id"   => $_arr_ssoLogin["user_id"],
-			"forward"    => $_arr_adminLogin["forward"],
 			"alert"      => "y020401",
 		);
 	}
@@ -98,7 +87,6 @@ class CONTROL_LOGON {
 	 * @return void
 	 */
 	function ctl_logon() {
-		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
 		$_str_forward     = fn_getSafe(fn_get("forward"), "txt", "");
 		$_str_alert       = fn_getSafe(fn_get("alert"), "txt", "");
 

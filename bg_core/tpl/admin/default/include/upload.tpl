@@ -1,7 +1,7 @@
 			<div class="form-group">
 				<a class="btn btn-success fileinput-button" id="upload_select">
 					<span class="glyphicon glyphicon-upload"></span>
-					{$lang.btn.upload}...
+					{$lang.btn.upload}
 					<!-- The file input field used as target for the file upload widget -->
 					<input id="attach_files" type="file" name="attach_files" multiple>
 				</a>

@@ -9,8 +9,10 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_pub.inc.php"); //载入后台通用
-include_once(BG_PATH_CONTROL_PUB . "ctl/alert.class.php"); //载入模板类
+include_once(BG_PATH_FUNC . "include.func.php");
+fn_include(true, false, "Content-Type: text/html; charset=utf-8", true, "ctl", false, true);
+
+include_once(BG_PATH_CONTROL . "pub/ctl/alert.class.php"); //载入模板类
 
 $ctl_alert = new CONTROL_ALERT(); //设置模板对象
 

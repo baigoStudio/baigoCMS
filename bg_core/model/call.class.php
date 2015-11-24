@@ -21,18 +21,18 @@ class MODEL_CALL {
 
 	function mdl_create_table() {
 		$_arr_callCreat = array(
-			"call_id"        => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-			"call_name"      => "varchar(300) NOT NULL COMMENT '调用名'",
-			"call_type"      => "enum('article','hits_day','hits_week','hits_month','hits_year','hits_all','spec','cate','tag_list','tag_rank') NOT NULL COMMENT '调用类型'",
-			"call_cate_ids"  => "varchar(300) NOT NULL COMMENT '栏目ID'",
-			"call_cate_id"   => "smallint NOT NULL COMMENT '栏目ID'",
-			"call_spec_id"   => "mediumint NOT NULL COMMENT '专题ID'",
-			"call_mark_ids"  => "varchar(300) NOT NULL COMMENT '标记ID'",
-			"call_file"      => "enum('html','js','xml','json') NOT NULL COMMENT '静态文件类型'",
-			"call_amount"    => "varchar(300) NOT NULL COMMENT '显示数选项'",
-			"call_attach"    => "enum('all','attach','none') NOT NULL COMMENT '含有附件'",
-			//"call_trim"      => "smallint NOT NULL COMMENT '标题字数'",
-			"call_status"    => "enum('enable','disable') NOT NULL COMMENT '状态'",
+			"call_id"            => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
+			"call_name"          => "varchar(300) NOT NULL COMMENT '调用名'",
+			"call_type"          => "enum('article','hits_day','hits_week','hits_month','hits_year','hits_all','spec','cate','tag_list','tag_rank') NOT NULL COMMENT '调用类型'",
+			"call_cate_ids"      => "varchar(300) NOT NULL COMMENT '栏目ID'",
+			"call_cate_excepts"  => "varchar(300) NOT NULL COMMENT '排除栏目'",
+			"call_cate_id"       => "smallint NOT NULL COMMENT '栏目ID'",
+			"call_spec_id"       => "mediumint NOT NULL COMMENT '专题ID'",
+			"call_mark_ids"      => "varchar(300) NOT NULL COMMENT '标记ID'",
+			"call_file"          => "enum('html','js','xml','json') NOT NULL COMMENT '静态文件类型'",
+			"call_amount"        => "varchar(300) NOT NULL COMMENT '显示数选项'",
+			"call_attach"        => "enum('all','attach','none') NOT NULL COMMENT '含有附件'",
+			"call_status"        => "enum('enable','disable') NOT NULL COMMENT '状态'",
 		);
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "call", $_arr_callCreat, "call_id", "调用");
@@ -74,17 +74,17 @@ class MODEL_CALL {
 	function mdl_submit() {
 
 		$_arr_callData = array(
-			"call_name"      => $this->callSubmit["call_name"],
-			"call_type"      => $this->callSubmit["call_type"],
-			"call_file"      => $this->callSubmit["call_file"],
-			"call_status"    => $this->callSubmit["call_status"],
-			"call_amount"    => $this->callSubmit["call_amount"],
-			//"call_trim"      => $this->callSubmit["call_trim"],
-			"call_cate_ids"  => $this->callSubmit["call_cate_ids"],
-			"call_cate_id"   => $this->callSubmit["call_cate_id"],
-			"call_mark_ids"  => $this->callSubmit["call_mark_ids"],
-			"call_spec_id"   => $this->callSubmit["call_spec_id"],
-			"call_attach"    => $this->callSubmit["call_attach"],
+			"call_name"          => $this->callSubmit["call_name"],
+			"call_type"          => $this->callSubmit["call_type"],
+			"call_file"          => $this->callSubmit["call_file"],
+			"call_status"        => $this->callSubmit["call_status"],
+			"call_amount"        => $this->callSubmit["call_amount"],
+			"call_cate_ids"      => $this->callSubmit["call_cate_ids"],
+			"call_cate_excepts"  => $this->callSubmit["call_cate_excepts"],
+			"call_cate_id"       => $this->callSubmit["call_cate_id"],
+			"call_mark_ids"      => $this->callSubmit["call_mark_ids"],
+			"call_spec_id"       => $this->callSubmit["call_spec_id"],
+			"call_attach"        => $this->callSubmit["call_attach"],
 		);
 
 		if ($this->callSubmit["call_id"] == 0) { //插入
@@ -137,8 +137,8 @@ class MODEL_CALL {
 			"call_file",
 			"call_status",
 			"call_amount",
-			//"call_trim",
 			"call_cate_ids",
+			"call_cate_excepts",
 			"call_cate_id",
 			"call_spec_id",
 			"call_mark_ids",
@@ -181,6 +181,12 @@ class MODEL_CALL {
 			$_arr_callRow["call_cate_ids"] = array();
 		}
 
+		if (isset($_arr_callRow["call_cate_excepts"])) {
+			$_arr_callRow["call_cate_excepts"] = fn_jsonDecode($_arr_callRow["call_cate_excepts"], "no"); //json解码
+		} else {
+			$_arr_callRow["call_cate_excepts"] = array();
+		}
+
 		if (isset($_arr_callRow["call_mark_ids"])) {
 			$_arr_callRow["call_mark_ids"] = fn_jsonDecode($_arr_callRow["call_mark_ids"], "no"); //json解码
 		} else {
@@ -212,8 +218,8 @@ class MODEL_CALL {
 			"call_file",
 			"call_status",
 			"call_amount",
-			//"call_trim",
 			"call_cate_ids",
+			"call_cate_excepts",
 			"call_cate_id",
 			"call_spec_id",
 			"call_mark_ids",
@@ -325,6 +331,57 @@ class MODEL_CALL {
 		exit;
 	}
 
+	function mdl_alert_table() {
+        $_arr_col   = $this->mdl_column();
+        $_arr_alert = array();
+
+		if (in_array("call_upfile", $_arr_col)) {
+			$_arr_alert["call_upfile"] = array("CHANGE", "enum('all','attach','none') NOT NULL COMMENT '含有附件'", "call_attach");
+		}
+
+		if (in_array("call_attach", $_arr_col)) {
+			$_arr_alert["call_attach"] = array("CHANGE", "enum('all','attach','none') NOT NULL COMMENT '含有附件'", "call_attach");
+		}
+
+		if (!in_array("call_spec_id", $_arr_col)) {
+			$_arr_alert["call_spec_id"] = array("ADD", "mediumint NOT NULL COMMENT '专题ID'");
+		}
+
+		if (!in_array("call_cate_excepts", $_arr_col)) {
+			$_arr_alert["call_cate_excepts"] = array("ADD", "varchar(300) NOT NULL COMMENT '排除栏目'");
+		}
+
+		if (in_array("call_type", $_arr_col)) {
+			$_arr_alert["call_type"] = array("CHANGE", "enum('article','hits_day','hits_week','hits_month','hits_year','hits_all','spec','cate','tag_list','tag_rank') NOT NULL COMMENT '调用类型'", "call_type");
+		}
+
+		if (in_array("call_cate_id", $_arr_col)) {
+			$_arr_alert["call_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目ID'", "call_cate_id");
+		}
+
+		if (in_array("call_file", $_arr_col)) {
+			$_arr_alert["call_file"] = array("CHANGE", "enum('html','js','xml','json') NOT NULL COMMENT '静态文件类型'", "call_file");
+		}
+
+		if (in_array("call_status", $_arr_col)) {
+			$_arr_alert["call_status"] = array("CHANGE", "enum('enable','disable') NOT NULL COMMENT '状态'", "call_status");
+		}
+
+		$_str_alert = "x170106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "call", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y170106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
+    }
+
 
 	function input_submit() {
 		if (!fn_token("chk")) { //令牌
@@ -394,37 +451,17 @@ class MODEL_CALL {
 			break;
 		}
 
-		/*$_arr_callTrim = validateStr(fn_post("call_trim"), 1, 0);
-		switch ($_arr_callTrim["status"]) {
-			case "too_short":
-				return array(
-					"alert" => "x170211",
-				);
-				exit;
-			break;
+		$this->callSubmit["call_file"]            = fn_getSafe(fn_post("call_file"), "txt", "");
+		$this->callSubmit["call_attach"]          = fn_getSafe(fn_post("call_attach"), "txt", "");
+		$this->callSubmit["call_cate_id"]         = fn_getSafe(fn_post("call_cate_id"), "int", 0);
+		$this->callSubmit["call_spec_id"]         = fn_getSafe(fn_post("call_spec_id"), "int", 0);
 
-			case "format_err":
-				return array(
-					"alert" => "x170212",
-				);
-				exit;
-			break;
+		$this->callSubmit["call_cate_ids"]        = fn_jsonEncode(fn_post("call_cate_ids"), "no");
+		$this->callSubmit["call_cate_excepts"]    = fn_jsonEncode(fn_post("call_cate_excepts"), "no");
+		$this->callSubmit["call_mark_ids"]        = fn_jsonEncode(fn_post("call_mark_ids"), "no");
+		$this->callSubmit["call_amount"]          = fn_jsonEncode(fn_post("call_amount"), "no");
 
-			case "ok":
-				$this->callSubmit["call_trim"] = $_arr_callTrim["str"];
-			break;
-		}*/
-
-		$this->callSubmit["call_file"]        = fn_getSafe(fn_post("call_file"), "txt", "");
-		$this->callSubmit["call_attach"]      = fn_getSafe(fn_post("call_attach"), "txt", "");
-		$this->callSubmit["call_cate_id"]     = fn_getSafe(fn_post("call_cate_id"), "int", 0);
-		$this->callSubmit["call_spec_id"]     = fn_getSafe(fn_post("call_spec_id"), "int", 0);
-
-		$this->callSubmit["call_cate_ids"]    = fn_jsonEncode(fn_post("call_cate_ids"), "no");
-		$this->callSubmit["call_mark_ids"]    = fn_jsonEncode(fn_post("call_mark_ids"), "no");
-		$this->callSubmit["call_amount"]      = fn_jsonEncode(fn_post("call_amount"), "no");
-
-		$this->callSubmit["alert"]        = "ok";
+		$this->callSubmit["alert"]                = "ok";
 
 		return $this->callSubmit;
 	}

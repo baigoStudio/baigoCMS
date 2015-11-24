@@ -9,16 +9,17 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 
 class CONTROL_ALERT {
 
 	private $obj_tpl;
 
 	function __construct() { //构造函数
-		$this->obj_base   = $GLOBALS["obj_base"];
-		$this->config     = $this->obj_base->config;
-		$this->obj_tpl    = new CLASS_TPL(BG_PATH_SYSTPL_INSTALL . $this->config["ui"]);
+		$this->obj_base       = $GLOBALS["obj_base"];
+		$this->config         = $this->obj_base->config;
+		$_arr_cfg["admin"]    = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "install/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 	}
 
 	/**

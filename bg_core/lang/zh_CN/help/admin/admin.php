@@ -15,7 +15,7 @@ return "<a name=\"list\"></a>
 
 	<a name=\"auth\"></a>
 	<h3>授权为管理员</h3>
-	<p>点左侧子菜单的“授权为管理员”，进入如下界面。此功能与创建管理员的区别为，创建管理员时，系统会向 baigo SSO 系统注册用户，而授权为管理员则是将 baigo SSO 已注册的用户授权为管理员。<a href=\"http://www.baigo.net/Products/baigoSSO/\" target=\"_blank\">baigo SSO 官方网站</a></p>
+	<p>点左侧子菜单的“授权为管理员”，进入如下界面。此功能与创建管理员的区别为，创建管理员时，系统会向 baigo SSO 系统注册用户，而授权为管理员则是将 baigo SSO 已注册的用户授权为管理员。<a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a></p>
 	<p><img src=\"{images}admin_auth.jpg\" class=\"img-responsive thumbnail\"></p>
 
 	<div class=\"panel panel-default\">

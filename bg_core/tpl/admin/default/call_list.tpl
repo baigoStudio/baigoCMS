@@ -10,11 +10,11 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.call.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -78,15 +78,15 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.callName}</th>
-							<th class="td_sm">{$lang.label.status} / {$lang.label.type}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.type}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -97,8 +97,8 @@
 								{$_css_status = "danger"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="call_id[]" value="{$value.call_id}" id="call_id_{$value.call_id}" class="chk_all validate" group="call_id"></td>
-								<td class="td_mn">{$value.call_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="call_id[]" value="{$value.call_id}" id="call_id_{$value.call_id}" class="chk_all validate" group="call_id"></td>
+								<td class="text-nowrap td_mn">{$value.call_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>{$value.call_name}</li>
@@ -107,7 +107,7 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_sm">
+								<td class="text-nowrap td_sm">
 									<ul class="list-unstyled">
 										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$status.call[$value.call_status]}</span>
@@ -147,10 +147,10 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -168,7 +168,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=call",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -189,4 +189,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

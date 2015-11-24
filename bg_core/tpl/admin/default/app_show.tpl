@@ -1,18 +1,18 @@
 {* admin_form.tpl 管理员编辑界面 *}
 {$cfg = [
-	title          => "{$adminMod.opt.main.title} - {$adminMod.opt.sub.app.title}",
-	menu_active    => "opt",
+	title          => "{$adminMod.more.main.title} - {$adminMod.more.sub.app.title}",
+	menu_active    => "more",
 	sub_active     => "app",
 	baigoValidator => "true",
 	baigoSubmit    => "true"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
-	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=opt&act_get=base">{$adminMod.opt.main.title}</a></li>
-	<li>{$adminMod.opt.sub.app.title}</li>
+	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=custom">{$adminMod.more.main.title}</a></li>
+	<li>{$adminMod.more.sub.app.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -140,12 +140,12 @@
 
 	</form>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_submit_form = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "reset",
 		confirm_msg: "{$lang.confirm.resetKey}",
 		text_submitting: "{$lang.label.submitting}",
@@ -162,4 +162,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

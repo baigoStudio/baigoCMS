@@ -23,14 +23,15 @@ class CONTROL_ARTICLE {
 	private $config;
 
 	function __construct() { //构造函数
-		$this->mdl_cate           = new MODEL_CATE(); //设置文章对象
-		$this->mdl_articlePub     = new MODEL_ARTICLE_PUB(); //设置文章对象
-		$this->mdl_tag            = new MODEL_TAG();
-		$this->mdl_custom         = new MODEL_CUSTOM();
+		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
+		$this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
+		$this->mdl_tag        = new MODEL_TAG();
+		$this->mdl_custom     = new MODEL_CUSTOM();
 		$this->article_init();
-		$this->obj_tpl            = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
-		$this->mdl_attach         = new MODEL_ATTACH();
-		$this->mdl_thumb          = new MODEL_THUMB();
+		$_arr_cfg["pub"]      = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLPUB . $this->config["tpl"], $_arr_cfg); //初始化视图对象
+		$this->mdl_attach     = new MODEL_ATTACH();
+		$this->mdl_thumb      = new MODEL_THUMB();
 	}
 
 
@@ -91,21 +92,21 @@ class CONTROL_ARTICLE {
 		$this->articleRow["cateRow"]          = $this->cateRow;
 		$this->articleRow["tagRows"]          = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $this->articleRow["article_id"]);
 
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "sys/thumb_list.php");
 
-		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_trees.php")) {
 			$this->mdl_cate->mdl_cache();
 		}
 
-		$_arr_cateRows = include(BG_PATH_CACHE . "cate_trees.php");
+		$_arr_cateRows = include(BG_PATH_CACHE . "sys/cate_trees.php");
 
-		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/custom_list.php")) {
 			$this->mdl_custom->mdl_cache();
 		}
-		$_arr_customRows = include(BG_PATH_CACHE . "custom_list.php");
+		$_arr_customRows = include(BG_PATH_CACHE . "sys/custom_list.php");
 
 		if ($this->articleRow["article_attach_id"] > 0) {
 			$_arr_attachRow = $this->mdl_attach->mdl_url($this->articleRow["article_attach_id"]);
@@ -148,11 +149,11 @@ class CONTROL_ARTICLE {
 					$_arr_associateRows[$_key]["attachRow"]   = $_arr_attachRow;
 				}
 
-				if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
-					$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
+				if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php")) {
+					$this->mdl_cate->mdl_cache();
 				}
 
-				$_arr_associateRows[$_key]["cateRow"] = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+				$_arr_associateRows[$_key]["cateRow"] = include(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php");
 			}
 		}
 
@@ -189,14 +190,18 @@ class CONTROL_ARTICLE {
 
 		if ($this->articleId > 0) {
 			$this->articleRow = $this->mdl_articlePub->mdl_read($this->articleId);
-			if (!file_exists(BG_PATH_CACHE . "cate_" . $this->articleRow["article_cate_id"] . ".php")) {
-				$this->mdl_cate->mdl_cache(array($this->articleRow["article_cate_id"]));
-			}
-
 			if ($this->articleRow["alert"] == "y120102") {
-				$this->cateRow                  = include(BG_PATH_CACHE . "cate_" . $this->articleRow["article_cate_id"] . ".php");
-				$this->config["tpl"]            = $this->cateRow["cate_tplDo"];
-				//$this->config["tpl"]    = $this->mdl_cate->tpl_process($this->articleRow["article_cate_id"]);
+    			if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $this->articleRow["article_cate_id"] . ".php")) {
+    				$this->mdl_cate->mdl_cache();
+    			}
+
+    			if (file_exists(BG_PATH_CACHE . "sys/cate_" . $this->articleRow["article_cate_id"] . ".php")) {
+    				$this->cateRow          = include(BG_PATH_CACHE . "sys/cate_" . $this->articleRow["article_cate_id"] . ".php");
+    				$this->config["tpl"]    = $this->cateRow["cate_tplDo"];
+    			} else {
+    				$this->cateRow["alert"] = "x110102";
+    				$this->config["tpl"]    = "default";
+    			}
 			}
 		}
 	}

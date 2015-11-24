@@ -19,24 +19,31 @@ if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
 	exit;
 }
 
-if (isset($_GET["ssid"])) {
-	session_id($_GET["ssid"]); //将当前的SessionId设置成客户端传递回来的SessionId
-}
+include_once(BG_PATH_FUNC . "include.func.php"); //验证是否已登录
+fn_include(true, true);
 
-session_start(); //开启session
-$GLOBALS["ssid"] = session_id();
-
-include_once(BG_PATH_INC . "common_global.inc.php"); //载入通用
 include_once(BG_PATH_CLASS . "mysqli.class.php"); //载入数据库类
-include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
-include_once(BG_PATH_CONTROL_INSTALL . "ctl/install.class.php"); //载入栏目控制器
+include_once(BG_PATH_CONTROL . "install/ctl/install.class.php"); //载入栏目控制器
 
-$GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
 $ctl_install            = new CONTROL_INSTALL(); //初始化商家
 
-header("Content-Type: text/html; charset=utf-8");
-
 switch ($GLOBALS["act_get"]) {
+	case "dbconfig":
+		$arr_installRow = $ctl_install->ctl_dbconfig();
+		if ($arr_installRow["alert"] != "y030404") {
+			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
+			exit;
+		}
+	break;
+
+	case "dbtable":
+		$arr_installRow = $ctl_install->ctl_dbtable();
+		if ($arr_installRow["alert"] != "y030404") {
+			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
+			exit;
+		}
+	break;
+
 	case "auth":
 		$arr_installRow = $ctl_install->ctl_auth();
 		if ($arr_installRow["alert"] != "y030404") {
@@ -69,46 +76,6 @@ switch ($GLOBALS["act_get"]) {
 		}
 	break;
 
-	case "sso":
-		$arr_installRow = $ctl_install->ctl_sso();
-		if ($arr_installRow["alert"] != "y030404") {
-			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "upload":
-		$arr_installRow = $ctl_install->ctl_upload();
-		if ($arr_installRow["alert"] != "y030404") {
-			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "visit":
-		$arr_installRow = $ctl_install->ctl_visit();
-		if ($arr_installRow["alert"] != "y030404") {
-			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "base":
-		$arr_installRow = $ctl_install->ctl_base();
-		if ($arr_installRow["alert"] != "y030404") {
-			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
-			exit;
-		}
-	break;
-
-	case "dbtable":
-		$arr_installRow = $ctl_install->ctl_dbtable();
-		if ($arr_installRow["alert"] != "y030404") {
-			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
-			exit;
-		}
-	break;
-
 	case "over":
 		$arr_installRow = $ctl_install->ctl_over();
 		if ($arr_installRow["alert"] != "y030404") {
@@ -117,9 +84,12 @@ switch ($GLOBALS["act_get"]) {
 		}
 	break;
 
-	case "dbconfig":
-		$arr_installRow = $ctl_install->ctl_dbconfig();
-		if ($arr_installRow["alert"] != "y030403") {
+	case "base":
+	case "sso":
+	case "upload":
+	case "visit":
+		$arr_installRow = $ctl_install->ctl_form();
+		if ($arr_installRow["alert"] != "y030405") {
 			header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
 			exit;
 		}

@@ -86,7 +86,7 @@ class CLASS_CALL_DISPLAY {
 	 * @return void
 	 */
 	function display_cate() {
-		$_arr_cateRows = $this->mdl_cate->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "show", "", $this->callRow["call_cate_id"]);
+		$_arr_cateRows = $this->mdl_cate->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "show", "", $this->callRow["call_cate_excepts"], $this->callRow["call_cate_id"]);
 
 		return $_arr_cateRows;
 	}
@@ -128,10 +128,10 @@ class CLASS_CALL_DISPLAY {
 		$_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "", "", "", $this->callRow["call_cate_ids"], $this->callRow["call_mark_ids"], $this->callRow["call_spec_id"], false, false, $this->callRow["call_attach"], $this->callRow["call_type"]);
 
 		//print_r($_arr_articleRows);
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "sys/thumb_list.php");
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
@@ -148,11 +148,11 @@ class CLASS_CALL_DISPLAY {
 				$_arr_articleRows[$_key]["attachRow"]     = $_arr_attachRow;
 			}
 
-			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
-				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
+			if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache();
 			}
 
-			$_arr_cateRow                        = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+			$_arr_cateRow                        = include(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php");
 			$_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
 
 			if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {

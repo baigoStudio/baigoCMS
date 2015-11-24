@@ -10,15 +10,15 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.app.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
-			<ul class="list-inline">
+			<ul class="nav nav-pills nav_baigo">
 				<li>
 					<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=app&act_get=form">
 						<span class="glyphicon glyphicon-plus"></span>
@@ -46,12 +46,14 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
+					<div class="input-group">
+    					<input type="text" name="key" value="{$tplData.search.key}" placeholder="{$lang.label.key}" class="form-control input-sm">
+        				<span class="input-group-btn">
+        					<button type="submit" class="btn btn-default btn-sm">
+        						<span class="glyphicon glyphicon-search"></span>
+        					</button>
+        				</span>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -66,15 +68,15 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.appName}</th>
-							<th class="td_md">{$lang.label.status} / {$lang.label.note}</th>
+							<th class="text-nowrap td_md">{$lang.label.status} / {$lang.label.note}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -85,8 +87,8 @@
 								{$_css_status = "danger"}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="app_id[]" value="{$value.app_id}" id="app_id_{$value.app_id}" group="app_id" class="validate chk_all"></td>
-								<td class="td_mn">{$value.app_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="app_id[]" value="{$value.app_id}" id="app_id_{$value.app_id}" group="app_id" class="validate chk_all"></td>
+								<td class="text-nowrap td_mn">{$value.app_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>{$value.app_name}</li>
@@ -108,9 +110,9 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_md">
+								<td class="text-nowrap td_md">
 									<ul class="list-unstyled">
-										<li>
+										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$status.app[$value.app_status]}</span>
 										</li>
 										<li>{$value.app_note}</li>
@@ -148,7 +150,7 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPL}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
 	<form id="app_notice">
@@ -156,7 +158,7 @@
 		<input type="hidden" name="app_id_notice" id="app_id_notice" value="">
 	</form>
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -177,6 +179,7 @@
 		confirm_id: "act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
@@ -184,14 +187,15 @@
 
 	var opts_submit_notice = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
+		text_submitting: "{$lang.label.submitting}",
 		btn_text: "{$lang.btn.ok}",
 		btn_close: "{$lang.btn.close}",
 		btn_url: "{$cfg.str_url}"
 	};
 
 	$(document).ready(function(){
-		var obj_validator_list = $("#app_list").baigoValidator(opts_validator_list);
-		var obj_submit_list = $("#app_list").baigoSubmit(opts_submit_list);
+		var obj_validator_list    = $("#app_list").baigoValidator(opts_validator_list);
+		var obj_submit_list       = $("#app_list").baigoSubmit(opts_submit_list);
 		$("#go_list").click(function(){
 			if (obj_validator_list.validateSubmit()) {
 				obj_submit_list.formSubmit();
@@ -208,4 +212,4 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_TPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPL}admin/default/include/html_foot.tpl" cfg=$cfg}

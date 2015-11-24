@@ -5,7 +5,7 @@
 	act_help   => "ext"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/upgrade_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_head.tpl" cfg=$cfg}
 
 		{foreach $type.ext as $key=>$value}
 			<div class="form-group">
@@ -31,10 +31,10 @@
 			<div class="form-group">
 				<div class="btn-group">
 					<a id="go_next" class="btn btn-primary btn-lg" href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=dbconfig">{$lang.btn.stepNext}</a>
-					{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/upgrade_drop.tpl" cfg=$cfg}
+					{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_drop.tpl" cfg=$cfg}
 				</div>
 			</div>
 		{/if}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_INSTALL}default/include/install_foot.tpl" cfg=$cfg}
-</html>
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/html_foot.tpl" cfg=$cfg}

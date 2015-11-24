@@ -6,12 +6,12 @@
 	sub_active     => "list"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=group&act_get=list">{$adminMod.group.main.title}</a></li>
 	<li>{$lang.page.show}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
@@ -49,6 +49,22 @@
 									</ul>
 								</dd>
 							{/foreach}
+
+							<dt>{$lang.label.opt}</dt>
+							<dd>
+								<ul class="list-inline">
+    								<li>
+										<span class="glyphicon glyphicon-{if isset($tplData.groupRow.group_allow.opt.dbconfig)}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+										{$lang.page.installDbConfig}
+									</li>
+    								{foreach $opt as $key_s=>$value_s}
+    									<li>
+    										<span class="glyphicon glyphicon-{if isset($tplData.groupRow.group_allow.opt[$key_s])}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+    										{$value_s.title}
+    									</li>
+    								{/foreach}
+								</ul>
+							</dd>
 						</dl>
 					</div>
 
@@ -89,5 +105,5 @@
 		</div>
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

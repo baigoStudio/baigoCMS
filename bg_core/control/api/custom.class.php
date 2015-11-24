@@ -38,9 +38,13 @@ class API_CUSTOM {
 	function api_list() {
 		$this->app_check("get");
 
-		$_arr_customRows = $this->mdl_custom->mdl_list(1000, 0, "", "", "enable");
+		if (!file_exists(BG_PATH_CACHE . "sys/custom_list.php")) {
+			$this->mdl_custom->mdl_cache();
+		}
 
-		$this->obj_api->halt_re($_arr_customRows, true);
+		$_arr_customRows = include(BG_PATH_CACHE . "sys/custom_list.php");
+
+		$this->obj_api->halt_re($_arr_customRows["custom_list"], true);
 	}
 
 

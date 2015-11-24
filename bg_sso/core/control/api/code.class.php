@@ -25,24 +25,10 @@ class API_CODE {
 
 	function __construct() { //构造函数
 		$this->obj_api    = new CLASS_API();
+		$this->obj_api->chk_install();
 		$this->log        = $this->obj_api->log; //初始化 AJAX 基对象
 		$this->mdl_app    = new MODEL_APP(); //设置管理组模型
 		$this->mdl_log    = new MODEL_LOG(); //设置管理员模型
-
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-			include_once(BG_PATH_CONFIG . "is_install.php");
-			if (!defined("BG_INSTALL_PUB") || PRD_SSO_PUB > BG_INSTALL_PUB) {
-				$_arr_return = array(
-					"alert" => "x030411"
-				);
-				$this->obj_api->halt_re($_arr_return);
-			}
-		} else {
-			$_arr_return = array(
-				"alert" => "x030410"
-			);
-			$this->obj_api->halt_re($_arr_return);
-		}
 	}
 
 
@@ -96,7 +82,7 @@ class API_CODE {
 	 * @return void
 	 */
 	function api_decode() {
-		$this->app_check("get");
+		$this->app_check("post");
 		if (!isset($this->appAllow["code"]["decode"])) {
 			$_arr_return = array(
 				"alert" => "x050315",
@@ -105,7 +91,7 @@ class API_CODE {
 			$this->obj_api->halt_re($_arr_return);
 		}
 
-		$_arr_code = validateStr(fn_get("code"), 1, 0);
+		$_arr_code = validateStr(fn_post("code"), 1, 0);
 		switch ($_arr_code["status"]) {
 			case "too_short":
 				$_arr_return = array(
@@ -119,7 +105,7 @@ class API_CODE {
 			break;
 		}
 
-		$_arr_key = validateStr(fn_get("key"), 1, 0);
+		$_arr_key = validateStr(fn_post("key"), 1, 0);
 		switch ($_arr_key["status"]) {
 			case "too_short":
 				$_arr_return = array(

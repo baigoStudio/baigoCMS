@@ -244,38 +244,13 @@ return array(
 			"del"    => "删除",
 		),
 	),
-	"opt" => array(
+	"more" => array(
 		"main" => array(
-			"title"  => "系统设置",
-			"mod"    => "opt",
-			"icon"   => "cog",
+			"title"  => "其他设置",
+			"mod"    => "custom",
+			"icon"   => "wrench",
 		),
 		"sub" => array(
-			"base" => array(
-				"title"     => "基本设置",
-				"mod"       => "opt",
-				"act_get"   => "base",
-			),
-			"db" => array(
-				"title"     => "数据库设置",
-				"mod"       => "opt",
-				"act_get"   => "db",
-			),
-			"visit" => array(
-				"title"     => "访问方式",
-				"mod"       => "opt",
-				"act_get"   => "visit",
-			),
-			"upload" => array(
-				"title"     => "上传设置",
-				"mod"       => "opt",
-				"act_get"   => "upload",
-			),
-			"sso" => array(
-				"title"     => "SSO 设置",
-				"mod"       => "opt",
-				"act_get"   => "sso",
-			),
 			"custom" => array(
 				"title"     => "自定义字段",
 				"mod"       => "custom",
@@ -288,11 +263,6 @@ return array(
 			),
 		),
 		"allow" => array(
-			"base"   => "基本",
-			"db"     => "数据库",
-			"visit"  => "访问方式",
-			"upload" => "上传设置",
-			"sso"    => "SSO 设置",
 			"custom" => "自定义字段",
 			"app"    => "API 授权设置",
 		),

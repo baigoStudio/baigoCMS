@@ -67,11 +67,18 @@ class API_ARTICLE {
 
 		unset($_arr_articleRow["article_url"]);
 
-		if (!file_exists(BG_PATH_CACHE . "cate_" . $_arr_articleRow["article_cate_id"] . ".php")) {
-			$this->mdl_cate->mdl_cache(array($_arr_articleRow["article_cate_id"]));
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_arr_articleRow["article_cate_id"] . ".php")) {
+			$this->mdl_cate->mdl_cache();
 		}
 
-		$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_arr_articleRow["article_cate_id"] . ".php");
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_arr_articleRow["article_cate_id"] . ".php")) {
+    		$_arr_return = array(
+				"alert" => "x110102",
+			);
+			$this->obj_api->halt_re($_arr_cateRow);
+		}
+
+		$_arr_cateRow = include(BG_PATH_CACHE . "sys/cate_" . $_arr_articleRow["article_cate_id"] . ".php");
 
 		if ($_arr_cateRow["alert"] != "y110102") {
 			$this->obj_api->halt_re($_arr_cateRow);
@@ -168,11 +175,11 @@ class API_ARTICLE {
 		}
 
 		if ($_num_cateId > 0) {
-			if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
-				$this->mdl_cate->mdl_cache(array($_num_cateId));
+			if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php")) {
+				$this->mdl_cate->mdl_cache();
 			}
 
-			$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
+			$_arr_cateRow = include(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php");
 			if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 				$_arr_cateIds   = $_arr_cateRow["cate_ids"];
 			}
@@ -200,11 +207,11 @@ class API_ARTICLE {
 				}
 				$_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
 			}
-			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
-				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
+			if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache();
 			}
 
-			$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+			$_arr_cateRow = include(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php");
 			if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
 				unset($_arr_cateRow["urlRow"]);
 				$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
@@ -248,9 +255,9 @@ class API_ARTICLE {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "sys/thumb_list.php");
 	}
 }

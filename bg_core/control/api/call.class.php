@@ -106,7 +106,7 @@ class API_CALL {
 	 * @return void
 	 */
 	private function call_cate() {
-		$_arr_cateRows = $this->mdl_cate->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "show", "", $this->callRow["call_cate_id"]);
+		$_arr_cateRows = $this->mdl_cate->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], "show", "", $this->callRow["call_cate_excepts"], $this->callRow["call_cate_id"]);
 
 		return $_arr_cateRows;
 	}
@@ -166,11 +166,11 @@ class API_CALL {
 					$_num_cateId = $_value["article_cate_id"];
 				}
 
-				if (!file_exists(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php")) {
-					$this->mdl_cate->mdl_cache(array($_num_cateId));
+				if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php")) {
+					$this->mdl_cate->mdl_cache();
 				}
 
-				$_arr_cateRow = include(BG_PATH_CACHE . "cate_" . $_num_cateId . ".php");
+				$_arr_cateRow = include(BG_PATH_CACHE . "sys/cate_" . $_num_cateId . ".php");
 				if ($_arr_cateRow["cate_status"] == "show") {
 					unset($_arr_cateRow["urlRow"]);
 					$_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
@@ -218,9 +218,9 @@ class API_CALL {
 			$this->obj_api->halt_re($_arr_appChk);
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "sys/thumb_list.php");
 	}
 }

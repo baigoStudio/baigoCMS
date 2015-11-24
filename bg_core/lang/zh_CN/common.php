@@ -16,7 +16,7 @@ return array(
 	"page" => array(
 		"admin"           => "管理后台", //管理后台
 		"login"           => "用户登录", //用户登录
-		"adminLogin"      => "后台登录", //用户登录
+		"adminLogon"      => "后台登录", //用户登录
 		"alert"           => "提示信息", //提示信息
 		"tplBrowse"       => "浏览模板", //浏览模板
 		"add"             => "创建", //创建
@@ -29,20 +29,17 @@ return array(
 		"pass"            => "修改密码",
 		"search"          => "搜索", //搜索
 		"spec"            => "专题",
+		"opt"             => "系统设置", //系统设置
 		"attachArticle"   => "本文附件管理", //媒体库
 
 		"upgrade"         => "baigo CMS 升级程序",
-		"upgradeTable"    => "升级数据库",
+		"upgradeDbTable"  => "升级数据库",
 		"upgradeOver"     => "完成升级",
 
 		"install"         => "baigo CMS 安装程序",
 		"installExt"      => "服务器环境检查",
-		"installDbconfig" => "数据库设置",
-		"installDbtable"  => "创建数据表",
-		"installBase"     => "基本设置",
-		"installVisit"    => "访问方式设置",
-		"installUpload"   => "上传设置",
-		"installSso"      => "SSO 设置",
+		"installDbConfig" => "数据库设置",
+		"installDbTable"  => "创建数据表",
 		"installSsoAuto"  => "SSO 自动部署",
 		"installAdmin"    => "创建管理员",
 		"installOver"     => "完成安装",
@@ -54,6 +51,7 @@ return array(
 		"logout"          => "退出", //退出
 		"back"            => "返回", //返回
 		"reg"             => "注册", //注册
+		"infoModi"        => "个人信息", //个人信息
 		"passModi"        => "修改密码", //修改密码
 		"add"             => "创建", //创建
 		"edit"            => "编辑", //编辑
@@ -62,6 +60,7 @@ return array(
 		"pub"             => "已发布", //已发布
 		"wait"            => "待审", //待审
 		"draft"           => "草稿箱", //草稿
+		"opt"             => "系统设置", //系统设置
 
 		"recycle"         => "回收站", //回收站
 
@@ -128,12 +127,23 @@ return array(
 		"appNotice"       => "通知接口 URL",
 		"appAllow"        => "权限", //系统权限
 		"apiUrl"          => "API 接口 URL",
+		"loging"          => "正在登录 ...",
+		"except"          => "排除",
+		"opt"             => "系统设置", //系统设置
+		"require"         => "必填项", //必填项
+		"format"          => "格式", //必填项
+
+        "dbHost"          => "数据库服务器",
+        "dbPort"          => "服务器端口",
+        "dbName"          => "数据库名称",
+        "dbUser"          => "用户名",
+        "dbPass"          => "密码",
+        "dbCharset"       => "数据编码",
+        "dbTable"         => "数据表前缀",
 
 		"customName"      => "字段名称",
-		"customTarget"    => "目标",
-		"customOpt"       => "选项",
-		"customOptNote"   => "请参考 MySQL 字段类型",
 		"customParent"    => "隶属于字段",
+		"customCate"      => "隶属于栏目", //隶属栏目
 
 		"ipAllow"         => "允许通信 IP",
 		"ipBad"           => "禁止通信 IP",
@@ -165,19 +175,17 @@ return array(
 
 		"mail"            => "E-mail",
 
-		"loading"         => "正在载入……",
+		"loading"         => "正在载入 ...",
 		"uploading"       => "正在上传",
-		"submitting"      => "正在提交……",
+		"submitting"      => "正在提交 ...",
 
 		"upgrade"         => "正在进行升级安装",
-		"upgradeTable"    => "即将升级数据库",
 		"upgradeOver"     => "还差最后一步，完成升级",
 
 		"installOver"     => "还差最后一步，完成安装",
-		"installDbtable"  => "即将创建数据表",
 		"installSso"      => "即将执行自动部署第一步",
 
-		"modOnly"         => "（需要修改时输入）", //需要修改时输入
+		"modOnly"         => "需要修改时输入", //需要修改时输入
 		"time"            => "时间", //时间
 		"datetime"        => "日期 / 时间", //时间
 		"note"            => "备注", //备注
@@ -270,15 +278,6 @@ return array(
 		"thumbType"       => "缩略图类型", //裁切类型
 		"thumbCall"       => "调用键名", //调用名
 
-		"dbHost"          => "数据库服务器",
-		"dbPort"          => "服务器端口",
-		"dbName"          => "数据库名称",
-		"dbUser"          => "数据库用户名",
-		"dbPass"          => "数据库密码",
-		"dbCharset"       => "数据库字符编码",
-		"dbTable"         => "数据表名前缀",
-		"dbDebug"         => "数据库调试模式",
-
 		"on"              => "开",
 		"off"             => "关",
 		"more"            => "显示更多选项", //显示高级选项
@@ -338,8 +337,8 @@ return array(
 
 	/*------长篇文字------*/
 	"text" => array(
-		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
-		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"" . PRD_SSO_URL . "\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
+		"installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
+		"upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
 		"installSsoAdmin" => "本操作将同时为 baigo CMS 与 baigo SSO 创建管理员，拥有所有的管理权限。请牢记用户名与密码。",
 		"installAdmin"    => "本操作将向 baigo SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 baigo SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。",
 		"installAuth"     => "本操作将用您输入的 baigo SSO 用户作为管理员，拥有所有的管理权限。您必须输入该用户的用户名和密码才能进行授权。如果您要创建新的管理员请点击 <mark>创建管理员</mark>。",
@@ -366,8 +365,9 @@ return array(
 		"search"      => "搜索", //搜索
 		"filter"      => "筛选", //筛选
 		"thumb"       => "缩略图",
-		"upload"      => "上传附件",
-		"empty"       => "清空我的回收站", //清空回收站
+		"upload"      => "上传附件 ...",
+		"emptyMy"     => "清空我的回收站", //清空回收站
+		"empty"       => "清空回收站", //清空回收站
 		"browse"      => "请选择文件 ...",
 		"skip"        => "跳过",
 		"jump"        => "跳转至",

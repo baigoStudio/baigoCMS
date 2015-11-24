@@ -9,9 +9,12 @@ if(!defined("IN_BAIGO")) {
 	exit("Access Denied");
 }
 
-include_once(BG_PATH_INC . "common_admin_ctl.inc.php"); //载入全局通用
+include_once(BG_PATH_FUNC . "include.func.php");
+fn_include(true, true, "Content-Type: text/html; charset=utf-8", true, "ctl", true);
+
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "is_admin.inc.php"); //验证是否已登录
-include_once(BG_PATH_CONTROL_ADMIN . "ctl/app.class.php"); //载入应用控制器
+include_once(BG_PATH_CONTROL . "admin/ctl/app.class.php"); //载入应用控制器
 
 $ctl_app = new CONTROL_APP(); //初始化应用
 

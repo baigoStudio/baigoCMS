@@ -25,7 +25,7 @@ class MODEL_GROUP {
 			"group_name"     => "varchar(30) NOT NULL COMMENT '组名'",
 			"group_note"     => "varchar(30) NOT NULL COMMENT '备注'",
 			"group_allow"    => "varchar(1000) NOT NULL COMMENT '权限'",
-			"group_type"     => "enum('admin','admin') NOT NULL COMMENT '类型'",
+			"group_type"     => "enum('admin','user') NOT NULL COMMENT '类型'",
 			"group_status"   => "enum('enable','disable') NOT NULL COMMENT '状态'",
 		);
 
@@ -282,6 +282,42 @@ class MODEL_GROUP {
 		);
 		exit;
 
+	}
+
+
+	function mdl_alert_table() {
+		$_arr_col     = $this->mdl_column();
+		$_arr_alert   = array();
+
+		if (!in_array("group_status", $_arr_col)) {
+			$_arr_alert["group_status"] = array("ADD", "enum('enable','disable') NOT NULL COMMENT '状态'");
+		}
+
+		if (in_array("group_status", $_arr_col)) {
+			$_arr_alert["group_status"] = array("CHANGE", "enum('enable','disable') NOT NULL COMMENT '状态'", "group_status");
+		}
+
+		if (in_array("group_id", $_arr_col)) {
+			$_arr_alert["group_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "group_id");
+		}
+
+		if (in_array("group_type", $_arr_col)) {
+			$_arr_alert["group_type"] = array("CHANGE", "enum('admin','user') NOT NULL COMMENT '类型'", "group_type");
+		}
+
+		$_str_alert = "x040106";
+
+		if ($_arr_alert) {
+			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "group", $_arr_alert);
+
+    		if ($_reselt) {
+        		$_str_alert = "y040106";
+    		}
+		}
+
+		return array(
+    		"alert" => $_str_alert,
+		);
 	}
 
 

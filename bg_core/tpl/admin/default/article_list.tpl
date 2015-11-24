@@ -24,14 +24,15 @@
 	baigoValidator => "true",
 	baigoSubmit    => "true",
 	tokenReload    => "true",
+	tooltip        => "true",
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li>{$adminMod.article.main.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<div class="pull-left">
@@ -140,7 +141,7 @@
 			<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
 			<input type="hidden" id="act_empty" name="act_post" value="empty">
 			<div class="form-group">
-				<button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.empty}</button>
+				<button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.emptyMy}</button>
 			</div>
 		</form>
 	{/if}
@@ -153,17 +154,17 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="td_mn">
+							<th class="text-nowrap td_mn">
 								<label for="chk_all" class="checkbox-inline">
 									<input type="checkbox" name="chk_all" id="chk_all" class="first">
 									{$lang.label.all}
 								</label>
 							</th>
-							<th class="td_mn">{$lang.label.id}</th>
+							<th class="text-nowrap td_mn">{$lang.label.id}</th>
 							<th>{$lang.label.articleTitle}</th>
-							<th class="td_lg">{$lang.label.cate} / {$lang.label.articleMark}</th>
-							<th class="td_md">{$lang.label.admin} / {$lang.label.hits}</th>
-							<th class="td_sm">{$lang.label.status} / {$lang.label.time}</th>
+							<th class="text-nowrap td_lg">{$lang.label.cate} / {$lang.label.articleMark}</th>
+							<th class="text-nowrap td_md">{$lang.label.admin} / {$lang.label.hits}</th>
+							<th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.time}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -192,8 +193,8 @@
 								{$_str_status = $lang.label[$value.article_box]}
 							{/if}
 							<tr>
-								<td class="td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="article_id_{$value.article_id}" group="article_id" class="chk_all validate"></td>
-								<td class="td_mn">{$value.article_id}</td>
+								<td class="text-nowrap td_mn"><input type="checkbox" name="article_id[]" value="{$value.article_id}" id="article_id_{$value.article_id}" group="article_id" class="chk_all validate"></td>
+								<td class="text-nowrap td_mn">{$value.article_id}</td>
 								<td>
 									<ul class="list-unstyled">
 										<li>
@@ -215,14 +216,25 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_lg">
+								<td class="text-nowrap td_lg">
 									<ul class="list-unstyled">
 										<li>
+											{$str_cateTrees = ""}
 											{if isset($value.cateRow.cate_trees)}
 												{foreach $value.cateRow.cate_trees as $key_tree=>$value_tree}
-													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list&cate_id={$value_tree.cate_id}">{$value_tree.cate_name}</a>
-													{if !$value_tree@last}&raquo;{/if}
+													{$str_cateTrees = "{$str_cateTrees}{$value_tree.cate_name}"}
+													{if !$value_tree@last}
+														{$str_cateTrees = "{$str_cateTrees} &raquo; "}
+													{/if}
 												{/foreach}
+											{/if}
+
+											{if isset($value.cateRow.cate_name)}
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list&cate_id={$value_tree.cate_id}">
+													<abbr data-toggle="tooltip" data-placement="bottom" title="{$str_cateTrees}">
+														{$value.cateRow.cate_name}
+													</abbr>
+												</a>
 											{else}
 												{$lang.label.unknown}
 											{/if}
@@ -236,7 +248,7 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_md">
+								<td class="text-nowrap td_md">
 									<ul class="list-unstyled">
 										<li>
 											{if isset($value.adminRow.admin_name)}
@@ -250,7 +262,7 @@
 										</li>
 									</ul>
 								</td>
-								<td class="td_sm">
+								<td class="text-nowrap td_sm">
 									<ul class="list-unstyled">
 										<li class="label_baigo">
 											<span class="label label-{$_css_status}">{$_str_status}</span>
@@ -307,10 +319,10 @@
 	</form>
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -328,7 +340,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=article",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -339,7 +351,7 @@
 
 	var opts_submit_empty = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=article",
-		confirm_id: "act_empty",
+		confirm_selector: "#act_empty",
 		confirm_val: "empty",
 		confirm_msg: "{$lang.confirm.empty}",
 		text_submitting: "{$lang.label.submitting}",
@@ -363,11 +375,7 @@
 		});
 
 		$("#article_list").baigoCheckall();
-
-		$("[data-toggle='tooltip']").tooltip({
-			html: true
-		});
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}

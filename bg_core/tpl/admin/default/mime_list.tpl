@@ -10,17 +10,17 @@
 	str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&{$tplData.query}"
 ]}
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_head.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
 	<li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=attach&act_get=list">{$adminMod.attach.main.title}</a></li>
 	<li>{$adminMod.attach.sub.mime.title}</li>
 
-	{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_left.tpl" cfg=$cfg}
+	{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
 	<div class="form-group">
 		<ul class="nav nav-pills nav_baigo">
 			<li>
-				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=list">
+				<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=form">
 					<span class="glyphicon glyphicon-plus"></span>
 					{$lang.href.add}
 				</a>
@@ -34,117 +34,123 @@
 		</ul>
 	</div>
 
-	<div class="row">
-		<div class="col-md-3">
-			<div class="well">
-				<form name="mime_form" id="mime_form">
-					<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
-					<input type="hidden" name="mime_id" value="{$tplData.mimeRow.mime_id}">
-					<input type="hidden" name="act_post" value="submit">
+	{if $tplData.search.act_get == "form"}
+		<div class="row">
+			<div class="col-md-3">
+				<div class="well">
+					<form name="mime_form" id="mime_form">
+						<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+						<input type="hidden" name="mime_id" value="{$tplData.mimeRow.mime_id}">
+						<input type="hidden" name="act_post" value="submit">
 
-					{if $tplData.mimeRow.mime_id > 0}
+						{if $tplData.mimeRow.mime_id > 0}
+							<div class="form-group">
+								<label class="control-label">{$lang.label.id}</label>
+								<p class="form-control-static">{$tplData.mimeRow.mime_id}</p>
+							</div>
+						{/if}
+
 						<div class="form-group">
-							<label class="control-label">{$lang.label.id}</label>
-							<p class="form-control-static">{$tplData.mimeRow.mime_id}</p>
+							<label for="mime_name" class="control-label">{$lang.label.mimeName}<span id="msg_mime_name">*</span></label>
+							<input type="text" name="mime_name" id="mime_name" value="{$tplData.mimeRow.mime_name}" class="validate form-control">
 						</div>
-					{/if}
 
-					<div class="form-group">
-						<label for="mime_name" class="control-label">{$lang.label.mimeName}<span id="msg_mime_name">*</span></label>
-						<input type="text" name="mime_name" id="mime_name" value="{$tplData.mimeRow.mime_name}" class="validate form-control">
-					</div>
+						<div class="form-group">
+							<label for="mime_ext" class="control-label">{$lang.label.ext}<span id="msg_mime_ext">*</span></label>
+							<input type="text" name="mime_ext" id="mime_ext" value="{$tplData.mimeRow.mime_ext}" class="validate form-control">
+						</div>
 
-					<div class="form-group">
-						<label for="mime_ext" class="control-label">{$lang.label.ext}<span id="msg_mime_ext">*</span></label>
-						<input type="text" name="mime_ext" id="mime_ext" value="{$tplData.mimeRow.mime_ext}" class="validate form-control">
-					</div>
+						<div class="form-group">
+							<label for="mime_note" class="control-label">{$lang.label.note}<span id="msg_mime_note"></span></label>
+							<input type="text" name="mime_note" id="mime_note" value="{$tplData.mimeRow.mime_note}" class="validate form-control">
+						</div>
 
-					<div class="form-group">
-						<label for="mime_note" class="control-label">{$lang.label.note}<span id="msg_mime_note"></span></label>
-						<input type="text" name="mime_note" id="mime_note" value="{$tplData.mimeRow.mime_note}" class="validate form-control">
-					</div>
-
-					<div class="form-group">
-						<label class="control-label">{$lang.label.mimeOften}</label>
-						<select id="mime_name_often" class="form-control">
-							<option value="">{$lang.option.pleaseSelect}</option>
-							{foreach $tplData.mimeOften as $key=>$value}
-								<option value="{$key}">{$key} [{$value.note}]</option>
-							{/foreach}
-						</select>
-					</div>
-
-					<div class="form-group">
-						<button type="button" id="mime_add" class="btn btn-primary">{$lang.btn.save}</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
-		<div class="col-md-9">
-			<form name="mime_list" id="mime_list">
-				<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
-
-				<div class="panel panel-default">
-					<div class="table-responsive">
-						<table class="table table-striped table-hover">
-							<thead>
-								<tr>
-									<th class="td_mn">
-										<label for="chk_all" class="checkbox-inline">
-											<input type="checkbox" name="chk_all" id="chk_all" class="first">
-											{$lang.label.all}
-										</label>
-									</th>
-									<th class="td_mn">{$lang.label.id}</th>
-									<th>{$lang.label.mimeName}</th>
-									<th class="td_md">{$lang.label.ext} / {$lang.label.note}</th>
-								</tr>
-							</thead>
-							<tbody>
-								{foreach $tplData.mimeRows as $key=>$value}
-									<tr>
-										<td class="td_mn"><input type="checkbox" name="mime_id[]" value="{$value.mime_id}" id="mime_id_{$value.mime_id}" class="chk_all validate" group="mime_id"></td>
-										<td class="td_mn">{$value.mime_id}</td>
-										<td>
-											<ul class="list-unstyled">
-												<li>{$value.mime_name}</li>
-												<li>
-													<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=list&mime_id={$value.mime_id}">{$lang.href.edit}</a>
-												</li>
-											</ul>
-										</td>
-										<td class="td_md">
-											<ul class="list-unstyled">
-												<li>{$value.mime_ext}</li>
-												<li>{$value.mime_note}</li>
-											</ul>
-										</td>
-									</tr>
+						<div class="form-group">
+							<label class="control-label">{$lang.label.mimeOften}</label>
+							<select id="mime_name_often" class="form-control">
+								<option value="">{$lang.option.pleaseSelect}</option>
+								{foreach $tplData.mimeOften as $key=>$value}
+									<option value="{$key}">{$key} [{$value.note}]</option>
 								{/foreach}
-							</tbody>
-							<tfoot>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<button type="button" id="mime_add" class="btn btn-primary">{$lang.btn.save}</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="col-md-9">
+	{/if}
+
+		<form name="mime_list" id="mime_list">
+			<input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+
+			<div class="panel panel-default">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th class="text-nowrap td_mn">
+									<label for="chk_all" class="checkbox-inline">
+										<input type="checkbox" name="chk_all" id="chk_all" class="first">
+										{$lang.label.all}
+									</label>
+								</th>
+								<th class="text-nowrap td_mn">{$lang.label.id}</th>
+								<th>{$lang.label.mimeName}</th>
+								<th class="text-nowrap td_md">{$lang.label.ext} / {$lang.label.note}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach $tplData.mimeRows as $key=>$value}
 								<tr>
-									<td colspan="2"><span id="msg_mime_id"></span></td>
-									<td colspan="2">
-										<input type="hidden" name="act_post" id="act_post" value="del">
-										<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
+									<td class="text-nowrap td_mn"><input type="checkbox" name="mime_id[]" value="{$value.mime_id}" id="mime_id_{$value.mime_id}" class="chk_all validate" group="mime_id"></td>
+									<td class="text-nowrap td_mn">{$value.mime_id}</td>
+									<td>
+										<ul class="list-unstyled">
+											<li>{$value.mime_name}</li>
+											<li>
+												<a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=mime&act_get=form&mime_id={$value.mime_id}">{$lang.href.edit}</a>
+											</li>
+										</ul>
+									</td>
+									<td class="text-nowrap td_md">
+										<ul class="list-unstyled">
+											<li>{$value.mime_ext}</li>
+											<li>{$value.mime_note}</li>
+										</ul>
 									</td>
 								</tr>
-							</tfoot>
-						</table>
-					</div>
+							{/foreach}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2"><span id="msg_mime_id"></span></td>
+								<td colspan="2">
+									<input type="hidden" name="act_post" id="act_post" value="del">
+									<button type="button" id="go_submit" class="btn btn-primary btn-sm">{$lang.btn.del}</button>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
 				</div>
+			</div>
 
-			</form>
+		</form>
+
+	{if $tplData.search.act_get == "form"}
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<div class="text-right">
-		{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/page.tpl" cfg=$cfg}
+		{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/page.tpl" cfg=$cfg}
 	</div>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/admin_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
 	<script type="text/javascript">
 	var opts_validator_list = {
@@ -178,7 +184,7 @@
 
 	var opts_submit_list = {
 		ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=mime",
-		confirm_id: "act_post",
+		confirm_selector: "#act_post",
 		confirm_val: "del",
 		confirm_msg: "{$lang.confirm.del}",
 		text_submitting: "{$lang.label.submitting}",
@@ -225,5 +231,5 @@
 	})
 	</script>
 
-{include "{$smarty.const.BG_PATH_SYSTPL_ADMIN}default/include/html_foot.tpl" cfg=$cfg}
+{include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
 

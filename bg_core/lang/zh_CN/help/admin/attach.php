@@ -31,7 +31,7 @@ return "<a name=\"list\"></a>
 		<div class=\"panel-heading\">填写说明</div>
 		<div class=\"panel-body\">
 			<h4 class=\"text-info\">允许上传的 MIME</h4>
-			<p>允许上传的 MIME 类型。MIME 全称：多用途互联网邮件扩展（MIME，Multipurpose Internet Mail Extensions）是一个互联网标准，它扩展了电子邮件标准。详见 <a href=\"http://zh.wikipedia.org/wiki/MIME\" target=\"_blank\">维基百科</a></p>
+			<p>允许上传的 MIME 类型。MIME 全称：多用途互联网邮件扩展（MIME，Multipurpose Internet Mail Extensions）是一个互联网标准，它扩展了电子邮件标准。详见 <a href=\"http://www.baike.com/wiki/MIME\" target=\"_blank\">互动百科</a></p>
 
 			<h4 class=\"text-info\">扩展名</h4>
 			<p>与 MIME 类型相对应的扩展名。</p>

@@ -19,14 +19,15 @@ class CONTROL_TAG {
 	private $mdl_attach;
 
 	function __construct() { //构造函数
-		$this->mdl_cate           = new MODEL_CATE(); //设置文章对象
-		$this->mdl_custom         = new MODEL_CUSTOM();
+		$this->mdl_cate       = new MODEL_CATE(); //设置文章对象
+		$this->mdl_custom     = new MODEL_CUSTOM();
 		$this->tag_init();
-		$this->obj_tpl            = new CLASS_TPL(BG_PATH_TPL_PUB . $this->config["tpl"]); //初始化视图对象
-		$this->mdl_tag            = new MODEL_TAG();
-		$this->mdl_articlePub     = new MODEL_ARTICLE_PUB();
-		$this->mdl_attach         = new MODEL_ATTACH(); //设置文章对象
-		$this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
+		$_arr_cfg["pub"]      = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLPUB . $this->config["tpl"], $_arr_cfg); //初始化视图对象
+		$this->mdl_tag        = new MODEL_TAG();
+		$this->mdl_articlePub = new MODEL_ARTICLE_PUB();
+		$this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
+		$this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
 	}
 
 
@@ -37,7 +38,7 @@ class CONTROL_TAG {
 	 * @return void
 	 */
 	function ctl_show() {
-		$_str_tagName = fn_getSafe(fn_get("tag_name"), "txt", "");
+		$_str_tagName = urldecode(fn_getSafe(fn_get("tag_name"), "txt", ""));
 
 		if (!$_str_tagName) {
 			return array(
@@ -67,10 +68,10 @@ class CONTROL_TAG {
 		$_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
 		$_str_query           = http_build_query($this->search);
 		$_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], "", "", "", false, false, false, $_arr_tagIds);
-		if (!file_exists(BG_PATH_CACHE . "thumb_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/thumb_list.php")) {
 			$this->mdl_thumb->mdl_cache();
 		}
-		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "thumb_list.php");
+		$this->mdl_attach->thumbRows = include(BG_PATH_CACHE . "sys/thumb_list.php");
 
 		foreach ($_arr_articleRows as $_key=>$_value) {
 			$_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
@@ -87,11 +88,11 @@ class CONTROL_TAG {
 				$_arr_articleRows[$_key]["attachRow"]   = $_arr_attachRow;
 			}
 
-			if (!file_exists(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php")) {
-				$this->mdl_cate->mdl_cache(array($_value["article_cate_id"]));
+			if (!file_exists(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php")) {
+				$this->mdl_cate->mdl_cache();
 			}
 
-			$_arr_cateRow                        = include(BG_PATH_CACHE . "cate_" . $_value["article_cate_id"] . ".php");
+			$_arr_cateRow                        = include(BG_PATH_CACHE . "sys/cate_" . $_value["article_cate_id"] . ".php");
 			$_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
 
 			if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
@@ -137,14 +138,14 @@ class CONTROL_TAG {
 			$this->search["page_ext"] = "";
 		}
 
-		if (!file_exists(BG_PATH_CACHE . "cate_trees.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/cate_trees.php")) {
 			$this->mdl_cate->mdl_cache();
 		}
-		$this->cateRows = include(BG_PATH_CACHE . "cate_trees.php");
+		$this->cateRows = include(BG_PATH_CACHE . "sys/cate_trees.php");
 
-		if (!file_exists(BG_PATH_CACHE . "custom_list.php")) {
+		if (!file_exists(BG_PATH_CACHE . "sys/custom_list.php")) {
 			$this->mdl_custom->mdl_cache();
 		}
-		$this->customRows = include(BG_PATH_CACHE . "custom_list.php");
+		$this->customRows = include(BG_PATH_CACHE . "sys/custom_list.php");
 	}
 }

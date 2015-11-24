@@ -69,7 +69,7 @@
 			var _str_customs     = "";
 			var _key             = $("#key").val();
 			var _customs         = $(".customs").serialize();
-			window.location.href = "{$tplData.search.urlRow.search_url}key-" + _key + "/customs-" + encodeURIComponent(Base64.encode(_customs));
+			window.location.href = "{$tplData.search.urlRow.search_url}key-" + encodeURIComponent(_key) + "/customs-" + encodeURIComponent(Base64.encode(_customs));
 		});
 	})
 	</script>

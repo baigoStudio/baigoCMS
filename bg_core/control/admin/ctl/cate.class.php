@@ -10,7 +10,7 @@ if(!defined("IN_BAIGO")) {
 }
 
 include_once(BG_PATH_CLASS . "dir.class.php");
-include_once(BG_PATH_CLASS . "tpl_admin.class.php"); //载入模板类
+include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_MODEL . "cate.class.php");
 
 /*-------------用户类-------------*/
@@ -25,7 +25,8 @@ class CONTROL_CATE {
 		$this->obj_base       = $GLOBALS["obj_base"];
 		$this->config         = $this->obj_base->config;
 		$this->obj_dir        = new CLASS_DIR();
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_SYSTPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$_arr_cfg["admin"] = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 		$this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
@@ -123,7 +124,7 @@ class CONTROL_CATE {
 		}
 
 		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
-		$_arr_tplRows     = $this->obj_dir->list_dir(BG_PATH_TPL_PUB);
+		$_arr_tplRows     = $this->obj_dir->list_dir(BG_PATH_TPLPUB);
 
 		$_arr_tpl = array(
 			"cateRow"    => $_arr_cateRow, //栏目信息

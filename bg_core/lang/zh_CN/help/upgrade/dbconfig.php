@@ -17,7 +17,7 @@ return "<h3>数据库设置</h3>
 			<h4 class=\"text-info\">数据库密码</h4>
 			<p>请按照服务器提供商所提供的资料填写。</p>
 
-			<h4 class=\"text-info\">数据库字符编码</h4>
+			<h4 class=\"text-info\">数据库编码</h4>
 			<p>一般为 <mark>utf8</mark>，请按照服务器提供商所提供的资料填写。</p>
 
 			<h4 class=\"text-info\">数据表名前缀</h4>

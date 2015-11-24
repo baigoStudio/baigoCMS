@@ -33,7 +33,8 @@ class CONTROL_APP {
 		$this->mdl_app        = new MODEL_APP(); //设置管理员模型
 		$this->mdl_appBelong  = new MODEL_APP_BELONG();
 		$this->mdl_user       = new MODEL_USER(); //设置管理员模型
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL_ADMIN . $this->config["ui"]); //初始化视图对象
+		$_arr_cfg["admin"]    = true;
+		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
 		$this->tplData = array(
 			"adminLogged" => $this->adminLogged
 		);
@@ -128,7 +129,6 @@ class CONTROL_APP {
 			exit;
 		}
 
-		$_act_get         = fn_getSafe($GLOBALS["act_get"], "txt", "");
 		$_num_appId       = fn_getSafe(fn_get("app_id"), "int", 0);
 		$_str_key         = fn_getSafe(fn_get("key"), "txt", "");
 		$_str_keyBelong   = fn_getSafe(fn_get("key_belong"), "txt", "");
@@ -146,8 +146,8 @@ class CONTROL_APP {
 		}
 
 		$_arr_search = array(
+			"act_get"    => $GLOBALS["act_get"],
 			"app_id"     => $_num_appId,
-			"act_get"    => $_act_get,
 			"key"        => $_str_key,
 			"key_belong" => $_str_keyBelong,
 		);

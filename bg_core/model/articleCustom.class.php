@@ -27,15 +27,7 @@ class MODEL_ARTICLE_CUSTOM {
 		);
 
 		foreach ($arr_customRows as $_key=>$_value) {
-			$_str_create = $_value["custom_type"];
-
-			if ($_value["custom_type"] != "text") {
-				$_str_create .= "(" . $_value["custom_opt"] . ")";
-			}
-
-			$_str_create .= " NOT NULL COMMENT '自定义字段" . $_value["custom_id"] . "'";
-
-			$_arr_articleCreat["custom_" . $_value["custom_id"]] = $_str_create;
+			$_arr_articleCreat["custom_" . $_value["custom_id"]] = "varchar(90) NOT NULL COMMENT '自定义字段 " . $_value["custom_id"] . "'";;
 		}
 
 		$_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "article_custom", $_arr_articleCreat, "article_id", "自定义字段");
@@ -44,36 +36,25 @@ class MODEL_ARTICLE_CUSTOM {
 			$_str_alert = "y210105";
 		}
 
-		$_arr_col     = $this->mdl_column(true);
+		$_arr_col     = $this->mdl_column();
 		$_arr_alert   = array();
 
 		foreach ($arr_customRows as $_key=>$_value) {
-			$_str_create = $_value["custom_type"];
-
-			if ($_value["custom_type"] != "text") {
-				$_str_create .= "(" . $_value["custom_opt"] . ")";
-			}
-
-			$_str_create .= " NOT NULL COMMENT '自定义字段" . $_value["custom_id"] . "'";
-
-			if (array_key_exists("custom_" . $_value["custom_id"], $_arr_col)) {
-				$_type = $_arr_col["custom_" . $_value["custom_id"]];
-				if ($_type != $_value["custom_type"] . "(" . $_value["custom_opt"] . ")") {
-					$_arr_alert["custom_" . $_value["custom_id"]] = array("CHANGE", $_str_create, "custom_" . $_value["custom_id"]);
-				}
-			} else {
-				$_arr_alert["custom_" . $_value["custom_id"]] = array("ADD", $_str_create);
+			if (!in_array("custom_" . $_value["custom_id"], $_arr_col)) {
+    			$_arr_alert["custom_" . $_value["custom_id"]] = array("ADD", "varchar(90) NOT NULL COMMENT '自定义字段 " . $_value["custom_id"] . "'");
 			}
 			$_arr_custom[] = "custom_" . $_value["custom_id"];
 		}
 
 		foreach ($_arr_col as $_key=>$_value) {
-			if (!in_array($_key, $_arr_custom) && $_key != "article_id") {
-				$_arr_alert[$_key] = array("DROP");
+			if (!in_array($_value, $_arr_custom) && $_value != "article_id") {
+				$_arr_alert[$_value] = array("DROP");
 			}
 		}
 
-		$_arr_alert["article_id"] = array("ADD", "int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'ID'");
+		if (!in_array("article_id", $_arr_col)) {
+			$_arr_alert["article_id"] = array("ADD", "int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'ID'");
+		}
 
 		if ($_arr_alert) {
 			$_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "article_custom", $_arr_alert);
@@ -82,25 +63,20 @@ class MODEL_ARTICLE_CUSTOM {
 			}
 		}
 
-
 		return array(
 			"alert" => $_str_alert, //更新成功
 		);
 	}
 
 
-	function mdl_column($is_type = false) {
+	function mdl_column() {
 		$_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "article_custom");
 
 		$_arr_col = array();
 
 		if ($_arr_colRows) {
 			foreach ($_arr_colRows as $_key=>$_value) {
-				if ($is_type) {
-					$_arr_col[$_value["Field"]] = $_value["Type"];
-				} else {
-					$_arr_col[] = $_value["Field"];
-				}
+				$_arr_col[] = $_value["Field"];
 			}
 		}
 
@@ -108,7 +84,7 @@ class MODEL_ARTICLE_CUSTOM {
 	}
 
 
-	function mdl_cache() {
+	/*function mdl_cache() {
 		$_str_alert   = "y210110";
 
 		$_arr_column  = $this->mdl_column();
@@ -128,5 +104,5 @@ class MODEL_ARTICLE_CUSTOM {
 		return array(
 			"alert" => $_str_alert,
 		);
-	}
+	}*/
 }
