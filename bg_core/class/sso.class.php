@@ -366,17 +366,13 @@ class CLASS_SSO {
 	function sso_install() {
 		$_arr_ssoData = array(
 			"act_post"   => "dbconfig",
-			"opt" => array(
-    			"dbconfig" => array(
-        			"BG_DB_HOST"     => BG_DB_HOST,
-        			"BG_DB_PORT"     => BG_DB_PORT,
-        			"BG_DB_NAME"     => BG_DB_NAME,
-        			"BG_DB_USER"     => BG_DB_USER,
-        			"BG_DB_PASS"     => BG_DB_PASS,
-        			"BG_DB_CHARSET"  => BG_DB_CHARSET,
-        			"BG_DB_TABLE"    => "sso_",
-    			),
-			),
+			"db_host"    => BG_DB_HOST,
+			"db_port"    => BG_DB_PORT,
+			"db_name"    => BG_DB_NAME,
+			"db_user"    => BG_DB_USER,
+			"db_pass"    => BG_DB_PASS,
+			"db_charset" => BG_DB_CHARSET,
+			"db_table"   => "sso_",
 		);
 		$_arr_get     = fn_http(BG_SITE_URL . BG_URL_SSO . "api/api.php?mod=install", $_arr_ssoData, "post"); //提交
 		$_arr_result  = $this->result_process($_arr_get);
