@@ -376,7 +376,7 @@ class CLASS_SSO {
 		);
 		$_arr_get     = fn_http(BG_SITE_URL . BG_URL_SSO . "api/api.php?mod=install", $_arr_ssoData, "post"); //提交
 		$_arr_result  = $this->result_process($_arr_get);
-		if ($_arr_result["alert"] != "y030405") {
+		if ($_arr_result["alert"] != "y030404") {
 			return $_arr_result;
 			exit;
 		}

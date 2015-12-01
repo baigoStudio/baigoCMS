@@ -58,7 +58,7 @@ class MODEL_OPT {
 		$_str_content .= "define(\"BG_DB_CHARSET\", \"" . $this->dbconfigSubmit["db_charset"] . "\");" . PHP_EOL;
 		$_str_content .= "define(\"BG_DB_TABLE\", \"" . $this->dbconfigSubmit["db_table"] . "\");" . PHP_EOL;
 
-		$_num_size = file_put_contents(BG_PATH_CONFIG . "opt_dbconfig.php", $_str_content);
+		$_num_size = file_put_contents(BG_PATH_CONFIG . "opt_dbconfig.inc.php", $_str_content);
 		if ($_num_size > 0) {
 			$_str_alert = "y030404";
 		} else {
