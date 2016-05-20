@@ -6,7 +6,7 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
@@ -19,139 +19,134 @@ include_once(BG_PATH_MODEL . "thumb.class.php");
 /*-------------用户类-------------*/
 class CONTROL_CALL {
 
-	public $obj_tpl;
-	public $mdl_call;
-	public $adminLogged;
+    public $obj_tpl;
+    public $mdl_call;
+    public $adminLogged;
 
-	function __construct() { //构造函数
-		$this->obj_base       = $GLOBALS["obj_base"];
-		$this->config         = $this->obj_base->config;
-		$this->adminLogged    = $GLOBALS["adminLogged"];
-		$_arr_cfg["admin"] = true;
-		$this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
-		$this->mdl_call       = new MODEL_CALL();
-		$this->mdl_cate       = new MODEL_CATE();
-		$this->mdl_mark       = new MODEL_MARK();
-		$this->mdl_spec       = new MODEL_SPEC();
-		$this->mdl_thumb      = new MODEL_THUMB();
-		$this->tplData = array(
-			"adminLogged" => $this->adminLogged
-		);
-	}
+    function __construct() { //构造函数
+        $this->obj_base       = $GLOBALS["obj_base"];
+        $this->config         = $this->obj_base->config;
+        $this->adminLogged    = $GLOBALS["adminLogged"];
+        $_arr_cfg["admin"] = true;
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->mdl_call       = new MODEL_CALL();
+        $this->mdl_cate       = new MODEL_CATE();
+        $this->mdl_mark       = new MODEL_MARK();
+        $this->mdl_spec       = new MODEL_SPEC();
+        $this->mdl_thumb      = new MODEL_THUMB();
+        $this->tplData = array(
+            "adminLogged" => $this->adminLogged
+        );
+    }
 
-	/**
-	 * ctl_form function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ctl_form() {
-		$_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
+    /**
+     * ctl_form function.
+     *
+     * @access public
+     * @return void
+     */
+    function ctl_form() {
+        $_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
 
-		if ($_num_callId > 0) {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
-				return array(
-					"alert" => "x170303",
-				);
-				exit;
-			}
-			$_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
-			if ($_arr_callRow["alert"] != "y170102") {
-				return $_arr_callRow;
-				exit;
-			}
-			//print_r($_arr_callRow);
-		} else {
-			if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
-				return array(
-					"alert" => "x170302",
-				);
-				exit;
-			}
-			$_arr_callRow = array(
-				"call_id"           => 0,
-				"call_name"         => "",
-				"call_file"         => "html",
-				"call_amount"       => array(
-					"top"              => 10,
-					"except"           => 0,
-				),
-				"call_attach"       => "",
-				"call_cate_id"      => "",
-				"call_cate_ids"     => array(),
-				"call_cate_excepts" => array(),
-				"call_mark_ids"     => array(),
-				"call_spec_id"      => 0,
-				"call_type"         => "",
-				"call_status"       => "enable",
-			);
-		}
+        if ($_num_callId > 0) {
+            if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
+                return array(
+                    "alert" => "x170303",
+                );
+            }
+            $_arr_callRow = $this->mdl_call->mdl_read($_num_callId);
+            if ($_arr_callRow["alert"] != "y170102") {
+                return $_arr_callRow;
+            }
+            //print_r($_arr_callRow);
+        } else {
+            if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["edit"])) {
+                return array(
+                    "alert" => "x170302",
+                );
+            }
+            $_arr_callRow = array(
+                "call_id"           => 0,
+                "call_name"         => "",
+                "call_file"         => "html",
+                "call_amount"       => array(
+                    "top"       => 10,
+                    "except"    => 0,
+                ),
+                "call_attach"       => "",
+                "call_cate_id"      => "",
+                "call_cate_ids"     => array(),
+                "call_cate_excepts" => array(),
+                "call_mark_ids"     => array(),
+                "call_spec_id"      => 0,
+                "call_type"         => "",
+                "call_status"       => "enable",
+            );
+        }
 
-		$_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, "show");
-		$_arr_markRows    = $this->mdl_mark->mdl_list(100);
-		$_arr_thumbRows   = $this->mdl_thumb->mdl_list(100);
+        $_arr_searchCate = array(
+            "status" => "show",
+        );
 
-		$_arr_tpl = array(
-			"callRow"    => $_arr_callRow,
-			"cateRows"   => $_arr_cateRows,
-			"markRows"   => $_arr_markRows,
-			"thumbRows"  => $_arr_thumbRows,
-		);
+        $_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, $_arr_searchCate);
+        $_arr_markRows    = $this->mdl_mark->mdl_list(100);
+        $_arr_thumbRows   = $this->mdl_thumb->mdl_list(100);
 
-		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
+        $_arr_tpl = array(
+            "callRow"    => $_arr_callRow,
+            "cateRows"   => $_arr_cateRows,
+            "markRows"   => $_arr_markRows,
+            "thumbRows"  => $_arr_thumbRows,
+        );
 
-		$this->obj_tpl->tplDisplay("call_form.tpl", $_arr_tplData);
+        $_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
-		return array(
-			"alert" => "y170102",
-		);
-	}
+        $this->obj_tpl->tplDisplay("call_form.tpl", $_arr_tplData);
+
+        return array(
+            "alert" => "y170102",
+        );
+    }
 
 
-	/**
-	 * ctl_list function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	function ctl_list() {
-		if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"])) {
-			return array(
-				"alert" => "x170301",
-			);
-			exit;
-		}
+    /**
+     * ctl_list function.
+     *
+     * @access public
+     * @return void
+     */
+    function ctl_list() {
+        if (!isset($this->adminLogged["groupRow"]["group_allow"]["call"]["browse"])) {
+            return array(
+                "alert" => "x170301",
+            );
+        }
 
-		$_str_key     = fn_getSafe(fn_get("key"), "txt", "");
-		$_str_type    = fn_getSafe(fn_get("type"), "txt", "");
-		$_str_status  = fn_getSafe(fn_get("status"), "txt", "");
+        $_arr_search = array(
+            "key"        => fn_getSafe(fn_get("key"), "txt", ""),
+            "type"       => fn_getSafe(fn_get("type"), "txt", ""),
+            "status"     => fn_getSafe(fn_get("status"), "txt", ""),
+        );
 
-		$_arr_search = array(
-			"act_get"    => $GLOBALS["act_get"],
-			"key"        => $_str_key,
-			"type"       => $_str_type,
-			"status"     => $_str_status,
-		);
+        $_num_callCount   = $this->mdl_call->mdl_count($_arr_search);
+        $_arr_page        = fn_page($_num_callCount); //取得分页数据
+        $_str_query       = http_build_query($_arr_search);
+        $_arr_callRows    = $this->mdl_call->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_arr_search);
 
-		$_num_callCount   = $this->mdl_call->mdl_count($_str_key, $_str_type, $_str_status);
-		$_arr_page        = fn_page($_num_callCount); //取得分页数据
-		$_str_query       = http_build_query($_arr_search);
-		$_arr_callRows    = $this->mdl_call->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_str_key, $_str_type, $_str_status);
+        $_arr_tpl = array(
+            "query"      => $_str_query,
+            "pageRow"    => $_arr_page,
+            "search"     => $_arr_search,
+            "callRows"   => $_arr_callRows, //管理员列表
+        );
 
-		$_arr_tpl = array(
-			"query"      => $_str_query,
-			"pageRow"    => $_arr_page,
-			"search"     => $_arr_search,
-			"callRows"   => $_arr_callRows, //管理员列表
-		);
+        $_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
-		$_arr_tplData = array_merge($this->tplData, $_arr_tpl);
+        $this->obj_tpl->tplDisplay("call_list.tpl", $_arr_tplData);
 
-		$this->obj_tpl->tplDisplay("call_list.tpl", $_arr_tplData);
+        return array(
+            "alert" => "y170301",
+        );
 
-		return array(
-			"alert" => "y170301",
-		);
-
-	}
+    }
 }

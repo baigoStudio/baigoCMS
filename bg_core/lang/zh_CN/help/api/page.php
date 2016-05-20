@@ -47,8 +47,8 @@ return "<a name=\"page\"></a>
 
     <p>&nbsp;</p>
 
-	<h4>返回结果示例</h4>
-	<p>
+    <h4>返回结果示例</h4>
+    <p>
 <pre><code class=\"language-javascript\">{
     &quot;page&quot;: &quot;MTA=&quot;, //当前页码
     &quot;p&quot;: &quot;Zm9uZQ==&quot;, //分组数
@@ -56,7 +56,7 @@ return "<a name=\"page\"></a>
     &quot;end&quot;: &quot;Zm9uZQ==&quot;, //分组结束页码
     &quot;total&quot;: &quot;MTM5NDQxNzg3Mg==&quot; //总页数
 }</code></pre>
-	</p>
+    </p>
 
     <p>&nbsp;</p>
 

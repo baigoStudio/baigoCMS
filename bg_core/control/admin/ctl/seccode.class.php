@@ -6,16 +6,16 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
 include_once(BG_PATH_CLASS . "seccode.class.php"); //载入验证码类
 
 class CONTROL_SECCODE {
 
-	function ctl_make() {
-		$obj_seccode = new CLASS_SECCODE();
-		$obj_seccode->secSet();
-		$obj_seccode->secDo();
-	}
+    function ctl_make() {
+        $obj_seccode = new CLASS_SECCODE();
+        $obj_seccode->secSet();
+        $obj_seccode->secDo();
+    }
 }

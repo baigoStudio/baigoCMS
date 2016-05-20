@@ -6,40 +6,48 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "include.func.php"); //验证是否已登录
-fn_include(true, true, "Content-type: application/json; charset=utf-8", true, "ajax", true);
+include_once(BG_PATH_FUNC . "init.func.php"); //验证是否已登录
+$arr_set = array(
+    "base"          => true,
+    "ssin"          => true,
+    "header"        => "Content-type: application/json; charset=utf-8",
+    "db"            => true,
+    "type"          => "ajax",
+    "ssin_begin"    => true,
+);
+fn_init($arr_set);
 
 include_once(BG_PATH_CONTROL . "admin/ajax/spec.class.php"); //载入登录控制器
 
 $ajax_spec = new AJAX_SPEC();
 
 switch ($GLOBALS["act_post"]) {
-	case "show":
-	case "hide":
-		$ajax_spec->ajax_status();
-	break;
+    case "show":
+    case "hide":
+        $ajax_spec->ajax_status();
+    break;
 
-	case "submit":
-		$ajax_spec->ajax_submit();
-	break;
+    case "submit":
+        $ajax_spec->ajax_submit();
+    break;
 
-	case "del":
-		$ajax_spec->ajax_del();
-	break;
+    case "del":
+        $ajax_spec->ajax_del();
+    break;
 
-	case "to":
-	case "exc":
-		$ajax_spec->ajax_toSpec();
-	break;
+    case "to":
+    case "exc":
+        $ajax_spec->ajax_toSpec();
+    break;
 
-	default:
-		switch ($GLOBALS["act_get"]) {
-			case "list":
-				$ajax_spec->ajax_list();
-			break;
-		}
-	break;
+    default:
+        switch ($GLOBALS["act_get"]) {
+            case "list":
+                $ajax_spec->ajax_list();
+            break;
+        }
+    break;
 }

@@ -6,7 +6,7 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
 include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
@@ -16,142 +16,142 @@ include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
 
 class AJAX_UPGRADE {
 
-	private $obj_sso;
-	private $obj_ajax;
-	private $obj_db;
+    private $obj_sso;
+    private $obj_ajax;
+    private $obj_db;
 
-	function __construct() { //构造函数
-		$this->obj_ajax = new CLASS_AJAX(); //初始化 AJAX 基对象
-		if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
-			include_once(BG_PATH_CONFIG . "is_install.php"); //载入栏目控制器
-			if (defined("BG_INSTALL_PUB") && PRD_CMS_PUB <= BG_INSTALL_PUB) {
-				$this->obj_ajax->halt_alert("x030403");
-			}
-		}
-		$this->upgrade_init();
-		$this->mdl_opt = new MODEL_OPT();
-	}
-
-
-	function ajax_dbconfig() {
-		$_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
-
-		if ($_arr_dbconfigSubmit["alert"] != "ok") {
-			$this->obj_ajax->halt_alert($_arr_dbconfigSubmit["alert"]);
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_dbconfig();
-
-		$this->obj_ajax->halt_alert($_arr_return["alert"]);
-	}
+    function __construct() { //构造函数
+        $this->obj_ajax = new CLASS_AJAX(); //初始化 AJAX 基对象
+        if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
+            include_once(BG_PATH_CONFIG . "is_install.php"); //载入栏目控制器
+            if (defined("BG_INSTALL_PUB") && PRD_CMS_PUB <= BG_INSTALL_PUB) {
+                $this->obj_ajax->halt_alert("x030403");
+            }
+        }
+        $this->upgrade_init();
+        $this->mdl_opt = new MODEL_OPT();
+    }
 
 
-	function ajax_submit() {
-		$_act_post    = fn_getSafe($GLOBALS["act_post"], "txt", "base");
+    function ajax_dbconfig() {
+        $_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
 
-		if ($_act_post != "dbconfig") {
-    		$this->check_db();
-		}
+        if ($_arr_dbconfigSubmit["alert"] != "ok") {
+            $this->obj_ajax->halt_alert($_arr_dbconfigSubmit["alert"]);
+        }
 
-		$_num_countSrc = 0;
+        $_arr_return = $this->mdl_opt->mdl_dbconfig();
 
-		foreach ($this->obj_ajax->opt[$_act_post]["list"] as $_key=>$_value) {
-			if ($_value["min"] > 0) {
-				$_num_countSrc++;
-			}
-		}
-
-		$_arr_const = $this->mdl_opt->input_const($_act_post);
-
-		$_num_countInput = count(array_filter($_arr_const));
-
-		if ($_num_countInput < $_num_countSrc) {
-			$this->obj_ajax->halt_alert("x030212");
-		}
-
-		$_arr_return = $this->mdl_opt->mdl_const($_act_post);
-
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
-
-		if ($_act_post == "visit") {
-    		if ($_arr_const["BG_VISIT_TYPE"] == "pstatic") {
-
-    			$_arr_return = $this->mdl_opt->mdl_htaccess();
-
-    			if ($_arr_return["alert"] != "y060101") {
-    				$this->obj_ajax->halt_alert($_arr_return["alert"]);
-    			}
-
-    		} else {
-    			if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-    				unlink(BG_PATH_ROOT . ".htaccess");
-    			}
-    		}
-		}
-
-		$this->obj_ajax->halt_alert("y030405");
-	}
+        $this->obj_ajax->halt_alert($_arr_return["alert"]);
+    }
 
 
-	function ajax_over() {
-		$this->check_db();
+    function ajax_submit() {
+        $_act_post    = fn_getSafe($GLOBALS["act_post"], "txt", "base");
 
-		$_arr_return = $this->mdl_opt->mdl_over();
+        if ($_act_post != "dbconfig") {
+            $this->check_db();
+        }
 
-		if ($_arr_return["alert"] != "y060101") {
-			$this->obj_ajax->halt_alert($_arr_return["alert"]);
-		}
+        $_num_countSrc = 0;
 
-		$this->obj_ajax->halt_alert("y030412");
-	}
+        foreach ($this->obj_ajax->opt[$_act_post]["list"] as $_key=>$_value) {
+            if ($_value["min"] > 0) {
+                $_num_countSrc++;
+            }
+        }
+
+        $_arr_const = $this->mdl_opt->input_const($_act_post);
+
+        $_num_countInput = count(array_filter($_arr_const));
+
+        if ($_num_countInput < $_num_countSrc) {
+            $this->obj_ajax->halt_alert("x030204");
+        }
+
+        $_arr_return = $this->mdl_opt->mdl_const($_act_post);
+
+        if ($_arr_return["alert"] != "y060101") {
+            $this->obj_ajax->halt_alert($_arr_return["alert"]);
+        }
+
+        if ($_act_post == "visit") {
+            if ($_arr_const["BG_VISIT_TYPE"] == "pstatic") {
+
+                $_arr_return = $this->mdl_opt->mdl_htaccess();
+
+                if ($_arr_return["alert"] != "y060101") {
+                    $this->obj_ajax->halt_alert($_arr_return["alert"]);
+                }
+
+            } else {
+                if (file_exists(BG_PATH_ROOT . ".htaccess")) {
+                    unlink(BG_PATH_ROOT . ".htaccess");
+                }
+            }
+        }
+
+        $this->obj_ajax->halt_alert("y030405");
+    }
 
 
-	private function check_db() {
-		if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
-			$this->obj_ajax->halt_alert("x030419");
-		} else {
-			if (!defined("BG_DB_PORT")) {
-				define("BG_DB_PORT", "3306");
-			}
+    function ajax_over() {
+        $this->check_db();
 
-			$_cfg_host = array(
-				"host"      => BG_DB_HOST,
-				"name"      => BG_DB_NAME,
-				"user"      => BG_DB_USER,
-				"pass"      => BG_DB_PASS,
-				"charset"   => BG_DB_CHARSET,
-				"debug"     => BG_DEBUG_DB,
-				"port"      => BG_DB_PORT,
-			);
+        $_arr_return = $this->mdl_opt->mdl_over();
 
-			$GLOBALS["obj_db"]   = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
-			$this->obj_db        = $GLOBALS["obj_db"];
+        if ($_arr_return["alert"] != "y060101") {
+            $this->obj_ajax->halt_alert($_arr_return["alert"]);
+        }
 
-			if (!$this->obj_db->connect()) {
-				$this->obj_ajax->halt_alert("x030111");
-			}
-
-			if (!$this->obj_db->select_db()) {
-				$this->obj_ajax->halt_alert("x030112");
-			}
-		}
-	}
+        $this->obj_ajax->halt_alert("y030412");
+    }
 
 
-	private function upgrade_init() {
-		$_arr_extRow      = get_loaded_extensions();
-		$_num_errCount    = 0;
+    private function check_db() {
+        if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
+            $this->obj_ajax->halt_alert("x030419");
+        } else {
+            if (!defined("BG_DB_PORT")) {
+                define("BG_DB_PORT", "3306");
+            }
 
-		foreach ($this->obj_ajax->type["ext"] as $_key=>$_value) {
-			if (!in_array($_key, $_arr_extRow)) {
-				$_num_errCount++;
-			}
-		}
+            $_cfg_host = array(
+                "host"      => BG_DB_HOST,
+                "name"      => BG_DB_NAME,
+                "user"      => BG_DB_USER,
+                "pass"      => BG_DB_PASS,
+                "charset"   => BG_DB_CHARSET,
+                "debug"     => BG_DEBUG_DB,
+                "port"      => BG_DB_PORT,
+            );
 
-		if ($_num_errCount > 0) {
-			$this->obj_ajax->halt_alert("x030418");
-		}
-	}
+            $GLOBALS["obj_db"]   = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
+            $this->obj_db        = $GLOBALS["obj_db"];
+
+            if (!$this->obj_db->connect()) {
+                $this->obj_ajax->halt_alert("x030111");
+            }
+
+            if (!$this->obj_db->select_db()) {
+                $this->obj_ajax->halt_alert("x030112");
+            }
+        }
+    }
+
+
+    private function upgrade_init() {
+        $_arr_extRow      = get_loaded_extensions();
+        $_num_errCount    = 0;
+
+        foreach ($this->obj_ajax->type["ext"] as $_key=>$_value) {
+            if (!in_array($_key, $_arr_extRow)) {
+                $_num_errCount++;
+            }
+        }
+
+        if ($_num_errCount > 0) {
+            $this->obj_ajax->halt_alert("x030418");
+        }
+    }
 }

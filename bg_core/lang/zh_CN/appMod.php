@@ -6,44 +6,44 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
 /*-------------------------权限-------------------------*/
 return array(
-	/*------栏目------*/
-	"cate" => array(
-		"title" => "栏目",
-		"allow" => array(
-			"get"        => "读取",
-			"list"       => "列表",
-		),
-	),
+    /*------栏目------*/
+    "cate" => array(
+        "title" => "栏目",
+        "allow" => array(
+            "read"  => "读取",
+            "list"  => "列表",
+        ),
+    ),
 
-	/*------文章------*/
-	"article" => array(
-		"title" => "文章",
-		"allow" => array(
-			"get"        => "读取",
-			"list"       => "列表",
-		),
-	),
+    /*------文章------*/
+    "article" => array(
+        "title" => "文章",
+        "allow" => array(
+            "read"  => "读取",
+            "list"  => "列表",
+        ),
+    ),
 
-	/*------tag------*/
-	"tag" => array(
-		"title" => "TAG",
-		"allow" => array(
-			"get"        => "读取",
-			"list"       => "列表",
-		),
-	),
+    /*------tag------*/
+    "tag" => array(
+        "title" => "TAG",
+        "allow" => array(
+            "read"  => "读取",
+            "list"  => "列表",
+        ),
+    ),
 
-	/*------专题------*/
-	"spec" => array(
-		"title" => "专题",
-		"allow" => array(
-			"get"        => "读取",
-			"list"       => "列表",
-		),
-	),
+    /*------专题------*/
+    "spec" => array(
+        "title" => "专题",
+        "allow" => array(
+            "read"  => "读取",
+            "list"  => "列表",
+        ),
+    ),
 );

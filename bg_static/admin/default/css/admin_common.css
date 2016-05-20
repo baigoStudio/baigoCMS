@@ -29,25 +29,24 @@
 .text_md { height: 300px!important; }
 
 .static_label { color: #999; font-weight: normal; }
-.static_input { font-size: 20px; }
 
 .list_padding { margin-left: 15px; }
 
 .list_menu {
-	padding-left: 0;
-	margin: 3px 0 0 -3px;
-	list-style: none;
+    padding-left: 0;
+    margin: 3px 0 0 -3px;
+    list-style: none;
 }
 
 .list_menu > li {
-	display: inline-block;
-	padding: 0 3px;
+    display: inline-block;
+    padding: 0 3px;
 }
 
 .list_menu > li + li:before {
-	padding-right: 4px;
-	color: #ccc;
-	content: "|";
+    padding-right: 4px;
+    color: #ccc;
+    content: "|";
 }
 
 label.control-label > span { color: #c30; margin-left: 10px; }
@@ -59,49 +58,49 @@ table td.child_5 { padding-left: 68px!important; }
 table td.child_6 { padding-left: 83px!important; }
 
 .input-group-addon.input_range {
-	width: auto;
-	min-width: 16px;
-	padding: 4px 5px;
-	font-weight: normal;
-	line-height: 1.428571429;
-	text-align: center;
-	text-shadow: 0 1px 0 #fff;
-	vertical-align: middle;
-	background-color: #eeeeee;
-	border: solid #cccccc;
-	border-width: 1px 0;
-	margin-left: -5px;
-	margin-right: -5px;
+    width: auto;
+    min-width: 16px;
+    padding: 4px 5px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff;
+    vertical-align: middle;
+    background-color: #eeeeee;
+    border: solid #cccccc;
+    border-width: 1px 0;
+    margin-left: -5px;
+    margin-right: -5px;
 }
 
 .nav_baigo a { padding: 4px 8px!important; }
 
 .radio_baigo,
 .checkbox_baigo {
-	display: block;
-	min-height: 20px;
-	margin-bottom: 5px;
-	vertical-align: middle;
+    display: block;
+    min-height: 20px;
+    margin-bottom: 5px;
+    vertical-align: middle;
 }
 
 .radio_baigo input[type="radio"],
 .checkbox_baigo input[type="checkbox"] {
-	display: inline;
-	font-weight: normal;
-	cursor: pointer;
-	margin-right: 5px;
+    display: inline;
+    font-weight: normal;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 .radio_baigo label,
 .checkbox_baigo label {
-	display: inline;
-	font-weight: normal;
-	cursor: pointer;
-	margin-right: 5px;
+    display: inline;
+    font-weight: normal;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 .dl_baigo { margin-bottom: 5px!important; }
 
 .list_dl dd {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }

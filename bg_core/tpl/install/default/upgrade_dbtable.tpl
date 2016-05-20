@@ -1,8 +1,8 @@
 {* upgrade_dbtable.tpl 登录界面 *}
 {$cfg = [
-	sub_title  => $lang.page.upgradeDbTable,
-	mod_help   => "upgrade",
-	act_help   => "dbtable"
+    sub_title  => $lang.page.upgradeDbTable,
+    mod_help   => "upgrade",
+    act_help   => "dbtable"
 ]}
 
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_head.tpl" cfg=$cfg}
@@ -25,12 +25,12 @@
         {/foreach}
     </div>
 
-	<div class="form-group">
-		<div class="btn-group">
-			<a class="btn btn-primary btn-lg" href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=base">{$lang.btn.stepNext}</a>
-			{include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_drop.tpl" cfg=$cfg}
-		</div>
-	</div>
+    <div class="form-group">
+        <div class="btn-group">
+            <a class="btn btn-primary btn-lg" href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=upgrade&act_get=base">{$lang.btn.stepNext}</a>
+            {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_drop.tpl" cfg=$cfg}
+        </div>
+    </div>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_foot.tpl" cfg=$cfg}
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/html_foot.tpl" cfg=$cfg}

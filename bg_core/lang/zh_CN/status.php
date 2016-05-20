@@ -6,65 +6,65 @@
 
 //不能非法包含或直接执行
 if(!defined("IN_BAIGO")) {
-	exit("Access Denied");
+    exit("Access Denied");
 }
 
 /*-------------------------通用-------------------------*/
 return array(
 
-	/*-------文章状态-------*/
-	"article" => array(
-		"pub"     => "发布", //发布
-		"wait"    => "待审", //等待审核
-		"hide"    => "隐藏", //隐藏
-	),
+    /*-------文章状态-------*/
+    "article" => array(
+        "pub"     => "发布", //发布
+        "wait"    => "待审", //等待审核
+        "hide"    => "隐藏", //隐藏
+    ),
 
-	"app" => array(
-		"enable"  => "启用", //生效
-		"disable" => "禁用", //禁用
-	),
+    "app" => array(
+        "enable"  => "启用", //生效
+        "disable" => "禁用", //禁用
+    ),
 
-	/*-------TAG状态-------*/
-	"tag" => array(
-		"show"    => "显示", //正常
-		"hide"    => "隐藏", //隐藏
-	),
+    /*-------TAG状态-------*/
+    "tag" => array(
+        "show"    => "显示", //正常
+        "hide"    => "隐藏", //隐藏
+    ),
 
-	/*-------栏目状态-------*/
-	"cate" => array(
-		"show"    => "显示", //正常
-		"hide"    => "隐藏", //隐藏
-	),
+    /*-------栏目状态-------*/
+    "cate" => array(
+        "show"    => "显示", //正常
+        "hide"    => "隐藏", //隐藏
+    ),
 
-	/*-------管理员状态-------*/
-	"admin" => array(
-		"enable"  => "启用", //发布
-		"disable" => "禁用", //隐藏
-	),
+    /*-------管理员状态-------*/
+    "admin" => array(
+        "enable"  => "启用", //发布
+        "disable" => "禁用", //隐藏
+    ),
 
-	"group" => array(
-		"enable"  => "启用", //发布
-		"disable" => "禁用", //隐藏
-	),
+    "group" => array(
+        "enable"  => "启用", //发布
+        "disable" => "禁用", //隐藏
+    ),
 
-	"call" => array(
-		"enable"  => "启用", //发布
-		"disable" => "禁用", //隐藏
-	),
+    "call" => array(
+        "enable"  => "启用", //发布
+        "disable" => "禁用", //隐藏
+    ),
 
-	"spec" => array(
-		"show"    => "显示", //正常
-		"hide"    => "隐藏", //隐藏
-	),
+    "spec" => array(
+        "show"    => "显示", //正常
+        "hide"    => "隐藏", //隐藏
+    ),
 
-	/*------自定义字段------*/
-	"custom" => array(
-		"enable"  => "启用", //发布
-		"disable" => "禁用", //隐藏
-	),
+    /*------自定义字段------*/
+    "custom" => array(
+        "enable"  => "启用", //发布
+        "disable" => "禁用", //隐藏
+    ),
 
-	"ext" => array(
-		"installed"   => "已安装", //栏目类型
-		"uninstall"   => "未安装", //栏目类型
-	),
+    "ext" => array(
+        "installed"   => "已安装", //栏目类型
+        "uninstall"   => "未安装", //栏目类型
+    ),
 );

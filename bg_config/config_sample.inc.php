@@ -38,7 +38,6 @@ define("BG_PATH_ROOT", str_replace("\\", "/", substr(dirname(__FILE__), 0, strrp
 define("BG_PATH_CONFIG", BG_PATH_ROOT . BG_NAME_CONFIG . "/");
 define("BG_PATH_CACHE", BG_PATH_ROOT . BG_NAME_CACHE . "/");
 define("BG_PATH_TPL", BG_PATH_ROOT . BG_NAME_TPL . "/");
-define("BG_PATH_TPLPUB", BG_PATH_TPL . BG_NAME_PUB . "/");
 define("BG_PATH_ATTACH", BG_PATH_ROOT . BG_NAME_ATTACH . "/");
 define("BG_PATH_SSO", BG_PATH_ROOT . BG_NAME_SSO . "/");
 define("BG_PATH_CORE", BG_PATH_ROOT . BG_NAME_CORE . "/");

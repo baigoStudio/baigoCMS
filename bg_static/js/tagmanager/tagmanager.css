@@ -4,17 +4,16 @@
  * https://github.com/twitter/bootstrap/blob/master/less/variables.less
  */
 .tm-tag {
-  height: 34px;
+  height: 34px; /* 已修改 */
   color: #555555;
   background-color: #f5f5f5;
   border: #bbbbbb 1px solid;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
   display: inline-block;
   border-radius: 3px;
-  font-size: 14px;
-  padding: 6px;
+  padding: 6px; /* 已修改 */
   margin: 0 5px 5px 0;
-  font-size: 14px;
+  font-size: 14px; /* 已修改 */
   line-height: 1.42857143;
   text-decoration: none;
   transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
@@ -93,10 +92,11 @@
   display: none;
 }
 input[type="text"].tm-input {
-  margin: 0 5px 5px 0;
+  margin: 0 5px 5px 0; /* 已修改 */
   display: inline-block;
   vertical-align: middle !important;
 }
+/* 另加 */
 button.tm-btn {
   margin: 0 5px 5px 0;
   display: inline-block;
