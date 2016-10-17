@@ -4,7 +4,7 @@ return "<h3>概述</h3>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">目录结构说明</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">文件 / 目录</th>
@@ -61,7 +61,7 @@ return "<h3>概述</h3>
                     <tr>
                         <td class=\"text-nowrap\">bg_static</td>
                         <td class=\"text-nowrap\">静态文件</td>
-                        <td>静态文件目录，主要用于保存图片、CSS、JavaScript等静态文件。</td>
+                        <td>静态文件目录，主要用于保存图片、CSS、JavaScript 等静态文件。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">bg_tpl</td>

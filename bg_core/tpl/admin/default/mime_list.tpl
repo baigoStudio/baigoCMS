@@ -1,4 +1,3 @@
-{* mime_list.php 允许上传类型列表 *}
 {$cfg = [
     title          => "{$adminMod.attach.main.title} - {$adminMod.attach.sub.mime.title}",
     menu_active    => "attach",
@@ -35,7 +34,7 @@
     </div>
 
     <form name="mime_list" id="mime_list">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -146,4 +145,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

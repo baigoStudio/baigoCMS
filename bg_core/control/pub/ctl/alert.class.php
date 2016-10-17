@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -15,7 +15,7 @@ class CONTROL_ALERT {
     public $obj_tpl;
 
     function __construct() { //构造函数
-        if(defined("BG_SITE_TPL")) {
+        if (defined("BG_SITE_TPL")) {
             $_str_tpl = BG_SITE_TPL;
         } else {
             $_str_tpl = "default";

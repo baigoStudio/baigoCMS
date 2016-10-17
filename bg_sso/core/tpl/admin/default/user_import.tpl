@@ -45,8 +45,9 @@
                 <div class="panel-body">
                     {if $tplData.csvRows}
                         <form name="csv_convert" id="csv_convert">
-                            <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                            <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                             <input type="hidden" name="act_post" value="convert">
+                            <input type="hidden" name="charset" value="{$tplData.charset}">
 
                             <table class="table_convert">
                                 <thead>
@@ -111,7 +112,7 @@
                     <div id="csv_uploads" class="csv_uploads"></div>
                 </form>
                 <form name="csv_del" id="csv_del">
-                    <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                    <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                     <input type="hidden" name="act_post" value="csvDel">
                     <div class="form-group">
                         <button class="btn btn-primary" type="button" id="go_del">{$lang.btn.delCsv}</button>
@@ -129,6 +130,38 @@
                 <div class="form-group">
                     <button type="button" id="md5_do" class="btn btn-primary">{$lang.btn.md5gen}</button>
                 </div>
+            </div>
+
+            <div class="well">
+                <form id="form_preview" name="form_preview" action="{$smarty.const.BG_URL_ADMIN}ctl.php">
+                    <input type="hidden" name="mod" value="user">
+                    <input type="hidden" name="act_get" value="import">
+
+                    <div class="form-group">
+                        <label class="control-label">{$lang.label.charsetSrc}</label>
+                        <select name="charset" id="charset" class="form-control">
+                            {foreach $tplData.charsetRows as $key=>$value}
+                                <optgroup label="{$value.title}">
+                                    {foreach $value.list as $key_sub=>$value_sub}
+                                        <option {if $tplData.charset == $key_sub}selected{/if} value="{$key_sub}">
+                                            {$value_sub.title}
+                                            {$key_sub}
+                                            {if isset($value_sub.often)}*{/if}
+                                        </option>
+                                    {/foreach}
+                                </optgroup>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">{$lang.btn.submit}</button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#charset_list_modal">
+                                {$lang.btn.charset}
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -157,6 +190,47 @@
                 {/foreach}
             </tbody>
         </table>
+    </div>
+
+    <div class="modal fade" id="charset_list_modal" aria-labelledby="charset_list_label">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="charset_list_label">{$lang.label.charset}</h4>
+                </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            {foreach $tplData.charsetRows as $key=>$value}
+                                <thead>
+                                    <tr>
+                                        <th class="text-nowrap">{$value.title}</th>
+                                        <th class="text-nowrap">{$lang.label.name}</th>
+                                        <th>{$lang.label.national}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $value.list as $key_sub=>$value_sub}
+                                        <tr>
+                                            <td class="text-nowrap">{$key_sub}</td>
+                                            <td class="text-nowrap">
+                                                {$value_sub.title}
+                                                {if isset($value_sub.often)}<code>*</code>{/if}
+                                            </td>
+                                            <td>{$value_sub.note}</td>
+                                        </tr>
+                                    {/foreach}
+                                </tbody>
+                            {/foreach}
+                        </table>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$lang.btn.close}</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
@@ -192,7 +266,7 @@
     $(document).ready(function(){
         $("#csv_files").fileupload({
             formData: [
-                { name: "token_session", value: "{$common.token_session}" },
+                { name: "{$common.tokenRow.name_session}", value: "{$common.tokenRow.token}" },
                 { name: "act_post", value: "import" },
             ],
             dataType: "json",

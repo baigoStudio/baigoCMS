@@ -1,4 +1,3 @@
-{*spec_form.php 上传界面*}
 <div class="modal-header">
     <div class="pull-left">
         <div class="form-group">{$lang.page.spec}</div>
@@ -6,7 +5,7 @@
     <div class="pull-right form-inline">
         <div class="form-group">
             <div class="input-group input-group-sm">
-                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="{$lang.label.key}">
+                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="{$lang.label.key}" value="{$tplData.search.key}">
                 <span class="input-group-btn">
                     <button class="btn btn-default btn-sm" type="button" id="search_btn">
                         <span class="glyphicon glyphicon-search"></span>
@@ -25,23 +24,8 @@
                 <th class="text-nowrap td_mn"> </th>
                 <th class="text-nowrap td_mn">{$lang.label.id}</th>
                 <th>{$lang.label.specName}</th>
+                <th class="text-nowrap td_sm">{$lang.label.status}</th>
             </tr>
-            <tr>
-                <td class="text-nowrap td_mn">
-                    <input type="radio" name="spec_id" checked value="0" title="{$lang.label.noSpec}">
-                </td>
-                <td class="text-nowrap td_mn">0</td>
-                <td>{$lang.label.noSpec}</td>
-            </tr>
-            {if isset($tplData.articleRow.specRow.spec_name)}
-                <tr>
-                    <td class="text-nowrap td_mn">
-                        <input type="radio" name="spec_id" checked value="{$tplData.articleRow.specRow.spec_id}" title="{$tplData.articleRow.specRow.spec_name}">
-                    </td>
-                    <td class="text-nowrap td_mn">{$tplData.articleRow.specRow.spec_id}</td>
-                    <td>{$tplData.articleRow.specRow.spec_name}</td>
-                </tr>
-            {/if}
         </thead>
         <tbody id="spec_list">
         </tbody>
@@ -61,9 +45,18 @@
 </div>
 
 <script type="text/javascript">
+var _str_appent_page;
+var _spec_status = new Array();
+{foreach $status.spec as $key=>$value}
+    _spec_status["{$key}"] = "{$value}";
+{/foreach}
+
+var _specIds = {$tplData.specIds};
+var _str_appent_spec;
+var _spec_list_html;
+
 function get_page(result, _page, _key) {
     _str_appent_page = "<ul class=\"pagination pagination-sm\">";
-
         if (result.pageRow.page > 1) {
             _str_appent_page += "<li><a href=\"javascript:reload_spec(1,'" + _key + "');\" title=\"{$lang.href.pageFirst}\">{$lang.href.pageFirst}</a></li>";
         }
@@ -78,9 +71,9 @@ function get_page(result, _page, _key) {
         }
         _str_appent_page += ">";
             if (result.pageRow.page <= 1) {
-                _str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&lsaquo;</span>";
+                _str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo;</span>";
             } else {
-                _str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page - 1) + ",'" + _key + "');\" title=\"{$lang.href.pagePrev}\">&lsaquo;</a>";
+                _str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page - 1) + ",'" + _key + "');\" title=\"{$lang.href.pagePrev}\">&laquo;</a>";
             }
         _str_appent_page += "</li>";
 
@@ -104,9 +97,9 @@ function get_page(result, _page, _key) {
         }
         _str_appent_page += ">";
             if (result.pageRow.page >= result.pageRow.total) {
-                _str_appent_page += "<span title=\"{$lang.href.pageNext}\">&rsaquo;</span>";
+                _str_appent_page += "<span title=\"{$lang.href.pageNext}\">&raquo;</span>";
             } else {
-                _str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page + 1) + ",'" + _key + "');\" title=\"{$lang.href.pageNext}\">&rsaquo;</a>";
+                _str_appent_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page + 1) + ",'" + _key + "');\" title=\"{$lang.href.pageNext}\">&raquo;</a>";
             }
         _str_appent_page += "</li>";
 
@@ -122,17 +115,37 @@ function get_page(result, _page, _key) {
     return _str_appent_page;
 }
 
-
 function get_list(_value) {
+    var _css_status;
+    var _checked;
+
+    if (_value.spec_status == "show") {
+        _css_status = "success";
+    } else {
+        _css_status = "default";
+    }
+
+    if ($.inArray(_value.spec_id, _specIds) >= 0) {
+        _checked = "checked";
+    } else {
+        _checked = "";
+    }
+
     _str_appent_spec = "<tr>" +
-        "<td class=\"text-nowrap td_mn\"><input type=\"radio\" name=\"spec_id\" value=\"" + _value.spec_id + "\" title=\"" + _value.spec_name + "\"></td>" +
+        "<td class=\"text-nowrap td_mn\">" +
+            "<input type=\"checkbox\" id=\"spec_id_" + _value.spec_id + "\" name=\"spec_id\" " + _checked + " value=\"" + _value.spec_id + "\" title=\"" + _value.spec_name + "\">" +
+        "</td>" +
         "<td class=\"text-nowrap td_mn\">" + _value.spec_id + "</td>" +
         "<td>" + _value.spec_name + "</td>" +
+        "<td class=\"text-nowrap td_sm label_baigo\">" +
+            "<span class=\"label label-" + _css_status + "\">" +
+                _spec_status[_value.spec_status] +
+            "</span>" +
+        "</td>" +
     "</div>";
 
     return _str_appent_spec;
 }
-
 
 function reload_spec(_page, _key) {
     $("#spec_list").empty();
@@ -145,29 +158,39 @@ function reload_spec(_page, _key) {
         $("#spec_page").append(_str_appent_page);
 
         $.each(result.specRows, function(_key, _value){
-            //alert(_value.spec_name);
             _str_appent_spec = get_list(_value);
 
             $("#spec_list").append(_str_appent_spec);
         });
 
         $("[name='spec_id']").click(function(){
-            var _spec_id = $(this).val();
-            var _spec_name = $(this).attr("title");
-            insertSpec(_spec_name, _spec_id);
+            var _spec_id    = $(this).val();
+            var _spec_name  = $(this).attr("title");
+            var _is_checked = $(this).prop("checked");
+            insertSpec(_spec_name, _spec_id, _is_checked);
         });
     });
 }
 
-function insertSpec(name, id) {
-    $("#article_spec_name").val(name);
-    $("#article_spec_id").val(id);
+function insertSpec(spec_name, spec_id, is_checked) {
+    if (is_checked) {
+        _spec_list_html = "<div class=\"checkbox\" id=\"spec_checkbox_" + spec_id + "\">" +
+            "<label for=\"{$tplData.search.target}_spec_ids_" + spec_id + "\">" +
+                "<input type=\"checkbox\" id=\"{$tplData.search.target}_spec_ids_" + spec_id + "\" checked name=\"{$tplData.search.target}_spec_ids[]\" value=\"" + spec_id + "\">" +
+                spec_name +
+            "</label>" +
+        "</div>";
+
+        $("#spec_check_list").append(_spec_list_html);
+    } else {
+        $("#spec_checkbox_" + spec_id).remove();
+    }
 }
 
 $(document).ready(function(){
-    reload_spec(1, "", "", "", "");
+    reload_spec(1, "{$tplData.search.key}", "", "", "");
     $("#search_btn").click(function(){
-        var _key    = $("#search_key").val();
+        var _key = $("#search_key").val();
         reload_spec(1, _key);
     });
 });

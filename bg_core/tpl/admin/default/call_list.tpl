@@ -1,4 +1,3 @@
-{* admin_callList.tpl 后台用户组 *}
 {$cfg = [
     title          => $adminMod.call.main.title,
     menu_active    => "call",
@@ -70,8 +69,17 @@
         <div class="clearfix"></div>
     </div>
 
+    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
+        <div class="form-group">
+            <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=call&act_get=1by1" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#gen_modal">
+                <span class="glyphicon glyphicon-refresh"></span>
+                {$lang.btn.callGen1by1}
+            </button>
+        </div>
+    {/if}
+
     <form name="call_list" id="call_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -103,7 +111,22 @@
                                     <ul class="list-unstyled">
                                         <li>{$value.call_name}</li>
                                         <li>
-                                            <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=form&call_id={$value.call_id}">{$lang.href.edit}</a>
+                                            <ul class="list_menu">
+                                                <li>
+                                                    <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=show&call_id={$value.call_id}">{$lang.href.show}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=call&act_get=form&call_id={$value.call_id}">{$lang.href.edit}</a>
+                                                </li>
+                                                {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static" && $value.call_status == "enable"}
+                                                    <li>
+                                                        <button type="button" class="btn btn-xs btn-info" data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=call&act_get=single&call_id={$value.call_id}" data-toggle="modal" data-target="#gen_modal">
+                                                            <span class="glyphicon glyphicon-refresh"></span>
+                                                            {$lang.btn.callGenSingle}
+                                                        </button>
+                                                    </li>
+                                                {/if}
+                                            </ul>
                                         </li>
                                     </ul>
                                 </td>

@@ -1,4 +1,3 @@
-{* admin_callForm.tpl 管理组编辑界面 *}
 {function cate_checkbox arr="" level=""}
     <ul class="list-unstyled{if $level > 0} list_padding{/if}">
         {foreach $arr as $key=>$value}
@@ -85,7 +84,7 @@
     </div>
 
     <form name="call_form" id="call_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="submit">
         <input type="hidden" name="call_id" id="call_id" value="{$tplData.callRow.call_id}">
 
@@ -114,30 +113,27 @@
                                 {cate_checkbox arr=$tplData.cateRows}
                             </div>
 
-                            <label class="control-label">{$lang.label.articleSpec}</label>
-
                             <div class="form-group">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" name="spec_key" id="spec_key" class="form-control" placeholder="{$lang.label.key}">
+                                <label class="control-label">{$lang.label.articleSpec}</label>
+                                <div class="input-group">
+                                    <input type="text" id="spec_key" name="spec_key" placeholder="{$lang.label.key}" class="form-control">
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-info" id="spec_search">
+                                        <button class="btn btn-info" type="button" id="spec_search_btn">
                                             <span class="glyphicon glyphicon-search"></span>
                                         </button>
                                     </span>
                                 </div>
+                                <div id="spec_check_list">
+                                    {foreach $tplData.specRows as $key=>$value}
+                                        <div class="checkbox" id="spec_checkbox_{$value.spec_id}">
+                                            <label for="call_spec_ids_{$value.spec_id}">
+                                                <input type="checkbox" id="call_spec_ids_{$value.spec_id}" checked name="call_spec_ids[]" value="{$value.spec_id}">
+                                                {$value.spec_name}
+                                            </label>
+                                        </div>
+                                    {/foreach}
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <select name="call_spec_id" class="form-control">
-                                    <option value="">{$lang.option.all}</option>
-                                    {if $tplData.specRow.spec_name}
-                                        <option {if $tplData.specRow.spec_id == $tplData.articleRow.article_spec_id}selected{/if} value="{$tplData.specRow.spec_id}">{$tplData.specRow.spec_name}</option>
-                                    {/if}
-                                    <optgroup label="{$lang.option.pleaseSelect}" id="spec_list"></optgroup>
-                                </select>
-                            </div>
-                            <div class="form-group" id="spec_page"></div>
-
 
                             <div class="form-group">
                                 <label class="control-label">{$lang.label.callAttach}</label>
@@ -168,7 +164,7 @@
                                 <label class="control-label">{$lang.label.callCate}</label>
                                 <div class="radio_baigo">
                                     <label for="call_cate_id_0">
-                                        <input type="radio" {if $tplData.callRow.call_cate_id == 0}checked{/if} value="0" name="call_cate_id" id="call_cate_id_0">
+                                        <input type="radio" {if $tplData.callRow.call_cate_id < 1}checked{/if} value="0" name="call_cate_id" id="call_cate_id_0">
                                         {$lang.label.cateAll}
                                     </label>
                                 </div>
@@ -204,7 +200,7 @@
                         </div>
                     </div>
 
-                    {if $smarty.const.BG_MODULE_GEN == 1}
+                    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
                         <div class="form-group">
                             <div id="group_call_file">
                                 <label class="control-label">{$lang.label.callFile}<span id="msg_call_file">*</span></label>
@@ -212,6 +208,20 @@
                                     <option value="">{$lang.option.pleaseSelect}</option>
                                     {foreach $type.callFile as $key=>$value}
                                         <option {if $tplData.callRow.call_file == $key}selected{/if} value="{$key}">{$value}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="group_call_tpl">
+                                <label class="control-label">{$lang.label.callTpl}<span id="msg_call_tpl">*</span></label>
+                                <select name="call_tpl" id="call_tpl" data-validate class="form-control">
+                                    <option value="">{$lang.option.pleaseSelect}</option>
+                                    {foreach $tplData.tplRows as $key=>$value}
+                                        {if $value["type"] == "file"}
+                                            <option {if $tplData.callRow.call_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
+                                        {/if}
                                     {/foreach}
                                 </select>
                             </div>
@@ -246,56 +256,17 @@
                 </div>
             </div>
         </div>
-
     </form>
+
+    <div class="modal fade" id="call_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content"></div>
+        </div>
+    </div>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 
     <script type="text/javascript">
-    function reload_spec(_key, _page) {
-        $("#spec_list").empty();
-        $("#spec_page").empty();
-
-        $.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=spec&act_get=list&key=" + _key + "&page=" + _page, function(result){
-
-            _str_appent_page = "<ul class=\"pager\">";
-                _str_appent_page += "<li class=\"previous";
-                if (result.pageRow.page <= 1) {
-                    _str_appent_page += " disabled";
-                }
-                _str_appent_page += "\">";
-                    if (result.pageRow.page <= 1) {
-                        _str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</span>";
-                    } else {
-                        _str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page - 1) + ");\" title=\"{$lang.href.pagePrev}\">&laquo; {$lang.href.pagePrev}</a>";
-                    }
-                _str_appent_page += "</li>";
-
-                _str_appent_page += "<li class=\"next";
-                if (result.pageRow.page >= result.pageRow.total) {
-                    _str_appent_page += " disabled";
-                }
-                _str_appent_page += "\">";
-                    if (result.pageRow.page >= result.pageRow.total) {
-                        _str_appent_page += "<span title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</span>";
-                    } else {
-                        _str_appent_page += "<a href=\"javascript:reload_spec('" + _key + "', " + (result.pageRow.page + 1) + ");\" title=\"{$lang.href.pageNext}\">{$lang.href.pageNext} &raquo;</a>";
-                    }
-                _str_appent_page += "</li>";
-            _str_appent_page += "</ul>";
-
-            $("#spec_page").append(_str_appent_page);
-
-            $.each(result.specRows, function(i_spec, field_spec){
-                _str_appent_spec = "<option value=\"" + field_spec.spec_id + "\">" +
-                    field_spec.spec_name;
-                "</option>";
-
-                $("#spec_list").append(_str_appent_spec);
-            });
-        });
-    }
-
     var opts_validator_form = {
         call_name: {
             len: { min: 1, max: 300 },
@@ -312,6 +283,11 @@
             len: { min: 1, max: 0 },
             validate: { type: "select", group: "#group_call_file" },
             msg: { selector: "#msg_call_file", too_few: "{$alert.x170205}" }
+        },
+        call_tpl: {
+            len: { min: 1, max: 0 },
+            validate: { type: "select", group: "#group_call_tpl" },
+            msg: { selector: "#msg_call_tpl", too_few: "{$alert.x170217}" }
         },
         call_status: {
             len: { min: 1, max: 0 },
@@ -361,7 +337,6 @@
 
     $(document).ready(function(){
         call_type("{$tplData.callRow.call_type}");
-        reload_spec("", 1);
         var obj_validate_form = $("#call_form").baigoValidator(opts_validator_form);
         var obj_submit_form   = $("#call_form").baigoSubmit(opts_submit_form);
         $(".go_submit").click(function(){
@@ -375,12 +350,12 @@
         });
 
         $("#call_form").baigoCheckall();
-        $("#spec_search").click(function(){
-            var _key = $("#spec_key").val();
-            reload_spec(_key, 1);
+
+        $("#spec_search_btn").click(function(){
+            var _spec_key = $("#spec_key").val();
+            $("#call_modal").modal({ remote: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=insert&target=call&call_id={$tplData.callRow.call_id}&view=iframe&key=" + _spec_key });
         });
     });
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

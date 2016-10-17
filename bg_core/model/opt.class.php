@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -23,21 +23,24 @@ class MODEL_OPT {
             if (is_numeric($_value)) {
                 $_str_outPut .= "define(\"" . $_key . "\", " . $_value . ");" . PHP_EOL;
             } else {
-                $_str_outPut .= "define(\"" . $_key . "\", \"" . str_replace(PHP_EOL, "|", $_value) . "\");" . PHP_EOL;
+                $_str_outPut .= "define(\"" . $_key . "\", \"" . rtrim(str_ireplace(PHP_EOL, "|", $_value), "/\\") . "\");" . PHP_EOL;
             }
         }
 
         if ($str_type == "base") {
             $_str_outPut .= "define(\"BG_SITE_SSIN\", \"" . fn_rand(6) . "\");" . PHP_EOL;
         } else if ($str_type == "visit") {
-            if (!isset($this->arr_const[$str_type]["BG_VISIT_FILE"]) && $this->arr_const[$str_type]["BG_VISIT_TYPE"] != "static") {
+            if (!isset($this->arr_const[$str_type]["BG_VISIT_FILE"])) {
                 $_str_outPut .= "define(\"BG_VISIT_FILE\", \"html\");" . PHP_EOL;
+            }
+            if (!isset($this->arr_const[$str_type]["BG_VISIT_PAGE"])) {
+                $_str_outPut .= "define(\"BG_VISIT_PAGE\", 10);" . PHP_EOL;
             }
         }
 
-        $_str_outPut = str_replace("||", "", $_str_outPut);
+        $_str_outPut = str_ireplace("||", "", $_str_outPut);
 
-        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG, "opt_" . $str_type . ".inc.php", $_str_outPut);
+        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG . "opt_" . $str_type . ".inc.php", $_str_outPut);
 
         if ($_num_size > 0) {
             $_str_alert = "y060101";
@@ -61,7 +64,7 @@ class MODEL_OPT {
         $_str_outPut .= "define(\"BG_DB_CHARSET\", \"" . $this->dbconfigSubmit["db_charset"] . "\");" . PHP_EOL;
         $_str_outPut .= "define(\"BG_DB_TABLE\", \"" . $this->dbconfigSubmit["db_table"] . "\");" . PHP_EOL;
 
-        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG, "opt_dbconfig.inc.php", $_str_outPut);
+        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG . "opt_dbconfig.inc.php", $_str_outPut);
 
         if ($_num_size > 0) {
             $_str_alert = "y030404";
@@ -89,7 +92,7 @@ class MODEL_OPT {
         $_str_outPut .= "</IfModule>" . PHP_EOL;
         $_str_outPut .= "# END baigo CMS" . PHP_EOL;
 
-        $_num_size = $this->obj_dir->put_file(BG_PATH_ROOT, ".htaccess", $_str_outPut);
+        $_num_size = $this->obj_dir->put_file(BG_PATH_ROOT . ".htaccess", $_str_outPut);
 
         if ($_num_size > 0) {
             $_str_alert = "y060101";
@@ -115,7 +118,7 @@ class MODEL_OPT {
         $_str_outPut .= "define(\"BG_INSTALL_PUB\", " . PRD_CMS_PUB . ");" . PHP_EOL;
         $_str_outPut .= "define(\"BG_INSTALL_TIME\", " . time() . ");" . PHP_EOL;
 
-        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG, "is_install.php", $_str_outPut);
+        $_num_size = $this->obj_dir->put_file(BG_PATH_CONFIG . "is_install.php", $_str_outPut);
 
         if ($_num_size > 0) {
             $_str_alert = "y060101";
@@ -279,5 +282,37 @@ class MODEL_OPT {
         $this->arr_const = fn_post("opt");
 
         return $this->arr_const[$str_type];
+    }
+
+
+    function chk_ver($is_check = false, $method = "auto") {
+        if (!file_exists(BG_PATH_CACHE . "sys/latest_ver.json")) {
+            $this->ver_process($method);
+        }
+
+        $_str_ver = file_get_contents(BG_PATH_CACHE . "sys/latest_ver.json");
+        $_arr_ver = json_decode($_str_ver, true);
+
+        if ($is_check || !$_arr_ver || !isset($_arr_ver["time"]) || $_arr_ver["time"] - time() > 30 * 86400 || isset($_arr_ver["err"])) {
+            $this->ver_process($method);
+            $_str_ver = file_get_contents(BG_PATH_CACHE . "sys/latest_ver.json");
+            $_arr_ver = json_decode($_str_ver, true);
+        }
+
+        return $_arr_ver;
+    }
+
+
+    function ver_process($method = "auto") {
+        $_arr_data = array(
+            "name"      => "baigoCMS",
+            "ver"       => PRD_CMS_VER,
+            "referer"   => fn_forward(fn_server("SERVER_NAME") . BG_URL_ROOT),
+            "method"    => $method,
+        );
+
+        $_str_ver = fn_http(PRD_VER_CHECK, $_arr_data, "get");
+
+        $this->obj_dir->put_file(BG_PATH_CACHE . "sys/latest_ver.json", $_str_ver["ret"]);
     }
 }

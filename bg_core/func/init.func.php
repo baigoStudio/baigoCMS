@@ -5,11 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-if (defined("BG_DEBUG_SYS") && BG_DEBUG_SYS == 1) {
+if (defined("BG_DEBUG_SYS") && BG_DEBUG_SYS > 0) {
     error_reporting(E_ALL);
 } else {
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
@@ -23,14 +23,16 @@ $GLOBALS["act_post"]    = fn_getSafe(fn_post("act_post"), "txt", ""); //表单�
 $GLOBALS["act_get"]     = fn_getSafe(fn_get("act_get"), "txt", ""); //查询串动作
 $GLOBALS["view"]        = fn_getSafe(fn_request("view"), "txt", ""); //查询串动作
 
-if ($GLOBALS["view"]) {
+if (fn_isEmpty($GLOBALS["view"])) {
+    $_url_attach = "";
+} else {
     $_url_attach = "&view=" . $GLOBALS["view"];
 }
 
 function fn_init($arr_set = array()) {
 
     //$base = false, $ssin = false, $header = "Content-Type: text/html; charset=utf-8", $db = false, $ajax = "", $admin = false, $is_pub = false, $is_ssin_db = true
-    
+
     if (isset($arr_set["db"])) {
         include_once(BG_PATH_CLASS . "mysqli.class.php"); //载入数据库类
 
@@ -51,9 +53,15 @@ function fn_init($arr_set = array()) {
         $GLOBALS["obj_db"]      = new CLASS_MYSQLI($_cfg_host); //设置数据库对象
     }
 
+    if (isset($arr_set["base"])) {
+        include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
+        $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
+    }
+
     if (isset($arr_set["db"])) {
         switch ($arr_set["db"]) {
             case "ajax":
+                header("Cache-Control: no-cache, no-store, max-age=0, must-revalidate");
                 if (!$GLOBALS["obj_db"]->connect()) {
                     $arr_alert = include_once(BG_PATH_LANG . $GLOBALS["obj_base"]->config["lang"] . "/alert.php"); //载入提示信息
                     $str_alert = "x030111";
@@ -63,7 +71,7 @@ function fn_init($arr_set = array()) {
                     );
                     exit(json_encode($arr_re));
                 }
-        
+
                 if (!$GLOBALS["obj_db"]->select_db()) {
                     $arr_alert = include_once(BG_PATH_LANG . $GLOBALS["obj_base"]->config["lang"] . "/alert.php"); //载入提示信息
                     $str_alert = "x030112";
@@ -74,15 +82,27 @@ function fn_init($arr_set = array()) {
                     exit(json_encode($arr_re));
                 }
             break;
-    
+
             case "ctl":
                 if (!$GLOBALS["obj_db"]->connect()) {
                     header("Location: " . BG_URL_ROOT . "db_conn_err.html");
                     exit;
                 }
-        
+
                 if (!$GLOBALS["obj_db"]->select_db()) {
                     header("Location: " . BG_URL_ROOT . "db_select_err.html");
+                    exit;
+                }
+            break;
+
+            case "install":
+                if (!$GLOBALS["obj_db"]->connect()) {
+                    header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=x030404");
+                    exit;
+                }
+
+                if (!$GLOBALS["obj_db"]->select_db()) {
+                    header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=x030404");
                     exit;
                 }
             break;
@@ -91,8 +111,7 @@ function fn_init($arr_set = array()) {
 
     if (isset($arr_set["ssin"])) {
         if (isset($arr_set["ssin_file"])) {
-            $_str_iniSsin = ini_get("session.save_path");
-            if (!$_str_iniSsin) {
+            if (fn_isEmpty(ini_get("session.save_path"))) {
                 ini_set("session.save_path", BG_PATH_CACHE . "ssin");
             }
         } else {
@@ -106,11 +125,6 @@ function fn_init($arr_set = array()) {
 
     if (isset($arr_set["header"])) {
         header($arr_set["header"]);
-    }
-
-    if (isset($arr_set["base"])) {
-        include_once(BG_PATH_CLASS . "base.class.php"); //载入基类
-        $GLOBALS["obj_base"]    = new CLASS_BASE(); //初始化基类
     }
 
     if (isset($arr_set["ssin_begin"])) {
@@ -128,7 +142,7 @@ function fn_init($arr_set = array()) {
         include_once(BG_PATH_MODEL . "attach.class.php");
         include_once(BG_PATH_MODEL . "thumb.class.php");
         include_once(BG_PATH_MODEL . "custom.class.php");
-        include_once(BG_PATH_MODEL . "articleCustom.class.php");
+        //include_once(BG_PATH_MODEL . "articleCustom.class.php");
         include_once(BG_PATH_FUNC . "callDisplay.func.php");
         include_once(BG_PATH_FUNC . "callAttach.func.php");
         include_once(BG_PATH_FUNC . "callCate.func.php");

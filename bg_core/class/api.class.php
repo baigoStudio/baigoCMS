@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -34,15 +34,15 @@ class CLASS_API {
 
         $_str_ip = fn_getIp(false);
 
-        if ($arr_appRow["app_ip_allow"]) {
-            $_str_ipAllow = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_allow"]);
+        if (!fn_isEmpty($arr_appRow["app_ip_allow"])) {
+            $_str_ipAllow = str_ireplace(PHP_EOL, "|", $arr_appRow["app_ip_allow"]);
             if (!fn_regChk($_str_ip, $_str_ipAllow, true)) {
                 return array(
                     "alert" => "x190212",
                 );
             }
-        } else if ($arr_appRow["app_ip_bad"]) {
-            $_str_ipBad = str_replace(PHP_EOL, "|", $arr_appRow["app_ip_bad"]);
+        } else if (!fn_isEmpty($arr_appRow["app_ip_bad"])) {
+            $_str_ipBad = str_ireplace(PHP_EOL, "|", $arr_appRow["app_ip_bad"]);
             if (fn_regChk($_str_ip, $_str_ipBad)) {
                 return array(
                     "alert" => "x190213",

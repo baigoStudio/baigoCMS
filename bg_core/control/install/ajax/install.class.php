@@ -5,11 +5,10 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "sso.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "opt.class.php"); //载入管理帐号模型
@@ -21,6 +20,7 @@ class AJAX_INSTALL {
     private $obj_db;
 
     function __construct() { //构造函数
+        $this->obj_dir  = new CLASS_DIR();
         $this->obj_ajax = new CLASS_AJAX(); //初始化 AJAX 基对象
         if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
             $this->obj_ajax->halt_alert("x030403");
@@ -71,18 +71,19 @@ class AJAX_INSTALL {
         }
 
         if ($_act_post == "visit") {
-            if ($_arr_const["BG_VISIT_TYPE"] == "pstatic") {
+            switch ($_arr_const["BG_VISIT_TYPE"]) {
+                case "static":
+                case "pstatic":
+                    $_arr_return = $this->mdl_opt->mdl_htaccess();
 
-                $_arr_return = $this->mdl_opt->mdl_htaccess();
+                    if ($_arr_return["alert"] != "y060101") {
+                        $this->obj_ajax->halt_alert($_arr_return["alert"]);
+                    }
+                break;
 
-                if ($_arr_return["alert"] != "y060101") {
-                    $this->obj_ajax->halt_alert($_arr_return["alert"]);
-                }
-
-            } else {
-                if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-                    unlink(BG_PATH_ROOT . ".htaccess");
-                }
+                default:
+                    $this->obj_dir->del_file(BG_PATH_ROOT . ".htaccess");
+                break;
             }
         }
 
@@ -100,9 +101,7 @@ class AJAX_INSTALL {
         $this->check_db();
 
         include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
-        include_once(BG_PATH_MODEL . "group.class.php"); //载入管理帐号模型
         $_mdl_admin  = new MODEL_ADMIN(); //设置管理组模型
-        $_mdl_group  = new MODEL_GROUP(); //设置管理组模型
 
         $_arr_adminSubmit = $_mdl_admin->input_submit();
         if ($_arr_adminSubmit["alert"] != "ok") {
@@ -117,33 +116,12 @@ class AJAX_INSTALL {
 
         $_obj_sso = new CLASS_SSO();
 
-        $_arr_ssoReg = $_obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
+        $_arr_ssoReg = $_obj_sso->sso_user_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
         if ($_arr_ssoReg["alert"] != "y010101") {
             $this->obj_ajax->halt_alert($_arr_ssoReg["alert"]);
         }
 
         $_mdl_admin->mdl_submit($_arr_ssoReg["user_id"]);
-
-        $_arr_groupRow    = $_mdl_group->mdl_read(1);
-
-        $_arr_groupData   = array(
-            "group_name"     => "超级管理组",
-            "group_note"     => "拥有所有权限",
-            "group_allow"    => $_arr_adminInput["group_allow"],
-            "group_type"     => "admin",
-            "group_status"   => "enable",
-        );
-
-        if ($_arr_groupRow["alert"] == "y040102") {
-            $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=1");
-        } else {
-            $_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
-            if ($_num_groupId < 1 || !$_num_groupId) {
-                $this->obj_ajax->halt_alert("x040101");
-            }
-        }
-
-        $_mdl_admin->mdl_toGroup($_arr_ssoReg["user_id"], 1);
 
         $this->obj_ajax->halt_alert("y030409");
     }
@@ -153,9 +131,7 @@ class AJAX_INSTALL {
         $this->check_db();
 
         include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
-        include_once(BG_PATH_MODEL . "group.class.php"); //载入管理帐号模型
         $_mdl_admin  = new MODEL_ADMIN(); //设置管理组模型
-        $_mdl_group  = new MODEL_GROUP(); //设置管理组模型
 
         $_arr_adminSubmit = $_mdl_admin->input_submit();
         if ($_arr_adminSubmit["alert"] != "ok") {
@@ -164,7 +140,7 @@ class AJAX_INSTALL {
 
         $_obj_sso = new CLASS_SSO();
 
-        $_arr_ssoGet = $_obj_sso->sso_read($_arr_adminSubmit["admin_name"], "user_name");
+        $_arr_ssoGet = $_obj_sso->sso_user_read($_arr_adminSubmit["admin_name"], "user_name");
         if ($_arr_ssoGet["alert"] != "y010102") {
             if ($_arr_ssoGet["alert"] == "x010102") {
                 $this->obj_ajax->halt_alert("x020205");
@@ -180,27 +156,6 @@ class AJAX_INSTALL {
         }
 
         $_mdl_admin->mdl_submit($_arr_ssoGet["user_id"]);
-
-        $_arr_groupRow    = $_mdl_group->mdl_read(1);
-
-        $_arr_groupData   = array(
-            "group_name"     => "超级管理组",
-            "group_note"     => "拥有所有权限",
-            "group_allow"    => $_arr_adminAuth["group_allow"],
-            "group_type"     => "admin",
-            "group_status"   => "enable",
-        );
-
-        if ($_arr_groupRow["alert"] == "y040102") {
-            $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=1");
-        } else {
-            $_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
-            if ($_num_groupId < 1 || !$_num_groupId) {
-                $this->obj_ajax->halt_alert("x040101");
-            }
-        }
-
-        $_mdl_admin->mdl_toGroup($_arr_ssoGet["user_id"], 1);
 
         $this->obj_ajax->halt_alert("y030409");
     }
@@ -266,14 +221,13 @@ class AJAX_INSTALL {
             $this->obj_ajax->halt_alert($_arr_return["alert"]);
         }
 
-        $_arr_ssoReg = $_obj_sso->sso_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
+        $_arr_ssoReg = $_obj_sso->sso_user_reg($_arr_adminSubmit["admin_name"], $this->adminSubmit["admin_pass"], $_arr_adminSubmit["admin_mail"], $_arr_adminSubmit["admin_nick"]);
 
         if ($_arr_ssoReg["alert"] != "y010101") {
             $this->obj_ajax->halt_alert($_arr_ssoReg["alert"]);
         }
 
         $_mdl_admin->mdl_submit($_arr_ssoReg["user_id"]);
-        $_mdl_admin->mdl_toGroup($_arr_ssoReg["user_id"], 1);
 
         $this->obj_ajax->halt_alert("y030409");
     }
@@ -300,7 +254,7 @@ class AJAX_INSTALL {
         $_obj_sso     = new CLASS_SSO();
 
         $_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
-        $_arr_ssoGet      = $_obj_sso->sso_read($_str_adminName, "user_name");
+        $_arr_ssoGet      = $_obj_sso->sso_user_read($_str_adminName, "user_name");
 
         if ($_arr_ssoGet["alert"] == "y010102") {
             $_arr_adminRow = $_mdl_admin->mdl_read($_arr_ssoGet["user_id"]);
@@ -327,7 +281,7 @@ class AJAX_INSTALL {
         $_obj_sso     = new CLASS_SSO();
 
         $_str_adminName   = fn_getSafe(fn_get("admin_name"), "txt", "");
-        $_arr_ssoGet      = $_obj_sso->sso_read($_str_adminName, "user_name");
+        $_arr_ssoGet      = $_obj_sso->sso_user_read($_str_adminName, "user_name");
 
         if ($_arr_ssoGet["alert"] == "y010102") {
             //检验用户是否存在
@@ -391,7 +345,7 @@ class AJAX_INSTALL {
 
 
     private function check_db() {
-        if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
+        if (fn_isEmpty(BG_DB_HOST) || fn_isEmpty(BG_DB_NAME) || fn_isEmpty(BG_DB_USER) || fn_isEmpty(BG_DB_PASS) || fn_isEmpty(BG_DB_CHARSET)) {
             $this->obj_ajax->halt_alert("x030404");
         } else {
             if (!defined("BG_DB_PORT")) {

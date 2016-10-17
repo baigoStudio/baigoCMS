@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -27,10 +27,10 @@ switch ($GLOBALS["act_get"]) {
     default:
         $arr_articleRow = $ctl_article->ctl_show();
         if ($arr_articleRow["alert"] != "y120102") {
-            if ($arr_articleRow["cate_type"] == "link" && $arr_articleRow["cate_link"]) {
+            if ($arr_articleRow["alert"] == "x110218" && isset($arr_articleRow["cate_link"]) && !fn_isEmpty($arr_articleRow["cate_link"])) {
                 $_str_linkUrl = $arr_articleRow["cate_link"];
             } else {
-                if ($arr_articleRow["article_link"]) {
+                if ($arr_articleRow["alert"] == "x120213" && isset($arr_articleRow["article_link"]) && !fn_isEmpty($arr_articleRow["article_link"])) {
                     $_str_linkUrl = $arr_articleRow["article_link"];
                 } else {
                     $_str_linkUrl = BG_URL_ROOT . "index.php?mod=alert&act_get=show&alert=" . $arr_articleRow["alert"];

@@ -1,7 +1,6 @@
-{* search_show.tpl 搜索显示 *}
 {function custom_list arr=""}
     {foreach $arr as $key=>$value}
-        {if isset($value.custom_childs)}
+        {if isset($value.custom_childs) && $value.custom_childs}
             <h4>
                 <span class="label label-default">{$value.custom_name}</span>
             </h4>
@@ -20,14 +19,14 @@
 
 {$cfg = [
     title      => $lang.page.search,
-    str_url    => "{$tplData.search.urlRow.search_url}key-{$tplData.search.key}/customs-{$tplData.search.customs}/cate-{$tplData.search.cate_id}/{$tplData.search.urlRow.page_attach}",
+    str_url    => "{$tplData.urlRow.search_url}key-{$tplData.search.key}/customs-{$tplData.search.customs}/cate-{$tplData.search.cate_id}/{$tplData.urlRow.page_attach}",
     page_ext   => ""
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 
     <ol class="breadcrumb">
         <li><a href="{$smarty.const.BG_URL_ROOT}">首页</a></li>
-        <li><a href="{$tplData.search.urlRow.search_url}">搜索</a></li>
+        <li><a href="{$tplData.urlRow.search_url}">搜索</a></li>
     </ol>
 
     <form name="search" id="search_form_in">
@@ -42,7 +41,7 @@
     </form>
 
     {foreach $tplData.articleRows as $key=>$value}
-        <h3><a href="{$value.article_url}" target="_blank">{$value.article_title}</a></h3>
+        <h3><a href="{$value.urlRow.article_url}" target="_blank">{$value.article_title}</a></h3>
         <p>{$value.article_time_pub|date_format:$smarty.const.BG_SITE_DATE}</p>
         <hr>
         <ul class="list-inline">

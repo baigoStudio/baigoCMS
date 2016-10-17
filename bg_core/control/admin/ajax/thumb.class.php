@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class AJAX_THUMB {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_thumb;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -28,6 +29,12 @@ class AJAX_THUMB {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +45,7 @@ class AJAX_THUMB {
      * @return void
      */
     function ajax_submit() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x090302");
         }
 
@@ -70,7 +77,7 @@ class AJAX_THUMB {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x090304");
         }
 
@@ -84,30 +91,5 @@ class AJAX_THUMB {
         $this->mdl_thumb->mdl_cache(true);
 
         $this->obj_ajax->halt_alert($_arr_thumbRow["alert"]);
-    }
-
-
-    /**
-     * ajax_chk function.
-     *
-     * @access public
-     * @return void
-     */
-    function ajax_chk() {
-        $_num_thumbId     = fn_getSafe(fn_get("thumb_id"), "int", 0);
-        $_num_thumbWidth  = fn_getSafe(fn_get("thumb_width"), "int", 0);
-        $_num_thumbHeight = fn_getSafe(fn_get("thumb_height"), "int", 0);
-        $_str_thumbType   = fn_getSafe(fn_get("thumb_type"), "txt", "");
-
-        $_arr_thumbRow  = $this->mdl_thumb->mdl_check($_num_thumbWidth, $_num_thumbHeight, $_str_thumbType);
-        if ($_arr_thumbRow["alert"] == "y130102") {
-            $this->obj_ajax->halt_re("x130203");
-        }
-
-        $arr_re = array(
-            "re" => "ok"
-        );
-
-        exit(json_encode($arr_re));
     }
 }

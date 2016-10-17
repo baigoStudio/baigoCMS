@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"tree\"></a>
-    <h3>栏目树</h3>
+return "<h3>栏目树</h3>
     <p>
         在任何模板内，均可以用遍历 <code>{\$tplData.cateRows}</code> 的方式来显示网站所有栏目的树形结构，详细字段请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=cate#cateRow\">栏目</a>。
     </p>
@@ -18,7 +17,9 @@ return "<a name=\"tree\"></a>
         [cate_parent_id] =&gt; 0 //隶属栏目 ID
         [urlRow] =&gt; Array (
             [cate_url] =&gt; /cate/baigocms/id-7/ //URL
+            [cate_urlMore] =&gt; /cate/baigocms/id-7/ //更多分页 URL
             [page_attach] =&gt; page- //分页附加
+            [page_ext] =&gt; .html
         )
         [cate_childs] =&gt; Array ( //子栏目
             [13] =&gt; Array (
@@ -28,7 +29,9 @@ return "<a name=\"tree\"></a>
                 [cate_parent_id] =&gt; 7
                 [urlRow] =&gt; Array (
                     [cate_url] =&gt; /cate/baigocms/test/id-13/
+                    [cate_urlMore] =&gt; /cate/baigocms/id-7/ //更多分页 URL
                     [page_attach] =&gt; page-
+                    [page_ext] =&gt; .html
                 )
             )
         )
@@ -36,42 +39,47 @@ return "<a name=\"tree\"></a>
 )</code></pre>
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
-
-    <a name=\"call\"></a>
-    <h3>调用</h3>
-    <p>
-        在任何模板内，均可以用函数 <code>{call_display call_id=调用 ID}</code> 的方式来显示调用，执行此函数后，模板会生成一个 <code>{\$callRows}</code> 数组，可以通过遍历 <code>{\$callRows.调用 ID}</code> 的方式来显示调用结果，<code>{\$callRows}</code> 数组会根据不同的调用类型有所不同，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=article#articleRow\">文章</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=cate#cateRow\">栏目</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=tag#tagRow\">TAG</a>、<a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=spec#specRow\">专题</a> 等有关信息。关于调用以及调用 ID 请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=call\">调用管理</a>。
-    </p>
-    <hr>
-
-    <a name=\"callAttach\"></a>
-    <h3>调用附件</h3>
-    <p>
-        在任何模板内，均可以用函数 <code>{call_attach attach_id=附件 ID}</code> 的方式来显示调用，执行此函数后，模板会生成一个 <code>{\$attachRows}</code> 数组，可以通过遍历 <code>{\$attachRows.附件 ID}</code> 的方式来显示调用结果，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=attach\">附件 / 缩略图</a>。
-    </p>
-    <hr>
-
-    <a name=\"callCate\"></a>
-    <h3>调用栏目</h3>
-    <p>
-        在任何模板内，均可以用函数 <code>{call_cate cate_id=栏目 ID}</code> 的方式来显示调用，执行此函数后，模板会生成一个 <code>{\$cateRows}</code> 数组，可以通过遍历 <code>{\$cateRows.栏目 ID}</code> 的方式来显示调用结果，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=cate\">栏目</a>。
-    </p>
-    <hr>
+    <p>&nbsp;</p>
 
     <a name=\"include\"></a>
     <h3>包含</h3>
     <p>
         在任何模板内，均可以用 <code>{include \"包含模板路径\"}</code> 的方式来包含并执行文件，您可以在模板目录下，建立一个目录，如 <mark>inc</mark>，用来统一存放被包含的模板，如：<code>{include \"inc/head.tpl\"}</code>，关于包含，请查看 Smarty 官方网站 <a href=\"http://www.smarty.net\" target=\"_blank\">http://www.smarty.net</a></a>。
     </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"ubb\"></a>
     <h3>部分 UBB 代码支持</h3>
     <p>
         在任何模板内，均可以用 Smarty 修饰符 <code>{\$string|ubb}</code> 的方式来实现部分 UBB 代码，被支持的 UBB 代码请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=common#ubb\">管理后台</a>。
     </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"const\"></a>
     <h3>常量</h3>
@@ -81,7 +89,7 @@ return "<a name=\"tree\"></a>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">常用常量</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">常量名</th>
@@ -161,11 +169,24 @@ return "<a name=\"tree\"></a>
                         <td class=\"text-nowrap\">BG_SITE_TIMESHORT</td>
                         <td>短时间格式</td>
                     </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">BG_VISIT_PAGE</td>
+                        <td>静态页数</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"lang\"></a>
     <h3>语言资源</h3>
@@ -175,7 +196,7 @@ return "<a name=\"tree\"></a>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">常用语言资源</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">数组名</th>
@@ -195,7 +216,16 @@ return "<a name=\"tree\"></a>
             </table>
         </div>
     </div>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"custom\"></a>
     <h3>自定义字段</h3>
@@ -205,7 +235,7 @@ return "<a name=\"tree\"></a>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">常用语言资源</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>

@@ -1,5 +1,20 @@
 <?php
-return "<a name=\"ubb\"></a>
+return "<h3>生成静态页面</h3>
+    <p>
+        在纯静态模式下，左侧菜单下方将会显示“生成静态页面”按钮，点击按钮会将未生成的文章生成静态文件，然后逐个生成栏目、调用、专题等静态页面。
+    </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
+    <hr>
+    <p>&nbsp;</p>
+
+    <a name=\"ubb\"></a>
     <h3>部分 UBB 代码支持</h3>
     <p>
         在任何表单中，可以输入如下代码来实现相应的功能，最终在 Smarty 模板显示时，需调用 UBB 修饰符，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=common#ubb\">模板</a>。
@@ -7,7 +22,7 @@ return "<a name=\"ubb\"></a>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">支持的 UBB 代码</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">代码</th>

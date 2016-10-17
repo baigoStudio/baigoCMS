@@ -1,4 +1,3 @@
-{*attach_form.php 上传界面*}
 {$cfg = [
     js_insert => "true"
 ]}
@@ -100,6 +99,9 @@ var _thumb_type = new Array();
     _thumb_type["{$key}"] = "{$value}";
 {/foreach}
 
+var _str_appent_page;
+var _str_appent_attach;
+
 function get_page(result, _page, _year, _month, _ext, _key, func) {
     _str_appent_page = "<ul class=\"pagination pagination-sm\">";
 
@@ -117,9 +119,9 @@ function get_page(result, _page, _year, _month, _ext, _key, func) {
         }
         _str_appent_page += ">";
             if (result.pageRow.page <= 1) {
-                _str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&lsaquo;</span>";
+                _str_appent_page += "<span title=\"{$lang.href.pagePrev}\">&laquo;</span>";
             } else {
-                _str_appent_page += "<a href=\"javascript:" + func + "(" + (result.pageRow.page - 1) + ",'" + _year + "','" + _month + "','" + _ext + "','" + _key + "');\" title=\"{$lang.href.pagePrev}\">&lsaquo;</a>";
+                _str_appent_page += "<a href=\"javascript:" + func + "(" + (result.pageRow.page - 1) + ",'" + _year + "','" + _month + "','" + _ext + "','" + _key + "');\" title=\"{$lang.href.pagePrev}\">&laquo;</a>";
             }
         _str_appent_page += "</li>";
 
@@ -143,9 +145,9 @@ function get_page(result, _page, _year, _month, _ext, _key, func) {
         }
         _str_appent_page += ">";
             if (result.pageRow.page >= result.pageRow.total) {
-                _str_appent_page += "<span title=\"{$lang.href.pageNext}\">&rsaquo;</span>";
+                _str_appent_page += "<span title=\"{$lang.href.pageNext}\">&raquo;</span>";
             } else {
-                _str_appent_page += "<a href=\"javascript:" + func + "(" + (result.pageRow.page + 1) + ",'" + _year + "','" + _month + "','" + _ext + "','" + _key + "');\" title=\"{$lang.href.pageNext}\">&rsaquo;</a>";
+                _str_appent_page += "<a href=\"javascript:" + func + "(" + (result.pageRow.page + 1) + ",'" + _year + "','" + _month + "','" + _ext + "','" + _key + "');\" title=\"{$lang.href.pageNext}\">&raquo;</a>";
             }
         _str_appent_page += "</li>";
 
@@ -160,7 +162,6 @@ function get_page(result, _page, _year, _month, _ext, _key, func) {
 
     return _str_appent_page;
 }
-
 
 function get_list(_value) {
     _str_appent_attach = "<div class=\"col-xs-6 col-md-3\">" +

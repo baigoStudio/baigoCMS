@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class AJAX_TAG {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_tag;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -28,6 +29,12 @@ class AJAX_TAG {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +45,7 @@ class AJAX_TAG {
      * @return void
      */
     function ajax_submit() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
+        if (!isset($this->group_allow["article"]["tag"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x130303");
         }
         $_arr_tagSubmit = $this->mdl_tag->input_submit();
@@ -59,7 +66,7 @@ class AJAX_TAG {
      * @return void
      */
     function ajax_status() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
+        if (!isset($this->group_allow["article"]["tag"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x130303");
         }
 
@@ -70,9 +77,6 @@ class AJAX_TAG {
         }
 
         $_str_tagStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
-        if (!$_str_tagStatus) {
-            $this->obj_ajax->halt_alert("x130204");
-        }
 
         $_arr_tagRow = $this->mdl_tag->mdl_status($_str_tagStatus);
 
@@ -87,7 +91,7 @@ class AJAX_TAG {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["tag"])) {
+        if (!isset($this->group_allow["article"]["tag"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x130304");
         }
 
@@ -111,9 +115,13 @@ class AJAX_TAG {
     function ajax_chkname() {
         $_str_tagName = fn_getSafe(fn_get("tag_name"), "txt", "");
         $_num_tagId   = fn_getSafe(fn_get("tag_id"), "int", 0);
-        $_arr_tagRow  = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
-        if ($_arr_tagRow["alert"] == "y130102") {
-            $this->obj_ajax->halt_re("x130203");
+
+        if (!fn_isEmpty($_str_tagName)) {
+            $_arr_tagRow  = $this->mdl_tag->mdl_read($_str_tagName, "tag_name", $_num_tagId);
+
+            if ($_arr_tagRow["alert"] == "y130102") {
+                $this->obj_ajax->halt_re("x130203");
+            }
         }
 
         $arr_re = array(

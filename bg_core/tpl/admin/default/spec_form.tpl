@@ -43,7 +43,7 @@
     </div>
 
     <form name="spec_form" id="spec_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="submit">
         <input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 

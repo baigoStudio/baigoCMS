@@ -1,4 +1,3 @@
-{* admin_groupForm.tpl 管理组编辑界面 *}
 {$cfg = [
     title          => "{$adminMod.attach.main.title} - {$adminMod.attach.sub.thumb.title}",
     menu_active    => "attach",
@@ -36,7 +35,7 @@
     </div>
 
     <form name="thumb_list" id="thumb_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">

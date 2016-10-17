@@ -1,3 +1,5 @@
+{function page_process thisPage=""}{if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}{if $thisPage <= $smarty.const.BG_VISIT_PAGE}{$cfg.str_url}{$thisPage}{$cfg.page_ext}{else}{$cfg.str_urlMore}{$thisPage}{/if}{else}{$cfg.str_url}{$thisPage}{/if}{/function}
+
     <ul class="pagination pagination-sm">
         {if $tplData.pageRow.page > 1}
             <li>
@@ -7,7 +9,7 @@
 
         {if $tplData.pageRow.p * 10 > 0}
             <li>
-                <a href="{$cfg.str_url}{$tplData.pageRow.p * 10}{$cfg.page_ext}" title="{$lang.href.pagePrevList}">{$lang.href.pagePrevList}</a>
+                <a href="{page_process thisPage=$tplData.pageRow.p * 10}" title="{$lang.href.pagePrevList}">{$lang.href.pagePrevList}</a>
             </li>
         {/if}
 
@@ -15,7 +17,7 @@
             {if $tplData.pageRow.page <= 1}
                 <span title="{$lang.href.pagePrev}">&laquo;</span>
             {else}
-                <a href="{$cfg.str_url}{$tplData.pageRow.page - 1}{$cfg.page_ext}" title="{$lang.href.pagePrev}">&laquo;</a>
+                <a href="{page_process thisPage=$tplData.pageRow.page - 1}" title="{$lang.href.pagePrev}">&laquo;</a>
             {/if}
         </li>
 
@@ -24,7 +26,7 @@
                 {if $iii == $tplData.pageRow.page}
                     <span>{$iii}</span>
                 {else}
-                    <a href="{$cfg.str_url}{$iii}{$cfg.page_ext}" title="{$iii}">{$iii}</a>
+                    <a href="{page_process thisPage=$iii}" title="{$iii}">{$iii}</a>
                 {/if}
             </li>
         {/for}
@@ -33,19 +35,25 @@
             {if $tplData.pageRow.page >= $tplData.pageRow.total}
                 <span title="{$lang.href.pageNext}">&raquo;</span>
             {else}
-                <a href="{$cfg.str_url}{$tplData.pageRow.page + 1}{$cfg.page_ext}" title="{$lang.href.pageNext}">&raquo;</a>
+                <a href="{page_process thisPage=$tplData.pageRow.page + 1}" title="{$lang.href.pageNext}">&raquo;</a>
             {/if}
         </li>
 
         {if $tplData.pageRow.end < $tplData.pageRow.total}
             <li>
-                <a href="{$cfg.str_url}{$iii}{$cfg.page_ext}" title="{$lang.href.pageNextList}">{$lang.href.pageNextList}</a>
+                <a href="{page_process thisPage=$iii}" title="{$lang.href.pageNextList}">{$lang.href.pageNextList}</a>
             </li>
         {/if}
 
         {if $tplData.pageRow.page < $tplData.pageRow.total}
             <li>
-                <a href="{$cfg.str_url}{$tplData.pageRow.total}{$cfg.page_ext}" title="{$lang.href.pageLast}">{$lang.href.pageLast}</a>
+                <a href="{page_process thisPage=$tplData.pageRow.total}" title="{$lang.href.pageLast}">{$lang.href.pageLast}</a>
+            </li>
+        {/if}
+
+        {if isset($cfg.is_static)}
+            <li>
+                <a href="{$cfg.str_urlMore}{$tplData.pageRow.total + 1}" title="{$lang.href.more}">{$lang.href.more}</a>
             </li>
         {/if}
     </ul>

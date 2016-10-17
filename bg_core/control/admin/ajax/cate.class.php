@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -16,6 +16,7 @@ include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目类
 class AJAX_CATE {
 
     private $mdl_cate;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged  = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -27,7 +28,20 @@ class AJAX_CATE {
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
 
-        $this->mdl_cate->mdl_cache(true);
+        if (defined("BG_MODULE_GEN") && BG_MODULE_GEN > 0 && defined("BG_VISIT_TYPE") && BG_VISIT_TYPE == "static") {
+            $this->obj_dir = new CLASS_DIR();
+        }
+
+        if (BG_MODULE_FTP > 0) {
+            include_once(BG_PATH_CLASS . "ftp.class.php"); //载入 FTP 类
+            $this->obj_ftp  = new CLASS_FTP(); //设置 FTP 对象
+        }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +52,7 @@ class AJAX_CATE {
      * @return void
      */
     function ajax_order() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
+        if (!isset($this->group_allow["cate"]["edit"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x110303");
         }
         if (!fn_token("chk")) { //令牌
@@ -79,11 +93,11 @@ class AJAX_CATE {
         }
 
         if ($_arr_cateSubmit["cate_id"] > 0) {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_cateSubmit["cate_id"]]["cate"])) {
+            if (!isset($this->group_allow["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_cateSubmit["cate_id"]]["cate"]) && !$this->is_super) {
                 $this->obj_ajax->halt_alert("x110303");
             }
         } else {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"])) {
+            if (!isset($this->group_allow["cate"]["add"]) && !$this->is_super) {
                 $this->obj_ajax->halt_alert("x110302");
             }
         }
@@ -131,7 +145,7 @@ class AJAX_CATE {
      * @return void
      */
     function ajax_status() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
+        if (!isset($this->group_allow["cate"]["edit"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x110303");
         }
 
@@ -141,11 +155,33 @@ class AJAX_CATE {
         }
 
         $_str_cateStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
-        if (!$_str_cateStatus) {
-            $this->obj_ajax->halt_alert("x110216");
-        }
 
         $_arr_cateRow = $this->mdl_cate->mdl_status($_str_cateStatus);
+
+        if (defined("BG_MODULE_GEN") && BG_MODULE_GEN > 0 && defined("BG_VISIT_TYPE") && BG_VISIT_TYPE == "static") {
+            if ($_str_cateStatus != "show") {
+                $arr_search = array(
+                    "cate_ids" => $_arr_cateIds["cate_ids"],
+                );
+                $_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, $arr_search, 1, false);
+                foreach ($_arr_cateRows as $_key=>$_value) {
+                    $this->obj_dir->del_dir($_value["urlRow"]["cate_path"]);
+                    if (defined("BG_MODULE_FTP") && BG_MODULE_FTP > 0) {
+                        if ($_value["cate_parent_id"] == 0 && isset($_value["cate_ftp_host"]) && !fn_isEmpty($_value["cate_ftp_host"])) {
+                            if ($_value["cate_ftp_pasv"] == "on") {
+                                $_bool_pasv = true;
+                            } else {
+                                $_bool_pasv = false;
+                            }
+                            $this->ftp_status_conn  = $this->obj_ftp->ftp_conn($_value["cate_ftp_host"], $_value["cate_ftp_port"]);
+                            $this->ftp_status_login = $this->obj_ftp->ftp_login($_value["cate_ftp_user"], $_value["cate_ftp_pass"], $_bool_pasv);
+
+                            $this->obj_ftp->del_dir($_value["cate_ftp_path"] . $_value["urlRow"]["cate_pathShort"]);
+                        }
+                    }
+                }
+            }
+        }
 
         $this->obj_ajax->halt_alert($_arr_cateRow["alert"]);
     }
@@ -158,13 +194,36 @@ class AJAX_CATE {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["del"])) {
+        if (!isset($this->group_allow["cate"]["del"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x110304");
         }
 
         $_arr_cateIds = $this->mdl_cate->input_ids();
         if ($_arr_cateIds["alert"] != "ok") {
             $this->obj_ajax->halt_alert($_arr_cateIds["alert"]);
+        }
+
+        if (defined("BG_MODULE_GEN") && BG_MODULE_GEN > 0 && defined("BG_VISIT_TYPE") && BG_VISIT_TYPE == "static") {
+            $arr_search = array(
+                "cate_ids" => $_arr_cateIds["cate_ids"],
+            );
+            $_arr_cateRows = $this->mdl_cate->mdl_list(1000, 0, $arr_search, 1, false);
+            foreach ($_arr_cateRows as $_key=>$_value) {
+                $this->obj_dir->del_dir($_value["urlRow"]["cate_path"]);
+                if (defined("BG_MODULE_FTP") && BG_MODULE_FTP > 0) {
+                    if ($_value["cate_parent_id"] == 0 && isset($_value["cate_ftp_host"]) && !fn_isEmpty($_value["cate_ftp_host"])) {
+                        if ($_value["cate_ftp_pasv"] == "on") {
+                            $_bool_pasv = true;
+                        } else {
+                            $_bool_pasv = false;
+                        }
+                        $this->ftp_status_conn  = $this->obj_ftp->ftp_conn($_value["cate_ftp_host"], $_value["cate_ftp_port"]);
+                        $this->ftp_status_login = $this->obj_ftp->ftp_login($_value["cate_ftp_user"], $_value["cate_ftp_pass"], $_bool_pasv);
+
+                        $this->obj_ftp->del_dir($_value["cate_ftp_path"] . $_value["urlRow"]["cate_pathShort"]);
+                    }
+                }
+            }
         }
 
         $_arr_cateRow = $this->mdl_cate->mdl_del();
@@ -208,7 +267,7 @@ class AJAX_CATE {
      */
     function ajax_chkalias() {
         $_str_cateAlias       = fn_getSafe(fn_get("cate_alias"), "txt", "");
-        if ($_str_cateAlias) {
+        if (!fn_isEmpty($_str_cateAlias)) {
             $_num_cateId          = fn_getSafe(fn_get("cate_id"), "int", 0);
             $_num_cateParentId    = fn_getSafe(fn_get("cate_parent_id"), "int", 0);
 
@@ -224,5 +283,9 @@ class AJAX_CATE {
         );
 
         exit(json_encode($arr_re));
+    }
+
+    function __destruct() {
+        $this->mdl_cate->mdl_cache(true);
     }
 }

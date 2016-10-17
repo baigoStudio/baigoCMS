@@ -5,9 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
+
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 
 include_once(BG_PATH_FUNC . "init.func.php");
 $arr_set = array(
@@ -19,7 +21,6 @@ $arr_set = array(
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_FUNC . "session.func.php"); //载入 session 函数
 include_once(BG_PATH_CONTROL . "admin/ctl/logon.class.php"); //载入登录控制器
 
@@ -39,7 +40,7 @@ switch ($GLOBALS["act_post"]) {
         switch ($GLOBALS["act_get"]) {
             case "logout":
                 $arr_logonRow = $ctl_logon->ctl_logout();
-                header("Location: " . base64_decode($arr_logonRow["forward"]));
+                header("Location: " . $arr_logonRow["forward"]);
                 exit;
             break;
 

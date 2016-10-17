@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -16,6 +16,7 @@ class AJAX_GROUP {
 
     private $adminLogged;
     private $mdl_group;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -26,6 +27,12 @@ class AJAX_GROUP {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -42,11 +49,11 @@ class AJAX_GROUP {
         }
 
         if ($_arr_groupSubmit["group_id"] > 0) {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
+            if (!isset($this->group_allow["group"]["edit"]) && !$this->is_super) {
                 $this->obj_ajax->halt_alert("x040303");
             }
         } else {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["add"])) {
+            if (!isset($this->group_allow["group"]["add"]) && !$this->is_super) {
                 $this->obj_ajax->halt_alert("x040302");
             }
         }
@@ -64,7 +71,7 @@ class AJAX_GROUP {
      * @return void
      */
     function ajax_status() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
+        if (!isset($this->group_allow["group"]["edit"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x040303");
         }
 
@@ -74,9 +81,6 @@ class AJAX_GROUP {
         }
 
         $_str_groupStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
-        if (!$_str_groupStatus) {
-            $this->obj_ajax->halt_alert("x040207");
-        }
 
         $_arr_groupRow = $this->mdl_group->mdl_status($_str_groupStatus);
 
@@ -91,7 +95,7 @@ class AJAX_GROUP {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["del"])) {
+        if (!isset($this->group_allow["group"]["del"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x040304");
         }
 

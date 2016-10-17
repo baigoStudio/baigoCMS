@@ -20,7 +20,7 @@
             </div>
         {/foreach}
 
-        {if $tplData.errCount > 0}
+        {if isset($tplData.errCount) && $tplData.errCount > 0}
             <div class="alert alert-danger">{$lang.text.extErr}</div>
             <div class="form-group">
                 <a class="btn btn-primary btn-lg disabled">{$lang.btn.stepNext}</a>

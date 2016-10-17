@@ -1,7 +1,11 @@
 <?php
 return "<h3>上传设置</h3>
 
-    <p><img src=\"{images}upload.jpg\" class=\"img-responsive\"></p>
+    <p>
+        <a href=\"{images}upload.jpg\" target=\"_blank\"><img src=\"{images}upload.jpg\" class=\"img-responsive\"></a>
+    </p>
+
+    <p>&nbsp;</p>
 
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">填写说明</div>
@@ -15,11 +19,11 @@ return "<h3>上传设置</h3>
             <h4 class=\"text-info\">允许同时上传数</h4>
             <p>允许同时上传的文件数量，默认可以同时上传 10 个。</p>
 
-            <h4 class=\"text-info\">绑定 URL</h4>
+            <h4 class=\"text-info\">URL 前缀</h4>
             <p>此项用于附件的分发，如您的附件保存在同一台服务器上，可忽略此项目，并采用默认值，末尾请勿加 <kbd>/</kbd>。</p>
 
             <h4 class=\"text-info\">分发 FTP 地址</h4>
-            <p><mark>以下选项根据不同系统，有可能无相应选项</mark>。此项用于附件的分发，需要额外安装分发模块，如您想将附件保存在其他服务器上，需填写本项。详情请查看 <a href=\"#example\">附件分发设置实例</a></p>
+            <p><mark>以下选项根据不同系统，有可能无相应选项</mark>。此项用于附件的分发，需开启分发模块（开启方法请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=intro&act_get=faq#module\">常见问题</a>），如您想将附件分发到其他服务器，需填写本项。详情请查看 <a href=\"#upload_example\">附件分发设置实例</a></p>
 
             <h4 class=\"text-info\">FTP 端口</h4>
             <p>请按照服务器提供商所提供的资料填写。</p>
@@ -32,14 +36,17 @@ return "<h3>上传设置</h3>
 
             <h4 class=\"text-info\">FTP 远程路径</h4>
             <p>请按照服务器提供商所提供的资料填写。</p>
+
+            <h4 class=\"text-info\">FTP 被动模式</h4>
+            <p>请按照服务器提供商所提供的资料填写。</p>
         </div>
     </div>
 
     <p>填写完毕，点击“保存“，保存成功后点击“下一步“。</p>
 
-    <hr>
+    <p>&nbsp;</p>
 
-    <a name=\"example\"></a>
+    <a name=\"upload_example\"></a>
     <h3>附件分发设置实例</h3>
     假设：
     <ol>
@@ -51,7 +58,7 @@ return "<h3>上传设置</h3>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">详细设置如下</div>
         <div class=\"panel-body\">
-            <h4 class=\"text-info\">绑定 URL</h4>
+            <h4 class=\"text-info\">URL 前缀</h4>
             <p>http://image.domain.com</p>
 
             <h4 class=\"text-info\">分发 FTP 地址</h4>

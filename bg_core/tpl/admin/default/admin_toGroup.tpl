@@ -8,7 +8,7 @@
 </div>
 <div class="modal-body">
     <form name="admin_form" id="admin_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="toGroup">
         <input type="hidden" name="admin_id" value="{$tplData.adminRow.admin_id}">
 
@@ -27,7 +27,7 @@
                 <label class="control-label">{$lang.label.adminGroup}<span id="msg_group_id">*</span></label>
                 <select name="group_id" id="group_id" data-validate class="form-control">
                     <option value="">{$lang.option.pleaseSelect}</option>
-                    <option {if $tplData.adminRow.admin_group_id == 0}selected{/if} value="0">{$lang.option.noGroup}</option>
+                    <option {if $tplData.adminRow.admin_group_id < 1}selected{/if} value="0">{$lang.option.noGroup}</option>
                     {foreach $tplData.groupRows as $key=>$value}
                         <option {if $tplData.adminRow.admin_group_id == $value.group_id}selected{/if} value="{$value.group_id}">{$value.group_name}</option>
                     {/foreach}

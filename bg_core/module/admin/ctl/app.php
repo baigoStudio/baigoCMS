@@ -5,9 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
+
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 
 include_once(BG_PATH_FUNC . "init.func.php");
 $arr_set = array(
@@ -20,7 +22,6 @@ $arr_set = array(
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已登录
 include_once(BG_PATH_INC . "is_admin.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL . "admin/ctl/app.class.php"); //载入应用控制器
 

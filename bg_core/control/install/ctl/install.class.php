@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -19,7 +19,7 @@ class CONTROL_INSTALL {
         $this->obj_base     = $GLOBALS["obj_base"];
         $this->config       = $this->obj_base->config;
         $_arr_cfg["admin"]  = true;
-        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "install/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "install/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->fields       = include_once(BG_PATH_LANG . $this->config["lang"] . "/fields.php");
         $this->obj_dir      = new CLASS_DIR(); //初始化目录对象
         $this->obj_dir->mk_dir(BG_PATH_CACHE . "ssin");
@@ -83,11 +83,13 @@ class CONTROL_INSTALL {
         $this->table_thumb();
         $this->table_attach();
         $this->table_spec();
+        $this->table_spec_belong();
         $this->table_app();
         $this->table_custom();
         $this->table_session();
         $this->view_article();
         $this->view_tag();
+        $this->view_spec();
 
         $this->obj_tpl->tplDisplay("install_dbtable.tpl", $this->tplData);
 
@@ -265,7 +267,7 @@ class CONTROL_INSTALL {
 
 
     private function check_db() {
-        if (strlen(BG_DB_HOST) < 1 || strlen(BG_DB_NAME) < 1 || strlen(BG_DB_USER) < 1 || strlen(BG_DB_PASS) < 1 || strlen(BG_DB_CHARSET) < 1) {
+        if (fn_isEmpty(BG_DB_HOST) || fn_isEmpty(BG_DB_NAME) || fn_isEmpty(BG_DB_USER) || fn_isEmpty(BG_DB_PASS) || fn_isEmpty(BG_DB_CHARSET)) {
             return false;
         } else {
             if (!defined("BG_DB_PORT")) {
@@ -308,7 +310,7 @@ class CONTROL_INSTALL {
             }
         }
 
-        $this->act_get = fn_getSafe($GLOBALS["act_get"], "txt", "ext");
+        $this->act_get = fn_getSafe(fn_get("act_get"), "txt", "ext");
 
         $this->tplData = array(
             "errCount"   => $this->errCount,
@@ -343,6 +345,7 @@ class CONTROL_INSTALL {
         include_once(BG_PATH_MODEL . "admin.class.php"); //载入管理帐号模型
         $_mdl_admin                 = new MODEL_ADMIN();
         $_mdl_admin->adminStatus    = $this->obj_tpl->status["admin"];
+        $_mdl_admin->adminTypes     = $this->obj_tpl->type["admin"];
         $_arr_adminTable            = $_mdl_admin->mdl_create_table();
 
         $this->tplData["db_alert"]["admin_table"] = array(
@@ -362,6 +365,7 @@ class CONTROL_INSTALL {
         include_once(BG_PATH_MODEL . "article.class.php"); //载入管理帐号模型
         $_mdl_article                   = new MODEL_ARTICLE();
         $_mdl_article->articleStatus    = $this->obj_tpl->status["article"];
+        $_mdl_article->articleGens      = $this->obj_tpl->status["gen"];
         $_arr_articleTable              = $_mdl_article->mdl_create_table();
         $_arr_articleIndex              = $_mdl_article->mdl_create_index();
 
@@ -410,6 +414,7 @@ class CONTROL_INSTALL {
         $_mdl_cate              = new MODEL_CATE();
         $_mdl_cate->cateStatus  = $this->obj_tpl->status["cate"];
         $_mdl_cate->cateTypes   = $this->obj_tpl->type["cate"];
+        $_mdl_cate->catePasvs   = $this->obj_tpl->status["pasv"];
         $_arr_cateTable         = $_mdl_cate->mdl_create_table();
         $_arr_cateIndex         = $_mdl_cate->mdl_create_index();
 
@@ -444,9 +449,10 @@ class CONTROL_INSTALL {
 
     private function view_article() {
         include_once(BG_PATH_MODEL . "articlePub.class.php"); //载入管理帐号模型
-        $_mdl_articlePub  = new MODEL_ARTICLE_PUB();
-        $_arr_cateView    = $_mdl_articlePub->mdl_create_cate_view();
-        $_arr_tagView     = $_mdl_articlePub->mdl_create_tag_view();
+        $_mdl_articlePub    = new MODEL_ARTICLE_PUB();
+        $_arr_cateView      = $_mdl_articlePub->mdl_create_cate_view();
+        $_arr_tagView       = $_mdl_articlePub->mdl_create_tag_view();
+        $_arr_specView      = $_mdl_articlePub->mdl_create_spec_view();
 
         $this->tplData["db_alert"]["cate_view"] = array(
             "alert"   => $_arr_cateView["alert"],
@@ -455,6 +461,10 @@ class CONTROL_INSTALL {
         $this->tplData["db_alert"]["tag_view"] = array(
             "alert"   => $_arr_tagView["alert"],
             "status"  => substr($_arr_tagView["alert"], 0, 1),
+        );
+        $this->tplData["db_alert"]["spec_view"] = array(
+            "alert"   => $_arr_specView["alert"],
+            "status"  => substr($_arr_specView["alert"], 0, 1),
         );
     }
 
@@ -585,6 +595,42 @@ class CONTROL_INSTALL {
         );
     }
 
+
+    /**
+     * table_tag_belong function.
+     *
+     * @access private
+     * @return void
+     */
+    private function table_spec_belong() {
+        include_once(BG_PATH_MODEL . "specBelong.class.php"); //载入管理帐号模型
+        $_mdl_specBelong       = new MODEL_SPEC_BELONG();
+        $_arr_specBelongTable  = $_mdl_specBelong->mdl_create_table();
+        $_arr_specBelongIndex  = $_mdl_specBelong->mdl_create_index();
+
+        $this->tplData["db_alert"]["spec_belong_table"] = array(
+            "alert"   => $_arr_specBelongTable["alert"],
+            "status"  => substr($_arr_specBelongTable["alert"], 0, 1),
+        );
+        $this->tplData["db_alert"]["spec_belong_index"] = array(
+            "alert"   => $_arr_specBelongIndex["alert"],
+            "status"  => substr($_arr_specBelongIndex["alert"], 0, 1),
+        );
+    }
+
+
+    private function view_spec() {
+        include_once(BG_PATH_MODEL . "specBelong.class.php"); //载入管理帐号模型
+        $_mdl_specBelong       = new MODEL_SPEC_BELONG();
+        $_arr_specBelongView   = $_mdl_specBelong->mdl_create_view();
+
+        $this->tplData["db_alert"]["spec_belong_view"] = array(
+            "alert"   => $_arr_specBelongView["alert"],
+            "status"  => substr($_arr_specBelongView["alert"], 0, 1),
+        );
+    }
+
+
     /**
      * table_thumb function.
      *
@@ -649,11 +695,27 @@ class CONTROL_INSTALL {
      */
     private function table_custom() {
         include_once(BG_PATH_MODEL . "custom.class.php"); //载入管理帐号模型
-        $_mdl_custom                = new MODEL_CUSTOM();
+        include_once(BG_PATH_MODEL . "articleCustom.class.php");
+        include_once(BG_PATH_MODEL . "articlePub.class.php");
+
+        $_mdl_custom        = new MODEL_CUSTOM();
+        $_mdl_articleCustom = new MODEL_ARTICLE_CUSTOM();
+        $_mdl_articlePub    = new MODEL_ARTICLE_PUB();
+
         $_mdl_custom->customStatus  = $this->obj_tpl->status["custom"];
         $_mdl_custom->customTypes   = $this->fields;
         $_mdl_custom->customFormats = $this->obj_tpl->type["custom"];
         $_arr_customTable           = $_mdl_custom->mdl_create_table();
+
+        $_arr_searchCustom = array(
+            "status" => "enable",
+        );
+        $_arr_customRows = $_mdl_custom->mdl_list(1000, 0, $_arr_searchCustom, 0, false);
+
+        $_mdl_articleCustom->mdl_create_table($_arr_customRows);
+        $_mdl_articlePub->mdl_create_custom_view($_arr_customRows);
+        $_mdl_custom->mdl_cache(true);
+
 
         $this->tplData["db_alert"]["custom_table"] = array(
             "alert"   => $_arr_customTable["alert"],

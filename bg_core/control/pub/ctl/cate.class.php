@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -53,17 +53,17 @@ class CONTROL_CATE {
             return $this->cateRow;
         }
 
-        if ($this->cateRow["cate_type"] == "link" && $this->cateRow["cate_link"]) {
+        if (isset($this->cateRow["cate_type"]) && $this->cateRow["cate_type"] == "link" && isset($this->cateRow["cate_link"]) && !fn_isEmpty($this->cateRow["cate_link"])) {
             return array(
                 "alert"     => "x110218",
                 "cate_link" => $this->cateRow["cate_link"],
             );
         }
 
-        if ($this->cateRow["cate_perpage"] <= BG_SITE_PERPAGE) {
-            $_num_perpage = BG_SITE_PERPAGE;
-        } else {
+        if ($this->cateRow["cate_perpage"] > 0 && $this->cateRow["cate_perpage"] != BG_SITE_PERPAGE) {
             $_num_perpage = $this->cateRow["cate_perpage"];
+        } else {
+            $_num_perpage = BG_SITE_PERPAGE;
         }
 
         $_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search);
@@ -74,7 +74,7 @@ class CONTROL_CATE {
         $this->mdl_attach->thumbRows = $this->mdl_thumb->mdl_cache();
 
         foreach ($_arr_articleRows as $_key=>$_value) {
-            $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+            $_arr_articleCateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
 
             $_arr_searchTag = array(
                 "status"        => "show",
@@ -94,10 +94,11 @@ class CONTROL_CATE {
                 $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
             }
 
-            $_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
-            if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
-                $_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
-            }
+            $_arr_articleRows[$_key]["cateRow"]  = $_arr_articleCateRow;
+            /*if ($_arr_articleCateRow["cate_trees"][0]["cate_domain"]) {
+                $_arr_articleRows[$_key]["urlRow"]["article_url"]  = $_arr_articleCateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["urlRow"]["article_url"];
+            }*/
+            $_arr_articleRows[$_key]["urlRow"]  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
         }
 
         //print_r($_arr_articleRows);
@@ -141,6 +142,7 @@ class CONTROL_CATE {
         $_str_customs = fn_getSafe(fn_get("customs"), "txt", "");
 
         $_str_customs = urldecode($_str_customs);
+        $_str_customs = fn_htmlcode($_str_customs, "decode", "base64");
         $_str_customs = base64_decode($_str_customs);
         $_str_customs = urldecode($_str_customs);
         if (stristr($_str_customs, "&")) {
@@ -161,23 +163,12 @@ class CONTROL_CATE {
         }
 
         $this->search = array(
+            "cate_ids"      => array(),
             "cate_id"       => $_num_cateId,
             "key"           => urldecode(fn_getSafe(fn_get("key"), "txt", "")),
             "customs"       => $_str_customs,
             "custom_rows"   => $_arr_customSearch,
         );
-
-        if (BG_VISIT_TYPE == "static") {
-            $this->search["page_ext"] = "." . BG_VISIT_FILE;
-        } else {
-            $this->search["page_ext"] = "";
-        }
-
-        if(defined("BG_SITE_TPL")) {
-            $_str_tpl = BG_SITE_TPL;
-        } else {
-            $_str_tpl = "default";
-        }
 
         $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_num_cateId);
 
@@ -193,8 +184,8 @@ class CONTROL_CATE {
 
         $this->search["cate_ids"] = $_arr_cateRow["cate_ids"];
 
-        $_arr_cateRows                          = $this->mdl_cate->mdl_cache();
-        $_arr_customRows                        = $this->mdl_custom->mdl_cache();
+        $_arr_cateRows      = $this->mdl_cate->mdl_cache();
+        $_arr_customRows    = $this->mdl_custom->mdl_cache();
         $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
 
         $this->tplData = array(

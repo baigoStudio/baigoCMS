@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -35,13 +35,5 @@ switch ($GLOBALS["act_post"]) {
 
     case "del":
         $ajax_thumb->ajax_del();
-    break;
-
-    default:
-        switch ($GLOBALS["act_get"]) {
-            case "chk":
-                $ajax_thumb->ajax_chk();
-            break;
-        }
     break;
 }

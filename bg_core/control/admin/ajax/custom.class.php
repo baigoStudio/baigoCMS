@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -21,6 +21,7 @@ class AJAX_CUSTOM {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_custom;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged        = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -33,11 +34,17 @@ class AJAX_CUSTOM {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
     function ajax_order() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x200303");
         }
         if (!fn_token("chk")) { //令牌
@@ -82,7 +89,7 @@ class AJAX_CUSTOM {
      * @return void
      */
     function ajax_submit() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x200302");
         }
 
@@ -101,7 +108,7 @@ class AJAX_CUSTOM {
 
 
     function ajax_status() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x170303");
         }
 
@@ -111,9 +118,6 @@ class AJAX_CUSTOM {
         }
 
         $_str_customStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
-        if (!$_str_customStatus) {
-            $this->obj_ajax->halt_alert("x200206");
-        }
 
         $_arr_customRow = $this->mdl_custom->mdl_status($_str_customStatus);
 
@@ -130,7 +134,7 @@ class AJAX_CUSTOM {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x200304");
         }
 
@@ -156,9 +160,13 @@ class AJAX_CUSTOM {
     function ajax_chkname() {
         $_str_customName      = fn_getSafe(fn_get("custom_name"), "txt", "");
         $_num_customId        = fn_getSafe(fn_get("custom_id"), "int", 0);
-        $_arr_customRow       = $this->mdl_custom->mdl_read($_str_customName, "custom_name", $_num_customId);
-        if ($_arr_customRow["alert"] == "y200102") {
-            $this->obj_ajax->halt_re("x200203");
+
+        if (!fn_isEmpty($_str_customName)) {
+            $_arr_customRow       = $this->mdl_custom->mdl_read($_str_customName, "custom_name", $_num_customId);
+
+            if ($_arr_customRow["alert"] == "y200102") {
+                $this->obj_ajax->halt_re("x200203");
+            }
         }
 
         $arr_re = array(

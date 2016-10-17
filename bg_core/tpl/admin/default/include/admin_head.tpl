@@ -1,4 +1,3 @@
-{* admin_head.tpl 管理后台头部，包含菜单 *}
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_head.tpl"}
 
     <header class="navbar navbar-inverse navbar-static-top">
@@ -10,13 +9,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                {if $config.ui == "default"}
+                {if $smarty.const.BG_DEFAULT_UI == "default"}
                     <a class="navbar-brand" href="{$smarty.const.PRD_CMS_URL}" target="_blank">
-                        <img src="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/image/admin_logo.png">
+                        <img src="{$smarty.const.BG_URL_STATIC}admin/{$smarty.const.BG_DEFAULT_UI}/image/admin_logo.png">
                     </a>
                 {else}
-                    <a class="navbar-brand" href="#">
-                        <img src="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/image/admin_logo.png">
+                    <a class="navbar-brand" href="javascript:void(0);">
+                        <img src="{$smarty.const.BG_URL_STATIC}admin/{$smarty.const.BG_DEFAULT_UI}/image/admin_logo.png">
                     </a>
                 {/if}
             </div>
@@ -39,6 +38,11 @@
                             <li{if isset($cfg.sub_active) && $cfg.sub_active == "info"} class="active"{/if}>
                                 <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile&act_get=info">
                                     {$lang.href.infoModi}
+                                </a>
+                            </li>
+                            <li{if isset($cfg.sub_active) && $cfg.sub_active == "prefer"} class="active"{/if}>
+                                <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile&act_get=prefer">
+                                    {$lang.href.prefer}
                                 </a>
                             </li>
                             <li{if isset($cfg.sub_active) && $cfg.sub_active == "pass"} class="active"{/if}>

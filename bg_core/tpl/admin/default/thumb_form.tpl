@@ -1,4 +1,3 @@
-{* admin_groupForm.tpl 管理组编辑界面 *}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     {$adminMod.attach.main.title} - {$adminMod.attach.sub.thumb.title}
@@ -6,7 +5,7 @@
 <div class="modal-body">
     <form name="thumb_form" id="thumb_form">
 
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="thumb_id" value="{$tplData.thumbRow.thumb_id}">
         <input type="hidden" name="act_post" value="submit">
 

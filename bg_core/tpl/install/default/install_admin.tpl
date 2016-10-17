@@ -1,4 +1,3 @@
-{* install_1.tpl 登录界面 *}
 {$cfg = [
     sub_title  => $lang.page.installAdmin,
     mod_help   => "install",
@@ -7,21 +6,10 @@
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/install_head.tpl" cfg=$cfg}
 
     <form name="install_form_admin" id="install_form_admin" autocomplete="off">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="admin">
         <input type="hidden" name="admin_status" value="enable">
-
-        {foreach $adminMod as $key_m=>$value_m}
-            {foreach $value_m.allow as $key_s=>$value_s}
-                <input type="hidden" name="group_allow[{$key_m}][{$key_s}]" value="1">
-            {/foreach}
-        {/foreach}
-
-        <input type="hidden" name="group_allow[opt][dbconfig]" value="1">
-
-        {foreach $opt as $key_s=>$value_s}
-            <input type="hidden" name="group_allow[opt][{$key_s}]" value="1">
-        {/foreach}
+        <input type="hidden" name="admin_type" value="super">
 
         <p>{$lang.text.installAdmin}</p>
         <p><a href="{$smarty.const.BG_URL_INSTALL}ctl.php?mod=install&act_get=auth" class="btn btn-info">{$lang.href.adminAuth}</a></p>
@@ -71,7 +59,7 @@
         },
         admin_pass_confirm: {
             len: { min: 1, max: 0 },
-            validate: { type: "confirm", target: "admin_pass" },
+            validate: { type: "confirm", target: "#admin_pass" },
             msg: { selector: "#msg_admin_pass_confirm", too_short: "{$alert.x020215}", not_match: "{$alert.x020211}" }
         },
         admin_nick: {

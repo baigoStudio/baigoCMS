@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -40,9 +40,9 @@ class CLASS_FTP {
      * @param mixed $ftp_pass 密码
      * @return void
      */
-    function ftp_login($ftp_user, $ftp_pass) {
+    function ftp_login($ftp_user, $ftp_pass, $ftp_pasv = false) {
         $this->ftp_status = @ftp_login($this->ftp_conn, $ftp_user, $ftp_pass); //登录
-        if (defined("BG_UPLOAD_FTPPASV") && BG_UPLOAD_FTPPASV == "on") {
+        if ($ftp_pasv) {
             ftp_pasv($this->ftp_conn, true); // 打开被动模式
         }
         return $this->ftp_status;
@@ -77,6 +77,26 @@ class CLASS_FTP {
     }
 
 
+    function del_dir($path_remote) {
+        if (stristr($path_remote, ".")) {
+            $path_remote = dirname($path_remote);
+        }
+        $_arr_dir = $this->list_dir($path_remote); //逐级列出
+
+        //print_r($_arr_dir);
+
+        foreach ($_arr_dir as $_key=>$_value) {
+            if ($_value["type"] == "file") {
+                $this->del_file($_value["name"]);  //删除
+            } else {
+                $this->del_dir($_value["name"]); //递归
+            }
+        }
+
+        @ftp_rmdir($this->ftp_conn, $path_remote);
+    }
+
+
     /** 创建目录
      * mk_dir function.
      *
@@ -93,7 +113,7 @@ class CLASS_FTP {
         } else {
             //创建目录
             if ($this->mk_dir(dirname($path_remote))) {
-                if(@ftp_mkdir($this->ftp_conn, $path_remote)) {
+                if (@ftp_mkdir($this->ftp_conn, $path_remote)) {
                     $this->ftp_status = true;
                 } else {
                     $this->ftp_status = false; //失败
@@ -104,6 +124,31 @@ class CLASS_FTP {
         }
 
         return $this->ftp_status;
+    }
+
+
+    function list_dir($path_remote) {
+        if (stristr($path_remote, ".")) {
+            $path_remote = dirname($path_remote);
+        }
+        $_arr_return  = array();
+        $_arr_dir     = @ftp_nlist($this->ftp_conn, $path_remote);
+
+        //print_r($_arr_dir);
+
+        if ($_arr_dir) {
+            foreach ($_arr_dir as $_key=>$_value) {
+                if (stristr($_value, ".")) {
+                    $_arr_return[$_key]["type"] = "file";
+                } else {
+                    $_arr_return[$_key]["type"] = "dir";
+                }
+
+                $_arr_return[$_key]["name"] = $_value;
+            }
+        }
+
+        return $_arr_return;
     }
 
 

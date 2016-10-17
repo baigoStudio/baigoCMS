@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -38,9 +38,12 @@ switch ($GLOBALS["act_post"]) {
         $ajax_spec->ajax_del();
     break;
 
-    case "to":
-    case "exc":
-        $ajax_spec->ajax_toSpec();
+    case "belongDel":
+        $ajax_spec->ajax_belongDel();
+    break;
+
+    case "belongAdd":
+        $ajax_spec->ajax_belongAdd();
     break;
 
     default:

@@ -1,4 +1,3 @@
-{*attach_list.php 上传管理*}
 {$cfg = [
     title          => $adminMod.attach.main.title,
     menu_active    => "attach",
@@ -102,7 +101,7 @@
             <div class="well">
                 {if $tplData.search.box == "recycle"}
                     <form name="attach_empty" id="attach_empty">
-                        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                         <input type="hidden" name="act_post" id="act_empty" value="empty">
                         <div class="form-group">
                             <button type="button" class="btn btn-warning" id="go_empty">
@@ -123,7 +122,7 @@
                     </form>
                 {else}
                     <form name="attach_clear" id="attach_clear">
-                        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                         <input type="hidden" name="act_post" id="act_clear" value="clear">
                         <div class="form-group">
                             <button type="button" class="btn btn-warning" id="go_clear">
@@ -148,7 +147,7 @@
 
         <div class="col-md-9">
             <form name="attach_list" id="attach_list" class="form-inline">
-                <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
                 <div class="panel panel-default">
                     <div class="table-responsive">

@@ -7,14 +7,30 @@ return "<h3>API 概述</h3>
         使用 API 接口，您需先在 baigo CMS 创建应用，创建成功后会给出 APP ID 和 APP KEY。详情查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=app#show\">查看应用</a>。
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <h3>应用的验证</h3>
     <p>
         baigo CMS 的所有 API 接口均需要验证应用以及验证应用的权限。详情请查看具体接口说明。
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <h3>返回结果</h3>
     <p>

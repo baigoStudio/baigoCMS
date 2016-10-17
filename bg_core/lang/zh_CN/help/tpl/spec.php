@@ -1,13 +1,12 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>专题列表</h3>
+return "<h3>专题列表</h3>
     <p>文件名：<span class=\"text-primary\">spec_list.tpl</span></p>
     <p>
         显示网站内所有的专题。
     </p>
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -27,13 +26,19 @@ return "<a name=\"list\"></a>
                         <td class=\"text-nowrap\">tplData.search</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">搜索参数</td>
-                        <td>显示专题列表所需要的搜索参数，查看 <a href=\"#search_list\">tplData.search</a>。</td>
+                        <td>显示专题列表所需要的搜索参数，查看 <a href=\"#search_list\">tplData.search</a>。<mark>纯静态模式下不提供</mark></td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tplData.query</td>
                         <td class=\"text-nowrap\">string</td>
                         <td class=\"text-nowrap\">搜索参数序列化字符串</td>
-                        <td>搜索参数序列化为字符串以后的结果。</td>
+                        <td>搜索参数序列化为字符串以后的结果。<mark>纯静态模式下不提供</mark></td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">tplData.urlRow</td>
+                        <td class=\"text-nowrap\">array</td>
+                        <td class=\"text-nowrap\">专题列表 URL 数组</td>
+                        <td>spec_url 专题列表 URL，page_attach 为分页附加参数，主要用于分页，page_ext 扩展名（仅用于纯静态模式）。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tplData.pageRow</td>
@@ -54,7 +59,7 @@ return "<a name=\"list\"></a>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -65,22 +70,25 @@ return "<a name=\"list\"></a>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class=\"text-nowrap\">page_ext</td>
+                        <td class=\"text-nowrap\">key</td>
                         <td class=\"text-nowrap\">string</td>
-                        <td class=\"text-nowrap\">扩展名</td>
-                        <td>仅用于纯静态模式。</td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">urlRow</td>
-                        <td class=\"text-nowrap\">array</td>
-                        <td class=\"text-nowrap\">专题列表 URL 数组</td>
-                        <td>spec_url 为专题列表 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
+                        <td class=\"text-nowrap\">搜索关键词</td>
+                        <td> </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"show\"></a>
     <h3>专题显示</h3>
@@ -90,7 +98,7 @@ return "<a name=\"list\"></a>
     </p>
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -114,12 +122,6 @@ return "<a name=\"list\"></a>
                         <td>所有隶属于此专题的文章。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=article#articleRow\" target=\"_blank\">文章</a>。</td>
                     </tr>
                     <tr>
-                        <td class=\"text-nowrap\">tplData.search</td>
-                        <td class=\"text-nowrap\">array</td>
-                        <td class=\"text-nowrap\">搜索参数</td>
-                        <td>显示文章列表所需要的搜索参数，查看 <a href=\"#search_show\">tplData.search</a>。</td>
-                    </tr>
-                    <tr>
                         <td class=\"text-nowrap\">tplData.pageRow</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">分页参数</td>
@@ -139,7 +141,7 @@ return "<a name=\"list\"></a>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -168,16 +170,16 @@ return "<a name=\"list\"></a>
                         <td> </td>
                     </tr>
                     <tr>
-                        <td class=\"text-nowrap\">urlRow</td>
-                        <td class=\"text-nowrap\">array</td>
-                        <td class=\"text-nowrap\">当前专题 URL 数组</td>
-                        <td>spec_url 为当前专题 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
-                    </tr>
-                    <tr>
                         <td class=\"text-nowrap\">spec_status</td>
                         <td class=\"text-nowrap\">string</td>
                         <td class=\"text-nowrap\">专题状态</td>
                         <td>pub 为发布，hide 为隐藏。</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">urlRow</td>
+                        <td class=\"text-nowrap\">array</td>
+                        <td class=\"text-nowrap\">当前专题 URL 数组</td>
+                        <td>spec_url 为当前专题 URL，page_attach 为分页附加参数，主要用于分页，page_ext 扩展名（仅用于纯静态模式）。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">alert</td>
@@ -190,6 +192,8 @@ return "<a name=\"list\"></a>
         </div>
     </div>
 
+    <p>&nbsp;</p>
+
     <h4>专题数据示例</h4>
     <code>{\$tplData.specRow|@print_r}</code>
     <p>
@@ -201,49 +205,8 @@ return "<a name=\"list\"></a>
     [urlRow] =&gt; Array (
         [spec_url] =&gt; /cms/spec/id-11/ //URL
         [page_attach] =&gt; page- //分页附加
+        [page_ext] =&gt; .html
     )
     [alert] =&gt; y180102 //返回代码
 )</code></pre>
-    </p>
-
-    <p>&nbsp;</p>
-
-    <a name=\"search_show\"></a>
-    <h4><code>{\$tplData.search}</code> 数组</h4>
-
-    <p>显示文章列表所需要的搜索参数。</p>
-
-    <div class=\"panel panel-default\">
-        <div class=\"table-responsive\">
-            <table class=\"table\">
-                <thead>
-                    <tr>
-                        <th class=\"text-nowrap\">键名</th>
-                        <th class=\"text-nowrap\">类型</th>
-                        <th class=\"text-nowrap\">说明</th>
-                        <th>备注</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class=\"text-nowrap\">spec_id</td>
-                        <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">专题 ID</td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">page_ext</td>
-                        <td class=\"text-nowrap\">string</td>
-                        <td class=\"text-nowrap\">扩展名</td>
-                        <td>仅用于纯静态模式。</td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">urlRow</td>
-                        <td class=\"text-nowrap\">array</td>
-                        <td class=\"text-nowrap\">专题列表 URL 数组</td>
-                        <td>spec_url 为专题列表 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>";
+    </p>";

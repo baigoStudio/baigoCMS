@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -43,7 +43,8 @@ class CONTROL_LOGON {
             return $_arr_adminRow;
         }
 
-        if (fn_baigoEncrypt($_arr_adminLogin["admin_pass"], $_arr_adminRow["admin_rand"]) != $_arr_adminRow["admin_pass"]) {
+        //$_arr_adminRow["admin_is_upgrade"] 字段是判断密码加密方式是否已经升级, 系统在升级后, 第一次登录时进行自动判断, 然后升级加密方式
+        if (fn_baigoEncrypt($_arr_adminLogin["admin_pass"], $_arr_adminRow["admin_rand"], false, $_arr_adminRow["admin_is_upgrade"]) != $_arr_adminRow["admin_pass"]) {
             return array(
                 "forward"   => $_arr_adminLogin["forward"],
                 "alert"     => "x020207",
@@ -66,25 +67,9 @@ class CONTROL_LOGON {
         fn_session("admin_hash", "mk", fn_baigoEncrypt($_arr_adminRow["admin_time"], $_str_adminRand));
 
         return array(
-            "admin_id"  => $_arr_adminLogin["admin_id"],
-            "forward"   => $_arr_adminLogin["forward"],
+            "admin_id"  => $_arr_adminRow["admin_id"],
+            "forward"   => fn_forward($_arr_adminLogin["forward"], "decode"),
             "alert"     => "y020201",
-        );
-    }
-
-    /*============登出============
-    无返回
-    */
-    function ctl_logout() {
-        $_str_forward  = fn_getSafe(fn_get("forward"), "txt", "");
-        if (!$_str_forward) {
-            $_str_forward = base64_encode(BG_URL_ADMIN . "ctl.php");
-        }
-
-        fn_ssin_end();
-
-        return array(
-            "forward" => $_str_forward,
         );
     }
 
@@ -92,7 +77,7 @@ class CONTROL_LOGON {
     无返回
     */
     function ctl_logon() {
-        $this->obj_tpl    = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"]);
+        $this->obj_tpl    = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI);
         $_str_forward     = fn_getSafe(fn_get("forward"), "txt", "");
         $_str_alert       = fn_getSafe(fn_get("alert"), "txt", "");
 
@@ -102,5 +87,22 @@ class CONTROL_LOGON {
         );
 
         $this->obj_tpl->tplDisplay("logon.tpl", $_arr_tplData);
+    }
+
+
+    /*============登出============
+    无返回
+    */
+    function ctl_logout() {
+        $_str_forward  = fn_getSafe(fn_get("forward"), "txt", "");
+        if (fn_isEmpty($_str_forward)) {
+            $_str_forward = fn_forward(BG_URL_ADMIN . "ctl.php");
+        }
+
+        fn_ssin_end();
+
+        return array(
+            "forward" => fn_forward($_str_forward, "decode"),
+        );
     }
 }

@@ -1,4 +1,3 @@
-{* upgrade_1.tpl 登录界面 *}
 {$cfg = [
     sub_title  => $lang.page.installDbConfig,
     mod_help   => "upgrade",
@@ -7,7 +6,7 @@
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_head.tpl" cfg=$cfg}
 
     <form name="upgrade_dbconfig" id="upgrade_dbconfig">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="dbconfig">
 
         <div class="form-group">

@@ -1,4 +1,3 @@
-{* custom_list.tpl 标签列表 *}
 {function custom_list arr=""}
     {foreach $arr as $key=>$value}
         {if $value.custom_status == "enable"}
@@ -114,7 +113,7 @@
     </div>
 
     <form name="custom_list" id="custom_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -219,4 +218,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

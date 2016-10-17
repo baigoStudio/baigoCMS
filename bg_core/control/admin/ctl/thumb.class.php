@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class CONTROL_THUMB {
     private $obj_tpl;
     private $mdl_thumb;
     private $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
@@ -25,15 +26,21 @@ class CONTROL_THUMB {
         $this->adminLogged    = $GLOBALS["adminLogged"];
         $this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
     function ctl_show() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             return array(
                 "alert" => "x090301",
             );
@@ -67,7 +74,7 @@ class CONTROL_THUMB {
 
 
     function ctl_form() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             return array(
                 "alert" => "x090301",
             );
@@ -110,7 +117,7 @@ class CONTROL_THUMB {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             return array(
                 "alert" => "x090301",
             );

@@ -5,18 +5,18 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    "text" => array(
-        "label"   => "文本输入",
+    "str" => array(
+        "label"   => "输入框",
     ),
-    "textarea" => array(
+    /*"textarea" => array(
         "label"   => "多行文本",
-    ),
+    ),*/
     "radio" => array(
         "label"   => "单选框",
         "option"  => array("选项一", "选项二", "选项三"),
@@ -25,7 +25,7 @@ return array(
         "label"   => "下拉菜单",
         "option"  => array("选项一", "选项二", "选项三"),
     ),
-    "date" => array(
+    /*"date" => array(
         "label"   => "日期",
     ),
     "datetime" => array(
@@ -33,5 +33,5 @@ return array(
     ),
     "digit" => array(
         "label"   => "数字",
-    ),
+    ),*/
 );

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -86,11 +86,6 @@ class MODEL_GROUP {
             $_arr_alert["group_status"] = array("ADD", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'");
         }
 
-        $_arr_groupData = array(
-            "group_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_status) < 1"); //更新数据
-
         if (in_array("group_id", $_arr_col)) {
             $_arr_alert["group_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "group_id");
         }
@@ -99,11 +94,6 @@ class MODEL_GROUP {
             $_arr_alert["group_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "group_type");
         }
 
-        $_arr_groupData = array(
-            "group_type" => $_arr_types[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_type) < 1"); //更新数据
-
         $_str_alert = "y040111";
 
         if ($_arr_alert) {
@@ -111,6 +101,15 @@ class MODEL_GROUP {
 
             if ($_reselt) {
                 $_str_alert = "y040106";
+                $_arr_groupData = array(
+                    "group_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_status) < 1"); //更新数据
+
+                $_arr_groupData = array(
+                    "group_type" => $_arr_types[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_type) < 1"); //更新数据
             }
         }
 
@@ -211,14 +210,15 @@ class MODEL_GROUP {
             $_arr_groupRow = $_arr_groupRows[0];
         } else {
             return array(
-                "alert" => "x040102", //不存在记录
+                "group_allow"   => array(),
+                "alert"         => "x040102", //不存在记录
             );
         }
 
-        if (isset($_arr_groupRow["group_allow"])) {
-            $_arr_groupRow["group_allow"] = fn_jsonDecode($_arr_groupRow["group_allow"], "no"); //json解码
-        } else {
+        if (fn_isEmpty($_arr_groupRow["group_allow"])) {
             $_arr_groupRow["group_allow"] = array();
+        } else {
+            $_arr_groupRow["group_allow"] = fn_jsonDecode($_arr_groupRow["group_allow"], "no"); //json解码
         }
 
         $_arr_groupRow["alert"]   = "y040102";
@@ -272,7 +272,11 @@ class MODEL_GROUP {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_groupRows = $this->obj_db->select(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, "", "group_id DESC", $num_no, $num_except); //列出本地表是否存在记录
+        $_arr_order = array(
+            array("group_id", "DESC"),
+        );
+
+        $_arr_groupRows = $this->obj_db->select(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except); //列出本地表是否存在记录
 
         return $_arr_groupRows;
 
@@ -449,15 +453,15 @@ class MODEL_GROUP {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND group_name LIKE '%" . $arr_search["key"] . "%' OR group_note LIKE '%" . $arr_search["key"] . "%'";
         }
 
-        if (isset($arr_search["type"]) && $arr_search["type"]) {
+        if (isset($arr_search["type"]) && !fn_isEmpty($arr_search["type"])) {
             $_str_sqlWhere .= " AND group_type='" . $arr_search["type"] . "'";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND group_status='" . $arr_search["status"] . "'";
         }
 

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -53,13 +53,13 @@ class CONTROL_ARTICLE {
             return $this->articleRow;
         }
 
-        if (strlen($this->articleRow["article_title"]) < 1 || $this->articleRow["article_status"] != "pub" || $this->articleRow["article_box"] != "normal" || $this->articleRow["article_time_pub"] > time()) {
+        if (fn_isEmpty($this->articleRow["article_title"]) || $this->articleRow["article_status"] != "pub" || $this->articleRow["article_box"] != "normal" || $this->articleRow["article_time_pub"] > time() || ($this->articleRow["article_time_hide"] > 0 && $this->articleRow["article_time_hide"] < time())) {
             return array(
                 "alert" => "x120102",
             );
         }
 
-        if ($this->articleRow["article_link"]) {
+        if (isset($this->articleRow["article_link"]) && !fn_isEmpty($this->articleRow["article_link"])) {
             return array(
                 "alert"         => "x120213",
                 "article_link"  => $this->articleRow["article_link"],
@@ -76,9 +76,9 @@ class CONTROL_ARTICLE {
             );
         }
 
-        if ($this->cateRow["cate_type"] == "link" && $this->cateRow["cate_link"]) {
+        if (isset($this->cateRow["cate_type"]) && $this->cateRow["cate_type"] == "link" && isset($this->cateRow["cate_link"]) && !fn_isEmpty($this->cateRow["cate_link"])) {
             return array(
-                "alert" => "x110218",
+                "alert"     => "x110218",
                 "cate_link" => $this->cateRow["cate_link"],
             );
         }
@@ -124,8 +124,12 @@ class CONTROL_ARTICLE {
             $_arr_assRows = $this->mdl_articlePub->mdl_list(BG_SITE_ASSOCIATE, 0, $_arr_search);
 
             foreach ($_arr_assRows as $_key=>$_value) {
-                $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
-                $_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, "", "show", "tag_id", $_value["article_id"]);
+                $_arr_articleCateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+                $_arr_searchTag = array(
+                    "status"        => "show",
+                    "tarticle_id"   => $_value["article_id"],
+                );
+                $_arr_assRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, $_arr_searchTag);
 
                 if ($_value["article_attach_id"] > 0) {
                     $_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
@@ -136,13 +140,14 @@ class CONTROL_ARTICLE {
                             );
                         }
                     }
-                    $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
+                    $_arr_assRows[$_key]["attachRow"]    = $_arr_attachRow;
                 }
 
-                $_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
-                if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
-                    $_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
-                }
+                $_arr_assRows[$_key]["cateRow"]  = $_arr_articleCateRow;
+                /*if ($_arr_articleCateRow["cate_trees"][0]["cate_domain"]) {
+                    $_arr_assRows[$_key]["urlRow"]["article_url"]  = $_arr_articleCateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["urlRow"]["article_url"];
+                }*/
+                $_arr_assRows[$_key]["urlRow"]  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
             }
         }
 
@@ -171,21 +176,20 @@ class CONTROL_ARTICLE {
     private function article_init() {
         $this->articleId   = fn_getSafe(fn_get("article_id"), "int", 0);
 
-        if(defined("BG_SITE_TPL")) {
-            $_str_tpl = BG_SITE_TPL;
-        } else {
-            $_str_tpl = "default";
-        }
-
         if ($this->articleId > 0) {
+
+            $_arr_customRows    = $this->mdl_custom->mdl_cache();
+            $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
+
             $this->articleRow = $this->mdl_articlePub->mdl_read($this->articleId);
             if ($this->articleRow["alert"] == "y120102") {
                 $this->cateRow = $this->mdl_cate->mdl_cache(false, $this->articleRow["article_cate_id"]);
-                if ($this->cateRow["alert"] == "x110102") {
-                    $this->config["tpl"]    = "default";
-                } else {
+                if ($this->cateRow["alert"] == "y110102" && isset($this->cateRow["cate_tplDo"])) {
                     $this->config["tpl"]    = $this->cateRow["cate_tplDo"];
+                } else {
+                    $this->config["tpl"]    = "default";
                 }
+                $this->articleRow["urlRow"] = $this->mdl_cate->article_url_process($this->articleRow, $this->cateRow);
             }
         }
     }

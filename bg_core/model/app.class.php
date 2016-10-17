@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -99,11 +99,6 @@ class MODEL_APP {
             $_arr_alert["app_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "app_status");
         }
 
-        $_arr_appData = array(
-            "app_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "app", $_arr_appData, "LENGTH(app_status) < 1"); //更新数据
-
         $_str_alert = "y190111";
 
         if ($_arr_alert) {
@@ -111,6 +106,10 @@ class MODEL_APP {
 
             if ($_reselt) {
                 $_str_alert = "y190106";
+                $_arr_appData = array(
+                    "app_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "app", $_arr_appData, "LENGTH(app_status) < 1"); //更新数据
             }
         }
 
@@ -275,10 +274,10 @@ class MODEL_APP {
             );
         }
 
-        if (isset($_arr_appRow["app_allow"])) {
-            $_arr_appRow["app_allow"] = fn_jsonDecode($_arr_appRow["app_allow"], "no");
-        } else {
+        if (fn_isEmpty($_arr_appRow["app_allow"])) {
             $_arr_appRow["app_allow"] = array();
+        } else {
+            $_arr_appRow["app_allow"] = fn_jsonDecode($_arr_appRow["app_allow"], "no");
 
         }
         $_arr_appRow["alert"] = "y190102";
@@ -308,7 +307,11 @@ class MODEL_APP {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_appRows = $this->obj_db->select(BG_DB_TABLE . "app", $_arr_appSelect, $_str_sqlWhere, "", "app_id DESC", $num_appNo, $num_appExcept); //查询数据
+        $_arr_order = array(
+            array("app_id", "DESC"),
+        );
+
+        $_arr_appRows = $this->obj_db->select(BG_DB_TABLE . "app", $_arr_appSelect, $_str_sqlWhere, "", $_arr_order, $num_appNo, $num_appExcept); //查询数据
 
         return $_arr_appRows;
     }
@@ -500,11 +503,11 @@ class MODEL_APP {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND (app_name LIKE '%" . $arr_search["key"] . "%' OR app_note LIKE '%" . $arr_search["key"] . "%')";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND app_status='" . $arr_search["status"] . "'";
         }
 

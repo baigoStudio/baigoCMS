@@ -16,7 +16,7 @@ if (!in_array($mod, $arr_mod)) {
     exit("Access Denied");
 }
 
-$base = str_replace("\\", "/", str_replace("//", "/", $_SERVER["DOCUMENT_ROOT"] . "/" . basename(dirname($_SERVER["PHP_SELF"])) . "/"));
+$base = dirname(__FILE__) . "/";
 
 include_once($base . "bg_config/init.class.php");
 

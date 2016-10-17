@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -16,6 +16,7 @@ class MODEL_ARTICLE {
     private $is_magic;
     public $custom_columns  = array();
     public $articleStatus   = array();
+    public $articleGens     = array();
 
     function __construct() { //构造函数
         $this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
@@ -35,6 +36,11 @@ class MODEL_ARTICLE {
         }
         $_str_status = implode("','", $_arr_status);
 
+        foreach ($this->articleGens as $_key=>$_value) {
+            $_arr_gens[] = $_key;
+        }
+        $_str_gens = implode("','", $_arr_gens);
+
         $_str_alert = "y120105";
 
         $_arr_articleCreat = array(
@@ -44,13 +50,14 @@ class MODEL_ARTICLE {
             "article_excerpt"    => "varchar(900) NOT NULL COMMENT '内容提要'",
             "article_status"     => "enum('" . $_str_status . "') NOT NULL COMMENT '状态'",
             "article_box"        => "enum('normal','draft','recycle') NOT NULL COMMENT '盒子'",
-            "article_mark_id"    => "smallint NOT NULL COMMENT '标记 ID'",
-            "article_spec_id"    => "int NOT NULL COMMENT '专题ID'",
+            "article_mark_id"    => "smallint NOT NULL COMMENT '标记ID'",
             "article_attach_id"  => "int NOT NULL COMMENT '附件ID'",
             "article_link"       => "varchar(900) NOT NULL COMMENT '链接'",
             "article_time"       => "int NOT NULL COMMENT '时间'",
-            "article_time_pub"   => "int NOT NULL COMMENT '定时发布'",
+            "article_time_pub"   => "int NOT NULL COMMENT '定时上线'",
+            "article_time_hide"  => "int NOT NULL COMMENT '定时下线'",
             "article_admin_id"   => "int NOT NULL COMMENT '发布用户'",
+            "article_is_gen"     => "enum('" . $_str_gens . "') NOT NULL COMMENT '是否生成'",
             "article_hits_day"   => "mediumint NOT NULL COMMENT '日点击'",
             "article_hits_week"  => "mediumint NOT NULL COMMENT '周点击'",
             "article_hits_month" => "mediumint NOT NULL COMMENT '月点击'",
@@ -300,6 +307,11 @@ class MODEL_ARTICLE {
         }
         $_str_status = implode("','", $_arr_status);
 
+        foreach ($this->articleGens as $_key=>$_value) {
+            $_arr_gens[] = $_key;
+        }
+        $_str_gens = implode("','", $_arr_gens);
+
         $_arr_col   = $this->mdl_column();
         $_arr_alert = array();
 
@@ -309,12 +321,6 @@ class MODEL_ARTICLE {
 
         if (in_array("article_upfile_id", $_arr_col)) {
             $_arr_alert["article_upfile_id"] = array("CHANGE", "int NOT NULL COMMENT '附件ID'", "article_attach_id");
-        }
-
-        if (in_array("article_spec_id", $_arr_col)) {
-            $_arr_alert["article_spec_id"] = array("CHANGE", "int NOT NULL COMMENT '专题ID'", "article_spec_id");
-        } else {
-            $_arr_alert["article_spec_id"] = array("ADD", "int NOT NULL COMMENT '专题ID'");
         }
 
         if (in_array("article_cate_id", $_arr_col)) {
@@ -333,19 +339,9 @@ class MODEL_ARTICLE {
             $_arr_alert["article_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "article_status");
         }
 
-        $_arr_articleData = array(
-            "article_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "LENGTH(article_status) < 1"); //更新数据
-
         if (in_array("article_box", $_arr_col)) {
             $_arr_alert["article_box"] = array("CHANGE", "enum('normal','draft','recycle') NOT NULL COMMENT '盒子'", "article_box");
         }
-
-        $_arr_articleData = array(
-            "article_box" => "normal",
-        );
-        $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "LENGTH(article_box) < 1"); //更新数据
 
         if (in_array("article_hits_day", $_arr_col)) {
             $_arr_alert["article_hits_day"] = array("CHANGE", "mediumint NOT NULL COMMENT '日点击'", "article_hits_day");
@@ -379,6 +375,14 @@ class MODEL_ARTICLE {
             $_arr_alert["article_time_year"] = array("ADD", "int NOT NULL COMMENT '年点击重置时间'");
         }
 
+        if (!in_array("article_is_gen", $_arr_col)) {
+            $_arr_alert["article_is_gen"] = array("ADD", "enum('" . $_str_gens . "') NOT NULL COMMENT '是否生成'");
+        }
+
+        if (!in_array("article_time_hide", $_arr_col)) {
+            $_arr_alert["article_time_hide"] = array("ADD", "int NOT NULL COMMENT '定时下线'");
+        }
+
         $_str_alert = "y120116";
 
         if ($_arr_alert) {
@@ -386,6 +390,20 @@ class MODEL_ARTICLE {
 
             if ($_reselt) {
                 $_str_alert = "y120106";
+                $_arr_articleData = array(
+                    "article_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "LENGTH(article_status) < 1"); //更新数据
+
+                $_arr_articleData = array(
+                    "article_box" => "normal",
+                );
+                $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "LENGTH(article_box) < 1"); //更新数据
+
+                $_arr_articleData = array(
+                    "article_is_gen" => $_str_gens[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleData, "LENGTH(article_is_gen) < 1"); //更新数据
             }
         }
 
@@ -405,16 +423,16 @@ class MODEL_ARTICLE {
      */
     function mdl_submit($num_adminId = 0, $str_status) {
         $_arr_articleData = array(
-            "article_title"      => $this->articleSubmit["article_title"],
-            "article_excerpt"    => $this->articleSubmit["article_excerpt"],
-            "article_cate_id"    => $this->articleSubmit["article_cate_id"],
-            "article_mark_id"    => $this->articleSubmit["article_mark_id"],
-            "article_status"     => $str_status,
-            "article_box"        => $this->articleSubmit["article_box"],
-            "article_link"       => $this->articleSubmit["article_link"],
-            "article_time_pub"   => $this->articleSubmit["article_time_pub"],
-            "article_attach_id"  => $this->articleSubmit["article_attach_id"],
-            "article_spec_id"    => $this->articleSubmit["article_spec_id"],
+            "article_title"     => $this->articleSubmit["article_title"],
+            "article_excerpt"   => $this->articleSubmit["article_excerpt"],
+            "article_cate_id"   => $this->articleSubmit["article_cate_id"],
+            "article_mark_id"   => $this->articleSubmit["article_mark_id"],
+            "article_status"    => $str_status,
+            "article_box"       => $this->articleSubmit["article_box"],
+            "article_link"      => $this->articleSubmit["article_link"],
+            "article_time_pub"  => $this->articleSubmit["article_time_pub"],
+            "article_time_hide" => $this->articleSubmit["article_time_hide"],
+            "article_attach_id" => $this->articleSubmit["article_attach_id"],
         );
 
         //print_r($_arr_articleData);
@@ -435,11 +453,11 @@ class MODEL_ARTICLE {
                 $_num_contentArticleId = $this->obj_db->insert(BG_DB_TABLE . "article_content", $_arr_contentData); //插入数据
 
                 if ($_num_contentArticleId < 1) {
-                    $_str_alert     = "x120101";
+                    $_str_alert = "x120101";
                 }
 
-                $_arr_contentData = array(
-                    "article_id"       => $_num_articleId,
+                $_arr_customData = array(
+                    "article_id" => $_num_articleId,
                 );
 
                 foreach ($this->articleSubmit["article_customs"] as $_key=>$_value) {
@@ -449,9 +467,9 @@ class MODEL_ARTICLE {
                 if ($_arr_customData) {
                     $_num_contentArticleId = $this->obj_db->insert(BG_DB_TABLE . "article_custom", $_arr_customData); //插入数据
 
-                    if ($_num_contentArticleId < 1) {
-                        $_str_alert     = "x120101";
-                    }
+                    /*if ($_num_contentArticleId < 1) {
+                        $_str_alert = "x120101";
+                    }*/
                 }
             } else {
                 return array(
@@ -550,9 +568,33 @@ class MODEL_ARTICLE {
         exit;*/
 
         return array(
-            "article_id" => $_num_articleId,
-            "alert"  => $_str_alert,
+            "article_id"    => $_num_articleId,
+            "alert"         => $_str_alert,
         );
+    }
+
+
+    function mdl_isGen($arr_articleId, $str_isGen = "yes") {
+
+        $_arr_articleData = array(
+            "article_is_gen" => $str_isGen,
+        );
+
+        $_str_articleId   = implode(",", $arr_articleId);
+        $_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
+
+        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article",  $_arr_articleData, $_str_sqlWhere); //更新数据
+
+        //如车影响行数小于0则返回错误
+        if ($_num_mysql > 0) {
+            $_str_alert = "y120103";
+        } else {
+            $_str_alert = "x120103";
+        }
+
+        return array(
+            "alert" => $_str_alert,
+        ); //成功
     }
 
 
@@ -576,7 +618,7 @@ class MODEL_ARTICLE {
             "article_link",
             "article_admin_id",
             "article_mark_id",
-            "article_spec_id",
+            "article_is_gen",
             "article_hits_day",
             "article_hits_week",
             "article_hits_month",
@@ -584,6 +626,7 @@ class MODEL_ARTICLE {
             "article_hits_all",
             "article_time",
             "article_time_pub",
+            "article_time_hide",
             "article_top",
         );
 
@@ -591,7 +634,18 @@ class MODEL_ARTICLE {
 
         //print_r($_str_sqlWhere);
 
-        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_top DESC, article_time_pub DESC", $num_no, $num_except);
+        if (isset($arr_search["spec_ids"]) && $arr_search["spec_ids"]) {
+            $_view_name = "article_spec_view";
+        } else {
+            $_view_name = "article";
+        }
+
+        $_arr_order = array(
+            array("article_top", "DESC"),
+            array("article_time_pub", "DESC"),
+        );
+
+        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . $_view_name, $_arr_articleSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except);
 
         return $_arr_articleRows;
     }
@@ -632,19 +686,20 @@ class MODEL_ARTICLE {
             "article_link",
             "article_admin_id",
             "article_attach_id",
+            "article_is_gen",
             "article_hits_day",
-            "article_time_day",
             "article_hits_week",
-            "article_time_week",
             "article_hits_month",
-            "article_time_month",
             "article_hits_year",
-            "article_time_year",
             "article_hits_all",
+            "article_time_day",
+            "article_time_week",
+            "article_time_month",
+            "article_time_year",
             "article_time",
             "article_time_pub",
+            "article_time_hide",
             "article_top",
-            "article_spec_id",
         );
 
         $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, "article_id=" . $num_articleId, "", "", 1, 0); //读取数据
@@ -668,7 +723,13 @@ class MODEL_ARTICLE {
             $_arr_articleRow["article_customs"]   = $_arr_customRow["article_customs"];
         }
 
-        $_arr_articleRow["alert"]         = "y120102";
+        /*$_arr_articleRow["urlRow"]  = $this->url_process($_arr_articleRow);
+
+        if (!file_exists($_arr_articleRow["urlRow"]["article_path"])) {
+            $_arr_articleRow["article_is_gen"] = 0;
+        }*/
+
+        $_arr_articleRow["alert"]   = "y120102";
 
         return $_arr_articleRow;
     }
@@ -758,8 +819,8 @@ class MODEL_ARTICLE {
         $_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
 
         if ($arr_cateIds) {
-            $_str_cateIds    = implode(",", $arr_cateIds);
-            $_str_sqlWhere   .= " AND article_cate_id IN (" . $_str_cateIds . ")";
+            $_str_cateIds   = implode(",", $arr_cateIds);
+            $_str_sqlWhere .= " AND article_cate_id IN (" . $_str_cateIds . ")";
         }
 
         $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "article", $_arr_articleUpdate, $_str_sqlWhere); //删除数据
@@ -790,6 +851,10 @@ class MODEL_ARTICLE {
         $_arr_articleUpdate = array(
             "article_status" => $str_status,
         );
+
+        if ($str_status != "pub") {
+            $_arr_articleUpdate["article_is_gen"] = "not";
+        }
 
         $_str_articleId   = implode(",", $this->articleIds["article_ids"]);
         $_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
@@ -867,6 +932,10 @@ class MODEL_ARTICLE {
         $_arr_articleUpdate = array(
             "article_box"        => $str_box,
         );
+
+        if ($str_box != "normal") {
+            $_arr_articleUpdate["article_is_gen"] = "not";
+        }
 
         $_str_articleId   = implode(",", $this->articleIds["article_ids"]);
         $_str_sqlWhere    = "article_id IN (" . $_str_articleId . ")";
@@ -1004,7 +1073,11 @@ class MODEL_ARTICLE {
 
         $_str_sqlWhere = "article_time > 0";
 
-        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_time ASC", 100, 0, false, true);
+        $_arr_order = array(
+            array("article_time", "ASC"),
+        );
+
+        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", $_arr_order, 100, 0, true);
 
         return $_arr_articleRows;
     }
@@ -1092,7 +1165,7 @@ class MODEL_ARTICLE {
 
             case "format_err":
                 return array(
-                    "alert" => "x120204",
+                    "alert" => "x120205",
                 );
             break;
 
@@ -1130,23 +1203,55 @@ class MODEL_ARTICLE {
         }
 
 
-        $_arr_articleTimePub = validateStr(fn_post("article_time_pub"), 1, 0, "str", "datetime");
-        switch ($_arr_articleTimePub["status"]) {
-            case "too_short":
-                return array(
-                    "alert" => "x120210",
-                );
-            break;
+        $_num_timePubCheckbox = fn_getSafe(fn_post("time_pub_checkbox"), "int", 0);
 
-            case "format_err":
-                return array(
-                    "alert" => "x120211",
-                );
-            break;
+        if ($_num_timePubCheckbox > 0) {
+            $_arr_articleTimePub = validateStr(fn_post("article_time_pub"), 1, 0, "str", "datetime");
+            switch ($_arr_articleTimePub["status"]) {
+                case "too_short":
+                    return array(
+                        "alert" => "x120210",
+                    );
+                break;
 
-            case "ok":
-                $this->articleSubmit["article_time_pub"] = strtotime($_arr_articleTimePub["str"]);
-            break;
+                case "format_err":
+                    return array(
+                        "alert" => "x120211",
+                    );
+                break;
+
+                case "ok":
+                    $this->articleSubmit["article_time_pub"] = fn_strtotime($_arr_articleTimePub["str"]);
+                break;
+            }
+        } else {
+            $this->articleSubmit["article_time_pub"] = time();
+        }
+
+
+        $_num_timeHideCheckbox = fn_getSafe(fn_post("time_hide_checkbox"), "int", 0);
+
+        if ($_num_timeHideCheckbox > 0) {
+            $_arr_articleTimeHide = validateStr(fn_post("article_time_hide"), 1, 0, "str", "datetime");
+            switch ($_arr_articleTimeHide["status"]) {
+                case "too_short":
+                    return array(
+                        "alert" => "x120219",
+                    );
+                break;
+
+                case "format_err":
+                    return array(
+                        "alert" => "x120220",
+                    );
+                break;
+
+                case "ok":
+                    $this->articleSubmit["article_time_hide"] = fn_strtotime($_arr_articleTimeHide["str"]);
+                break;
+            }
+        } else {
+            $this->articleSubmit["article_time_hide"] = 0;
         }
 
         $_arr_articleCateId = validateStr(fn_post("article_cate_id"), 1, 0);
@@ -1190,14 +1295,20 @@ class MODEL_ARTICLE {
 
         $_str_excerptType = fn_getSafe(fn_post("article_excerpt_type"), "txt", "auto");
 
+        if (fn_isEmpty(fn_cookie("prefer_excerpt_count"))) {
+            $_num_excerptCount = 100;
+        } else {
+            $_num_excerptCount = fn_cookie("prefer_excerpt_count");
+        }
+
         switch ($_str_excerptType) {
             case "auto":
-                $this->articleSubmit["article_excerpt"] = fn_substr_utf8($this->articleSubmit["article_content"], 0, BG_SITE_EXCERPT);
+                $this->articleSubmit["article_excerpt"] = fn_substr_utf8($this->articleSubmit["article_content"], 0, $_num_excerptCount);
             break;
 
             case "txt":
                 $_str_articleExcerpt = strip_tags($this->articleSubmit["article_content"]);
-                $this->articleSubmit["article_excerpt"] = fn_substr_utf8($_str_articleExcerpt, 0, BG_SITE_EXCERPT);
+                $this->articleSubmit["article_excerpt"] = fn_substr_utf8($_str_articleExcerpt, 0, $_num_excerptCount);
             break;
 
             case "none":
@@ -1225,10 +1336,22 @@ class MODEL_ARTICLE {
         }
 
         $this->articleSubmit["article_mark_id"]   = fn_getSafe(fn_post("article_mark_id"), "int", 0);
-        $this->articleSubmit["article_spec_id"]   = fn_getSafe(fn_post("article_spec_id"), "int", 0);
 
-        $_str_articleTags                     = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");
-        $_arr_articleTags                     = explode(",", $_str_articleTags);
+        $_arr_articleSpecIds    = fn_post("article_spec_ids");
+        $this->articleSubmit["article_spec_ids"]    = array();
+
+        if ($_arr_articleSpecIds) {
+            foreach ($_arr_articleSpecIds as $_key=>$_value) {
+                if ($_value > 0) {
+                    $this->articleSubmit["article_spec_ids"][$_key] = fn_getSafe($_value, "int", 0);
+                }
+            }
+        }
+
+        $this->articleSubmit["article_spec_ids"] = array_unique($this->articleSubmit["article_spec_ids"]);
+
+        $_str_articleTags   = fn_getSafe(fn_post("hidden-article_tag"), "txt", "");
+        $_arr_articleTags   = explode("|", $_str_articleTags);
         $this->articleSubmit["article_tags"]  = array();
 
         foreach ($_arr_articleTags as $_key=>$_value) {
@@ -1346,23 +1469,23 @@ class MODEL_ARTICLE {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND article_title LIKE '%" . $arr_search["key"] . "%'";
         }
 
-        if (isset($arr_search["year"]) && $arr_search["year"]) {
+        if (isset($arr_search["year"]) && !fn_isEmpty($arr_search["year"])) {
             $_str_sqlWhere .= " AND FROM_UNIXTIME(article_time_pub, '%Y')='" . $arr_search["year"] . "'";
         }
 
-        if (isset($arr_search["month"]) && $arr_search["month"]) {
+        if (isset($arr_search["month"]) && !fn_isEmpty($arr_search["month"])) {
             $_str_sqlWhere .= " AND FROM_UNIXTIME(article_time_pub, '%m')='" . $arr_search["month"] . "'";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND article_status='" . $arr_search["status"] . "'";
         }
 
-        if (isset($arr_search["box"]) && $arr_search["box"]) {
+        if (isset($arr_search["box"]) && !fn_isEmpty($arr_search["box"])) {
             $_str_sqlWhere .= " AND article_box='" . $arr_search["box"] . "'";
         } else {
             $_str_sqlWhere .= " AND article_box='normal'";
@@ -1377,16 +1500,23 @@ class MODEL_ARTICLE {
             $_str_sqlWhere .= " AND article_mark_id=" . $arr_search["mark_id"];
         }
 
-        if (isset($arr_search["spec_id"]) && $arr_search["spec_id"] > 0) {
-            $_str_sqlWhere .= " AND article_spec_id=" . $arr_search["spec_id"];
-        }
-
-        if (isset($arr_search["not_spec_id"]) && $arr_search["not_spec_id"] > 0) {
-            $_str_sqlWhere .= " AND article_spec_id<>" . $arr_search["not_spec_id"];
-        }
-
         if (isset($arr_search["admin_id"]) && $arr_search["admin_id"] > 0) {
             $_str_sqlWhere .= " AND article_admin_id=" . $arr_search["admin_id"];
+        }
+
+        if (isset($arr_search["article_ids"]) && $arr_search["article_ids"]) {
+            $_str_articleIds = implode(",", $arr_search["article_ids"]);
+            $_str_sqlWhere .= " AND article_id IN (" . $_str_articleIds . ")";
+        }
+
+        if (isset($arr_search["not_ids"]) && $arr_search["not_ids"]) {
+            $_str_notIds = implode(",", $arr_search["not_ids"]);
+            $_str_sqlWhere .= " AND article_id NOT IN (" . $_str_notIds . ")";
+        }
+
+        if (isset($arr_search["spec_ids"]) && $arr_search["spec_ids"]) {
+            $_str_specIds = implode(",", $arr_search["spec_ids"]);
+            $_str_sqlWhere .= " AND belong_spec_id IN (" . $_str_specIds . ")";
         }
 
         return $_str_sqlWhere;

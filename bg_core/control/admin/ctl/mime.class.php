@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class CONTROL_MIME {
     public $obj_tpl;
     public $mdl_mime;
     public $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"];
@@ -25,16 +26,22 @@ class CONTROL_MIME {
         $this->adminLogged    = $GLOBALS["adminLogged"];
         $this->mdl_mime       = new MODEL_MIME();
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->mime           = include_once(BG_PATH_LANG . $this->config["lang"] . "/mime.php");
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
     function ctl_form() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
+        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
             return array(
                 "alert" => "x080301",
             );
@@ -85,7 +92,7 @@ class CONTROL_MIME {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
+        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
             return array(
                 "alert" => "x080301",
             );

@@ -1,4 +1,3 @@
-{* admin_form.tpl 管理员编辑界面 *}
 {$cfg = [
     title          => "{$lang.page.opt} - {$lang.page.app}",
     menu_active    => "opt",
@@ -26,7 +25,7 @@
     </div>
 
     <form name="app_form" id="app_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" id="act_post" value="reset">
         <input type="hidden" name="app_id" value="{$tplData.appRow.app_id}">
 

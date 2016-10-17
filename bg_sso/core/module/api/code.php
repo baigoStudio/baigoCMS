@@ -6,14 +6,13 @@
 
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
 include_once(BG_PATH_FUNC . "init.func.php"); //初始化
 $arr_set = array(
     "base"          => true, //基本设置
-    //"ssin"          => true,
     "header"        => "Content-type: application/json; charset=utf-8", //header
     "db"            => true, //连接数据库
     "type"          => "ajax", //模块类型

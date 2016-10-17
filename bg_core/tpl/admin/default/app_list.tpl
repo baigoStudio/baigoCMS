@@ -1,4 +1,3 @@
-{* admin_list.tpl 管理员列表 *}
 {$cfg = [
     title          => "{$lang.page.opt} - {$lang.page.app}",
     menu_active    => "opt",
@@ -64,7 +63,7 @@
     </div>
 
     <form name="app_list" id="app_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -179,7 +178,7 @@
         btn_url: "{$cfg.str_url}"
     };
 
-    var opts_submit_notice = {
+    var opts_submit_notify = {
         ajax_url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=app",
         text_submitting: "{$lang.label.submitting}",
         btn_text: "{$lang.btn.ok}",

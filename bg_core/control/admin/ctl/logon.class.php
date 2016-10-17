@@ -5,11 +5,10 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "sso.class.php"); //载入 SSO
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 
@@ -29,7 +28,7 @@ class CONTROL_LOGON {
         $this->obj_sso      = new CLASS_SSO(); //SSO
         $this->mdl_admin    = new MODEL_ADMIN(); //设置管理员对象
         $_arr_cfg["admin"]  = true;
-        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
     }
 
 
@@ -45,7 +44,7 @@ class CONTROL_LOGON {
             return $_arr_adminLogin;
         }
 
-        $_arr_ssoLogin = $this->obj_sso->sso_login($_arr_adminLogin["admin_name"], $_arr_adminLogin["admin_pass"]); //sso验证
+        $_arr_ssoLogin = $this->obj_sso->sso_user_login($_arr_adminLogin["admin_name"], $_arr_adminLogin["admin_pass"]); //sso验证
         if ($_arr_ssoLogin["alert"] != "y010401") {
             $_arr_ssoLogin["forward"] = $_arr_adminLogin["forward"];
             return $_arr_ssoLogin;
@@ -59,13 +58,13 @@ class CONTROL_LOGON {
 
         $_arr_sync = array();
 
-        if(defined("BG_SSO_SYNC") && BG_SSO_SYNC == "on") {
+        if (defined("BG_SSO_SYNC") && BG_SSO_SYNC == "on" && fn_cookie("prefer_sync_sync") == "on") {
             $_arr_sync = $this->obj_sso->sso_sync_login($_arr_ssoLogin["user_id"]);
         }
 
         $_arr_tplData = array(
             "admin_id"   => $_arr_ssoLogin["user_id"],
-            "forward"    => base64_decode($_arr_adminLogin["forward"]),
+            "forward"    => fn_forward($_arr_adminLogin["forward"], "decode"),
             "sync"       => $_arr_sync,
         );
 
@@ -105,14 +104,14 @@ class CONTROL_LOGON {
      */
     function ctl_logout() {
         $_str_forward  = fn_getSafe(fn_get("forward"), "txt", "");
-        if (!$_str_forward) {
-            $_str_forward = base64_encode(BG_URL_ADMIN . "ctl.php");
+        if (fn_isEmpty($_str_forward)) {
+            $_str_forward = fn_forward(BG_URL_ADMIN . "ctl.php");
         }
 
         fn_ssin_end();
 
         return array(
-            "forward" => $_str_forward,
+            "forward" => fn_forward($_str_forward, "decode"),
         );
     }
 }

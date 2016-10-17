@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -13,7 +13,7 @@ if(!defined("IN_BAIGO")) {
 class CONTROL_SPEC {
 
     private $obj_tpl;
-    private $search;
+    private $search = array();
     private $mdl_spec;
     private $mdl_tag;
     private $mdl_attach;
@@ -22,12 +22,12 @@ class CONTROL_SPEC {
     function __construct() { //构造函数
         $this->mdl_cate         = new MODEL_CATE(); //设置文章对象
         $this->mdl_custom       = new MODEL_CUSTOM();
+        $this->mdl_spec         = new MODEL_SPEC();
+        $this->mdl_articlePub   = new MODEL_ARTICLE_PUB(); //设置文章对象
         $this->spec_init();
         $_arr_cfg["pub"]        = true;
-        $this->obj_tpl          = new CLASS_TPL(BG_PATH_TPL . "pub/" . $this->config["tpl"], $_arr_cfg); //初始化视图对象
-        $this->mdl_spec         = new MODEL_SPEC();
+        $this->obj_tpl          = new CLASS_TPL(BG_PATH_TPL . "pub/" . $this->urlRow["spec_tpl"], $_arr_cfg); //初始化视图对象
         $this->mdl_tag          = new MODEL_TAG();
-        $this->mdl_articlePub   = new MODEL_ARTICLE_PUB(); //设置文章对象
         $this->mdl_attach       = new MODEL_ATTACH(); //设置文章对象
         $this->mdl_thumb        = new MODEL_THUMB(); //设置上传信息对象
     }
@@ -59,17 +59,16 @@ class CONTROL_SPEC {
             );
         }
 
-        $this->search["spec_id"] = $_num_specId;
+        $_arr_search["spec_ids"] = array($_num_specId);
 
-        $_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search);
+        $_num_articleCount    = $this->mdl_articlePub->mdl_count($_arr_search);
         $_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
-        $_str_query           = http_build_query($this->search);
-        $_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $this->search);
+        $_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $_arr_search);
 
         $this->mdl_attach->thumbRows = $this->mdl_thumb->mdl_cache();
 
         foreach ($_arr_articleRows as $_key=>$_value) {
-            $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+            $_arr_articleCateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
 
             $_arr_searchTag = array(
                 "status"        => "show",
@@ -89,21 +88,20 @@ class CONTROL_SPEC {
                 $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
             }
 
-            $_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
-            if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
-                $_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
-            }
+            $_arr_articleRows[$_key]["cateRow"]  = $_arr_articleCateRow;
+            /*if ($_arr_articleCateRow["cate_trees"][0]["cate_domain"]) {
+                $_arr_articleRows[$_key]["urlRow"]["article_url"]  = $_arr_articleCateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["urlRow"]["article_url"];
+            }*/
+            $_arr_articleRows[$_key]["urlRow"]  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
         }
 
-        $_arr_tplData = array(
-            "query"          => $_str_query,
-            "pageRow"        => $_arr_page,
-            "search"         => $this->search,
-            "specRow"        => $_arr_specRow,
-            "articleRows"    => $_arr_articleRows,
-            "cateRows"       => $this->cateRows,
-            "customRows"     => $this->customRows["custom_list"],
+        $_arr_tpl = array(
+            "pageRow"       => $_arr_page,
+            "specRow"       => $_arr_specRow,
+            "articleRows"   => $_arr_articleRows,
         );
+
+        $_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
         $this->obj_tpl->tplDisplay("spec_show.tpl", $_arr_tplData);
 
@@ -121,67 +119,37 @@ class CONTROL_SPEC {
      */
     function ctl_list() {
         $_arr_search = array(
-            "status" => "show",
+            "status"    => "show",
+            "key"       => urldecode(fn_getSafe(fn_get("key"), "txt", "")),
         );
-        $_num_specCount   = $this->mdl_spec->mdl_count($_arr_search);
-        $_arr_page        = fn_page($_num_specCount); //取得分页数据
-        $_str_query       = http_build_query($this->search);
-        $_arr_specRows    = $this->mdl_spec->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_arr_search);
+        $_num_specCount = $this->mdl_spec->mdl_count($_arr_search);
+        $_arr_page      = fn_page($_num_specCount, BG_SITE_PERPAGE); //取得分页数据
+        $_str_query     = http_build_query($_arr_search);
+        $_arr_specRows  = $this->mdl_spec->mdl_list(BG_DEFAULT_PERPAGE, $_arr_page["except"], $_arr_search);
 
-        $_arr_tplData = array(
-            "query"      => $_str_query,
-            "pageRow"    => $_arr_page,
-            "search"     => $this->search,
-            "specRows"   => $_arr_specRows,
-            "cateRows"   => $this->cateRows,
-            "customRows" => $this->customRows["custom_list"],
+        $_arr_tpl = array(
+            "search"        => $_arr_search,
+            "query"         => $_str_query,
+            "pageRow"       => $_arr_page,
+            "specRows"      => $_arr_specRows,
         );
+
+        $_arr_tplData = array_merge($this->tplData, $_arr_tpl);
 
         $this->obj_tpl->tplDisplay("spec_list.tpl", $_arr_tplData);
     }
 
 
-    private function url_process() {
-        switch (BG_VISIT_TYPE) {
-            case "static":
-            case "pstatic":
-                $_str_specUrl        = BG_URL_ROOT . "spec/";
-                $_str_pageAttach    = "page-";
-            break;
-
-            default:
-                $_str_specUrl        = BG_URL_ROOT . "index.php?mod=spec&act_get=list";
-                $_str_pageAttach    = "&page=";
-            break;
-        }
-
-        return array(
-            "spec_url"       => $_str_specUrl,
-            "page_attach"    => $_str_pageAttach,
-        );
-    }
-
-
     private function spec_init() {
-        if(defined("BG_SITE_TPL")) {
-            $this->config["tpl"] = BG_SITE_TPL;
-        } else {
-            $this->config["tpl"] = "default";
-        }
+        $_arr_cateRows      = $this->mdl_cate->mdl_cache();
+        $_arr_customRows    = $this->mdl_custom->mdl_cache();
+        $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
+        $this->urlRow       = $this->mdl_spec->url_process_global();
 
-        $_arr_urlRow = $this->url_process();
-
-        $this->search = array(
-            "urlRow"     => $_arr_urlRow,
+        $this->tplData = array(
+            "urlRow"        => $this->urlRow,
+            "cateRows"      => $_arr_cateRows,
+            "customRows"    => $_arr_customRows["custom_list"],
         );
-
-        if (BG_VISIT_TYPE == "static") {
-            $this->search["page_ext"] = "." . BG_VISIT_FILE;
-        } else {
-            $this->search["page_ext"] = "";
-        }
-
-        $this->cateRows     = $this->mdl_cate->mdl_cache();
-        $this->customRows   = $this->mdl_custom->mdl_cache();
     }
 }

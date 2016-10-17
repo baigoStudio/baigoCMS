@@ -11,7 +11,7 @@
     <script src="{$smarty.const.BG_URL_STATIC}js/jquery.min.js" type="text/javascript"></script>
     <link href="{$smarty.const.BG_URL_STATIC}js/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="{$smarty.const.BG_URL_STATIC}js/baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet">
-    <link href="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/css/admin_logon.css" type="text/css" rel="stylesheet">
+    <link href="{$smarty.const.BG_URL_STATIC}admin/{$smarty.const.BG_DEFAULT_UI}/css/admin_logon.css" type="text/css" rel="stylesheet">
 
 </head>
 
@@ -32,11 +32,11 @@
             <div class="panel-body">
                 <form action="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=logon" method="post" id="login_form">
                     <input type="hidden" name="act_post" value="login">
-                    <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                    <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                     <input type="hidden" name="forward" value="{$tplData.forward}">
 
                     <div class="form-group">
-                        {if $tplData.alert}
+                        {if $tplData.alert && isset($alert[$tplData.alert])}
                             <div class="alert alert-danger">{$alert[$tplData.alert]}</div>
                         {/if}
                     </div>
@@ -61,7 +61,7 @@
                             <div class="input-group">
                                 <input type="text" name="seccode" id="seccode" placeholder="{$alert.x030201}" data-validate class="form-control input-lg">
                                 <span class="input-group-addon">
-                                    <a href="javascript:reloadImg('seccodeImg', '{$smarty.const.BG_URL_ADMIN}ctl.php?mod=seccode&act_get=make');" title="{$lang.alt.seccode}">
+                                    <a href="javascript:reloadImg('seccodeImg','{$smarty.const.BG_URL_ADMIN}ctl.php?mod=seccode&act_get=make');" title="{$lang.alt.seccode}">
                                         <img src="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=seccode&act_get=make" id="seccodeImg" alt="{$lang.alt.seccode}" height="32">
                                     </a>
                                 </span>
@@ -84,19 +84,19 @@
                 <div class="pull-left">
                     <small>
                         {$smarty.const.PRD_CMS_POWERED}
-                        {if $config.ui == "default"}
+                        {if $smarty.const.BG_DEFAULT_UI == "default"}
                             <a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_NAME}</a>
                         {else}
-                            {$config.ui} CMS
+                            {$smarty.const.BG_DEFAULT_UI} CMS
                         {/if}
                         {$smarty.const.PRD_CMS_VER}
                     </small>
                 </div>
                 <div class="pull-right foot_logo">
-                    {if $config.ui == "default"}
+                    {if $smarty.const.BG_DEFAULT_UI == "default"}
                         <a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME} {$smarty.const.PRD_CMS_VER}</a>
                     {else}
-                        <a href="#">{$config.ui} CMS</a>
+                        <a href="javascript:void(0);">{$smarty.const.BG_DEFAULT_UI} CMS</a>
                     {/if}
                 </div>
                 <div class="clearfix"></div>
@@ -133,6 +133,7 @@
     }
 
     $(document).ready(function(){
+        $("#admin_name").focus();
         $("#go_login").click(function(){
             go_login();
         });
@@ -148,7 +149,7 @@
     <script src="{$smarty.const.BG_URL_STATIC}js/reloadImg.js" type="text/javascript"></script>
     <script src="{$smarty.const.BG_URL_STATIC}js/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
-    <!-- {$smarty.const.PRD_CMS_POWERED} {if $config.ui == "default"}{$smarty.const.PRD_CMS_NAME}{else}{$config.ui} CMS{/if} {$smarty.const.PRD_CMS_VER} -->
+    <!-- {$smarty.const.PRD_CMS_POWERED} {if $smarty.const.BG_DEFAULT_UI == "default"}{$smarty.const.PRD_CMS_NAME}{else}{$smarty.const.BG_DEFAULT_UI} CMS{/if} {$smarty.const.PRD_CMS_VER} -->
 
 </body>
 </html>

@@ -5,10 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
+include_once(BG_PATH_FUNC . "http.func.php"); //载入模板类
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_MODEL . "opt.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目类
@@ -19,23 +20,42 @@ class AJAX_OPT {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_opt;
+    private $is_super = false;
 
     function __construct() { //构造函数
-        $this->adminLogged    = $GLOBALS["adminLogged"]; //已登录商家信息
-        $this->obj_ajax       = new CLASS_AJAX(); //初始化 AJAX 基对象
+        $this->obj_dir      = new CLASS_DIR();
+        $this->adminLogged  = $GLOBALS["adminLogged"]; //已登录商家信息
+        $this->obj_ajax     = new CLASS_AJAX(); //初始化 AJAX 基对象
         $this->obj_ajax->chk_install();
-        $this->mdl_opt        = new MODEL_OPT();
-        $this->mdl_cate       = new MODEL_CATE();
+        $this->mdl_opt      = new MODEL_OPT();
+        $this->mdl_cate     = new MODEL_CATE();
 
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
+    }
+
+
+    function ajax_chkver() {
+        if (!isset($this->group_allow["opt"]["chkver"]) && !$this->is_super) {
+            $this->obj_ajax->halt_alert("x060301");
+        }
+
+        $this->mdl_opt->chk_ver(true, "manual");
+
+        $this->obj_ajax->halt_alert("y060402");
     }
 
 
     function ajax_dbconfig() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["dbconfig"])) {
-            $this->obj_ajax->halt_alert("x060306");
+        if (!isset($this->group_allow["opt"]["dbconfig"]) && !$this->is_super) {
+            $this->obj_ajax->halt_alert("x060301");
         }
 
         $_arr_dbconfigSubmit = $this->mdl_opt->input_dbconfig();
@@ -53,7 +73,7 @@ class AJAX_OPT {
     function ajax_submit() {
         $_act_post = fn_getSafe($GLOBALS["act_post"], "txt", "base");
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"][$_act_post])) {
+        if (!isset($this->group_allow["opt"][$_act_post]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x060301");
         }
 
@@ -84,18 +104,19 @@ class AJAX_OPT {
         }
 
         if ($_act_post == "visit") {
-            if ($_arr_const["BG_VISIT_TYPE"] == "pstatic") {
+            switch ($_arr_const["BG_VISIT_TYPE"]) {
+                case "static":
+                case "pstatic":
+                    $_arr_return = $this->mdl_opt->mdl_htaccess();
 
-                $_arr_return = $this->mdl_opt->mdl_htaccess();
+                    if ($_arr_return["alert"] != "y060101") {
+                        $this->obj_ajax->halt_alert($_arr_return["alert"]);
+                    }
+                break;
 
-                if ($_arr_return["alert"] != "y060101") {
-                    $this->obj_ajax->halt_alert($_arr_return["alert"]);
-                }
-
-            } else {
-                if (file_exists(BG_PATH_ROOT . ".htaccess")) {
-                    unlink(BG_PATH_ROOT . ".htaccess");
-                }
+                default:
+                    $this->obj_dir->del_file(BG_PATH_ROOT . ".htaccess");
+                break;
             }
         }
 

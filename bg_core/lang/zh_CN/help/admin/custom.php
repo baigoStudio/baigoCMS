@@ -1,10 +1,19 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>自定义字段</h3>
+return "<h3>自定义字段</h3>
     <p>点左侧菜单其他设置的“自定义字段“子菜单，进入如下界面，可以对自定义字段进行编辑、删除、改变状态等操作。自定义字段顾名思义是用来自定义的，当管理员在发布文章等操作时，如发现现有的字段无法满足时，便可以创建自定义字段项目来实现，如：创建文章时，管理员需要增加一个型号字段，便可在此创建。</p>
-    <p><img src=\"{images}custom_list.jpg\" class=\"img-responsive thumbnail\"></p>
+    <p>
+        <a href=\"{images}custom_list.jpg\" target=\"_blank\"><img src=\"{images}custom_list.jpg\" class=\"img-responsive thumbnail\"></a>
+    </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"form\"></a>
     <h3>创建（编辑）自定义字段</h3>

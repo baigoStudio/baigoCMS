@@ -1,5 +1,3 @@
-{* html_foot.tpl HTML 底部通用 *}
-
     {if isset($cfg.tagmanager)}
         <script src="{$smarty.const.BG_URL_STATIC}js/typeahead/typeahead.min.js" type="text/javascript"></script>
         <script src="{$smarty.const.BG_URL_STATIC}js/tagmanager/tagmanager.js" type="text/javascript"></script>
@@ -42,11 +40,13 @@
     {if isset($cfg.tinymce)}
         <!--html 编辑器-->
         <script src="{$smarty.const.BG_URL_STATIC}js/tinymce/tinymce.min.js" type="text/javascript"></script>
+        <script src="{$smarty.const.BG_URL_STATIC}js/tinymce/jquery.tinymce.min.js" type="text/javascript"></script>
         <script type="text/javascript">
         tinyMCE.init({
             selector: "textarea.tinymce",
             language: "{$config.lang}",
-            plugins: ["table image insertdatetime lists advlist anchor link autolink autoresize charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr"],
+            resize: {if isset($smarty.cookies["prefer_editor_resize_{$smarty.const.BG_SITE_SSIN}"]) && $smarty.cookies["prefer_editor_resize_{$smarty.const.BG_SITE_SSIN}"] == "on"}true{else}false{/if},
+            plugins: ["table image insertdatetime lists advlist anchor link autolink charmap code textcolor colorpicker contextmenu media paste searchreplace visualblocks visualchars hr autosave{if isset($smarty.cookies["prefer_editor_autosize_{$smarty.const.BG_SITE_SSIN}"]) && $smarty.cookies["prefer_editor_autosize_{$smarty.const.BG_SITE_SSIN}"] == "on"} autoresize{/if}"],
             toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image | code",
             convert_urls: false,
             remove_script_host: false
@@ -103,14 +103,9 @@
         <script type="text/javascript">
         function tokenReload() {
             $.getJSON("{$smarty.const.BG_URL_ADMIN}ajax.php?mod=token&act_get=make", function(result){
-                var _token = $("form input.token_session").val();
-                if (result.alert == "y030102") {
-                    if (_token != result.token) {
-                        //alert(result.str_alert);
-                        $("form input.token_session").val(result.token);
-                    }
-                } else {
-                    alert(result.msg);
+                if (result.alert != "y030102") {
+                    $("#msg_token_content").text(result.msg);
+                    $("#msg_token").modal({ show: true, backdrop: "static" });
                 }
             });
             setTimeout("tokenReload();", 300000);
@@ -124,7 +119,7 @@
 
     <script src="{$smarty.const.BG_URL_STATIC}js/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
-    <!-- {$smarty.const.PRD_CMS_POWERED} {if $config.ui == "default"}{$smarty.const.PRD_CMS_NAME}{else}{$config.ui} CMS{/if} {$smarty.const.PRD_CMS_VER} -->
+    <!-- {$smarty.const.PRD_CMS_POWERED} {if $smarty.const.BG_DEFAULT_UI == "default"}{$smarty.const.PRD_CMS_NAME}{else}{$smarty.const.BG_DEFAULT_UI} CMS{/if} {$smarty.const.PRD_CMS_VER} -->
 
 </body>
 </html>

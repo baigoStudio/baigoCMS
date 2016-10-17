@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -19,6 +19,7 @@ class CONTROL_CUSTOM {
     public $obj_tpl;
     public $mdl_custom;
     public $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
@@ -27,16 +28,22 @@ class CONTROL_CUSTOM {
         $this->mdl_custom     = new MODEL_CUSTOM();
         $this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
         $_arr_cfg["admin"]    = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->fields         = include_once(BG_PATH_LANG . $this->config["lang"] . "/fields.php");
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
     function ctl_order() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             return array(
                 "alert" => "x200303"
             );
@@ -70,7 +77,7 @@ class CONTROL_CUSTOM {
 
 
     function ctl_form() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             return array(
                 "alert" => "x200301",
             );
@@ -112,7 +119,7 @@ class CONTROL_CUSTOM {
         $_arr_cateRows    = $this->mdl_cate->mdl_list(1000, 0, $_arr_searchCate);
 
         //print_r($_arr_customRow);
-        
+
         $_arr_tpl = array(
             "customRow"  => $_arr_customRow,
             "customRows" => $_arr_customRows,
@@ -136,7 +143,7 @@ class CONTROL_CUSTOM {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["opt"]["custom"])) {
+        if (!isset($this->group_allow["opt"]["custom"]) && !$this->is_super) {
             return array(
                 "alert" => "x200301",
             );

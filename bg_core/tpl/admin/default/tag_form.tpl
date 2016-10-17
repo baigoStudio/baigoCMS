@@ -1,4 +1,3 @@
-{* tag_list.tpl 标签列表 *}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     {$adminMod.article.main.title} - {$adminMod.article.sub.tag.title}
@@ -6,7 +5,7 @@
 <div class="modal-body">
 
     <form name="tag_form" id="tag_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="tag_id" id="tag_id" value="{$tplData.tagRow.tag_id}">
         <input type="hidden" name="act_post" value="submit">
         {if $tplData.tagRow.tag_id > 0}

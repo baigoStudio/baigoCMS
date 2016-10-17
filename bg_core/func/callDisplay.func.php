@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -43,6 +43,7 @@ function fn_callDisplay($arr_call, $template) {
 
     //print_r($_arr_return);
     $callRows[$arr_call["call_id"]] = $_arr_return;
+
     $template->assign("callRows", $callRows);
 }
 
@@ -62,7 +63,7 @@ class CLASS_CALL_DISPLAY {
         $this->mdl_articlePub     = new MODEL_ARTICLE_PUB();
         $this->mdl_tag            = new MODEL_TAG();
         $this->mdl_attach         = new MODEL_ATTACH();
-        $this->mdl_thumb          = new MODEL_THUMB(); //设置上传信息对象
+        $this->mdl_thumb          = new MODEL_THUMB();
     }
 
 
@@ -70,11 +71,11 @@ class CLASS_CALL_DISPLAY {
      * display_init function.
      *
      * @access public
-     * @param mixed $_num_callId
+     * @param mixed $num_callId
      * @return void
      */
-    function display_init($_num_callId) {
-        $this->callRow = $this->mdl_call->mdl_read($_num_callId);
+    function display_init($num_callId) {
+        $this->callRow = $this->mdl_call->mdl_read($num_callId);
         return $this->callRow;
     }
 
@@ -89,10 +90,10 @@ class CLASS_CALL_DISPLAY {
         $_arr_searchCate = array(
             "status"        => "show",
             "excepts"       => $this->callRow["call_cate_excepts"],
-            "call_cate_id"  => $this->callRow["call_cate_id"],
+            "parent_id"     => $this->callRow["call_cate_id"],
         );
 
-        $_arr_cateRows = $this->mdl_cate->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchCate);
+        $_arr_cateRows = $this->mdl_cate->mdl_listPub($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchCate);
 
         return $_arr_cateRows;
     }
@@ -123,8 +124,8 @@ class CLASS_CALL_DISPLAY {
      */
     function display_tag() {
         $_arr_searchTag = array(
-            "status"        => "show",
-            "article_id"    => $this->callRow["call_type"],
+            "status"    => "show",
+            "type"      => $this->callRow["call_type"],
         );
         $_arr_tagRows = $this->mdl_tag->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchTag);
 
@@ -142,7 +143,7 @@ class CLASS_CALL_DISPLAY {
         $_arr_search = array(
             "cate_ids"      => $this->callRow["call_cate_ids"],
             "mark_ids"      => $this->callRow["call_mark_ids"],
-            "spec_id"       => $this->callRow["call_spec_id"],
+            "spec_ids"      => $this->callRow["call_spec_ids"],
             "attach_type"   => $this->callRow["call_attach"],
         );
 
@@ -152,7 +153,7 @@ class CLASS_CALL_DISPLAY {
         $this->mdl_attach->thumbRows = $this->mdl_thumb->mdl_cache();
 
         foreach ($_arr_articleRows as $_key=>$_value) {
-            $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+            $_arr_articleCateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
 
             $_arr_searchTag = array(
                 "status"        => "show",
@@ -172,10 +173,8 @@ class CLASS_CALL_DISPLAY {
                 $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
             }
 
-            $_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
-            if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
-                $_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
-            }
+            $_arr_articleRows[$_key]["cateRow"]  = $_arr_articleCateRow;
+            $_arr_articleRows[$_key]["urlRow"]  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
         }
 
         return $_arr_articleRows;

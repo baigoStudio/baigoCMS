@@ -1,4 +1,3 @@
-{* alert.tpl 提示信息 *}
 {$cfg = [
     title  => "提示信息"
 ]}

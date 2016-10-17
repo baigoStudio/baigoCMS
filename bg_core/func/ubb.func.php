@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -17,24 +17,24 @@ if(!defined("IN_BAIGO")) {
  * @return void
  */
 function fn_ubb($string) {
-    $string    = str_replace("[b]",     "<b>",     $string);
-    $string    = str_replace("[/b]",    "</b>",    $string);
-    $string    = str_replace("[code]",  "<code>",  $string);
-    $string    = str_replace("[/code]", "</code>", $string);
-    $string    = str_replace("[del]",   "<del>",   $string);
-    $string    = str_replace("[/del]",  "</del>",  $string);
-    $string    = str_replace("[em]",    "<i>",     $string);
-    $string    = str_replace("[/em]",   "</i>",    $string);
-    $string    = str_replace("[i]",     "<i>",     $string);
-    $string    = str_replace("[/i]",    "</i>",    $string);
-    $string    = str_replace("[kbd]",   "<kbd>",   $string);
-    $string    = str_replace("[/kbd]",  "</kbd>",  $string);
-    $string    = str_replace("[s]",     "<u>",     $string);
-    $string    = str_replace("[/s]",    "</u>",    $string);
-    $string    = str_replace("[u]",     "<u>",     $string);
-    $string    = str_replace("[/u]",    "</u>",    $string);
-    $string    = str_replace("[br]",    "<br>",    $string);
-    $string    = str_replace("[hr]",    "<hr>",    $string);
+    $string    = str_ireplace("[b]",     "<b>",     $string);
+    $string    = str_ireplace("[/b]",    "</b>",    $string);
+    $string    = str_ireplace("[code]",  "<code>",  $string);
+    $string    = str_ireplace("[/code]", "</code>", $string);
+    $string    = str_ireplace("[del]",   "<del>",   $string);
+    $string    = str_ireplace("[/del]",  "</del>",  $string);
+    $string    = str_ireplace("[em]",    "<i>",     $string);
+    $string    = str_ireplace("[/em]",   "</i>",    $string);
+    $string    = str_ireplace("[i]",     "<i>",     $string);
+    $string    = str_ireplace("[/i]",    "</i>",    $string);
+    $string    = str_ireplace("[kbd]",   "<kbd>",   $string);
+    $string    = str_ireplace("[/kbd]",  "</kbd>",  $string);
+    $string    = str_ireplace("[s]",     "<u>",     $string);
+    $string    = str_ireplace("[/s]",    "</u>",    $string);
+    $string    = str_ireplace("[u]",     "<u>",     $string);
+    $string    = str_ireplace("[/u]",    "</u>",    $string);
+    $string    = str_ireplace("[br]",    "<br>",    $string);
+    $string    = str_ireplace("[hr]",    "<hr>",    $string);
 
     return $string;
 }

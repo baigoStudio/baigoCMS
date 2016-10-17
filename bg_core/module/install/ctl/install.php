@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -22,13 +22,23 @@ if (file_exists(BG_PATH_CONFIG . "is_install.php")) {
 
 include_once(BG_PATH_FUNC . "init.func.php"); //验证是否已登录
 switch ($GLOBALS["act_get"]) {
-    case "dbconfig":
-    case "ext":
+    case "dbtable":
+    case "auth":
+    case "admin":
+    case "base":
+    case "sso":
+    case "upload":
+    case "visit":
+    case "ssoAuto":
+    case "ssoAdmin":
+    case "over":
+    case "spec":
         $arr_set = array(
             "base"      => true,
             "ssin"      => true,
             "header"    => "Content-Type: text/html; charset=utf-8",
-            "ssin_file" => true,
+            "db"        => true,
+            "type"      => "install",
         );
     break;
 
@@ -37,8 +47,7 @@ switch ($GLOBALS["act_get"]) {
             "base"      => true,
             "ssin"      => true,
             "header"    => "Content-Type: text/html; charset=utf-8",
-            "db"        => true,
-            "type"      => "ctl",
+            "ssin_file" => true,
         );
     break;
 }
@@ -98,19 +107,20 @@ switch ($GLOBALS["act_get"]) {
         }
     break;
 
-    case "over":
-        $arr_installRow = $ctl_install->ctl_over();
+    case "base":
+    case "sso":
+    case "upload":
+    case "visit":
+    case "spec":
+        $arr_installRow = $ctl_install->ctl_form();
         if ($arr_installRow["alert"] != "y030405") {
             header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
             exit;
         }
     break;
 
-    case "base":
-    case "sso":
-    case "upload":
-    case "visit":
-        $arr_installRow = $ctl_install->ctl_form();
+    case "over":
+        $arr_installRow = $ctl_install->ctl_over();
         if ($arr_installRow["alert"] != "y030405") {
             header("Location: " . BG_URL_INSTALL . "ctl.php?mod=alert&act_get=show&alert=" . $arr_installRow["alert"]);
             exit;

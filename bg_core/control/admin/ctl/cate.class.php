@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class CONTROL_CATE {
     private $obj_tpl;
     private $mdl_cate;
     private $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"];
@@ -25,11 +26,17 @@ class CONTROL_CATE {
         $this->config         = $this->obj_base->config;
         $this->obj_dir        = new CLASS_DIR();
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->mdl_cate       = new MODEL_CATE(); //设置栏目对象
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -40,7 +47,7 @@ class CONTROL_CATE {
      * @return void
      */
     function ctl_order() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"])) {
+        if (!isset($this->group_allow["cate"]["edit"]) && !$this->is_super) {
             return array(
                 "alert" => "x110303"
             );
@@ -73,33 +80,6 @@ class CONTROL_CATE {
     }
 
 
-    function ctl_show() {
-        $_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
-
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_num_cateId]["cate"])) {
-            return array(
-                "alert" => "x110303"
-            );
-        }
-        $_arr_cateRow = $this->mdl_cate->mdl_read($_num_cateId);
-        if ($_arr_cateRow["alert"] != "y110102") {
-            return $_arr_cateRow;
-        }
-
-        $_arr_tpl = array(
-            "cateRow"    => $_arr_cateRow, //栏目信息
-        );
-
-        $_arr_tplData = array_merge($this->tplData, $_arr_tpl);
-
-        $this->obj_tpl->tplDisplay("cate_show.tpl", $_arr_tplData);
-
-        return array(
-            "alert" => "y110102"
-        );
-    }
-
-
     /**
      * ctl_form function.
      *
@@ -110,7 +90,7 @@ class CONTROL_CATE {
         $_num_cateId = fn_getSafe(fn_get("cate_id"), "int", 0);
 
         if ($_num_cateId > 0) {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_num_cateId]["cate"])) {
+            if (!isset($this->group_allow["cate"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_num_cateId]["cate"]) && !$this->is_super) {
                 return array(
                     "alert" => "x110303"
                 );
@@ -120,7 +100,7 @@ class CONTROL_CATE {
                 return $_arr_cateRow;
             }
         } else {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["add"])) {
+            if (!isset($this->group_allow["cate"]["add"]) && !$this->is_super) {
                 return array(
                     "alert" => "x110302"
                 );
@@ -145,6 +125,7 @@ class CONTROL_CATE {
         }
 
         $_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
+
         $_arr_tplRows     = $this->obj_dir->list_dir(BG_PATH_TPL . "pub/");
 
         $_arr_tpl = array(
@@ -170,7 +151,7 @@ class CONTROL_CATE {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["cate"]["browse"])) {
+        if (!isset($this->group_allow["cate"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x110301"
             );

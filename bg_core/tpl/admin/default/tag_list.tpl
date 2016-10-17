@@ -1,4 +1,3 @@
-{* tag_list.tpl 标签列表 *}
 {$cfg = [
     title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.tag.title}",
     menu_active    => "article",
@@ -65,7 +64,7 @@
 
 
     <form name="tag_list" id="tag_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -201,4 +200,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

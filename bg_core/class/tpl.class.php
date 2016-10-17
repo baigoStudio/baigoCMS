@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -16,7 +16,7 @@ class CLASS_TPL {
 
     public $common; //通用
     public $obj_base;
-    private $obj_smarty; //Smarty
+    public $obj_smarty; //Smarty
     public $config; //配置
     public $arr_cfg = array(); //需要载入语言文档的配置
 
@@ -27,28 +27,32 @@ class CLASS_TPL {
 
         $this->obj_smarty               = new Smarty(); //初始化 Smarty 对象
         $this->obj_smarty->template_dir = $str_pathTpl;
-        $this->obj_smarty->compile_dir  = BG_PATH_CACHE . "tpl/";
+        $this->obj_smarty->compile_dir  = BG_PATH_CACHE . "tpl/"; //编译目录
         $this->obj_smarty->debugging    = BG_SWITCH_SMARTY_DEBUG; //调试模式
 
-        $this->lang     = include_once(BG_PATH_LANG . $this->config["lang"] . "/common.php"); //载入语言文件
-        $this->alert    = include_once(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入返回代码
+        $this->lang     = include(BG_PATH_LANG . $this->config["lang"] . "/common.php"); //载入语言文件
+        $this->alert    = include(BG_PATH_LANG . $this->config["lang"] . "/alert.php"); //载入返回代码
 
         if (isset($this->arr_cfg["admin"])) {
-            $this->status   = include_once(BG_PATH_LANG . $this->config["lang"] . "/status.php"); //载入状态文件
-            $this->type     = include_once(BG_PATH_LANG . $this->config["lang"] . "/type.php"); //载入类型文件
-            $this->install  = include_once(BG_PATH_LANG . $this->config["lang"] . "/install.php"); //载入安装代码
-            $this->opt      = include_once(BG_PATH_LANG . $this->config["lang"] . "/opt.php"); //载入设置配置
+            $this->status   = include(BG_PATH_LANG . $this->config["lang"] . "/status.php"); //载入状态文件
+            $this->type     = include(BG_PATH_LANG . $this->config["lang"] . "/type.php"); //载入类型文件
+            $this->install  = include(BG_PATH_LANG . $this->config["lang"] . "/install.php"); //载入安装代码
+            $this->opt      = include(BG_PATH_LANG . $this->config["lang"] . "/opt.php"); //载入设置配置
 
-            if(!defined("BG_MODULE_FTP") || BG_MODULE_FTP < 1) {
-                unset($this->opt["upload"]["list"]["BG_UPLOAD_URL"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPHOST"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPORT"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPUSER"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPASS"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPATH"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPASV"]);
+            if (!defined("BG_MODULE_FTP") || BG_MODULE_FTP < 1) {
+                unset($this->opt["upload"]["list"]["BG_UPLOAD_URL"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPHOST"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPORT"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPUSER"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPASS"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPATH"], $this->opt["spec"]);
             }
 
-            if(!defined("BG_MODULE_GEN") || BG_MODULE_GEN < 1) {
-                unset($this->opt["visit"]["list"]["BG_VISIT_TYPE"]["option"]["static"], $this->opt["visit"]["list"]["BG_VISIT_FILE"]);
+            if (!defined("BG_MODULE_GEN") || BG_MODULE_GEN < 1) {
+                unset($this->opt["visit"]["list"]["BG_VISIT_TYPE"]["option"]["static"], $this->opt["visit"]["list"]["BG_VISIT_FILE"], $this->opt["visit"]["list"]["BG_VISIT_PAGE"], $this->opt["spec"]);
             }
 
-            $this->appMod   = include_once(BG_PATH_LANG . $this->config["lang"] . "/appMod.php"); //载入权限配置
-            $this->adminMod = include_once(BG_PATH_LANG . $this->config["lang"] . "/adminMod.php"); //载入管理权限配置
+            if (!defined("BG_VISIT_TYPE") || BG_VISIT_TYPE != "static") {
+                unset($this->opt["visit"]["list"]["BG_VISIT_FILE"], $this->opt["visit"]["list"]["BG_VISIT_PAGE"], $this->opt["spec"]);
+            }
+
+            $this->appMod   = include(BG_PATH_LANG . $this->config["lang"] . "/appMod.php"); //载入权限配置
+            $this->adminMod = include(BG_PATH_LANG . $this->config["lang"] . "/adminMod.php"); //载入管理权限配置
 
             if (BG_MODULE_GEN < 1) {
                 unset($this->adminMod["gen"]);
@@ -66,12 +70,14 @@ class CLASS_TPL {
      * @return void
      */
     function tplDisplay($str_tpl, $arr_tplData = "", $is_dislay = true) {
+        $_str_return = "";
+
         $this->obj_smarty->assign("config", $this->config);
         $this->obj_smarty->assign("lang", $this->lang);
         $this->obj_smarty->assign("alert", $this->alert);
 
         if (isset($this->arr_cfg["admin"])) {
-            $this->common["token_session"]  = fn_token(); //生成令牌
+            $this->common["tokenRow"]  = fn_token(); //生成令牌
             $this->obj_smarty->assign("common", $this->common);
             $this->obj_smarty->assign("status", $this->status);
             $this->obj_smarty->assign("type", $this->type);
@@ -85,7 +91,7 @@ class CLASS_TPL {
             $this->obj_smarty->registerPlugin("function", "call_display", "fn_callDisplay"); //注册自定义函数
             $this->obj_smarty->registerPlugin("function", "call_attach", "fn_callAttach"); //注册自定义函数
             $this->obj_smarty->registerPlugin("function", "call_cate", "fn_callCate"); //注册自定义函数
-            $this->obj_smarty->registerPlugin("modifier","ubb","fn_ubb");
+            $this->obj_smarty->registerPlugin("modifier", "ubb", "fn_ubb"); //注册自定义修饰器
         }
 
         $this->obj_smarty->assign("tplData", $arr_tplData);
@@ -93,7 +99,16 @@ class CLASS_TPL {
         if ($is_dislay) {
             $this->obj_smarty->display($str_tpl); //显示
         } else {
-            return $this->obj_smarty->fetch($str_tpl); //获取并返回
+            $_str_return = $this->obj_smarty->fetch($str_tpl); //获取并返回
         }
+
+        /*if (isset($this->arr_cfg["pub"])) {
+            $this->obj_smarty->unregisterPlugin("function", "call_display"); //注销自定义函数
+            $this->obj_smarty->unregisterPlugin("function", "call_attach"); //注销自定义函数
+            $this->obj_smarty->unregisterPlugin("function", "call_cate"); //注销自定义函数
+            $this->obj_smarty->unregisterPlugin("modifier", "ubb"); //注销自定义修饰器
+        }*/
+
+        return $_str_return;
     }
 }

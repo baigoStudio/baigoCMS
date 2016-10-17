@@ -1,4 +1,3 @@
-{* custom_list.tpl 标签列表 *}
 {function custom_option arr=""}
     {foreach $arr as $key=>$value}
         <option value="{$value.custom_id}" {if $tplData.customRow.custom_parent_id == $value.custom_id}selected{/if} {if $tplData.customRow.custom_id == $value.custom_id}disabled{/if}>
@@ -73,7 +72,7 @@
     </div>
 
     <form name="custom_form" id="custom_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="custom_id" id="custom_id" value="{$tplData.customRow.custom_id}">
         <input type="hidden" name="act_post" value="submit">
 
@@ -93,7 +92,7 @@
                                 <label class="control-label">{$lang.label.customParent}<span id="msg_custom_parent_id">*</span></label>
                                 <select name="custom_parent_id" id="custom_parent_id" data-validate class="form-control">
                                     <option value="">{$lang.option.pleaseSelect}</option>
-                                    <option {if $tplData.customRow.custom_parent_id == 0}selected{/if} value="0">{$lang.option.asCustomParent}</option>
+                                    <option {if $tplData.customRow.custom_parent_id < 1}selected{/if} value="0">{$lang.option.asCustomParent}</option>
                                     {custom_option arr=$tplData.customRows}
                                 </select>
                             </div>
@@ -105,7 +104,7 @@
                                 <select name="custom_type" id="custom_type" data-validate class="form-control">
                                     <option value="">{$lang.option.pleaseSelect}</option>
                                     {foreach $tplData.fields as $key=>$value}
-                                        <option {if $tplData.customRow.custom_type == $key}selected{/if} value="{$key}">{$value["label"]}</option>
+                                        <option {if $tplData.customRow.custom_type == $key}selected{/if} value="{$key}">{$value.label}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -171,7 +170,7 @@
                             <label class="control-label">{$lang.label.customCate}<span id="msg_custom_cate_id">*</span></label>
                             <select name="custom_cate_id" id="custom_cate_id" data-validate class="form-control">
                                 <option value="">{$lang.option.pleaseSelect}</option>
-                                <option {if $tplData.customRow.custom_cate_id == 0}selected{/if} value="0">{$lang.option.allCate}</option>
+                                <option {if $tplData.customRow.custom_cate_id < 1}selected{/if} value="0">{$lang.option.allCate}</option>
                                 {cate_select arr=$tplData.cateRows}
                             </select>
                         </div>
@@ -194,7 +193,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="custom_require">
-                                <input type="checkbox" id="custom_require" name="custom_require" {if $tplData.customRow.custom_require == 1}checked{/if} value="1">
+                                <input type="checkbox" id="custom_require" name="custom_require" {if $tplData.customRow.custom_require > 0}checked{/if} value="1">
                                 {$lang.label.require}
                             </label>
                         </div>
@@ -294,4 +293,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

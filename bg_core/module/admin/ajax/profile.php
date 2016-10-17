@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -31,5 +31,9 @@ switch ($GLOBALS["act_post"]) {
 
     case "info":
         $ajax_profile->ajax_info();
+    break;
+
+    case "prefer":
+        $ajax_profile->ajax_prefer();
     break;
 }

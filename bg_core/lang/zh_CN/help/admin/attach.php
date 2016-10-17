@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>所有附件</h3>
+return "<h3>所有附件</h3>
     <p>
         点左侧菜单“附件管理“，进入如下界面，可以对已上传的文件进行删除操作。点击“上传按钮“，可以上传文件。上传受上传设置和附件类型的限制，详见 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=opt#upload\">上传设置</a>、<a href=\"#mime\">附件类型</a>。
     </p>
@@ -10,10 +9,18 @@ return "<a name=\"list\"></a>
     </p>
 
     <p>
-        <img src=\"{images}attach_list.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}attach_list.jpg\" target=\"_blank\"><img src=\"{images}attach_list.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"mime\"></a>
     <h3>附件类型</h3>
@@ -22,8 +29,10 @@ return "<a name=\"list\"></a>
     </p>
 
     <p>
-        <img src=\"{images}mime_list.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}mime_list.jpg\" target=\"_blank\"><img src=\"{images}mime_list.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
+
+    <p>&nbsp;</p>
 
     <p>左侧表单可以创建允许上传的文件类型。表单下方的选框是常用的 MIME 类型，选择自动填写表单。</p>
 
@@ -41,7 +50,15 @@ return "<a name=\"list\"></a>
         </div>
     </div>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"thumb\"></a>
     <h3>缩略图</h3>
@@ -52,8 +69,10 @@ return "<a name=\"list\"></a>
         进入编辑缩略图后，可以点击“重新生成缩略图“，系统会将根据该尺寸，对系统内的所有图片重新生成缩略图，重新生成将耗费非常长的时间（视系统内图片的数量），同时也将耗费大量系统资源，请谨慎操作。此操作一般应用于更改了缩略图尺寸，或者新增了缩略图以后。因更改尺寸，系统内原该尺寸的缩略图会失效，新尺寸的缩略图尚未生成。新增缩略图类似，增加缩略图前上传的图片，将没有改尺寸的缩略图。
     </p>
     <p>
-        <img src=\"{images}thumb_list.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}thumb_list.jpg\" target=\"_blank\"><img src=\"{images}thumb_list.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
+
+    <p>&nbsp;</p>
 
     <p>左侧表单可以创建自动生成的缩略图的尺寸。</p>
 
@@ -71,7 +90,7 @@ return "<a name=\"list\"></a>
                 比例：图片按照上述两项参数的规定，按比例缩放，裁切：图片按照上述两项参数的规定，缩放图片，超出部分将被裁掉。下图是缩略图类型的说明，以最大宽度150，最大高度150为例，左侧为比例，右侧为裁切。
             </p>
             <p>
-                <img src=\"{images}thumb_note.jpg\" class=\"img-responsive thumbnail\">
+                <a href=\"{images}thumb_note.jpg\" target=\"_blank\"><img src=\"{images}thumb_note.jpg\" class=\"img-responsive thumbnail\"></a>
             </p>
         </div>
     </div>";

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -255,7 +255,11 @@ class MODEL_VERIFY {
             "verify_time_disable",
         );
 
-        $_arr_verifyRows = $this->obj_db->select(BG_DB_TABLE . "verify", $_arr_verifySelect, "", "", "verify_id DESC", $num_no, $num_except); //查询数据
+        $_arr_order = array(
+            array("verify_id", "DESC"),
+        );
+
+        $_arr_verifyRows = $this->obj_db->select(BG_DB_TABLE . "verify", $_arr_verifySelect, "", "", $_arr_order, $num_no, $num_except); //查询数据
 
         foreach ($_arr_verifyRows as $_key=>$_value) {
             if ($_value["verify_token_expire"] < time()) {
@@ -377,7 +381,7 @@ class MODEL_VERIFY {
 
         $this->verifyIds = array(
             "alert"         => $_str_alert,
-            "verify_ids"    => $_arr_verifyIds
+            "verify_ids"    => array_unique($_arr_verifyIds),
         );
 
         return $this->verifyIds;

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -27,6 +27,11 @@ return array(
     "group" => array(
         "admin"   => "管理组", //管理组
         //"user"    => "用户组", //用户组
+    ),
+
+    "admin" => array(
+        "normal"   => "普通管理员", //简体中文
+        "super"    => "超级管理员", //英语
     ),
 
     /*------栏目类型------*/
@@ -52,17 +57,18 @@ return array(
 
     /*------是否有图片类型------*/
     "callAttach" => array(
-        "all"     => "全部", //普通
-        "attach"  => "仅显示带图片文章", //单页
-        "none"    => "仅显示无图片文章", //跳转至
+        "all"     => "全部",
+        "attach"  => "仅显示带附件文章",
+        "none"    => "仅显示无附件文章",
     ),
 
     /*------调用生成文件------*/
     "callFile" => array(
         "html"    => "HTML",
+        "shtml"    => "SHTML",
         "js"      => "JS",
-        "xml"     => "XML",
-        "json"    => "JSON",
+        //"xml"     => "XML",
+        //"json"    => "JSON",
     ),
 
     /*------缩略图------*/

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -21,12 +21,16 @@ class CLASS_AJAX {
         $this->type       = include_once(BG_PATH_LANG . $this->config["lang"] . "/type.php"); //载入类型文件
         $this->opt        = include_once(BG_PATH_LANG . $this->config["lang"] . "/opt.php"); //载入类型文件
 
-        if(!defined("BG_MODULE_FTP") || BG_MODULE_FTP < 1) {
+        if (!defined("BG_MODULE_FTP") || BG_MODULE_FTP < 1) {
             unset($this->opt["upload"]["list"]["BG_UPLOAD_URL"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPHOST"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPORT"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPUSER"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPASS"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPATH"], $this->opt["upload"]["list"]["BG_UPLOAD_FTPPASV"]);
         }
 
-        if(!defined("BG_MODULE_GEN") || BG_MODULE_GEN < 1) {
-            unset($this->opt["visit"]["list"]["BG_VISIT_TYPE"]["option"]["static"], $this->opt["visit"]["list"]["BG_VISIT_FILE"]);
+        if (!defined("BG_MODULE_GEN") || BG_MODULE_GEN < 1) {
+            unset($this->opt["visit"]["list"]["BG_VISIT_TYPE"]["option"]["static"], $this->opt["visit"]["list"]["BG_VISIT_FILE"], $this->opt["visit"]["list"]["BG_VISIT_PAGE"]);
+        }
+
+        if (!defined("BG_VISIT_TYPE") || BG_VISIT_TYPE != "static") {
+            unset($this->opt["visit"]["list"]["BG_VISIT_FILE"], $this->opt["visit"]["list"]["BG_VISIT_PAGE"]);
         }
     }
 

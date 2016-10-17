@@ -6,7 +6,15 @@ return "<h3>概述</h3>
         <li>如采用高级部署方式，建议 SSO 同样采用，详情请查看 baigo SSO 帮助文档中的高级部署。</li>
     </ol>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <h3>上传文件</h3>
 
@@ -14,7 +22,7 @@ return "<h3>概述</h3>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">目录结构说明</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">文件 / 目录</th>
@@ -70,7 +78,7 @@ return "<h3>概述</h3>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">bg_static</td>
-                        <td class=\"text-nowrap\">静态文件</td>
+                        <td class=\"text-nowrap\">静态页面类型</td>
                         <td>/web/wwwroot</td>
                     </tr>
                     <tr>
@@ -83,7 +91,15 @@ return "<h3>概述</h3>
         </div>
     </div>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <h3>修改配置文件</h3>
 
@@ -94,7 +110,15 @@ define(&quot;BG_PATH_CACHE&quot;, &quot;/web/bg_cache/&quot;);
 define(&quot;BG_PATH_TPL&quot;, &quot;/web/bg_tpl/&quot;);</code></pre>
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <h3>执行安装程序</h3>
 

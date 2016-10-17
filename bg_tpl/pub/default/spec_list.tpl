@@ -1,8 +1,8 @@
-{* spec_list.tpl TAG 列表 *}
 {$cfg = [
-    title      => $lang.page.spec,
-    str_url    => "{$tplData.search.urlRow.spec_url}{$tplData.search.urlRow.page_attach}",
-    page_ext   => $tplData.search.page_ext
+    title       => $lang.page.spec,
+    str_url     => "{$tplData.urlRow.spec_url}{$tplData.urlRow.page_attach}",
+    str_urlMore => "{$tplData.urlRow.spec_urlMore}{$tplData.urlRow.page_attach}",
+    page_ext    => $tplData.urlRow.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 

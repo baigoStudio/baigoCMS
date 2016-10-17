@@ -1,4 +1,3 @@
-{* cate_single.tpl 单页栏目 *}
 {$cfg = [
     title      => $tplData.cateRow.cate_name
 ]}

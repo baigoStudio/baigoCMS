@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -24,11 +24,11 @@ class CONTROL_SEARCH {
         $this->mdl_custom     = new MODEL_CUSTOM();
         $this->mdl_attach     = new MODEL_ATTACH(); //设置文章对象
         $this->mdl_thumb      = new MODEL_THUMB(); //设置上传信息对象
+        $this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
         $this->search_init();
         $_arr_cfg["pub"]      = true;
         $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPL . "pub/" . $this->config["tpl"], $_arr_cfg); //初始化视图对象
         $this->mdl_tag        = new MODEL_TAG();
-        $this->mdl_articlePub = new MODEL_ARTICLE_PUB(); //设置文章对象
     }
 
 
@@ -37,14 +37,14 @@ class CONTROL_SEARCH {
         $_arr_page        = array();
         $_arr_articleRows = array();
 
-        if ($this->search["key"] || $this->search["customs"]) {
+        if (!fn_isEmpty($this->search["key"]) || !fn_isEmpty($this->search["customs"])) {
             $_num_articleCount    = $this->mdl_articlePub->mdl_count($this->search);
             $_arr_page            = fn_page($_num_articleCount, BG_SITE_PERPAGE); //取得分页数据
             $_str_query           = http_build_query($this->search);
             $_arr_articleRows     = $this->mdl_articlePub->mdl_list(BG_SITE_PERPAGE, $_arr_page["except"], $this->search);
 
             foreach ($_arr_articleRows as $_key=>$_value) {
-                $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+                $_arr_articleCateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
 
                 $_arr_searchTag = array(
                     "status"        => "show",
@@ -64,10 +64,11 @@ class CONTROL_SEARCH {
                     $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
                 }
 
-                $_arr_articleRows[$_key]["cateRow"]  = $_arr_cateRow;
-                if ($_arr_cateRow["cate_trees"][0]["cate_domain"]) {
-                    $_arr_articleRows[$_key]["article_url"]  = $_arr_cateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["article_url"];
-                }
+                $_arr_articleRows[$_key]["cateRow"]  = $_arr_articleCateRow;
+                /*if ($_arr_articleCateRow["cate_trees"][0]["cate_domain"]) {
+                    $_arr_articleRows[$_key]["urlRow"]["article_url"]  = $_arr_articleCateRow["cate_trees"][0]["cate_domain"] . "/" . $_value["urlRow"]["article_url"];
+                }*/
+                $_arr_articleRows[$_key]["urlRow"]  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
             }
         }
 
@@ -91,8 +92,8 @@ class CONTROL_SEARCH {
 
     private function url_process() {
         switch (BG_VISIT_TYPE) {
-            case "pstatic":
             case "static":
+            case "pstatic":
                 $_str_searchUrl     = BG_URL_ROOT . "search/";
                 $_str_pageAttach    = "page-";
             break;
@@ -111,7 +112,7 @@ class CONTROL_SEARCH {
 
 
     private function search_init() {
-        if(defined("BG_SITE_TPL")) {
+        if (defined("BG_SITE_TPL")) {
             $this->config["tpl"] = BG_SITE_TPL;
         } else {
             $this->config["tpl"] = "default";
@@ -121,6 +122,7 @@ class CONTROL_SEARCH {
         $_str_customs = fn_getSafe(fn_get("customs"), "txt", "");
 
         $_str_customs = urldecode($_str_customs);
+        $_str_customs = fn_htmlcode($_str_customs, "decode", "base64");
         $_str_customs = base64_decode($_str_customs);
         $_str_customs = urldecode($_str_customs);
         if (stristr($_str_customs, "&")) {
@@ -142,10 +144,10 @@ class CONTROL_SEARCH {
 
         $this->search = array(
             "cate_id"       => $_num_cateId,
+            "cate_ids"      => array(),
             "key"           => urldecode(fn_getSafe(fn_get("key"), "txt", "")),
             "customs"       => $_str_customs,
             "custom_rows"   => $_arr_customSearch,
-            "urlRow"        => $this->url_process(),
         );
 
         if ($_num_cateId > 0) {
@@ -159,10 +161,12 @@ class CONTROL_SEARCH {
         $this->mdl_attach->thumbRows    = $this->mdl_thumb->mdl_cache();
         $_arr_cateRows                  = $this->mdl_cate->mdl_cache();
         $_arr_customRows                = $this->mdl_custom->mdl_cache();
+        $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
 
         $this->tplData = array(
-            "customRows" => $_arr_customRows["custom_list"],
-            "cateRows"   => $_arr_cateRows,
+            "customRows"    => $_arr_customRows["custom_list"],
+            "cateRows"      => $_arr_cateRows,
+            "urlRow"        => $this->url_process(),
         );
     }
 

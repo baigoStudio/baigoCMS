@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class AJAX_MARK {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_mark;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -28,6 +29,12 @@ class AJAX_MARK {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +45,7 @@ class AJAX_MARK {
      * @return void
      */
     function ajax_submit() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
+        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x140302");
         }
 
@@ -61,7 +68,7 @@ class AJAX_MARK {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
+        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x140304");
         }
 
@@ -85,9 +92,13 @@ class AJAX_MARK {
     function ajax_chkname() {
         $_str_markName    = fn_getSafe(fn_get("mark_name"), "txt", "");
         $_num_markId      = fn_getSafe(fn_get("mark_id"), "int", 0);
-        $_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, "mark_name", $_num_markId);
-        if ($_arr_markRow["alert"] == "y140102") {
-            $this->obj_ajax->halt_re("x140203");
+
+        if (!fn_isEmpty($_str_markName)) {
+            $_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, "mark_name", $_num_markId);
+
+            if ($_arr_markRow["alert"] == "y140102") {
+                $this->obj_ajax->halt_re("x140203");
+            }
         }
 
         $arr_re = array(

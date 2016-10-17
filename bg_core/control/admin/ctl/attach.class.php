@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -27,13 +27,14 @@ class CONTROL_ATTACH {
     private $mdl_attach;
     private $mimeRows;
     private $mdl_admin;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"];
         $this->config         = $this->obj_base->config;
         $this->adminLogged    = $GLOBALS["adminLogged"];
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->mdl_attach     = new MODEL_ATTACH(); //设置上传信息对象
         $this->mdl_thumb      = new MODEL_THUMB();
         $this->mdl_mime       = new MODEL_MIME();
@@ -47,6 +48,12 @@ class CONTROL_ATTACH {
             "uploadSize"     => BG_UPLOAD_SIZE * $this->sizeUnit,
             "mimeRows"       => $this->mimeRows
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -63,7 +70,7 @@ class CONTROL_ATTACH {
             return $_arr_articleRow;
         }
 
-        if ((!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["edit"]) && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) || !isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) { //判断权限
+        if ((!isset($this->group_allow["article"]["edit"]) && !isset($this->adminLogged["admin_allow_cate"][$_arr_articleRow["article_cate_id"]]["edit"]) && $_arr_articleRow["article_admin_id"] != $this->adminLogged["admin_id"]) || !isset($this->group_allow["attach"]["browse"]) && !$this->is_super) { //判断权限
             return array(
                 "alert" => "x120303"
             );
@@ -119,7 +126,7 @@ class CONTROL_ATTACH {
      * @return void
      */
     function ctl_form() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"])) {
+        if (!isset($this->group_allow["attach"]["upload"]) && !$this->is_super) {
             return array(
                 "alert" => "x070302",
             );
@@ -169,7 +176,7 @@ class CONTROL_ATTACH {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) {
+        if (!isset($this->group_allow["attach"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x070301",
             );
@@ -183,10 +190,10 @@ class CONTROL_ATTACH {
 
         $_str_attachIds   = fn_getSafe(fn_get("ids"), "txt", "");
 
-        if ($_str_attachIds) {
-            $_arr_attachIds = explode("|", $_str_attachIds);
-        } else {
+        if (fn_isEmpty($_str_attachIds)) {
             $_arr_attachIds = false;
+        } else {
+            $_arr_attachIds = explode("|", $_str_attachIds);
         }
 
         $_arr_search = array(

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -77,7 +77,8 @@ class AJAX_PROFILE {
             return $_arr_adminRow;
         }
 
-        if (fn_baigoEncrypt($_arr_adminPass["admin_pass"], $_arr_adminRow["admin_rand"]) != $_arr_adminRow["admin_pass"]) {
+        //$_arr_adminRow["admin_is_upgrade"] 字段是判断密码加密方式是否已经升级, 系统在升级后, 第一次登录时进行自动判断, 然后升级加密方式
+        if (fn_baigoEncrypt($_arr_adminPass["admin_pass"], $_arr_adminRow["admin_rand"], false, $_arr_adminRow["admin_is_upgrade"]) != $_arr_adminRow["admin_pass"]) {
             $this->obj_ajax->halt_alert("x020207");
         }
 

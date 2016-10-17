@@ -7,7 +7,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,7 +18,6 @@ if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
         header("Location: " . BG_URL_INSTALL . "ctl.php?mod=upgrade");
         exit;
     }
-
 } else {
     header("Location: " . BG_URL_INSTALL . "ctl.php");
     exit;

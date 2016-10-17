@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class CONTROL_MARK {
     public $obj_tpl;
     public $mdl_mark;
     public $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
@@ -25,15 +26,21 @@ class CONTROL_MARK {
         $this->adminLogged    = $GLOBALS["adminLogged"];
         $this->mdl_mark       = new MODEL_MARK();
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
     function ctl_form() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
+        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
             return array(
                 "alert" => "x140301",
             );
@@ -74,7 +81,7 @@ class CONTROL_MARK {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["article"]["mark"])) {
+        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
             return array(
                 "alert" => "x140301",
             );

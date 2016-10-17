@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -23,12 +23,14 @@ return array(
         "order"             => "排序",
         "show"              => "查看",
         "profile"           => "管理员个人信息",
+        "prefer"            => "个人偏好",
         "pass"              => "修改密码",
         "search"            => "搜索", //搜索
         "spec"              => "专题",
         "opt"               => "系统设置", //系统设置
         "custom"            => "自定义字段",
         "app"               => "API 授权设置",
+        "gening"            => "正在生成",
 
         "admin"             => "管理后台", //管理后台
         "adminLogon"        => "后台登录", //管理登录
@@ -47,6 +49,8 @@ return array(
         "installSsoAuto"    => "SSO 自动部署",
         "installAdmin"      => "创建管理员",
         "installOver"       => "完成安装",
+
+        "chkver"            => "检查更新",
     ),
 
     /*------链接文字------*/
@@ -55,8 +59,6 @@ return array(
         "logout"          => "退出", //退出
         "back"            => "返回", //返回
         "reg"             => "注册", //注册
-        "infoModi"        => "个人信息", //个人信息
-        "passModi"        => "修改密码", //修改密码
         "add"             => "创建", //创建
         "edit"            => "编辑", //编辑
         "auth"            => "授权", //授权
@@ -65,6 +67,12 @@ return array(
         "wait"            => "待审", //待审
         "draft"           => "草稿箱", //草稿
         "opt"             => "系统设置", //系统设置
+        "more"            => "更多", //更多
+        "forward"         => "跳转",
+
+        "infoModi"        => "个人信息", //个人信息
+        "passModi"        => "修改密码", //修改密码
+        "prefer"          => "偏好设置",
 
         "recycle"         => "回收站", //回收站
 
@@ -131,11 +139,19 @@ return array(
         "format"          => "格式", //必填项
         "timezone"        => "时区",
 
+        "installVer"        => "当前安装版本",
+        "installTime"       => "安装（升级）时间",
+        "pubTime"           => "发布时间",
+        "latestVer"         => "最新版本",
+        "announcement"      => "公告",
+        "downloadUrl"       => "下载地址",
+        "description"       => "描述",
+
         "appName"         => "应用名称",
         "appId"           => "APP ID",
         "appKey"          => "APP KEY",
         "appKeyNote"      => "如果 APP KEY 泄露，可以通过重置更换，原 APP KEY 将作废。",
-        "appNotice"       => "通知接口 URL",
+        "appNotify"       => "通知接口 URL",
         "appAllow"        => "权限", //系统权限
         "apiUrl"          => "API 接口 URL",
 
@@ -196,11 +212,14 @@ return array(
         "time"            => "时间", //时间
         "datetime"        => "日期 / 时间", //时间
         "note"            => "备注", //备注
-        "timePub"         => "发布时间",
-        "deadline"        => "定时",
+        "timePub"         => "定时上线",
+        "timeHide"        => "定时下线",
+        "offline"         => "下线",
         "timeNote"        => "格式 " . date("Y-m-d H:i"),
 
         "tpl"             => "模板", //模板
+        "pageCount"       => "第", //首页
+        "pagePage"        => "页", //首页
 
         "order"           => "排序",
         "orderFirst"      => "移到最前",
@@ -213,6 +232,7 @@ return array(
         "groupAllow"      => "系统权限", //系统权限
         "groupType"       => "类型",
 
+        "article"         => "文章",
         "articleTitle"    => "文章标题", //文章标题
         "articleContent"  => "文章内容", //文章标题
         "articleLink"     => "跳转至", //跳转至
@@ -224,8 +244,12 @@ return array(
         "articleCount"    => "文章数",
         "articleSpec"     => "专题",
         "articleExcerpt"  => "摘要", //摘要
+        "articleUrl"      => "文章地址", //文章地址
+        "articlePath"     => "文章路径", //文章路径
         "excerptType"     => "摘要类型", //摘要
         "excerptDefault"  => "默认摘要类型", //摘要
+        "enforce"         => "警告！此操作将耗费较长时间！", //确认清空回收站
+        "staticFile"      => "静态文件",
 
         "hits"            => "点击数",
         "hitsDay"         => "日点击",
@@ -246,17 +270,22 @@ return array(
         "cateDomainNote"  => "末尾请勿加 <kbd>/</kbd>",
         "cateContent"     => "栏目介绍", //栏目简介
         "catePerpage"     => "每页显示数", //每页显示数
-        "cateFtpServ"     => "FTP 服务器", //FTP 服务器
-        "cateFtpPort"     => "FTP 服务器端口", //FTP 服务器端口
+        "cateFtpServ"     => "分发 FTP 地址", //分发 FTP 地址
+        "cateFtpPort"     => "FTP 端口", //FTP 端口
         "cateFtpUser"     => "FTP 用户名", //FTP 用户名
         "cateFtpPass"     => "FTP 密码", //FTP 密码
         "cateFtpPath"     => "FTP 远程路径", //FTP 远程路径
+        "cateFtpPathNote" => "末尾请勿加 <kbd>/</kbd>",
+        "cateFtpPasv"     => "FTP 被动模式", //FTP 远程路径
         "cateAll"         => "所有栏目", //作为一级栏目
 
-        "callName"        => "调用名称", //调用类型
+        "call"            => "调用", //调用
+        "callName"        => "调用名称", //调用名称
+        "callFunc"        => "调用方式", //调用方法
         "callFilter"      => "显示符合以下条件的内容",
         "callType"        => "调用类型", //调用类型
         "callFile"        => "生成文件类型", //生成扩展名
+        "callTpl"         => "模板", //模板
         "callAmount"      => "显示数量",
         "callAmoutTop"    => "显示前",
         "callAmoutExcept" => "排除前",
@@ -343,6 +372,7 @@ return array(
 
     /*------长篇文字------*/
     "text" => array(
+        "notForward"      => "如果长时间没有跳转，请点“跳转”按钮跳转！",
         "installSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a>。如果您的网站没有部署 baigo SSO，请点击 <mark>SSO 自动部署</mark>。",
         "upgradeSso"      => "baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href=\"http://www.baigo.net/sso/\" target=\"_blank\">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。",
         "installSsoAdmin" => "本操作将同时为 baigo CMS 与 baigo SSO 创建管理员，拥有所有的管理权限。请牢记用户名与密码。",
@@ -352,7 +382,8 @@ return array(
         "extOk"           => "服务器环境检查通过，可以继续安装。",
         "x070405"         => "尚未设置允许上传的文件类型，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=mime&act_get=list\" target=\"_top\">点击立刻设置</a>",
         "x110401"         => "尚未创建栏目，<a href=\"" . BG_URL_ADMIN . "ctl.php?mod=cate&act_get=form\" target=\"_top\">点击立刻创建</a>",
-
+        "haveNewVer"      => "您的版本不是最新的，下面是最新版本的发布和更新帮助链接。",
+        "isNewVer"        => "恭喜！您的版本是最新的！",
     ),
 
     "digit"    => array("日", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"),
@@ -379,18 +410,31 @@ return array(
         "jump"        => "跳转至",
         "over"        => "完成",
         "menu"        => "菜单",
+        "more"        => "更多操作", //更多操作
 
         "belongAdd"   => "选择",
-        "belongDel"   => "移除",
+        "belongDel"   => "移出",
 
-        "setPrimary"  => "设为主图",
-        "attachClear" => "清理附件",
-        "thumbGen"    => "重新生成缩略图",
-        "cateGen"     => "生成静态页面",
+        "setPrimary"        => "设为主图",
+        "attachClear"       => "清理附件",
+        "thumbGen"          => "重新生成缩略图",
+        "genOverall"        => "生成静态页面",
+        "callGen1by1"       => "逐个生成",
+        "callGenSingle"     => "生成",
+        "articleGen1by1"    => "逐个生成",
+        "articleGenSingle"  => "生成",
+        "articleGenEnforce" => "强制生成",
+        "cateGen1by1"       => "逐个生成",
+        "cateGenSingle"     => "生成",
+        "specGenOverall"    => "全面生成",
+        "specGenList"       => "生成列表",
+        "specGen1by1"       => "逐个生成",
+        "specGenSingle"     => "生成",
 
         "reloadSpec"  => "重载专题",
         "stepNext"    => "下一步",
         "resetKey"    => "重置 APP KEY",
+        "chkver"      => "再次检查更新",
     ),
 
     /*------确认框------*/
@@ -398,8 +442,8 @@ return array(
         "del"         => "确认永久删除吗？此操作不可恢复！", //确认清空回收站
         "empty"       => "确认清空回收站吗？此操作不可恢复！", //确认清空回收站
         "resetKey"    => "确认重置吗？此操作不可恢复！",
-        "clear"       => "确认清理附件吗？此操作将耗费将长时间！", //确认清空回收站
-        "gen"         => "确认重新生成吗？此操作将耗费将长时间！", //确认清空回收站
+        "clear"       => "确认清理附件吗？此操作将耗费较长时间！", //确认清空回收站
+        "gen"         => "确认重新生成吗？此操作将耗费较长时间！", //确认清空回收站
     ),
 
     /*------图片说明------*/

@@ -5,11 +5,10 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "tpl.class.php"); //载入模板类
 include_once(BG_PATH_CLASS . "sso.class.php");
 include_once(BG_PATH_MODEL . "cate.class.php"); //载入栏目模型
@@ -26,13 +25,14 @@ class CONTROL_ADMIN {
     private $mdl_group;
     private $mdl_cate;
     private $tplData;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base     = $GLOBALS["obj_base"];
         $this->config       = $this->obj_base->config;
         $this->adminLogged  = $GLOBALS["adminLogged"]; //获取已登录信息
         $_arr_cfg["admin"]  = true;
-        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl      = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->obj_sso      = new CLASS_SSO(); //初始化单点登录
         $this->mdl_admin    = new MODEL_ADMIN(); //设置管理员对象
         $this->mdl_group    = new MODEL_GROUP(); //设置组对象
@@ -40,6 +40,12 @@ class CONTROL_ADMIN {
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -50,7 +56,7 @@ class CONTROL_ADMIN {
      * @return void
      */
     function ctl_toGroup() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["toGroup"])) {
+        if (!isset($this->group_allow["admin"]["toGroup"]) && !$this->is_super) {
             return array(
                 "alert" => "x020305",
             );
@@ -58,13 +64,13 @@ class CONTROL_ADMIN {
 
         $_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
-        if ($_num_adminId == $this->adminLogged["admin_id"]) {
+        if ($_num_adminId == $this->adminLogged["admin_id"] && !$this->is_super) {
             return array(
                 "alert" => "x020306",
             );
         }
 
-        $_arr_ssoRow  = $this->obj_sso->sso_read($_num_adminId);
+        $_arr_ssoRow  = $this->obj_sso->sso_user_read($_num_adminId);
         if ($_arr_ssoRow["alert"] != "y010102") { //SSO 中不存在该用户
             return $_arr_ssoRow;
         }
@@ -104,12 +110,12 @@ class CONTROL_ADMIN {
         $_num_adminId = fn_getSafe(fn_get("admin_id"), "int", 0);
 
         if ($_num_adminId > 0) {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["edit"])) {
+            if (!isset($this->group_allow["admin"]["edit"]) && !$this->is_super) {
                 return array(
                     "alert" => "x020303",
                 );
             }
-            if ($_num_adminId == $this->adminLogged["admin_id"]) {
+            if ($_num_adminId == $this->adminLogged["admin_id"] && !$this->is_super) {
                 return array(
                     "alert" => "x020306",
                 );
@@ -118,13 +124,13 @@ class CONTROL_ADMIN {
             if ($_arr_adminRow["alert"] != "y020102") { //不存在该管理员
                 return $_arr_adminRow;
             }
-            $_arr_ssoRow = $this->obj_sso->sso_read($_num_adminId);
+            $_arr_ssoRow = $this->obj_sso->sso_user_read($_num_adminId);
             if ($_arr_ssoRow["alert"] != "y010102") { //SSO 中不存在该用户
                 return $_arr_ssoRow;
             }
             $_arr_adminRow["ssoRow"] = $_arr_ssoRow;
         } else {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
+            if (!isset($this->group_allow["admin"]["add"]) && !$this->is_super) {
                 return array(
                     "alert" => "x020302",
                 );
@@ -134,6 +140,7 @@ class CONTROL_ADMIN {
                 "admin_nick"    => "",
                 "admin_note"    => "",
                 "admin_status"  => "enable",
+                "admin_type"    => "normal",
                 "ssoRow" => array(
                     "user_mail" => "",
                     "user_nick" => "",
@@ -165,7 +172,7 @@ class CONTROL_ADMIN {
      * @return void
      */
     function ctl_show() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
+        if (!isset($this->group_allow["admin"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x020301",
             );
@@ -177,7 +184,7 @@ class CONTROL_ADMIN {
         if ($_arr_adminRow["alert"] != "y020102") {
             return $_arr_adminRow;
         }
-        $_arr_ssoRow = $this->obj_sso->sso_read($_num_adminId);
+        $_arr_ssoRow = $this->obj_sso->sso_user_read($_num_adminId);
         if ($_arr_ssoRow["alert"] != "y010102") {
             return $_arr_ssoRow;
         }
@@ -210,12 +217,15 @@ class CONTROL_ADMIN {
      */
     function ctl_auth() {
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["add"])) {
+        if (!isset($this->group_allow["admin"]["add"]) && !$this->is_super) {
             return array(
                 "alert" => "x020302",
             );
         }
-        $_arr_adminRow["admin_status"] = "enable";
+        $_arr_adminRow = array(
+            "admin_status"  => "enable",
+            "admin_type"    => "normal",
+        );
 
         $_arr_cateRows    = $this->mdl_cate->mdl_list(1000);
 
@@ -241,7 +251,7 @@ class CONTROL_ADMIN {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["admin"]["browse"])) {
+        if (!isset($this->group_allow["admin"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x020301",
             );
@@ -251,6 +261,7 @@ class CONTROL_ADMIN {
         $_arr_search = array(
             "key"       => fn_getSafe(fn_get("key"), "txt", ""),
             "status"    => fn_getSafe(fn_get("status"), "txt", ""),
+            "type"      => fn_getSafe(fn_get("type"), "txt", ""),
             "group_id"  => fn_getSafe(fn_get("group_id"), "int", 0),
         );
 

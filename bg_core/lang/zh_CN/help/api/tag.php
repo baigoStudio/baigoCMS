@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"get\"></a>
-    <h3>TAG 显示</h3>
+return "<h3>TAG 显示</h3>
     <p class=\"text-info\">接口说明</p>
     <p>用于显示当前 TAG 的详细信息。</p>
 
@@ -14,9 +13,9 @@ return "<a name=\"get\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -58,11 +57,11 @@ return "<a name=\"get\"></a>
     <p>&nbsp;</p>
 
     <a name=\"result\"></a>
-    <h4>返回结果</h4>
 
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -118,7 +117,8 @@ return "<a name=\"get\"></a>
     &quot;tag_article_count&quot;: &quot;0&quot;, //关联文章数
     &quot;urlRow&quot;: {
         &quot;tag_url&quot;: &quot;/cms/tag/tag-asp/&quot;, //URL
-        &quot;page_attach&quot;: &quot;page-&quot; //分页附加
+        &quot;page_attach&quot;: &quot;page-&quot;, //分页附加
+        &quot;page_ext&quot;: &quot;.html&quot;
     }
     &quot;alert&quot;: &quot;y130102&quot;
 }</code></pre>

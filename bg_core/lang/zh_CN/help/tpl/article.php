@@ -6,7 +6,7 @@ return "<h3>文章显示</h3>
     </p>
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -42,7 +42,7 @@ return "<h3>文章显示</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -80,12 +80,6 @@ return "<h3>文章显示</h3>
                         <td class=\"text-nowrap\">article_mark_id</td>
                         <td class=\"text-nowrap\">int</td>
                         <td class=\"text-nowrap\">隶属标记 ID</td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">article_spec_id</td>
-                        <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">文章隶属专题 ID</td>
                         <td> </td>
                     </tr>
                     <tr>
@@ -139,14 +133,20 @@ return "<h3>文章显示</h3>
                     <tr>
                         <td class=\"text-nowrap\">article_time_pub</td>
                         <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">文章发布时间</td>
-                        <td>指文章发布时间。</td>
+                        <td class=\"text-nowrap\">文章上线时间</td>
+                        <td>指文章上线时间。</td>
                     </tr>
                     <tr>
-                        <td class=\"text-nowrap\">article_url</td>
-                        <td class=\"text-nowrap\">string</td>
+                        <td class=\"text-nowrap\">article_time_hide</td>
+                        <td class=\"text-nowrap\">int</td>
+                        <td class=\"text-nowrap\">文章下线时间</td>
+                        <td>指文章下线时间。</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">urlRow</td>
+                        <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">当前文章 URL</td>
-                        <td> </td>
+                        <td>article_url 为文章 URL，page_ext 为文章扩展名。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tagRows</td>
@@ -176,7 +176,7 @@ return "<h3>文章显示</h3>
                         <td class=\"text-nowrap\">article_customs</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">自定义字段值</td>
-                        <td>自定义字段的内容。用 <code>{\$tplData.articleRow.article_customs[\"custom_自定义字段 ID\"}</code> 的方法便可显示自定义字段的内容。详情请查看通用资源 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=common#custom\" target=\"_blank\">自定义字段</a>，或后台管理 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
+                        <td>自定义字段的内容。用 <code>{\$tplData.articleRow.article_customs[\"custom_自定义字段 ID\"}</code> 的方式便可显示自定义字段的内容。详情请查看通用资源 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=common#custom\" target=\"_blank\">自定义字段</a>，或后台管理 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">alert</td>
@@ -208,8 +208,8 @@ return "<h3>文章显示</h3>
     [article_hits_year] =&gt; 5 //年点击
     [article_hits_all] =&gt; 6 //总点击
     [article_time] =&gt; 1438309806 //添加时间
-    [article_time_pub] =&gt; 1438308780 //发布时间
-    [article_spec_id] =&gt; 11 //隶属专题 ID
+    [article_time_pub] =&gt; 1438308780 //上线时间
+    [article_time_hide] =&gt; 1438308780 //下线时间
     [article_attach_id] =&gt; 2662 //附件 ID
     [article_content] =&gt; &lt;p&gt;&lt;img id=&quot;baigo_2662&quot; class=&quot;img-responsive&quot; src=&quot;/cms/bg_attach/2015/07/2662.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;&lt;p&gt;&nbsp;&lt;/p&gt;&lt;p&gt;[hr]&lt;/p&gt; //内容
     [article_customs] =&gt; Array ( //自定义字段
@@ -230,11 +230,13 @@ return "<h3>文章显示</h3>
         [cate_alias] =&gt; support
         [cate_parent_id] =&gt; 0
         [cate_type] =&gt; normal
-        [cate_tplDo] =&gt; default
+        [cate_tplDo] =&gt; default //模板
         [cate_content] =&gt;
         [urlRow] =&gt; Array (
             [cate_url] =&gt; /cms/cate/support/id-2/
+            [cate_urlMore] =&gt; /cms/cate/support/id-2/
             [page_attach] =&gt; page-
+            [page_ext] =&gt; .html
         )
         [cate_trees] =&gt; Array (
             [0] =&gt; Array (
@@ -244,7 +246,9 @@ return "<h3>文章显示</h3>
                 [cate_domain] =&gt;
                 [urlRow] =&gt; Array (
                     [cate_url] =&gt; /cms/cate/support/id-2/
+                    [cate_urlMore] =&gt; /cms/cate/support/id-2/
                     [page_attach] =&gt; page-
+                    [page_ext] =&gt; .html
                 )
             )
         )
@@ -268,4 +272,21 @@ return "<h3>文章显示</h3>
     )
     [alert] =&gt; y120102
 )</code></pre>
-    </p>";
+    </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
+    <hr>
+    <p>&nbsp;</p>
+
+    <a name=\"hits\"></a>
+    <h3>文章计数</h3>
+
+    <p>由于纯静态页面无法计数，因此在此提供计数接口，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=article#hits\" target=\"_blank\">计数接口</a></p>
+
+    <p>此接口建议使用 script 或 iframe 方式调用，如 <code>&lt;script src=&quot;http://www.domain.com/bg_api/api.php?mod=article&act_get=hits&article_id=9&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></p>";

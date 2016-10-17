@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"get\"></a>
-    <h3>自定义字段列表</h3>
+return "<h3>自定义字段列表</h3>
     <p class=\"text-info\">接口说明</p>
     <p>用于显示系统内所有有效自定义字段列表。</p>
 
@@ -14,9 +13,9 @@ return "<a name=\"get\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -52,11 +51,11 @@ return "<a name=\"get\"></a>
     <p>&nbsp;</p>
 
     <a name=\"result\"></a>
-    <h4>返回结果</h4>
 
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>

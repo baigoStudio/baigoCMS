@@ -1,4 +1,3 @@
-{* index.tpl 首页 *}
 {$cfg = [
     title => "首页"
 ]}

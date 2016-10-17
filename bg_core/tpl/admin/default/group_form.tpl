@@ -1,4 +1,3 @@
-{* admin_groupForm.tpl 管理组编辑界面 *}
 {if $tplData.groupRow.group_id < 1}
     {$title_sub = $lang.page.add}
     {$sub_active = "form"}
@@ -43,7 +42,7 @@
     </div>
 
     <form name="group_form" id="group_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="submit">
         <input type="hidden" name="group_id" id="group_id" value="{$tplData.groupRow.group_id}">
 
@@ -99,6 +98,10 @@
                                     <label for="allow_opt_app" class="checkbox-inline">
                                         <input type="checkbox" name="group_allow[opt][app]" value="1" id="allow_opt_app" data-parent="allow_opt" {if isset($tplData.groupRow.group_allow.opt.app)}checked{/if}>
                                         {$lang.page.app}
+                                    </label>
+                                    <label for="allow_opt_chkver" class="checkbox-inline">
+                                        <input type="checkbox" name="group_allow[opt][chkver]" value="1" id="allow_opt_chkver" data-parent="allow_opt" {if isset($tplData.groupRow.group_allow.opt.chkver)}checked{/if}>
+                                        {$lang.page.chkver}
                                     </label>
                                     <label for="allow_opt_dbconfig" class="checkbox-inline">
                                         <input type="checkbox" name="group_allow[opt][dbconfig]" value="1" id="allow_opt_dbconfig" data-parent="allow_opt" {if isset($tplData.groupRow.group_allow.opt.dbconfig)}checked{/if}>
@@ -241,4 +244,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

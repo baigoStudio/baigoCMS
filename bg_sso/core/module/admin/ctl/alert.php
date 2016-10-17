@@ -5,10 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已安装
 include_once(BG_PATH_FUNC . "init.func.php"); //初始化
 $arr_set = array(
     "base"          => true, //基本设置
@@ -20,14 +21,13 @@ $arr_set = array(
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已安装
 include_once(BG_PATH_INC . "is_admin.inc.php"); //验证是否已登录
 include_once(BG_PATH_CONTROL . "admin/ctl/alert.class.php"); //载入提示信息类
 
 $ctl_alert = new CONTROL_ALERT(); //初始化提示信息对象
 
 switch ($GLOBALS["act_get"]) {
-    case "show":
+    default:
         $ctl_alert->ctl_show(); //显示消息
     break;
 }

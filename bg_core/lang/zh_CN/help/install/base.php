@@ -1,7 +1,11 @@
 <?php
 return "<h3>基本设置</h3>
 
-    <p><img src=\"{images}base.jpg\" class=\"img-responsive\"></p>
+    <p>
+        <a href=\"{images}base.jpg\" target=\"_blank\"><img src=\"{images}base.jpg\" class=\"img-responsive\"></a>
+    </p>
+
+    <p>&nbsp;</p>
 
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">填写说明</div>
@@ -25,7 +29,7 @@ return "<h3>基本设置</h3>
             <p>文章摘要现在可以选择类型，其中自动截取方式将会由系统自己截取文章内容的最前面部分的文字，默认为 100.</p>
 
             <h4 class=\"text-info\">时区</h4>
-            <p>请根据当地实际情况填写，默认为 Etc/GMT+8，即北京时间。</p>
+            <p>请根据当地实际情况填写，默认为 Asia/Shanghai，即北京时间。</p>
 
             <h4 class=\"text-info\">日期格式</h4>
             <p>部分页面显示日期的格式，此日期为完整的日期格式，默认为 xxxx-xx-xx（年-月-日）。</p>

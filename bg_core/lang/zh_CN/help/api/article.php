@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>文章列表</h3>
+return "<h3>文章列表</h3>
     <p class=\"text-info\">接口说明</p>
     <p>用于显示文章列表。</p>
 
@@ -14,9 +13,9 @@ return "<a name=\"list\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -75,22 +74,23 @@ return "<a name=\"list\"></a>
                         <td>标记 ID，多个 ID 请使用 <kbd>|</kbd> 分隔。</td>
                     </tr>
                     <tr>
-                        <td class=\"text-nowrap\">spec_id</td>
-                        <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">false</td>
-                        <td>专题 ID。</td>
-                    </tr>
-                    <tr>
                         <td class=\"text-nowrap\">tag_ids</td>
                         <td class=\"text-nowrap\">string</td>
                         <td class=\"text-nowrap\">false</td>
-                        <td>TAG ID，多个 ID 请使用 <kbd>|</kbd> 分隔。此参数与下一项参数 <mark>customs</mark> 为二选一，当本参数不为空时，自动忽略 <mark>customs</mark> 参数。</td>
+                        <td rowspan=\"3\">
+                            <div>多个 ID 请使用 <kbd>|</kbd> 分隔。此三个参数为三选一，优先级依次为 tag_ids &gt; spec_ids &gt; customs。</div>
+                            <div>关于 customs 详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=search#customs\" target=\"_blank\">搜索</a></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">spec_ids</td>
+                        <td class=\"text-nowrap\">string</td>
+                        <td class=\"text-nowrap\">false</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">customs</td>
                         <td class=\"text-nowrap\">string</td>
                         <td class=\"text-nowrap\">false</td>
-                        <td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=search#customs\" target=\"_blank\">搜索</a></td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">per_page</td>
@@ -105,10 +105,10 @@ return "<a name=\"list\"></a>
 
     <p>&nbsp;</p>
 
-    <h4>返回结果</h4>
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -135,7 +135,15 @@ return "<a name=\"list\"></a>
         </div>
     </div>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"get\"></a>
     <h3>文章显示</h3>
@@ -152,9 +160,9 @@ return "<a name=\"list\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -196,10 +204,11 @@ return "<a name=\"list\"></a>
     <p>&nbsp;</p>
 
     <a name=\"result\"></a>
-    <h4>返回结果</h4>
+
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -237,12 +246,6 @@ return "<a name=\"list\"></a>
                         <td class=\"text-nowrap\">article_mark_id</td>
                         <td class=\"text-nowrap\">int</td>
                         <td class=\"text-nowrap\">隶属标记 ID</td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">article_spec_id</td>
-                        <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">文章隶属专题 ID</td>
                         <td> </td>
                     </tr>
                     <tr>
@@ -296,8 +299,14 @@ return "<a name=\"list\"></a>
                     <tr>
                         <td class=\"text-nowrap\">article_time_pub</td>
                         <td class=\"text-nowrap\">int</td>
-                        <td class=\"text-nowrap\">文章发布时间</td>
-                        <td>指文章发布时间。</td>
+                        <td class=\"text-nowrap\">文章上线时间</td>
+                        <td>指文章上线时间。</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">article_time_hide</td>
+                        <td class=\"text-nowrap\">int</td>
+                        <td class=\"text-nowrap\">文章下线时间</td>
+                        <td>指文章下线时间。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tagRows</td>
@@ -327,7 +336,7 @@ return "<a name=\"list\"></a>
                         <td class=\"text-nowrap\">article_customs</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">自定义字段</td>
-                        <td>自定义字段的内容。用 <code>article_customs[\"custom_自定义字段 ID\"]</code> 的方法便可获取自定义字段的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
+                        <td>自定义字段的内容。用 <code>article_customs[\"custom_自定义字段 ID\"]</code> 的方式便可获取自定义字段的内容。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=admin&act_get=custom\" target=\"_blank\">自定义字段</a>。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">alert</td>
@@ -358,8 +367,8 @@ return "<a name=\"list\"></a>
     &quot;article_hits_year&quot;: &quot;5&quot;, //年点击
     &quot;article_hits_all&quot;: &quot;6&quot;, //总点击
     &quot;article_time&quot;: &quot;1438309806&quot;, //添加时间
-    &quot;article_time_pub&quot;: &quot;1438308780&quot;, //发布时间
-    &quot;article_spec_id&quot;: &quot;11&quot;, //隶属专题 ID
+    &quot;article_time_pub&quot;: &quot;1438308780&quot;, //上线时间
+    &quot;article_time_hide&quot;: &quot;1438308780&quot;, //下线时间
     &quot;article_attach_id&quot;: &quot;2662&quot;, //附件 ID
     &quot;article_content&quot;: &quot;&lt;p&gt;&lt;img id=\&quot;baigo_2662\&quot; class=\&quot;img-responsive\&quot; src=\&quot;/cms/bg_attach/2015/07/2662.jpg\&quot; alt=\&quot;\&quot; /&gt;&lt;/p&gt;&lt;p&gt;&nbsp;&lt;/p&gt;&lt;p&gt;[hr]&lt;/p&gt;&quot;, //内容
     &quot;article_customs&quot;: { //自定义字段
@@ -372,7 +381,10 @@ return "<a name=\"list\"></a>
         &quot;custom_11&quot;: &quot;&quot;,
         &quot;custom_12&quot;: &quot;&quot;
     },
-    &quot;article_url&quot;: &quot;/cms/article/id-62&quot;, //URL
+    &quot;urlRow&quot;: {
+        &quot;article_url&quot;: &quot;/cms/article/id-62&quot;, //URL
+        &quot;page_ext&quot;: &quot;.html&quot;
+    },
     &quot;cateRow&quot;: { //隶属栏目信息
         &quot;alert&quot;: &quot;y110102&quot;,
         &quot;cate_id&quot;: &quot;2&quot;,
@@ -384,7 +396,9 @@ return "<a name=\"list\"></a>
         &quot;cate_content&quot;: &quot;&quot;
         &quot;urlRow&quot;: {
             &quot;cate_url&quot;: &quot;/cms/cate/support/id-2/&quot;,
-            &quot;page_attach&quot;: &quot;page-&quot;
+            &quot;cate_urlMore&quot;: &quot;/cms/cate/support/id-2/&quot;,
+            &quot;page_attach&quot;: &quot;page-&quot;,
+            &quot;page_ext&quot;: &quot;.html&quot;
         },
         &quot;cate_trees&quot;: {
             [
@@ -395,7 +409,9 @@ return "<a name=\"list\"></a>
                     &quot;cate_domain&quot;: &quot;&quot;,
                     &quot;urlRow&quot;: {
                         &quot;cate_url&quot;: &quot;/cms/cate/support/id-2/&quot;,
-                        &quot;page_attach&quot;: &quot;page-&quot;
+                        &quot;cate_urlMore&quot;: &quot;/cms/cate/support/id-2/&quot;,
+                        &quot;page_attach&quot;: &quot;page-&quot;,
+                        &quot;page_ext&quot;: &quot;.html&quot;
                     }
                 }
             ]
@@ -420,4 +436,85 @@ return "<a name=\"list\"></a>
     },
     &quot;alert&quot;: &quot;y120102&quot;
 }</code></pre>
-    </p>";
+    </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
+    <hr>
+    <p>&nbsp;</p>
+
+    <a name=\"hits\"></a>
+    <h3>文章计数</h3>
+
+    <p class=\"text-info\">接口说明</p>
+    <p>由于纯静态页面无法计数，因此在此提供计数接口，建议只用于纯静态模式。本接口只能提供简单的文章点击数，如果需要详细的访问统计，请使用专业的网站统计系统。</p>
+
+    <p class=\"text-info\">URL</p>
+    <p><span class=\"text-primary\">http://www.domain.com/bg_api/api.php?mod=article</span></p>
+
+    <p class=\"text-info\">HTTP 请求方式</p>
+    <p>GET</p>
+
+    <p class=\"text-info\">返回格式</p>
+    <p>JSON</p>
+
+    <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">请求参数</div>
+        <div class=\"table-responsive\">
+            <table class=\"table table-bordered\">
+                <thead>
+                    <tr>
+                        <th class=\"text-nowrap\">名称</th>
+                        <th class=\"text-nowrap\">类型</th>
+                        <th class=\"text-nowrap\">必须</th>
+                        <th>具体描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class=\"text-nowrap\">act_get</td>
+                        <td class=\"text-nowrap\">string</td>
+                        <td class=\"text-nowrap\">true</td>
+                        <td>接口调用动作，值只能为 hits。</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">article_id</td>
+                        <td class=\"text-nowrap\">int</td>
+                        <td class=\"text-nowrap\">true</td>
+                        <td>文章 ID</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
+        <div class=\"table-responsive\">
+            <table class=\"table table-bordered\">
+                <thead>
+                    <tr>
+                        <th class=\"text-nowrap\">键名</th>
+                        <th class=\"text-nowrap\">类型</th>
+                        <th class=\"text-nowrap\">说明</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class=\"text-nowrap\">alert</td>
+                        <td class=\"text-nowrap\">string</td>
+                        <td class=\"text-nowrap\">返回代码</td>
+                        <td>显示技术结果，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=api&act_get=alert\" target=\"_blank\">返回代码</a>。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>";

@@ -4,7 +4,6 @@ return array(
     "active"   => "admin",
     "menu"     => array(
         "outline"     => "后台概述",
-        "faq"         => "常见问题",
         "common"      => "通用资源",
         "article"     => "文章管理",
         "spec"        => "专题",

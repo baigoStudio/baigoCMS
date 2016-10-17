@@ -1,14 +1,21 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>所有群组</h3>
+return "<h3>所有群组</h3>
     <p>
         点左侧菜单“群组管理“，进入如下界面，可以对群组进行编辑、删除等操作。群组是指一系列管理员的集合，管理员可以预先将一些管理权限赋予群组，隶属于某个组的管理员便自动获得该群组的权限。
     </p>
     <p>
-        <img src=\"{images}group_list.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}group_list.jpg\" target=\"_blank\"><img src=\"{images}group_list.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"form\"></a>
     <h3>创建（编辑）群组</h3>
@@ -16,8 +23,10 @@ return "<a name=\"list\"></a>
         点左侧子菜单的“创建群组“或者点击群组列表的“编辑“菜单，进入如下界面，在此，您可以对群组进行各项操作。
     </p>
     <p>
-        <img src=\"{images}group_form.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}group_form.jpg\" target=\"_blank\"><img src=\"{images}group_form.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
+
+    <p>&nbsp;</p>
 
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">填写说明</div>

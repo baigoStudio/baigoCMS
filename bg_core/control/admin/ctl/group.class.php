@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -17,6 +17,7 @@ class CONTROL_GROUP {
     public $obj_tpl;
     public $mdl_group;
     public $adminLogged;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->obj_base       = $GLOBALS["obj_base"]; //获取界面类型
@@ -24,10 +25,16 @@ class CONTROL_GROUP {
         $this->adminLogged    = $GLOBALS["adminLogged"];
         $this->mdl_group      = new MODEL_GROUP();
         $_arr_cfg["admin"] = true;
-        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . $this->config["ui"], $_arr_cfg); //初始化视图对象
+        $this->obj_tpl        = new CLASS_TPL(BG_PATH_TPLSYS . "admin/" . BG_DEFAULT_UI, $_arr_cfg); //初始化视图对象
         $this->tplData = array(
             "adminLogged" => $this->adminLogged
         );
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +45,7 @@ class CONTROL_GROUP {
      * @return void
      */
     function ctl_show() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
+        if (!isset($this->group_allow["group"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x040301",
             );
@@ -81,7 +88,7 @@ class CONTROL_GROUP {
         $_num_groupId = fn_getSafe(fn_get("group_id"), "int", 0);
 
         if ($_num_groupId > 0) {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["edit"])) {
+            if (!isset($this->group_allow["group"]["edit"]) && !$this->is_super) {
                 return array(
                     "alert" => "x040303",
                 );
@@ -91,7 +98,7 @@ class CONTROL_GROUP {
                 return $_arr_groupRow;
             }
         } else {
-            if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["add"])) {
+            if (!isset($this->group_allow["group"]["add"]) && !$this->is_super) {
                 return array(
                     "alert" => "x040302",
                 );
@@ -127,7 +134,7 @@ class CONTROL_GROUP {
      * @return void
      */
     function ctl_list() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["group"]["browse"])) {
+        if (!isset($this->group_allow["group"]["browse"]) && !$this->is_super) {
             return array(
                 "alert" => "x040301",
             );

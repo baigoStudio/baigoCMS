@@ -1,8 +1,7 @@
-{* tag_show.tpl TAG 显示 *}
 {$cfg = [
     title      => $tplData.tagRow.tag_name,
     str_url    => "{$tplData.tagRow.urlRow.tag_url}{$tplData.tagRow.urlRow.page_attach}",
-    page_ext   => $tplData.search.page_ext
+    page_ext   => $tplData.tagRow.urlRow.page_ext
 ]}
 {include "include/pub_head.tpl" cfg=$cfg}
 
@@ -13,7 +12,7 @@
     </ol>
 
     {foreach $tplData.articleRows as $key=>$value}
-        <h3><a href="{$value.article_url}" target="_blank">{$value.article_title}</a></h3>
+        <h3><a href="{$value.urlRow.article_url}" target="_blank">{$value.article_title}</a></h3>
         <p>{$value.article_time_pub|date_format:$smarty.const.BG_SITE_DATE}</p>
         <hr>
         <ul class="list-inline">

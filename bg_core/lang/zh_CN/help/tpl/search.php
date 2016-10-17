@@ -1,13 +1,12 @@
 <?php
 return "<h3>搜索</h3>
-
     <p>文件名：<span class=\"text-primary\">search_show.tpl</span></p>
     <p>
         用于显示搜索结果。
     </p>
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -42,6 +41,12 @@ return "<h3>搜索</h3>
                         <td>搜索参数序列化为字符串以后的结果。</td>
                     </tr>
                     <tr>
+                        <td class=\"text-nowrap\">tplData.urlRow</td>
+                        <td class=\"text-nowrap\">array</td>
+                        <td class=\"text-nowrap\">搜索 URL 数组</td>
+                        <td>search_url 为搜索 URL，page_attach 为分页附加参数，主要用于分页。</td>
+                    </tr>
+                    <tr>
                         <td class=\"text-nowrap\">tplData.pageRow</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">分页参数</td>
@@ -61,7 +66,7 @@ return "<h3>搜索</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -89,12 +94,6 @@ return "<h3>搜索</h3>
                         <td class=\"text-nowrap\">栏目 ID</td>
                         <td> </td>
                     </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">urlRow</td>
-                        <td class=\"text-nowrap\">array</td>
-                        <td class=\"text-nowrap\">搜索 URL 数组</td>
-                        <td>search_url 为搜索 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -109,7 +108,7 @@ return "<h3>搜索</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">访问方式</th>
@@ -141,7 +140,7 @@ return "<h3>搜索</h3>
     <a name=\"customs\"></a>
     <h4>自定义字段</h4>
 
-    <p>关于上述表格中的 <mark>自定义字段</mark>，是指 baigo CMS 特有的用于自定义字段的字符串，其格式为 GET 查询串，例如 <code>2=关键词&5=关键词</code>，然后将查询串用 <mark>Base64</mark> 进行编码，最后将生成的字符串进行 URL 编码。</p>
+    <p>关于上述表格中的 <mark>自定义字段</mark>，是指 baigo CMS 特有的用于自定义字段的字符串，其格式为 GET 查询串，例如 <code>custom_2=关键词&custom_5=关键词</code>，然后将查询串用 <mark>Base64</mark> 进行编码，最后将生成的字符串进行 URL 编码。</p>
 
     <p>在 HTML 页面中，建议使用 JavaScript 或 VBScript 以及 jQuery 等脚本将搜索内容序列化。</p>
 
@@ -160,11 +159,11 @@ return "<h3>搜索</h3>
     &lt;/div&gt;
     &lt;div class=&quot;form-group&quot;&gt;
         &lt;label class=&quot;control-label&quot;&gt;电压&lt;/label&gt;
-        &lt;input type=&quot;text&quot; name=&quot;2&quot; value=&quot;&quot; class=&quot;customs form-control&quot; placeholder=&quot;电压&quot;&gt;
+        &lt;input type=&quot;text&quot; name=&quot;custom_2&quot; value=&quot;&quot; class=&quot;customs form-control&quot; placeholder=&quot;电压&quot;&gt;
     &lt;/div&gt;
     &lt;div class=&quot;form-group&quot;&gt;
         &lt;label class=&quot;control-label&quot;&gt;序列号&lt;/label&gt;
-        &lt;input type=&quot;text&quot; name=&quot;1&quot; value=&quot;&quot; class=&quot;customs form-control&quot; placeholder=&quot;序列号&quot;&gt;
+        &lt;input type=&quot;text&quot; name=&quot;custom_5&quot; value=&quot;&quot; class=&quot;customs form-control&quot; placeholder=&quot;序列号&quot;&gt;
     &lt;/div&gt;
     &lt;button type=&quot;button&quot; id=&quot;search_go&quot; class=&quot;btn btn-primary&quot;&gt;搜索&lt;/button&gt;
 &lt;/form&gt;</code></pre>
@@ -176,7 +175,7 @@ return "<h3>搜索</h3>
     $(&quot;#search_go&quot;).click(function(){
         var _key = $(&quot;#key&quot;).val();
         var _customs = $(&quot;.customs&quot;).serialize();
-        window.location.href = &quot;./search/key-&quot; + _key + &quot;/customs-&quot; + encodeURIComponent(Base64.encode(customs)) + &quot;/&quot;;
+        window.location.href = &quot;./search/key-&quot; + _key + &quot;/customs-&quot; + encodeURIComponent(Base64.encode(_customs)) + &quot;/&quot;;
     });
 })</code></pre>
     </p>";

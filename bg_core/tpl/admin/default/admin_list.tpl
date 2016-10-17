@@ -1,4 +1,3 @@
-{* admin_list.tpl 管理员列表 *}
 {$cfg = [
     title          => $adminMod.admin.main.title,
     menu_active    => "admin",
@@ -47,6 +46,14 @@
                 <input type="hidden" name="mod" value="admin">
                 <input type="hidden" name="act_get" value="list">
                 <div class="form-group">
+                    <select name="type" class="form-control input-sm">
+                        <option value="">{$lang.option.allType}</option>
+                        {foreach $type.admin as $key=>$value}
+                            <option {if $tplData.search.type == $key}selected{/if} value="{$key}">{$value}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="form-group">
                     <select name="status" class="form-control input-sm">
                         <option value="">{$lang.option.allStatus}</option>
                         {foreach $status.admin as $key=>$value}
@@ -70,7 +77,7 @@
     </div>
 
     <form name="admin_list" id="admin_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -86,7 +93,7 @@
                             <th class="text-nowrap td_mn">{$lang.label.id}</th>
                             <th>{$lang.label.admin}</th>
                             <th class="text-nowrap td_md">{$lang.label.adminGroup} / {$lang.label.note}</th>
-                            <th class="text-nowrap td_sm">{$lang.label.status}</th>
+                            <th class="text-nowrap td_md">{$lang.label.status} / {$lang.label.type}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,8 +157,13 @@
                                         <li>{$value.admin_note}</li>
                                     </ul>
                                 </td>
-                                <td class="td_sm label_baigo">
-                                    <span class="label label-{$css_status}">{$status.admin[$value.admin_status]}</span>
+                                <td class="text-nowrap td_md">
+                                    <ul class="list-unstyled">
+                                        <li class="label_baigo">
+                                            <span class="label label-{$css_status}">{$status.admin[$value.admin_status]}</span>
+                                        </li>
+                                        <li>{$type.admin[$value.admin_type]}</li>
+                                    </ul>
                                 </td>
                             </tr>
                         {/foreach}

@@ -1,4 +1,3 @@
-{* spec_list.tpl 标签列表 *}
 {$cfg = [
     title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.spec.title}",
     menu_active    => "article",
@@ -63,8 +62,25 @@
         <div class="clearfix"></div>
     </div>
 
+    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
+        <div class="form-group">
+            <div class="btn-group btn-group-sm">
+                <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=spec&act_get=1by1&overall=true" class="btn btn-primary" data-toggle="modal" data-target="#gen_modal">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    {$lang.btn.specGenOverall}
+                </button>
+                <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=spec&act_get=list" class="btn btn-primary" data-toggle="modal" data-target="#gen_modal">
+                    {$lang.btn.specGenList}
+                </button>
+                <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=spec&act_get=1by1" class="btn btn-primary" data-toggle="modal" data-target="#gen_modal">
+                    {$lang.btn.specGen1by1}
+                </button>
+            </div>
+        </div>
+    {/if}
+
     <form name="spec_list" id="spec_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -109,6 +125,14 @@
                                                 <li>
                                                     <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=select&spec_id={$value.spec_id}">{$lang.href.specSelect}</a>
                                                 </li>
+                                                {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static" && $value.spec_status == "show"}
+                                                    <li>
+                                                        <button type="button" class="btn btn-xs btn-info" data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=spec&act_get=single&spec_id={$value.spec_id}" data-toggle="modal" data-target="#gen_modal">
+                                                            <span class="glyphicon glyphicon-refresh"></span>
+                                                            {$lang.btn.specGenSingle}
+                                                        </button>
+                                                    </li>
+                                                {/if}
                                             </ul>
                                         </li>
                                     </ul>
@@ -193,4 +217,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

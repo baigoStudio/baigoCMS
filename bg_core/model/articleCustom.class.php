@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -38,10 +38,11 @@ class MODEL_ARTICLE_CUSTOM {
 
         $_arr_col     = $this->mdl_column();
         $_arr_alert   = array();
+        $_arr_custom  = array();
 
         foreach ($arr_customRows as $_key=>$_value) {
             if (!in_array("custom_" . $_value["custom_id"], $_arr_col)) {
-                $_arr_alert["custom_" . $_value["custom_id"]] = array("ADD", "varchar(90) NOT NULL COMMENT '自定义字段 " . $_value["custom_id"] . "'");
+                $_arr_alert["custom_" . $_value["custom_id"]] = array("ADD", "varchar(90) NOT NULL COMMENT '" . $_value["custom_id"] . " " . $_value["custom_name"] . "'");
             }
             $_arr_custom[] = "custom_" . $_value["custom_id"];
         }

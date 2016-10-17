@@ -5,12 +5,12 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
-if (BG_MODULE_FTP == 1) {
+if (BG_MODULE_FTP > 0) {
     include_once(BG_PATH_CLASS . "ftp.class.php"); //载入 FTP 类
 }
 include_once(BG_PATH_CLASS . "upload.class.php"); //载入上传类
@@ -26,6 +26,7 @@ class AJAX_ATTACH {
     private $obj_ajax;
     private $mdl_attach;
     private $attachMime;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged  = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -38,6 +39,12 @@ class AJAX_ATTACH {
         $this->mdl_admin    = new MODEL_ADMIN();
         $this->mdl_article  = new MODEL_ARTICLE(); //设置文章对象
         $this->setUpload();
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -46,7 +53,7 @@ class AJAX_ATTACH {
             $this->show_err($this->adminLogged["alert"], "err");
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["thumb"])) {
+        if (!isset($this->group_allow["attach"]["thumb"]) && !$this->is_super) {
             $this->show_err("x070304", "err");
         }
 
@@ -54,8 +61,8 @@ class AJAX_ATTACH {
         $_arr_attachId    = fn_post("attach_range");
 
         $_arr_search = array(
-            "begin_id" => fn_getSafe($_arr_attachId["begin_id"], "int", 0),
-            "end_id"   => fn_getSafe($_arr_attachId["end_id"], "int", 0),
+            "min_id"    => fn_getSafe($_arr_attachId["min_id"], "int", 0),
+            "max_id"    => fn_getSafe($_arr_attachId["max_id"], "int", 0),
         );
 
         if ($_num_thumbId < 1) {
@@ -75,6 +82,9 @@ class AJAX_ATTACH {
 
         //$_obj_finfo       = new finfo();
 
+        $_str_status = "complete";
+        $_str_msg    = $this->obj_ajax->alert["y070409"];
+
         if ($_arr_page["page"] <= $_arr_page["total"]) {
             foreach ($_arr_attachRows as $_key=>$_value) {
                 if (file_exists($_value["attach_path"])) {
@@ -86,9 +96,6 @@ class AJAX_ATTACH {
             }
             $_str_status = "loading";
             $_str_msg    = $this->obj_ajax->alert["x070409"];
-        } else {
-            $_str_status = "complete";
-            $_str_msg    = $this->obj_ajax->alert["y070409"];
         }
 
         $_arr_re = array(
@@ -107,7 +114,7 @@ class AJAX_ATTACH {
             $this->show_err($this->adminLogged["alert"], "err");
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"])) {
+        if (!isset($this->group_allow["attach"]["del"]) && !$this->is_super) {
             $this->show_err("x070304", "err");
         }
 
@@ -128,7 +135,7 @@ class AJAX_ATTACH {
         $_num_perPage     = 10;
         $_num_attachCount = $this->mdl_attach->mdl_count($_arr_search);
         $_arr_page        = fn_page($_num_attachCount, $_num_perPage, "post");
-        $_arr_attachRows  = $this->mdl_attach->mdl_list($_arr_search);
+        $_arr_attachRows  = $this->mdl_attach->mdl_list(1000, 0, $_arr_search);
 
         $_arr_search = array(
             "box"           => "recycle",
@@ -168,11 +175,11 @@ class AJAX_ATTACH {
             $this->show_err($this->adminLogged["alert"], "err");
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"])) {
+        if (!isset($this->group_allow["attach"]["del"]) && !$this->is_super) {
             $this->show_err("x070304", "err");
         }
 
-        $_num_last        = fn_getSafe(fn_post("last"), "int", 0);
+        $_num_maxId = fn_getSafe(fn_post("max_id"), "int", 0);
 
         $_arr_searchCount = array(
             "box"   => "normal",
@@ -180,7 +187,7 @@ class AJAX_ATTACH {
 
         $_arr_searchList = array(
             "box"       => "normal",
-            "end_id"    => $_num_last,
+            "max_id"    => $_num_maxId,
         );
 
         $_num_perPage     = 10;
@@ -196,18 +203,19 @@ class AJAX_ATTACH {
                     $this->mdl_attach->mdl_box("recycle", array($_value["attach_id"]));
                 }
             }
-            $_str_status = "loading";
-            $_str_msg    = $this->obj_ajax->alert["x070407"];
+            $_str_status    = "loading";
+            $_str_msg       = $this->obj_ajax->alert["x070407"];
+            $_num_maxId     = $_value["attach_id"];
         } else {
-            $_str_status = "complete";
-            $_str_msg    = $this->obj_ajax->alert["y070407"];
+            $_str_status    = "complete";
+            $_str_msg       = $this->obj_ajax->alert["y070407"];
         }
 
         $_arr_re = array(
-            "msg"    => $_str_msg,
-            "count"  => $_arr_page["total"],
-            "last"   => $_value["attach_id"],
-            "status" => $_str_status,
+            "msg"       => $_str_msg,
+            "count"     => $_arr_page["total"],
+            "max_id"    => $_num_maxId,
+            "status"    => $_str_status,
         );
 
         exit(json_encode($_arr_re));
@@ -215,7 +223,7 @@ class AJAX_ATTACH {
 
 
     function ajax_box() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"])) {
+        if (!isset($this->group_allow["attach"]["del"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x170303");
         }
 
@@ -225,9 +233,6 @@ class AJAX_ATTACH {
         }
 
         $_str_attachStatus = fn_getSafe($GLOBALS["act_post"], "txt", "");
-        if (!$_str_attachStatus) {
-            $this->obj_ajax->halt_alert("x070102");
-        }
 
         $_arr_attachRow = $this->mdl_attach->mdl_box($_str_attachStatus);
 
@@ -250,7 +255,7 @@ class AJAX_ATTACH {
             $this->show_err($_arr_status["alert"]);
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["upload"])) {
+        if (!isset($this->group_allow["attach"]["upload"]) && !$this->is_super) {
             $this->show_err("x070302");
         }
 
@@ -302,7 +307,7 @@ class AJAX_ATTACH {
             $this->obj_ajax->halt_alert($_arr_status["alert"]);
         }
 
-        if (isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["del"])) {
+        if (isset($this->group_allow["attach"]["del"]) && !$this->is_super) {
             $_num_adminId = 0;
         } else {
             $_num_adminId = $this->adminLogged["admin_id"];
@@ -338,7 +343,7 @@ class AJAX_ATTACH {
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) {
+        if (!isset($this->group_allow["attach"]["browse"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x070301");
         }
 
@@ -378,10 +383,9 @@ class AJAX_ATTACH {
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
 
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["browse"])) {
+        if (!isset($this->group_allow["attach"]["browse"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x070301");
         }
-
 
         $_num_articleId = fn_getSafe(fn_get("article_id"), "int", 0);
         if ($_num_articleId < 1) {

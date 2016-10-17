@@ -1,6 +1,4 @@
-{* admin_form.tpl 管理员编辑界面 *}
-{* 栏目显示函数（递归） *}
-{function cate_list arr="" level=""}
+{function cate_list arr="" level=""}{* 栏目显示函数（递归） *}
     <ul class="list-unstyled{if $level > 0} list_padding{/if}">
         {foreach $arr as $key=>$value}
             <li>
@@ -95,6 +93,11 @@
                     <p class="form-control-static">{$tplData.adminRow.admin_id}</p>
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label static_label">{$lang.label.type}</label>
+                    <p class="form-control-static">{$type.admin[$tplData.adminRow.admin_type]}</p>
+                </div>
+
                 {if $tplData.adminRow.admin_status == "enable"}
                     {$css_status = "success"}
                 {else}
@@ -108,13 +111,13 @@
                     </p>
                 </div>
 
-                {if $tplData.adminRow.admin_allow_profile.info == "1"}
+                {if isset($tplData.adminRow.admin_allow_profile.info)}
                     <div class="form-group label_baigo">
                         <span class="label label-danger">{$lang.label.profileInfo}</span>
                     </div>
                 {/if}
 
-                {if $tplData.adminRow.admin_allow_profile.pass == "1"}
+                {if isset($tplData.adminRow.admin_allow_profile.pass)}
                     <div class="form-group label_baigo">
                         <span class="label label-danger">{$lang.label.profilePass}</span>
                     </div>

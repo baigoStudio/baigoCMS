@@ -2,10 +2,10 @@
 
             <div class="panel-footer">
                 <div class="pull-left">
-                    {if $config.ui == "default"}
+                    {if $smarty.const.BG_DEFAULT_UI == "default"}
                         <a href="{$smarty.const.PRD_CMS_URL}" target="_blank">{$smarty.const.PRD_CMS_POWERED} {$smarty.const.PRD_CMS_NAME}</a>
                     {else}
-                        <a href="#">{$config.ui} CMS</a>
+                        <a href="javascript:void(0);">{$smarty.const.BG_DEFAULT_UI} CMS</a>
                     {/if}
                 </div>
                 <div class="pull-right">

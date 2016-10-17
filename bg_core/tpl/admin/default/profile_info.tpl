@@ -1,4 +1,3 @@
-{* profile_form.tpl 管理员编辑界面 *}
 {function cate_list arr="" level=""}
     <ul class="list-unstyled{if $level > 0} list_padding{/if}">
         {foreach $arr as $key=>$value}
@@ -41,7 +40,7 @@
     {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
     <form name="profile_form" id="profile_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="info">
 
         <div class="row">

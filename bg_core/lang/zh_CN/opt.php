@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -48,13 +48,6 @@ return array(
                 "format"     => "int",
                 "min"        => 1,
                 "default"    => 10,
-            ),
-            "BG_SITE_EXCERPT" => array(
-                "label"      => "文章摘要截取字数",
-                "type"       => "str",
-                "format"     => "int",
-                "min"        => 1,
-                "default"    => 100,
             ),
             "BG_SITE_DATE" => array(
                 "label"      => "日期格式",
@@ -132,7 +125,7 @@ return array(
                 "default"    => 10,
             ),
             "BG_UPLOAD_URL" => array(
-                "label"      => "绑定 URL ",
+                "label"      => "URL 前缀 ",
                 "type"       => "str",
                 "format"     => "url",
                 "min"        => 0,
@@ -206,22 +199,93 @@ return array(
                     ),
                     "pstatic"   => array(
                         "value"    => "伪静态",
-                        "note"     => "例：" . BG_SITE_URL . "/article/123 (需服务器支持)",
+                        "note"     => "例：" . BG_SITE_URL . "/article/123（需服务器支持）",
                     ),
                     "static"    => array(
                         "value"    => "纯静态",
-                        "note"     => "例：" . BG_SITE_URL . "/article/" . date("Y") . "/" . date("m") . "/123.html (需安装静态页面模块)",
+                        "note"     => "例：" . BG_SITE_URL . "/article/" . date("Y") . "/" . date("m") . "/123.html",
                     ),
                 ),
             ),
             "BG_VISIT_FILE" => array(
-                "label"      => "生成静态文件",
+                "label"      => "静态页面类型",
                 "type"       => "select",
                 "min"        => 1,
                 "default"    => "html",
                 "option" => array(
                     "html"  => "HTML",
                     "shtml" => "SHTML",
+                ),
+            ),
+            "BG_VISIT_PAGE" => array(
+                "label"      => "静态页数",
+                "type"       => "str",
+                "format"     => "int",
+                "min"        => 1,
+                "default"    => 10,
+                "note"       => "生成静态页面的页数，超过部分通过动态页面显示。",
+            ),
+        ),
+    ),
+    "spec" => array(
+        "title"   => "专题分发设置",
+        "list"    => array(
+            "BG_SPEC_URL" => array(
+                "label"      => "URL 前缀 ",
+                "type"       => "str",
+                "format"     => "url",
+                "min"        => 0,
+                "default"    => "http://" . $_SERVER["SERVER_NAME"],
+                "note"       => "末尾请勿加 <kbd>/</kbd>",
+            ),
+            "BG_SPEC_FTPHOST" => array(
+                "label"      => "分发 FTP 地址",
+                "type"       => "str",
+                "format"     => "text",
+                "min"        => 1,
+                "default"    => "",
+            ),
+            "BG_SPEC_FTPPORT" => array(
+                "label"      => "FTP 端口",
+                "type"       => "str",
+                "format"     => "text",
+                "min"        => 0,
+                "default"    => "21",
+            ),
+            "BG_SPEC_FTPUSER" => array(
+                "label"      => "FTP 用户名",
+                "type"       => "str",
+                "format"     => "text",
+                "min"        => 1,
+                "default"    => "",
+            ),
+            "BG_SPEC_FTPPASS" => array(
+                "label"      => "FTP 密码",
+                "type"       => "str",
+                "format"     => "text",
+                "min"        => 1,
+                "default"    => "",
+            ),
+            "BG_SPEC_FTPPATH" => array(
+                "label"      => "FTP 远程路径",
+                "type"       => "str",
+                "format"     => "text",
+                "min"        => 1,
+                "default"    => "",
+                "note"        => "末尾请勿加 <kbd>/</kbd>",
+            ),
+            "BG_SPEC_FTPPASV" => array(
+                "label"      => "FTP 被动模式",
+                "type"       => "radio",
+                "min"        => 1,
+                "default"    => "on",
+                "option" => array(
+                    "on"    => array(
+                        "value"    => "开启"
+                    ),
+                    "off"   => array(
+                        "value"    => "关闭"
+                    ),
                 ),
             ),
         ),

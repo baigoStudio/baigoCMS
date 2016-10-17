@@ -1,4 +1,3 @@
-{* article_form.tpl 文章编辑 *}
 {function custom_list arr=""}
     {foreach $arr as $key=>$value}
         {if $value.custom_childs}
@@ -110,7 +109,6 @@
     sub_active     => $sub_active,
     baigoValidator => "true",
     baigoSubmit    => "true",
-    sisyphus       => "true",
     tinymce        => "true",
     datepicker     => "true",
     tagmanager     => "true",
@@ -144,10 +142,9 @@
     </div>
 
     <form name="article_form" id="article_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="submit">
         <input type="hidden" name="article_id" value="{$tplData.articleRow.article_id}">
-        <input type="hidden" name="article_spec_id" id="article_spec_id" value="{$tplData.articleRow.article_spec_id}">
 
         <div class="row">
             <div class="col-md-9">
@@ -180,12 +177,14 @@
 
                         <div class="form-group">
                             <label class="control-label">{$lang.label.excerptType}</label>
-                            {foreach $type.excerpt as $key=>$value}
-                                <label for="article_excerpt_type_{$key}" class="radio-inline">
-                                    <input type="radio" name="article_excerpt_type" id="article_excerpt_type_{$key}" {if $tplData.articleRow.article_excerpt_type == $key}checked{/if} value="{$key}" class="article_excerpt_type">
-                                    {$value}
-                                </label>
-                            {/foreach}
+                            <div>
+                                {foreach $type.excerpt as $key=>$value}
+                                    <label for="article_excerpt_type_{$key}" class="radio-inline">
+                                        <input type="radio" name="article_excerpt_type" id="article_excerpt_type_{$key}" {if $tplData.articleRow.article_excerpt_type == $key}checked{/if} value="{$key}" class="article_excerpt_type">
+                                        {$value}
+                                    </label>
+                                {/foreach}
+                            </div>
                         </div>
 
                         <div id="group_article_excerpt">
@@ -195,15 +194,11 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            {custom_list arr=$tplData.customRows}
-                        </div>
-
                         <div class="form-group">
                             <label class="control-label">{$lang.label.articleTag}<span id="msg_article_tag"></span></label>
-                            <div class="form-inline">
+                            <div class="tm-input-group form-inline">
                                 <input type="text" name="article_tag" id="article_tag" data-validate class="form-control tm-input tm-input-success">
-                                <button type="button" class="btn btn-info tm-btn" id="tag_add">{$lang.btn.add}</button>
+                                <button type="button" class="btn btn-info btn-sm tm-btn" id="tag_add"><span class="glyphicon glyphicon-plus"></span></button>
                             </div>
                         </div>
 
@@ -212,6 +207,12 @@
                                 <label class="control-label">{$lang.label.articleLink}<span id="msg_article_link"></span></label>
                                 <input type="text" name="article_link" id="article_link" value="{$tplData.articleRow.article_link}" data-validate class="form-control">
                                 <p class="help-block">{$lang.label.articleLinkNote}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                {custom_list arr=$tplData.customRows}
                             </div>
                         </div>
 
@@ -304,15 +305,14 @@
 
                     <div class="form-group">
                         <div class="checkbox">
-                            <label for="deadline_checkbox">
-                                <input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} id="deadline_checkbox">
-                                {$lang.label.deadline}
+                            <label for="time_pub_checkbox">
+                                <input type="checkbox" {if $tplData.articleRow.article_time_pub > $smarty.now}checked{/if} name="time_pub_checkbox" id="time_pub_checkbox" value="1">
+                                {$lang.label.timePub}
                                 <span id="msg_article_time_pub"></span>
                             </label>
                         </div>
                     </div>
-
-                    <div id="deadline_input">
+                    <div id="time_pub_input">
                         <div class="form-group">
                             <input type="text" name="article_time_pub" id="article_time_pub" value="{$tplData.articleRow.article_time_pub|date_format:"%Y-%m-%d %H:%M"}" data-validate class="form-control input_date">
                             <p class="help-block">{$lang.label.timeNote}</p>
@@ -320,14 +320,41 @@
                     </div>
 
                     <div class="form-group">
+                        <div class="checkbox">
+                            <label for="time_hide_checkbox">
+                                <input type="checkbox" {if $tplData.articleRow.article_time_hide > 0}checked{/if} id="time_hide_checkbox" name="time_hide_checkbox" value="1">
+                                {$lang.label.timeHide}
+                                <span id="msg_article_time_hide"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="time_hide_input">
+                        <div class="form-group">
+                            <input type="text" name="article_time_hide" id="article_time_hide" value="{$tplData.articleRow.article_time_hide|date_format:"%Y-%m-%d %H:%M"}" data-validate class="form-control input_date">
+                            <p class="help-block">{$lang.label.timeNote}</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="control-label">{$lang.label.articleSpec}</label>
                         <div class="input-group">
-                            <input type="text" id="article_spec_name" class="form-control" disabled value="{if isset($tplData.specRow.spec_name)}{$tplData.specRow.spec_name}{else}{$lang.label.noSpec}{/if}">
+                            <input type="text" id="spec_key" name="spec_key" placeholder="{$lang.label.key}" class="form-control">
                             <span class="input-group-btn">
-                                <a class="btn btn-info" href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=insert&article_id={$tplData.articleRow.article_id}&view=iframe" data-toggle="modal" data-target="#article_modal">
+                                <button class="btn btn-info" type="button" id="spec_search_btn">
                                     <span class="glyphicon glyphicon-search"></span>
-                                </a>
+                                </button>
                             </span>
+                        </div>
+                        <div id="spec_check_list">
+                            {foreach $tplData.specRows as $key=>$value}
+                                <div class="checkbox" id="spec_checkbox_{$value.spec_id}">
+                                    <label for="article_spec_ids_{$value.spec_id}">
+                                        <input type="checkbox" id="article_spec_ids_{$value.spec_id}" checked name="article_spec_ids[]" value="{$value.spec_id}">
+                                        {$value.spec_name}
+                                    </label>
+                                </div>
+                            {/foreach}
                         </div>
                     </div>
                 </div>
@@ -385,6 +412,11 @@
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "datetime" },
             msg: { selector: "#msg_article_time_pub", too_short: "{$alert.x120210}", format_err: "{$alert.x120211}" }
+        },
+        article_time_hide: {
+            len: { min: 1, max: 0 },
+            validate: { type: "str", format: "datetime" },
+            msg: { selector: "#msg_article_time_hide", too_short: "{$alert.x120219}", format_err: "{$alert.x120220}" }
         }
     };
 
@@ -418,11 +450,19 @@
         }
     }
 
-    function deadline_check(_is_checked) {
+    function time_pub_check(_is_checked) {
         if (_is_checked) {
-            $("#deadline_input").show();
+            $("#time_pub_input").show();
         } else {
-            $("#deadline_input").hide();
+            $("#time_pub_input").hide();
+        }
+    }
+
+    function time_hide_check(_is_checked) {
+        if (_is_checked) {
+            $("#time_hide_input").show();
+        } else {
+            $("#time_hide_input").hide();
         }
     }
 
@@ -430,7 +470,9 @@
         article_cate_id("{$tplData.articleRow.article_cate_id}");
         excerpt_type("{$tplData.articleRow.article_excerpt_type}");
         cate_ids_check({if count($tplData.articleRow.cate_ids) > 1}true{else}false{/if});
-        deadline_check({if $tplData.articleRow.article_time_pub > $smarty.now}true{else}false{/if});
+        time_pub_check({if $tplData.articleRow.article_time_pub > $smarty.now}true{else}false{/if});
+        time_hide_check({if $tplData.articleRow.article_time_hide > 0}true{else}false{/if});
+
         $("#article_modal").on("hidden.bs.modal", function() {
             $(this).removeData("bs.modal");
         });
@@ -443,6 +485,11 @@
         $("#article_cate_id").change(function(){
             var _cate_id = $(this).val();
             article_cate_id(_cate_id);
+        });
+
+        $("#spec_search_btn").click(function(){
+            var _spec_key = $("#spec_key").val();
+            $("#article_modal").modal({ remote: "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=insert&target=article&article_id={$tplData.articleRow.article_id}&view=iframe&key=" + _spec_key });
         });
 
         var obj_validate_form = $("#article_form").baigoValidator(opts_validator_form);
@@ -460,9 +507,14 @@
             cate_ids_check(_is_checked);
         });
 
-        $("#deadline_checkbox").click(function(){
+        $("#time_pub_checkbox").click(function(){
             var _is_checked = $(this).prop("checked");
-            deadline_check(_is_checked);
+            time_pub_check(_is_checked);
+        });
+
+        $("#time_hide_checkbox").click(function(){
+            var _is_checked = $(this).prop("checked");
+            time_hide_check(_is_checked);
         });
 
         var obj_tagMan = jQuery("#article_tag").tagsManager({
@@ -474,7 +526,7 @@
         });
 
         $("#article_tag").typeahead({
-            limit: 200,
+            limit: 1000,
             prefetch: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=tag&act_get=list"
         }).on("typeahead:selected", function(e, d) {
             obj_tagMan.tagsManager("pushTag", d.value);
@@ -488,4 +540,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -55,31 +55,6 @@ return array(
             "mark"       => "标记",
         ),
     ),
-    "cate" => array(
-        "main" => array(
-            "title"  => "栏目管理",
-            "mod"    => "cate",
-            "icon"   => "th-large",
-        ),
-        "sub" => array(
-            "list" => array(
-                "title"     => "所有栏目",
-                "mod"       => "cate",
-                "act_get"   => "list",
-            ),
-            "form" => array(
-                "title"     => "创建栏目",
-                "mod"       => "cate",
-                "act_get"   => "form",
-            ),
-        ),
-        "allow" => array(
-            "browse" => "浏览",
-            "add"    => "创建",
-            "edit"   => "编辑",
-            "del"    => "删除",
-        ),
-    ),
     "attach" => array(
         "main" => array(
             "title"  => "附件管理",
@@ -109,6 +84,31 @@ return array(
             "upload" => "上传",
             "mime"   => "附件类型",
             "thumb"  => "缩略图",
+        ),
+    ),
+    "cate" => array(
+        "main" => array(
+            "title"  => "栏目管理",
+            "mod"    => "cate",
+            "icon"   => "th-large",
+        ),
+        "sub" => array(
+            "list" => array(
+                "title"     => "所有栏目",
+                "mod"       => "cate",
+                "act_get"   => "list",
+            ),
+            "form" => array(
+                "title"     => "创建栏目",
+                "mod"       => "cate",
+                "act_get"   => "form",
+            ),
+        ),
+        "allow" => array(
+            "browse" => "浏览",
+            "add"    => "创建",
+            "edit"   => "编辑",
+            "del"    => "删除",
         ),
     ),
     "call" => array(
@@ -142,29 +142,7 @@ return array(
             //"gen"    => "生成",
         ),
     ),
-    /*"gen" => array(
-        "main" => array(
-            "title"  => "生成管理",
-            "mod"    => "gen",
-        ),
-        "sub" => array(
-            "gen" => array(
-                "title"     => "生成文件",
-                "mod"       => "gen",
-                "act_get"   => "gen",
-            ),
-            "all" => array(
-                "title"     => "全面生成",
-                "mod"       => "gen",
-                "act_get"   => "all",
-            ),
-        ),
-        "allow" => array(
-            "gen"    => "生成",
-            "all"    => "全面生成",
-        ),
-    ),
-    "user" => array(
+    /*"user" => array(
         "main" => array(
             "title"  => "用户管理",
             "mod"    => "user",

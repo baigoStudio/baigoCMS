@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -22,8 +22,8 @@ class MODEL_TAG_BELONG {
     function mdl_create_table() {
         $_arr_belongCreat = array(
             "belong_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-            "belong_tag_id"      => "int NOT NULL COMMENT '标签 ID'",
-            "belong_article_id"  => "int NOT NULL COMMENT '文章 ID'",
+            "belong_tag_id"      => "int NOT NULL COMMENT '标签ID'",
+            "belong_article_id"  => "int NOT NULL COMMENT '文章ID'",
         );
 
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "tag_belong", $_arr_belongCreat, "belong_id", "标签从属");

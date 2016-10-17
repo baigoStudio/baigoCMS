@@ -8,7 +8,7 @@ return "<h3>图片、附件</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -51,7 +51,7 @@ return "<h3>图片、附件</h3>
                     <tr>
                         <td class=\"text-nowrap\">attach_url</td>
                         <td class=\"text-nowrap\">string</td>
-                        <td class=\"text-nowrap\">附件 URL 地址</td>
+                        <td class=\"text-nowrap\">附件 URL</td>
                         <td> </td>
                     </tr>
                 </tbody>
@@ -59,7 +59,15 @@ return "<h3>图片、附件</h3>
         </div>
     </div>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"thumb\"></a>
     <h3>缩略图</h3>

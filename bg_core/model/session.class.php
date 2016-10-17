@@ -19,7 +19,7 @@ class MODEL_SESSION {
 
     function mdl_create_table() {
         $_arr_ssinCreat = array(
-            "session_id"        => "varchar(255) NOT NULL COMMENT 'SESSION ID'",
+            "session_id"        => "varchar(255) NOT NULL COMMENT 'ID'",
             "session_data"      => "text NOT NULL COMMENT 'SESSION 数据'",
             "session_expire"    => "int NOT NULL COMMENT 'SESSION 过期时间'",
         );
@@ -45,7 +45,7 @@ class MODEL_SESSION {
         /*$dbHandle       = @mysql_connect("server","user","password");
         $dbSel          = @mysql_select_db("database",$dbHandle);
         // return success
-        if(!$dbHandle || !$dbSel) {
+        if (!$dbHandle || !$dbSel) {
             return false;
         }
         $this->dbHandle = $dbHandle;*/

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -22,8 +22,8 @@ class MODEL_CATE_BELONG {
     function mdl_create_table() {
         $_arr_belongCreat = array(
             "belong_id"          => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-            "belong_cate_id"     => "smallint NOT NULL COMMENT '栏目 ID'",
-            "belong_article_id"  => "int NOT NULL COMMENT '文章 ID'",
+            "belong_cate_id"     => "smallint NOT NULL COMMENT '栏目ID'",
+            "belong_article_id"  => "int NOT NULL COMMENT '文章ID'",
         );
 
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "cate_belong", $_arr_belongCreat, "belong_id", "栏目从属");
@@ -85,7 +85,7 @@ class MODEL_CATE_BELONG {
         $_arr_alert       = array();
 
         if (in_array("belong_cate_id", $_arr_col)) {
-            $_arr_alert["belong_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目 ID'", "belong_cate_id");
+            $_arr_alert["belong_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目ID'", "belong_cate_id");
         }
 
         $_str_alert = "y150111";
@@ -198,7 +198,11 @@ class MODEL_CATE_BELONG {
             $_str_sqlWhere .= " AND belong_article_id=" . $num_articleId;
         }
 
-        $_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "cate_belong", $_arr_belongSelect, $_str_sqlWhere, "", "belong_id DESC", 1000, 0);
+        $_arr_order = array(
+            array("belong_id", "DESC"),
+        );
+
+        $_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "cate_belong", $_arr_belongSelect, $_str_sqlWhere, "", $_arr_order, 1000, 0);
 
         return $_arr_belongRows;
     }

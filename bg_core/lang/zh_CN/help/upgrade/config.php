@@ -9,6 +9,7 @@ return array(
         "dbtable"     => "升级数据库",
         "base"        => "基本设置",
         "visit"       => "访问方式设置",
+        "spec"        => "专题分发设置",
         "upload"      => "上传设置",
         "sso"         => "SSO 设置",
         "over"        => "完成升级",

@@ -1,4 +1,3 @@
-{*cate_form.php 栏目编辑界面*}
 {function cate_list arr=""}
     {foreach $arr as $key=>$value}
         <option value="{$value.cate_id}" {if $tplData.cateRow.cate_parent_id == $value.cate_id}selected{/if} {if $tplData.cateRow.cate_id == $value.cate_id}disabled{/if}>
@@ -61,7 +60,7 @@
     </div>
 
     <form name="cate_form" id="cate_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="submit">
         <input type="hidden" name="cate_id" id="cate_id" value="{$tplData.cateRow.cate_id}">
 
@@ -118,7 +117,7 @@
                             </div>
                         </div>
 
-                        {if $smarty.const.BG_MODULE_GEN == 1 && $smarty.const.BG_MODULE_FTP == 1 && $tplData.cateRow.cate_parent_id < 1}
+                        {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_MODULE_FTP > 0 && $tplData.cateRow.cate_parent_id < 1}
                             <div class="form-group">
                                 <label for="more_checkbox" class="checkbox-inline">
                                     <input type="checkbox" id="more_checkbox" name="more_checkbox" {if $tplData.cateRow.cate_ftp_host}checked{/if}>
@@ -150,6 +149,19 @@
                                 <div class="form-group">
                                     <label class="control-label">{$lang.label.cateFtpPath}<span id="msg_cate_ftp_path"></span></label>
                                     <input type="text" name="cate_ftp_path" id="cate_ftp_path" value="{$tplData.cateRow.cate_ftp_path}" class="form-control">
+                                    <p class="help-block">{$lang.label.cateFtpPathNote}</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">{$lang.label.cateFtpPasv}<span id="msg_cate_ftp_pasv"></span></label>
+                                    {foreach $status.pasv as $key=>$value}
+                                        <div class="radio_baigo">
+                                            <label for="cate_ftp_pasv_{$key}">
+                                                <input type="radio" name="cate_ftp_pasv" id="cate_ftp_pasv_{$key}" value="{$key}" {if $tplData.cateRow.cate_ftp_pasv == $key}checked{/if}>
+                                                {$value}
+                                            </label>
+                                        </div>
+                                    {/foreach}
                                 </div>
                             </div>
                         {/if}
@@ -175,7 +187,7 @@
                             <label class="control-label">{$lang.label.cateParent}<span id="msg_cate_parent_id">*</span></label>
                             <select name="cate_parent_id" id="cate_parent_id" data-validate class="form-control">
                                 <option value="">{$lang.option.pleaseSelect}</option>
-                                <option {if $tplData.cateRow.cate_parent_id == 0}selected{/if} value="0">{$lang.option.asCateParent}</option>
+                                <option {if $tplData.cateRow.cate_parent_id < 1}selected{/if} value="0">{$lang.option.asCateParent}</option>
                                 {cate_list arr=$tplData.cateRows}
                             </select>
                         </div>
@@ -186,10 +198,10 @@
                             <label class="control-label">{$lang.label.tpl}<span id="msg_cate_tpl">*</span></label>
                             <select name="cate_tpl" id="cate_tpl" data-validate class="form-control">
                                 <option value="">{$lang.option.pleaseSelect}</option>
-                                <option {if $tplData.cateRow.cate_tpl == "inherit"}selected{/if} value="inherit">{$lang.option.tplInherit}</option>
+                                <option {if isset($tplData.cateRow.cate_tpl) && $tplData.cateRow.cate_tpl == "inherit"}selected{/if} value="inherit">{$lang.option.tplInherit}</option>
                                 {foreach $tplData.tplRows as $key=>$value}
                                     {if $value["type"] == "dir"}
-                                        <option {if $tplData.cateRow.cate_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
+                                        <option {if isset($tplData.cateRow.cate_tpl) && $tplData.cateRow.cate_tpl == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
                                     {/if}
                                 {/foreach}
                             </select>
@@ -246,7 +258,7 @@
         },
         cate_alias: {
             len: { min: 0, max: 300 },
-            validate: { type: "ajax", format: "alphabetDigit", group: "#group_cate_alias" },
+            validate: { type: "ajax", format: "alias", group: "#group_cate_alias" },
             msg: { selector: "#msg_cate_alias", too_long: "{$alert.x110204}", format_err: "{$alert.x110205}", ajaxIng: "{$alert.x030401}", ajax_err: "{$alert.x030402}" },
             ajax: { url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=cate&act_get=chkalias", key: "cate_alias", type: "str", attach_selectors: ["#cate_id","#cate_parent_id"], attach_keys: ["cate_id","cate_parent_id"] }
         },
@@ -366,4 +378,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

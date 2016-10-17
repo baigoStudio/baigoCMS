@@ -1,9 +1,19 @@
-{* cate_show.tpl 栏目显示 *}
+{$str_url = $tplData.cateRow.urlRow.cate_url}
+
+{if $smarty.const.BG_MODULE_GEN < 1}
+    {$str_url = "{$str_url}key-{$tplData.search.key}/customs-{$tplData.search.customs}/"}
+{/if}
+
 {$cfg = [
-    title      => $tplData.cateRow.cate_name,
-    str_url    => "{$tplData.cateRow.urlRow.cate_url}key-{$tplData.search.key}/customs-{$tplData.search.customs}/{$tplData.cateRow.urlRow.page_attach}",
-    page_ext   => $tplData.search.page_ext
+    title       => $tplData.cateRow.cate_name,
+    str_url     => "{$str_url}{$tplData.cateRow.urlRow.page_attach}",
+    str_urlMore => "{$tplData.cateRow.urlRow.cate_urlMore}{$tplData.cateRow.urlRow.page_attach}",
+    page_ext    => $tplData.cateRow.urlRow.page_ext
 ]}
+
+{if isset($tplData.cateRow.is_static)}
+    {$cfg.is_static = "true"}
+{/if}
 
 {include "include/pub_head.tpl" cfg=$cfg}
 
@@ -14,12 +24,14 @@
         {/foreach}
     </ol>
 
+    <!--#include virtual="/cms/call/9.html" -->
+
     {foreach $tplData.articleRows as $value}
-        <h3><a href="{$value.article_url}" target="_blank">{$value.article_title}</a></h3>
+        <h3><a href="{$value.urlRow.article_url}" target="_blank">{$value.article_title}</a></h3>
         <p>{$value.article_time_pub|date_format:$smarty.const.BG_SITE_DATE}</p>
 
         <p>{$value.article_excerpt}</p>
-        <p><a href="{$value.article_url}">阅读全文...</a></p>
+        <p><a href="{$value.urlRow.article_url}">阅读全文...</a></p>
         <hr>
         <ul class="list-inline">
             <li>

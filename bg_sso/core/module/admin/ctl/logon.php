@@ -5,10 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
+include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已安装
 include_once(BG_PATH_FUNC . "init.func.php"); //初始化
 $arr_set = array(
     "base"          => true, //基本设置
@@ -19,7 +20,6 @@ $arr_set = array(
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_INC . "is_install.inc.php"); //验证是否已安装
 include_once(BG_PATH_FUNC . "session.func.php"); //载入 session 函数
 include_once(BG_PATH_CONTROL . "admin/ctl/logon.class.php"); //载入登录控制器
 
@@ -31,7 +31,7 @@ switch ($GLOBALS["act_post"]) {
         if ($arr_logonRow["alert"] != "y020201") {
             header("Location: " . BG_URL_ADMIN . "ctl.php?mod=logon&act_get=logon&forward=" . $arr_logonRow["forward"] . "&alert=" . $arr_logonRow["alert"]);
         } else {
-            $_str_forward = base64_decode($arr_logonRow["forward"]);
+            $_str_forward = $arr_logonRow["forward"];
             if (stristr($_str_forward, "logon")) {
                 $_str_forward = BG_URL_ADMIN . "ctl.php";
             }
@@ -44,7 +44,7 @@ switch ($GLOBALS["act_post"]) {
         switch ($GLOBALS["act_get"]) {
             case "logout":
                 $arr_logonRow = $ctl_logon->ctl_logout(); //登出
-                header("Location: " . base64_decode($arr_logonRow["forward"]));
+                header("Location: " . $arr_logonRow["forward"]);
                 exit;
             break;
 

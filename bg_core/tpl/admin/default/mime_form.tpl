@@ -1,4 +1,3 @@
-{* mime_list.php 允许上传类型列表 *}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     {$adminMod.attach.main.title} - {$adminMod.attach.sub.mime.title}
@@ -6,7 +5,7 @@
 <div class="modal-body">
 
     <form name="mime_form" id="mime_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="mime_id" id="mime_id" value="{$tplData.mimeRow.mime_id}">
         <input type="hidden" name="act_post" value="submit">
 

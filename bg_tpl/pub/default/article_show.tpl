@@ -1,4 +1,3 @@
-{* article_show.tpl 文章显示 *}
 {function custom_list arr=""}
     {foreach $arr as $key=>$value}
         {if isset($value.custom_childs)}
@@ -59,7 +58,7 @@
 
     <ul class="list-unstyled">
         {foreach $tplData.associateRows as $key=>$value}
-            <li><a href="{$value.article_url}">{$value.article_title}</a></li>
+            <li><a href="{$value.urlRow.article_url}">{$value.article_title}</a></li>
         {/foreach}
     </ul>
 

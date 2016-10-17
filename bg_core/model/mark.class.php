@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -185,7 +185,11 @@ class MODEL_MARK {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_markRows = $this->obj_db->select(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, "", "mark_id DESC", $num_no, $num_except);
+        $_arr_order = array(
+            array("mark_id", "DESC"),
+        );
+
+        $_arr_markRows = $this->obj_db->select(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except);
 
         return $_arr_markRows;
     }
@@ -310,7 +314,7 @@ class MODEL_MARK {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND mark_name LIKE '%" . $arr_search["key"] . "%'";
         }
 

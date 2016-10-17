@@ -1,4 +1,3 @@
-{* profile_form.tpl 管理员编辑界面 *}
 {$cfg = [
     title          => $lang.page.pass,
     menu_active    => "profile",
@@ -6,7 +5,7 @@
     baigoValidator => "true",
     baigoSubmit    => "true",
     tokenReload    => "true",
-    str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile"
+    str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=profile&act_get=pass"
 ]}
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
@@ -17,7 +16,7 @@
     {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
     <form name="profile_form" id="profile_form" autocomplete="off">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="pass">
 
         <div class="row">
@@ -78,7 +77,7 @@
         },
         admin_pass_confirm: {
             len: { min: 1, max: 0 },
-            validate: { type: "confirm", target: "admin_pass_new", group: "#group_admin_pass_confirm" },
+            validate: { type: "confirm", target: "#admin_pass_new", group: "#group_admin_pass_confirm" },
             msg: { selector: "#msg_admin_pass_confirm", too_short: "{$alert.x020215}", not_match: "{$alert.x020211}" }
         }
     };

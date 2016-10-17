@@ -1,6 +1,4 @@
-{*cate_list.php 栏目列表*}
-{* 栏目显示函数（递归） *}
-{function cate_list arr=""}
+{function cate_list arr=""}{* 栏目显示函数（递归） *}
     {foreach $arr as $key=>$value}
         {if $value.cate_status == "show"}
             {$css_status = "success"}
@@ -9,7 +7,7 @@
         {/if}
         <tr{if $value.cate_level == 1} class="active"{/if}>
             <td class="text-nowrap td_mn"><input type="checkbox" name="cate_ids[]" value="{$value.cate_id}" id="cate_id_{$value.cate_id}" data-validate="cate_id" data-parent="chk_all"></td>
-            <td>{$value.cate_id}</td>
+            <td class="text-nowrap td_mn">{$value.cate_id}</td>
             <td class="child_{$value.cate_level}">
                 <ul class="list-unstyled">
                     <li>
@@ -25,9 +23,6 @@
                     <li>
                         <ul class="list_menu">
                             <li>
-                                <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=show&cate_id={$value.cate_id}">{$lang.href.show}</a>
-                            </li>
-                            <li>
                                 <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=cate&act_get=form&cate_id={$value.cate_id}">{$lang.href.edit}</a>
                             </li>
                             <li>
@@ -36,6 +31,14 @@
                             <li>
                                 <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&cate_id={$value.cate_id}">{$lang.href.articleList}</a>
                             </li>
+                            {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static" && $value.cate_status == "show"}
+                                <li>
+                                    <button type="button" class="btn btn-xs btn-info" data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=cate&act_get=single&cate_id={$value.cate_id}" data-toggle="modal" data-target="#gen_modal">
+                                        <span class="glyphicon glyphicon-refresh"></span>
+                                        {$lang.btn.cateGenSingle}
+                                    </button>
+                                </li>
+                            {/if}
                         </ul>
                     </li>
                 </ul>
@@ -68,7 +71,6 @@
     menu_active    => "cate",
     sub_active     => "list",
     baigoCheckall  => "true",
-    validate       => "true",
     baigoSubmit    => "true",
     baigoValidator => "true",
     tokenReload    => "true",
@@ -135,8 +137,17 @@
         <div class="clearfix"></div>
     </div>
 
+    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
+        <div class="form-group">
+            <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=cate&act_get=1by1" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#gen_modal">
+                <span class="glyphicon glyphicon-refresh"></span>
+                {$lang.btn.cateGen1by1}
+            </button>
+        </div>
+    {/if}
+
     <form name="cate_list" id="cate_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -186,7 +197,6 @@
                 </table>
             </div>
         </div>
-
     </form>
 
     <div class="text-right">
@@ -242,4 +252,3 @@
     </script>
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

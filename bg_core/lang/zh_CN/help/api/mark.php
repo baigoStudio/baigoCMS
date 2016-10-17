@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>标记列表</h3>
+return "<h3>标记列表</h3>
     <p class=\"text-info\">接口说明</p>
     <p>用于显示网站内所有的标记。</p>
 
@@ -14,9 +13,9 @@ return "<a name=\"list\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -52,10 +51,11 @@ return "<a name=\"list\"></a>
     <p>&nbsp;</p>
 
     <a name=\"result\"></a>
-    <h4>返回结果</h4>
+
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>

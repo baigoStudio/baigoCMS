@@ -6,14 +6,13 @@
 
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
 include_once(BG_PATH_FUNC . "init.func.php"); //初始化
 $arr_set = array(
     "base"          => true, //基本设置
-    //"ssin"          => true,
     "header"        => "Content-type: application/json; charset=utf-8", //header
     "db"            => true, //连接数据库
     "type"          => "ajax", //模块类型
@@ -24,7 +23,7 @@ include_once(BG_PATH_CONTROL . "api/signature.class.php"); //载入签名控制�
 
 $api_signature = new API_SIGNATURE(); //初始化签名
 
-switch ($GLOBALS["act_get"]) {
+switch ($GLOBALS["act_post"]) {
     case "signature":
         $api_signature->api_signature(); //生成签名
     break;

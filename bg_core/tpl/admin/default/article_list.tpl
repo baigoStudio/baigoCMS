@@ -1,4 +1,3 @@
-{* article_list.tpl 文章列表 *}
 {function cate_list arr=""}
     {foreach $arr as $key=>$value}
         <option {if $tplData.search.cate_id == $value.cate_id}selected{/if} value="{$value.cate_id}">
@@ -77,6 +76,7 @@
             <form name="article_search" id="article_search" action="{$smarty.const.BG_URL_ADMIN}ctl.php" method="get" class="form-inline">
                 <input type="hidden" name="mod" value="article">
                 <input type="hidden" name="act_get" value="list">
+                <input type="hidden" name="box" value="{$tplData.search.box}">
                 <div class="form-group">
                     <select name="cate_id" class="form-control input-sm">
                         <option value="">{$lang.option.allCate}</option>
@@ -138,7 +138,7 @@
 
     {if $tplData.search.box == "recycle"}
         <form name="article_empty" id="article_empty">
-            <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+            <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
             <input type="hidden" id="act_empty" name="act_post" value="empty">
             <div class="form-group">
                 <button type="button" id="go_empty" class="btn btn-info btn-sm">{$lang.btn.emptyMy}</button>
@@ -146,8 +146,22 @@
         </form>
     {/if}
 
+    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static" && !$tplData.search.box}
+        <div class="form-group">
+            <div class="btn-group btn-group-sm">
+                <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=article&act_get=1by1" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#gen_modal">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    {$lang.btn.articleGen1by1}
+                </button>
+                <button data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=article&act_get=1by1&enforce=true" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#gen_modal">
+                    <span data-toggle="tooltip" data-placement="right" title="{$lang.label.enforce}">{$lang.btn.articleGenEnforce}</span>
+                </button>
+            </div>
+        </div>
+    {/if}
+
     <form name="article_list" id="article_list" class="form-inline">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
         <div class="panel panel-default">
             <div class="table-responsive">
@@ -164,7 +178,7 @@
                             <th>{$lang.label.articleTitle}</th>
                             <th class="text-nowrap td_lg">{$lang.label.cate} / {$lang.label.articleMark}</th>
                             <th class="text-nowrap td_md">{$lang.label.admin} / {$lang.label.hits}</th>
-                            <th class="text-nowrap td_sm">{$lang.label.status} / {$lang.label.time}</th>
+                            <th class="text-nowrap td_lg">{$lang.label.status} / {$lang.label.time}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -172,26 +186,38 @@
                             {if $value.article_box == "normal"}
                                 {if $value.article_time_pub > $smarty.now}
                                     {$css_status = "info"}
-                                    {$str_status = "{$lang.label.deadline} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+                                    {$str_status = "{$lang.label.timePub} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                 {else}
-                                    {if $value.article_top == 1}
-                                        {$css_status = "primary"}
-                                        {$str_status = $lang.label.top}
+                                    {if $value.article_time_hide > 0 && $value.article_time_pub < $smarty.now}
+                                        {$css_status = "default"}
+                                        {$str_status = "{$lang.label.timeHide} {$value.article_time_hide|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                     {else}
-                                        {if $value.article_status == "pub"}
-                                            {$css_status = "success"}
-                                        {else if $value.article_status == "wait"}
-                                            {$css_status = "warning"}
+                                        {if $value.article_top == 1}
+                                            {$css_status = "primary"}
+                                            {$str_status = $lang.label.top}
                                         {else}
-                                            {$css_status = "default"}
+                                            {if $value.article_status == "pub"}
+                                                {$css_status = "success"}
+                                            {else if $value.article_status == "wait"}
+                                                {$css_status = "warning"}
+                                            {else}
+                                                {$css_status = "default"}
+                                            {/if}
+                                            {$str_status = $status.article[$value.article_status]}
                                         {/if}
-                                        {$str_status = $status.article[$value.article_status]}
                                     {/if}
                                 {/if}
                             {else}
                                 {$css_status = "default"}
                                 {$str_status = $lang.label[$value.article_box]}
                             {/if}
+                            {if $value.article_is_gen == "yes"}
+                                {$css_gen = "default"}
+                            {else}
+                                {$css_gen = "danger"}
+                            {/if}
+
+                            {$str_gen = $status.gen[$value.article_is_gen]}
                             <tr>
                                 <td class="text-nowrap td_mn"><input type="checkbox" name="article_ids[]" value="{$value.article_id}" id="article_id_{$value.article_id}" data-validate="article_id" data-parent="chk_all"></td>
                                 <td class="text-nowrap td_mn">{$value.article_id}</td>
@@ -212,6 +238,14 @@
                                                 <li>
                                                     <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$value.article_id}">{$lang.href.edit}</a>
                                                 </li>
+                                                {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static" && $value.article_box == "normal" && $value.article_status == "pub" && $value.article_time_pub < $smarty.now && ($value.article_time_hide < 1 || $value.article_time_hide > $smarty.now)}
+                                                    <li>
+                                                        <button type="button" class="btn btn-xs btn-info" data-whatever="{$smarty.const.BG_URL_ADMIN}gen.php?mod=article&act_get=single&article_id={$value.article_id}" data-toggle="modal" data-target="#gen_modal">
+                                                            <span class="glyphicon glyphicon-refresh"></span>
+                                                            {$lang.btn.articleGenSingle}
+                                                        </button>
+                                                    </li>
+                                                {/if}
                                             </ul>
                                         </li>
                                     </ul>
@@ -252,7 +286,7 @@
                                     <ul class="list-unstyled">
                                         <li>
                                             {if isset($value.adminRow.admin_name)}
-                                                <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}">{$value.adminRow.admin_name}</a>
+                                                <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&admin_id={$value.article_admin_id}&box={$tplData.search.box}">{$value.adminRow.admin_name}</a>
                                             {else}
                                                 {$lang.label.unknown}
                                             {/if}
@@ -262,10 +296,13 @@
                                         </li>
                                     </ul>
                                 </td>
-                                <td class="text-nowrap td_sm">
+                                <td class="text-nowrap td_lg">
                                     <ul class="list-unstyled">
                                         <li class="label_baigo">
                                             <span class="label label-{$css_status}">{$str_status}</span>
+                                            {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
+                                                <span class="label label-{$css_gen}">{$str_gen}</span>
+                                            {/if}
                                         </li>
                                         <li>
                                             <abbr data-toggle="tooltip" data-placement="bottom" title="{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIME}"}">{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</abbr>

@@ -1,11 +1,19 @@
 <?php
-return "<a name=\"index\"></a>
-    <h3>主页</h3>
+return "<h3>主页</h3>
     <p>文件名：<span class=\"text-primary\">index.tpl</span></p>
     <p>
         主页是一个网站的起点。是用户打开浏览器时默认打开的一个网页。它主要起着引导用户浏览所需资源的作用。
     </p>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"alert\"></a>
     <h3>提示信息</h3>
@@ -15,7 +23,7 @@ return "<a name=\"index\"></a>
     </p>
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -37,5 +45,4 @@ return "<a name=\"index\"></a>
                 </tbody>
             </table>
         </div>
-    </div>
-    <hr>";
+    </div>";

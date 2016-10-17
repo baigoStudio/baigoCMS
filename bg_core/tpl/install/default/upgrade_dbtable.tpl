@@ -1,4 +1,3 @@
-{* upgrade_dbtable.tpl 登录界面 *}
 {$cfg = [
     sub_title  => $lang.page.upgradeDbTable,
     mod_help   => "upgrade",

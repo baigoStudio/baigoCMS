@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -83,11 +83,6 @@ class MODEL_THUMB {
             $_arr_alert["thumb_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "thumb_type");
         }
 
-        $_arr_thumbData = array(
-            "thumb_type" => $_arr_types[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData, "LENGTH(thumb_type) < 1"); //更新数据
-
         $_str_alert = "y090111";
 
         if ($_arr_alert) {
@@ -95,6 +90,10 @@ class MODEL_THUMB {
 
             if ($_reselt) {
                 $_str_alert = "y090106";
+                $_arr_thumbData = array(
+                    "thumb_type" => $_arr_types[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData, "LENGTH(thumb_type) < 1"); //更新数据
             }
         }
 
@@ -203,7 +202,7 @@ class MODEL_THUMB {
             $_str_sqlWhere .= " AND thumb_height=" . $num_thumbHeight;
         }
 
-        if ($str_thumbType) {
+        if (!fn_isEmpty($str_thumbType)) {
             $_str_sqlWhere .= " AND thumb_type='" . $str_thumbType . "'";
         }
 
@@ -243,7 +242,11 @@ class MODEL_THUMB {
 
         $_str_sqlWhere    = "1=1";
 
-        $_arr_thumb       = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "thumb_id DESC", $num_no, $num_except); //查询数据
+        $_arr_order = array(
+            array("thumb_id", "DESC"),
+        );
+
+        $_arr_thumb       = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except); //查询数据
         $_arr_thumbRow[] = array(
             "thumb_id"       => 0,
             "thumb_width"    => 100,
@@ -306,10 +309,10 @@ class MODEL_THUMB {
                 }
             $_str_outPut .= ");";
 
-            $_num_size = $this->obj_dir->put_file(BG_PATH_CACHE . "sys/", "thumb_list.php", $_str_outPut);
+            $_num_size = $this->obj_dir->put_file(BG_PATH_CACHE . "sys/thumb_list.php", $_str_outPut);
         }
 
-        $_arr_cacheReturn = include_once(BG_PATH_CACHE . "sys/thumb_list.php");
+        $_arr_cacheReturn = include(BG_PATH_CACHE . "sys/thumb_list.php");
 
         return $_arr_cacheReturn;
     }

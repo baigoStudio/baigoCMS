@@ -7,7 +7,7 @@ return "<h3>模板概述</h3>
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">模板目录结构说明</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">文件名</th>
@@ -70,6 +70,52 @@ return "<h3>模板概述</h3>
                         <td class=\"text-nowrap\">include</td>
                         <td class=\"text-nowrap\">包含文件目录</td>
                         <td>此目录用来存放被包含的文件，可自定义名称，也可删除此目录，与具体的模板写法有关，关于包含，请查看 Smarty 官方网站 <a href=\"http://www.smarty.net\" target=\"_blank\">http://www.smarty.net</a>。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
+    <hr>
+    <p>&nbsp;</p>
+
+    <p>
+        调用模板位于 <mark>./bg_tpl/call</mark> 目录下，如默认模板 <mark>./bg_tpl/call/call_cate.tpl</mark>。注：模板文件名必须使用 <mark>英文</mark> 与 <mark>数字</mark>，不能使用中文、符号等。
+    </p>
+
+    <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">默认模板结构说明</div>
+        <div class=\"table-responsive\">
+            <table class=\"table table-bordered\">
+                <thead>
+                    <tr>
+                        <th class=\"text-nowrap\">默认模板</th>
+                        <th class=\"text-nowrap\">调用类型</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class=\"text-nowrap\">call_article.tpl</td>
+                        <td class=\"text-nowrap\">文章列表、日排行、周排行、月排行、年排行、总排行</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">call_cate.tpl</td>
+                        <td class=\"text-nowrap\">栏目列表</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">call_spec.tpl</td>
+                        <td class=\"text-nowrap\">专题列表</td>
+                    </tr>
+                    <tr>
+                        <td class=\"text-nowrap\">call_tag.tpl</td>
+                        <td class=\"text-nowrap\">TAG 列表、TAG 排行</td>
                     </tr>
                 </tbody>
             </table>

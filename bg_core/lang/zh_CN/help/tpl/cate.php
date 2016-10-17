@@ -10,7 +10,7 @@ return "<h3>栏目显示</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -36,13 +36,13 @@ return "<h3>栏目显示</h3>
                         <td class=\"text-nowrap\">tplData.search</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">搜索参数</td>
-                        <td>显示文章列表所需要的搜索参数，查看 <a href=\"#search\">tplData.search</a>。</td>
+                        <td>显示文章列表所需要的搜索参数，查看 <a href=\"#search\">tplData.search</a>。<mark>纯静态模式下不提供</mark></td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tplData.query</td>
                         <td class=\"text-nowrap\">string</td>
                         <td class=\"text-nowrap\">搜索参数序列化字符串</td>
-                        <td>搜索参数序列化为字符串以后的结果。</td>
+                        <td>搜索参数序列化为字符串以后的结果。<mark>纯静态模式下不提供</mark></td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">tplData.pageRow</td>
@@ -54,7 +54,7 @@ return "<h3>栏目显示</h3>
                         <td class=\"text-nowrap\">tplData.customs</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">自定义字段搜索数组</td>
-                        <td>多维数组，格式为 <code>\"custom_自定义字段 ID\" => \"关键词\"</code>，多个自定义字段时的例子：<code>array(\"custom_2\" => \"关键词\", \"custom_5\" => \"关键词\")</code></td>
+                        <td>多维数组，格式为 <code>\"custom_自定义字段 ID\" => \"关键词\"</code>，多个自定义字段时的例子：<code>array(\"custom_2\" => \"关键词\", \"custom_5\" => \"关键词\")</code>。<mark>纯静态模式下不提供</mark></td>
                     </tr>
                 </tbody>
             </table>
@@ -70,7 +70,7 @@ return "<h3>栏目显示</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -135,10 +135,16 @@ return "<h3>栏目显示</h3>
                         <td>show 为显示，hide 为隐藏。</td>
                     </tr>
                     <tr>
+                        <td class=\"text-nowrap\">is_static</td>
+                        <td class=\"text-nowrap\">bool</td>
+                        <td class=\"text-nowrap\">是否为纯静态页面</td>
+                        <td>仅用于纯静态模式</td>
+                    </tr>
+                    <tr>
                         <td class=\"text-nowrap\">urlRow</td>
                         <td class=\"text-nowrap\">array</td>
                         <td class=\"text-nowrap\">当前栏目 URL 数组</td>
-                        <td>cate_url 为当前栏目 URL 地址，page_attach 为分页附加参数，主要用于分页。</td>
+                        <td>cate_url 为当前栏目 URL，cate_urlMore 更多分页 URL（仅用于纯静态模式，详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=intro&act_get=faq#cate_urlMore\" target=\"_blank\">常见问题</a>），page_attach 为分页附加参数，主要用于分页, page_ext 扩展名（仅用于纯静态模式）。</td>
                     </tr>
                     <tr>
                         <td class=\"text-nowrap\">alert</td>
@@ -162,11 +168,13 @@ return "<h3>栏目显示</h3>
     [cate_alias] =&gt; support //别名
     [cate_parent_id] =&gt; 0  //隶属于栏目
     [cate_type] =&gt; normal  //类型
-    [cate_tplDo] =&gt; default //栏目
+    [cate_tplDo] =&gt; default //模板
     [cate_content] =&gt; //内容
     [urlRow] =&gt; Array (
         [cate_url] =&gt; /cms/cate/support/id-2/ //URL
+        [cate_urlMore] =&gt; /cms/cate/support/id-2/ //更多分页 URL
         [page_attach] =&gt; page- //分页附加
+        [page_ext] =&gt; .html
     )
     [cate_trees] =&gt; Array ( //当前栏目的树形结构
         [0] =&gt; Array (
@@ -176,7 +184,9 @@ return "<h3>栏目显示</h3>
             [cate_domain] =&gt;
             [urlRow] =&gt; Array (
                 [cate_url] =&gt; /cms/cate/support/id-2/
+                [cate_urlMore] =&gt; /cms/cate/support/id-2/ //更多分页 URL
                 [page_attach] =&gt; page-
+                [page_ext] =&gt; .html
             )
         )
     )
@@ -193,7 +203,7 @@ return "<h3>栏目显示</h3>
 
     <div class=\"panel panel-default\">
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">键名</th>
@@ -218,14 +228,8 @@ return "<h3>栏目显示</h3>
                     <tr>
                         <td class=\"text-nowrap\">customs</td>
                         <td class=\"text-nowrap\">string</td>
-                        <td class=\"text-nowrap\">搜索字符串</td>
+                        <td class=\"text-nowrap\">自定义字段</td>
                         <td>详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=search#customs\" target=\"_blank\">搜索</a></td>
-                    </tr>
-                    <tr>
-                        <td class=\"text-nowrap\">page_ext</td>
-                        <td class=\"text-nowrap\">string</td>
-                        <td class=\"text-nowrap\">扩展名</td>
-                        <td>仅用于纯静态模式。</td>
                     </tr>
                 </tbody>
             </table>

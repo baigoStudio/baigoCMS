@@ -9,9 +9,10 @@ return array(
         "page"        => "分页参数",
         "cate"        => "栏目",
         "article"     => "文章",
-        "attach"      => "附件 / 缩略图",
         "tag"         => "TAG",
         "spec"        => "专题",
+        "attach"      => "附件 / 缩略图",
+        "call"        => "调用",
         "search"      => "搜索",
     ),
 );

@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -191,7 +191,7 @@ class CLASS_MYSQLI {
 
     function alert_table($table, $data = false, $rename = false) {
         $sql      = "ALTER TABLE `" . $table . "` ";
-        if ($rename) {
+        if (!fn_isEmpty($rename)) {
             $sql .= " RENAME TO `" . $rename . "`";
         }
         if ($data) {
@@ -266,11 +266,12 @@ class CLASS_MYSQLI {
     function count($table, $where = "", $distinct = "") {
         $sql = "SELECT";
         if ($distinct) {
-            $sql .= " COUNT(DISTINCT `" . implode("`,`", $distinct) . "`) FROM `" . $table . "`";
+            $sql .= " COUNT(DISTINCT `" . implode("`,`", $distinct) . "`)";
         } else {
-            $sql .= " COUNT(*) FROM `" . $table . "`";
+            $sql .= " COUNT(*)";
         }
-        if ($where) {
+        $sql .= " FROM `" . $table . "`";
+        if (!fn_isEmpty($where)) {
             $sql .= " WHERE " . $where;
         }
         //print_r($sql);
@@ -282,7 +283,7 @@ class CLASS_MYSQLI {
         return $obj_temp[0];
     }
 
-    function select($table, $data = "", $where = "", $group = "", $order = "", $length = 0, $start = 0, $distinct = "", $field = false) {
+    function select($table, $data = "", $where = "", $group = "", $order = "", $length = 0, $start = 0, $field = false) {
         $sql = "SELECT";
         if ($data) {
             if ($field) {
@@ -293,18 +294,20 @@ class CLASS_MYSQLI {
         } else {
             $sql .= " *";
         }
-        if ($distinct) {
-            $sql .= ", COUNT(DISTINCT `" . implode(",", $distinct) . "`)";
-        }
         $sql .= " FROM `" . $table . "`";
-        if ($where) {
+        if (!fn_isEmpty($where)) {
             $sql .= " WHERE " . $where;
         }
         if ($group) {
-            $sql .= " GROUP BY " . $group;
+            $sql .= " GROUP BY `" . implode("`,`", $group) . "`";
         }
         if ($order) {
-            $sql .= " ORDER BY " . $order;
+            $sql_order = " ORDER BY ";
+            foreach ($order as $_key=>$_value) {
+                $sql_order .= "`" . $_value[0] . "` " . $_value[1] . ",";
+            }
+            $sql_order = rtrim($sql_order, ",");
+            $sql .= $sql_order;
         }
         if ($length > 0) {
             $sql .= " LIMIT " . $start . ", " . $length;

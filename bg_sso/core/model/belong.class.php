@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -187,7 +187,11 @@ class MODEL_BELONG {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "belong", $_arr_belongSelect, $_str_sqlWhere, "", "belong_id DESC", $num_no, $num_except);
+        $_arr_order = array(
+            array("belong_id", "DESC"),
+        );
+
+        $_arr_belongRows = $this->obj_db->select(BG_DB_TABLE . "belong", $_arr_belongSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except);
 
         return $_arr_belongRows;
     }

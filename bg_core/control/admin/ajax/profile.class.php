@@ -5,11 +5,10 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "http.func.php"); //载入 http
 include_once(BG_PATH_CLASS . "ajax.class.php"); //载入 AJAX 基类
 include_once(BG_PATH_CLASS . "sso.class.php");
 
@@ -34,6 +33,18 @@ class AJAX_PROFILE {
     }
 
 
+    function ajax_prefer() {
+        if (isset($this->adminLogged["admin_allow_profile"]["prefer"])) {
+            $this->obj_ajax->halt_alert("x020112");
+        }
+
+        $_arr_adminSubmit   = $this->mdl_admin->input_prefer();
+        $_arr_adminRow      = $this->mdl_admin->mdl_prefer();
+
+        $this->obj_ajax->halt_alert($_arr_adminRow["alert"]);
+    }
+
+
     /**
      * ajax_my function.
      *
@@ -50,7 +61,7 @@ class AJAX_PROFILE {
             $this->obj_ajax->halt_alert($_arr_adminProfile["alert"]);
         }
 
-        $_arr_ssoEdit     = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], "user_id", "", "", $_arr_adminProfile["admin_mail"], $_arr_adminProfile["admin_nick"]);
+        $_arr_ssoEdit     = $this->obj_sso->sso_user_edit($this->adminLogged["admin_id"], "user_id", "", "", $_arr_adminProfile["admin_mail"], $_arr_adminProfile["admin_nick"]);
         $_arr_adminRow    = $this->mdl_admin->mdl_profile($this->adminLogged["admin_id"]);
 
         if ($_arr_adminRow["alert"] == "y020103" || $_arr_ssoEdit["alert"] == "y010103") {
@@ -79,7 +90,7 @@ class AJAX_PROFILE {
             $this->obj_ajax->halt_alert($_arr_adminPass["alert"]);
         }
 
-        $_arr_ssoEdit = $this->obj_sso->sso_edit($this->adminLogged["admin_id"], "user_id", $_arr_adminPass["admin_pass"], $_arr_adminPass["admin_pass_new"], "", "", true);
+        $_arr_ssoEdit = $this->obj_sso->sso_user_edit($this->adminLogged["admin_id"], "user_id", $_arr_adminPass["admin_pass"], $_arr_adminPass["admin_pass_new"], "", "", true);
 
         if ($_arr_ssoEdit["alert"] == "y010103") {
             $_str_alert = "y020109";

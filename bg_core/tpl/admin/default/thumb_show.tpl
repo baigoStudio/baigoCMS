@@ -1,4 +1,3 @@
-{* admin_groupForm.tpl 管理组编辑界面 *}
 {$cfg = [
     title          => "{$adminMod.attach.main.title} - {$adminMod.attach.sub.thumb.title}",
     menu_active    => "attach",
@@ -31,7 +30,7 @@
     </div>
 
     <form name="thumb_gen" id="thumb_gen">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="thumb_id" value="{$tplData.thumbRow.thumb_id}">
         <input type="hidden" name="act_post" id="act_gen" value="gen">
 
@@ -42,9 +41,9 @@
                         <div class="form-group">
                             <label class="control-label">{$lang.label.rangeId}</label>
                             <div class="input-group">
-                                <input type="text" name="attach_range[begin_id]" id="attach_range_begin_id" value="0" class="form-control">
+                                <input type="text" name="attach_range[min_id]" id="attach_range_min_id" value="0" class="form-control">
                                 <span class="input-group-addon input_range">{$lang.label.to}</span>
-                                <input type="text" name="attach_range[end_id]" id="attach_range_end_id" value="0" class="form-control">
+                                <input type="text" name="attach_range[max_id]" id="attach_range_max_id" value="0" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
@@ -58,10 +57,10 @@
                                 <div class="progress-bar progress-bar-info progress-bar-striped active"></div>
                             </div>
                         </div>
-                
+
                         <div class="form-group">
                             <div class="baigoClearMsg">
-                
+
                             </div>
                         </div>
                     </div>
@@ -74,22 +73,22 @@
                         <label class="control-label static_label">{$lang.label.id}</label>
                         <p class="form-control-static">{$tplData.thumbRow.thumb_id}</p>
                     </div>
-            
+
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.thumbWidth}</label>
                         <p class="form-control-static">{$tplData.thumbRow.thumb_width}</p>
                     </div>
-            
+
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.thumbHeight}</label>
                         <p class="form-control-static">{$tplData.thumbRow.thumb_height}</p>
                     </div>
-            
+
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.thumbCall}</label>
                         <p class="form-control-static">thumb_{$tplData.thumbRow.thumb_width}_{$tplData.thumbRow.thumb_height}_{$tplData.thumbRow.thumb_type}</p>
                     </div>
-            
+
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.thumbType}</label>
                         <p class="form-control-static">{$type.thumb[$tplData.thumbRow.thumb_type]}</p>
@@ -110,7 +109,7 @@
         msg_loading: "{$alert.x070409}",
         msg_complete: "{$alert.y070409}"
     };
-    
+
     $(document).ready(function(){
         var obj_gen = $("#thumb_gen").baigoClear(opts_gen);
         $("#go_gen").click(function(){

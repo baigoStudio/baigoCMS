@@ -16,6 +16,8 @@
             <div id="attach_uploads" class="attach_uploads"></div>
 
             <script type="text/javascript">
+            var _str_msg
+
             function upload_msg(_upload_name, _upload_msg) {
                 _str_msg = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">" +
                     "<span aria-hidden=\"true\">&times;</span>" +
@@ -37,7 +39,7 @@
 
                 $("#attach_files").fileupload({
                     formData: [
-                        { name: "token_session", value: "{$common.token_session}" },
+                        { name: "{$common.tokenRow.name_session}", value: "{$common.tokenRow.token}" },
                         { name: "act_post", value: "submit" }
                     ],
                     url: "{$smarty.const.BG_URL_ADMIN}ajax.php?mod=attach",

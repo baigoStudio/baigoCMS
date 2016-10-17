@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -47,15 +47,16 @@ class MODEL_CALL {
             "call_id"            => "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'",
             "call_name"          => "varchar(300) NOT NULL COMMENT '调用名'",
             "call_type"          => "enum('" . $_str_types . "') NOT NULL COMMENT '调用类型'",
-            "call_cate_ids"      => "varchar(300) NOT NULL COMMENT '栏目ID'",
-            "call_cate_excepts"  => "varchar(300) NOT NULL COMMENT '排除栏目'",
+            "call_cate_ids"      => "varchar(1000) NOT NULL COMMENT '栏目ID'",
+            "call_cate_excepts"  => "varchar(1000) NOT NULL COMMENT '排除栏目'",
             "call_cate_id"       => "smallint NOT NULL COMMENT '栏目ID'",
-            "call_spec_id"       => "int NOT NULL COMMENT '专题ID'",
+            "call_spec_ids"      => "varchar(1000) NOT NULL COMMENT '专题ID'",
             "call_mark_ids"      => "varchar(300) NOT NULL COMMENT '标记ID'",
-            "call_file"          => "enum('" . $_str_files . "') NOT NULL COMMENT '静态文件类型'",
+            "call_file"          => "enum('" . $_str_files . "') NOT NULL COMMENT '静态页面类型'",
             "call_amount"        => "varchar(300) NOT NULL COMMENT '显示数选项'",
             "call_attach"        => "enum('" . $_str_attachs . "') NOT NULL COMMENT '含有附件'",
             "call_status"        => "enum('" . $_str_status . "') NOT NULL COMMENT '状态'",
+            "call_tpl"           => "varchar(1000) NOT NULL COMMENT '模板'",
         );
 
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "call", $_arr_callCreat, "call_id", "调用");
@@ -115,49 +116,33 @@ class MODEL_CALL {
             $_arr_alert["call_attach"] = array("CHANGE", "enum('" . $_str_attachs . "') NOT NULL COMMENT '含有附件'", "call_attach");
         }
 
-        $_arr_callData = array(
-            "call_attach" => $_arr_attachs[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_attach) < 1"); //更新数据
-
-        if (!in_array("call_spec_id", $_arr_col)) {
-            $_arr_alert["call_spec_id"] = array("ADD", "int NOT NULL COMMENT '专题 ID'");
+        if (!in_array("call_spec_ids", $_arr_col)) {
+            $_arr_alert["call_spec_ids"] = array("ADD", "varchar(1000) NOT NULL COMMENT '专题ID'");
         }
 
         if (!in_array("call_cate_excepts", $_arr_col)) {
-            $_arr_alert["call_cate_excepts"] = array("ADD", "varchar(300) NOT NULL COMMENT '排除栏目'");
+            $_arr_alert["call_cate_excepts"] = array("ADD", "varchar(1000) NOT NULL COMMENT '排除栏目'");
+        }
+
+        if (!in_array("call_tpl", $_arr_col)) {
+            $_arr_alert["call_tpl"] = array("ADD", "varchar(1000) NOT NULL COMMENT '模板'");
         }
 
         if (in_array("call_type", $_arr_col)) {
             $_arr_alert["call_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '调用类型'", "call_type");
         }
 
-        $_arr_callData = array(
-            "call_type" => $_arr_types[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_type) < 1"); //更新数据
-
         if (in_array("call_cate_id", $_arr_col)) {
-            $_arr_alert["call_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目ID'", "call_cate_id");
+            $_arr_alert["call_cate_id"] = array("CHANGE", "smallint NOT NULL COMMENT '栏目 ID'", "call_cate_id");
         }
 
         if (in_array("call_file", $_arr_col)) {
-            $_arr_alert["call_file"] = array("CHANGE", "enum('" . $_str_files . "') NOT NULL COMMENT '静态文件类型'", "call_file");
+            $_arr_alert["call_file"] = array("CHANGE", "enum('" . $_str_files . "') NOT NULL COMMENT '静态页面类型'", "call_file");
         }
-
-        $_arr_callData = array(
-            "call_file" => $_arr_files[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_file) < 1"); //更新数据
 
         if (in_array("call_status", $_arr_col)) {
             $_arr_alert["call_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "call_status");
         }
-
-        $_arr_callData = array(
-            "call_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_status) < 1"); //更新数据
 
         $_str_alert = "y170111";
 
@@ -166,6 +151,25 @@ class MODEL_CALL {
 
             if ($_reselt) {
                 $_str_alert = "y170106";
+                $_arr_callData = array(
+                    "call_attach" => $_arr_attachs[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_attach) < 1"); //更新数据
+
+                $_arr_callData = array(
+                    "call_type" => $_arr_types[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_type) < 1"); //更新数据
+
+                $_arr_callData = array(
+                    "call_file" => $_arr_files[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_file) < 1"); //更新数据
+
+                $_arr_callData = array(
+                    "call_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "call", $_arr_callData, "LENGTH(call_status) < 1"); //更新数据
             }
         }
 
@@ -192,13 +196,14 @@ class MODEL_CALL {
             "call_name"          => $this->callSubmit["call_name"],
             "call_type"          => $this->callSubmit["call_type"],
             "call_file"          => $this->callSubmit["call_file"],
+            "call_tpl"           => $this->callSubmit["call_tpl"],
             "call_status"        => $this->callSubmit["call_status"],
             "call_amount"        => $this->callSubmit["call_amount"],
             "call_cate_ids"      => $this->callSubmit["call_cate_ids"],
             "call_cate_excepts"  => $this->callSubmit["call_cate_excepts"],
             "call_cate_id"       => $this->callSubmit["call_cate_id"],
             "call_mark_ids"      => $this->callSubmit["call_mark_ids"],
-            "call_spec_id"       => $this->callSubmit["call_spec_id"],
+            "call_spec_ids"      => $this->callSubmit["call_spec_ids"],
             "call_attach"        => $this->callSubmit["call_attach"],
         );
 
@@ -209,7 +214,8 @@ class MODEL_CALL {
                 $_str_alert = "y170101";
             } else {
                 return array(
-                    "alert" => "x170101",
+                    "call_id"   => $_num_callId,
+                    "alert"     => "x170101",
                 );
             }
         } else {
@@ -220,14 +226,15 @@ class MODEL_CALL {
                 $_str_alert = "y170103";
             } else {
                 return array(
-                    "alert" => "x170103",
+                    "call_id"   => $_num_callId,
+                    "alert"     => "x170103",
                 );
             }
         }
 
         return array(
-            "call_id"    => $_num_callId,
-            "alert"  => $_str_alert,
+            "call_id"   => $_num_callId,
+            "alert"     => $_str_alert,
         );
     }
 
@@ -241,37 +248,46 @@ class MODEL_CALL {
      * @param int $num_notId (default: 0)
      * @return void
      */
-    function mdl_read($str_call, $str_readBy = "call_id", $num_notId = 0) {
+    function mdl_read($str_call, $str_readBy = "call_id", $num_notId = 0, $is_min = false) {
 
         $_arr_callSelect = array(
             "call_id",
             "call_name",
             "call_type",
             "call_file",
+            "call_tpl",
             "call_status",
             "call_amount",
             "call_cate_ids",
             "call_cate_excepts",
             "call_cate_id",
-            "call_spec_id",
+            "call_spec_ids",
             "call_mark_ids",
             "call_attach",
         );
 
-        switch ($str_readBy) {
-            case "call_id":
-                $_str_sqlWhere = $str_readBy . "=" . $str_call;
-            break;
-            default:
-                $_str_sqlWhere = $str_readBy . "='" . $str_call . "'";
-            break;
+        if ($is_min) {
+            $_str_sqlWhere = $str_readBy . ">" . $str_call;
+        } else {
+            switch ($str_readBy) {
+                case "call_id":
+                    $_str_sqlWhere = $str_readBy . "=" . $str_call;
+                break;
+                default:
+                    $_str_sqlWhere = $str_readBy . "='" . $str_call . "'";
+                break;
+            }
         }
 
         if ($num_notId > 0) {
             $_str_sqlWhere .= " AND call_id<>" . $num_notId;
         }
 
-        $_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
+        $_arr_order = array(
+            array("call_id", "ASC"),
+        );
+
+        $_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", $_arr_order, 1, 0); //检查本地表是否存在记录
 
         if (isset($_arr_callRows[0])) {
             $_arr_callRow = $_arr_callRows[0];
@@ -305,6 +321,15 @@ class MODEL_CALL {
             $_arr_callRow["call_mark_ids"] = array();
         }
 
+        if (isset($_arr_callRow["call_spec_ids"])) {
+            $_arr_callRow["call_spec_ids"] = fn_jsonDecode($_arr_callRow["call_spec_ids"], "no"); //json解码
+        } else {
+            $_arr_callRow["call_spec_ids"] = array();
+        }
+
+        $_arr_callRow["urlRow"] = $this->url_process($_arr_callRow);
+
+
         $_arr_callRow["alert"]        = "y170102";
 
         return $_arr_callRow;
@@ -328,19 +353,24 @@ class MODEL_CALL {
             "call_name",
             "call_type",
             "call_file",
+            "call_tpl",
             "call_status",
-            "call_amount",
+            /*"call_amount",
             "call_cate_ids",
             "call_cate_excepts",
             "call_cate_id",
-            "call_spec_id",
+            "call_spec_ids",
             "call_mark_ids",
-            "call_attach",
+            "call_attach",*/
         );
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", "call_id DESC", $num_no, $num_except); //列出本地表是否存在记录
+        $_arr_order = array(
+            array("call_id", "DESC"),
+        );
+
+        $_arr_callRows = $this->obj_db->select(BG_DB_TABLE . "call",  $_arr_callSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except); //列出本地表是否存在记录
 
         return $_arr_callRows;
 
@@ -482,10 +512,11 @@ class MODEL_CALL {
         }
 
         $this->callSubmit["call_file"]            = fn_getSafe(fn_post("call_file"), "txt", "");
+        $this->callSubmit["call_tpl"]             = fn_getSafe(fn_post("call_tpl"), "txt", "");
         $this->callSubmit["call_attach"]          = fn_getSafe(fn_post("call_attach"), "txt", "");
         $this->callSubmit["call_cate_id"]         = fn_getSafe(fn_post("call_cate_id"), "int", 0);
-        $this->callSubmit["call_spec_id"]         = fn_getSafe(fn_post("call_spec_id"), "int", 0);
 
+        $this->callSubmit["call_spec_ids"]        = fn_jsonEncode(fn_post("call_spec_ids"), "no");
         $this->callSubmit["call_cate_ids"]        = fn_jsonEncode(fn_post("call_cate_ids"), "no");
         $this->callSubmit["call_cate_excepts"]    = fn_jsonEncode(fn_post("call_cate_excepts"), "no");
         $this->callSubmit["call_mark_ids"]        = fn_jsonEncode(fn_post("call_mark_ids"), "no");
@@ -530,18 +561,41 @@ class MODEL_CALL {
     }
 
 
+    private function url_process($arr_callRow) {
+        $_str_callPath      = "";
+        $_str_callPathShort = "";
+        $_str_callUrl       = "";
+        $_str_pageExt       = "";
+
+
+        if (BG_VISIT_TYPE == "static") {
+            $_str_callPath      = BG_PATH_ROOT . "call/";
+            $_str_callPathShort = "/call/" . $arr_callRow["call_id"] . "." . $arr_callRow["call_file"];
+            $_str_callUrl       = BG_URL_ROOT . "call/" . $arr_callRow["call_id"] . "." . $arr_callRow["call_file"];
+            $_str_pageExt       = "." . $arr_callRow["call_file"];
+        }
+
+        return array(
+            "call_path"         => $_str_callPath,
+            "call_pathShort"    => $_str_callPathShort,
+            "call_url"          => $_str_callUrl,
+            "page_ext"          => $_str_pageExt,
+        );
+    }
+
+
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND call_name LIKE '%" . $arr_search["key"] . "%'";
         }
 
-        if (isset($arr_search["type"]) && $arr_search["type"]) {
+        if (isset($arr_search["type"]) && !fn_isEmpty($arr_search["type"])) {
             $_str_sqlWhere .= " AND call_type='" . $arr_search["type"] . "'";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND call_status='" . $arr_search["status"] . "'";
         }
 

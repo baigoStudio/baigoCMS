@@ -1,14 +1,24 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>所有调用</h3>
+return "<h3>所有调用</h3>
     <p>
         点左侧菜单“调用管理“，进入如下界面，可以对调用进行编辑、删除等操作。调用主要用于模板开发与 API 调用。
     </p>
+
+    <p>在纯静态模式下，将会显示“逐个生成”按钮，“<mark>逐个生成</mark>按钮会逐个生成调用”。</p>
+
     <p>
-        <img src=\"{images}call_list.jpg\" class=\"img-responsive thumbnail\">
+        <a href=\"{images}call_list.jpg\" target=\"_blank\"><img src=\"{images}call_list.jpg\" class=\"img-responsive thumbnail\"></a>
     </p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"form\"></a>
     <h3>创建（编辑）调用</h3>
@@ -26,15 +36,15 @@ return "<a name=\"list\"></a>
 
             <div class=\"carousel-inner\" role=\"listbox\">
                 <div class=\"item active\">
-                    <img src=\"{images}call_form_article.jpg\">
+                    <a href=\"{images}call_form_article.jpg\" target=\"_blank\"><img src=\"{images}call_form_article.jpg\"></a>
                     <div class=\"carousel-caption indicator_black\">文章列表、排行</div>
                 </div>
                 <div class=\"item\">
-                    <img src=\"{images}call_form_cate.jpg\">
+                    <a href=\"{images}call_form_cate.jpg\" target=\"_blank\"><img src=\"{images}call_form_cate.jpg\"></a>
                     <div class=\"carousel-caption indicator_black\">栏目列表</div>
                 </div>
                 <div class=\"item\">
-                    <img src=\"{images}call_form_tag.jpg\">
+                    <a href=\"{images}call_form_tag.jpg\" target=\"_blank\"><img src=\"{images}call_form_tag.jpg\"></a>
                     <div class=\"carousel-caption indicator_black\">TAG 列表</div>
                 </div>
             </div>
@@ -49,6 +59,8 @@ return "<a name=\"list\"></a>
             </a>
         </div>
     </p>
+
+    <p>&nbsp;</p>
 
     <div class=\"panel panel-default\">
         <div class=\"panel-heading\">填写说明</div>
@@ -72,6 +84,12 @@ return "<a name=\"list\"></a>
             <h4 class=\"text-info\">调用类型</h4>
             <p>可选文章列表、日排行、周排行、月排行、年排行、总排行、栏目列表、TAG 列表。文章列表和所有排行，都是指安设定要求列出相关文章，栏目列表是指按设定要求列出相关栏目，TAG 列表是指按设定要求列出相关 TAG。</p>
 
+            <h4 class=\"text-info\">生成文件类型</h4>
+            <p>纯静态模式下会显示改选项，科学 HTML 和 JS，分别针对不同的调用方式。</p>
+
+            <h4 class=\"text-info\">模板</h4>
+            <p>纯静态模式下会显示改选项，选择调用生成的模板。详情请查看 <a href=\"{BG_URL_HELP}ctl.php?mod=tpl&act_get=call\" target=\"_blank\">模板文档</a>。</p>
+
             <h4 class=\"text-info\">状态</h4>
             <p>可选启用或禁用。</p>
 
@@ -81,4 +99,24 @@ return "<a name=\"list\"></a>
             <h4 class=\"text-info\">显示字数</h4>
             <p>文章标题、栏目名称、TAG 等显示的字数，如字数超过这里的设定，将以省略号替代。</p>
         </div>
-    </div>";
+    </div>
+
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
+    <hr>
+    <p>&nbsp;</p>
+
+    <a name=\"show\"></a>
+    <h3>查看调用</h3>
+    <p>
+        点调用列表的“查看”菜单，进入如下界面，在此，您可以查看调用方式等信息。
+    </p>
+
+    <p>
+        <a href=\"{images}call_show.jpg\" target=\"_blank\"><img src=\"{images}call_show.jpg\" class=\"img-responsive thumbnail\"></a>
+    </p>";

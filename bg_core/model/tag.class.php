@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -101,11 +101,6 @@ class MODEL_TAG {
             $_arr_alert["tag_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "tag_status");
         }
 
-        $_arr_tagData = array(
-            "tag_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "LENGTH(tag_status) < 1"); //更新数据
-
         if (in_array("tag_article_count", $_arr_col)) {
             $_arr_alert["tag_article_count"] = array("CHANGE", "int NOT NULL COMMENT '文章数'", "tag_article_count");
         }
@@ -117,6 +112,10 @@ class MODEL_TAG {
 
             if ($_reselt) {
                 $_str_alert = "y130106";
+                $_arr_tagData = array(
+                    "tag_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "LENGTH(tag_status) < 1"); //更新数据
             }
         }
 
@@ -139,16 +138,16 @@ class MODEL_TAG {
     function mdl_submit($str_tagName = "", $str_tagStatus = "") {
         $_arr_tagData = array();
 
-        if ($str_tagName) {
-            $_arr_tagData["tag_name"] = $str_tagName;
-        } else {
+        if (fn_isEmpty($str_tagName)) {
             $_arr_tagData["tag_name"] = $this->tagSubmit["tag_name"];
+        } else {
+            $_arr_tagData["tag_name"] = $str_tagName;
         }
 
-        if ($str_tagStatus) {
-            $_arr_tagData["tag_status"] = $str_tagStatus;
-        } else {
+        if (fn_isEmpty($str_tagStatus)) {
             $_arr_tagData["tag_status"] = $this->tagSubmit["tag_status"];
+        } else {
+            $_arr_tagData["tag_status"] = $str_tagStatus;
         }
 
         if (!isset($this->tagSubmit["tag_id"]) || $this->tagSubmit["tag_id"] < 1) {
@@ -251,8 +250,8 @@ class MODEL_TAG {
             );
         }
 
-        $_arr_tagRow["urlRow"]    = $this->url_process($_arr_tagRow);
-        $_arr_tagRow["alert"] = "y130102";
+        $_arr_tagRow["urlRow"]  = $this->url_process($_arr_tagRow);
+        $_arr_tagRow["alert"]   = "y130102";
 
         return $_arr_tagRow;
     }
@@ -277,45 +276,27 @@ class MODEL_TAG {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_str_sqlGroup = "";
+        $_arr_sqlGroup = array("tag_id");
+
+        $_arr_sqlOrder = array(
+            array("tag_id", "DESC"),
+        );
 
         if (isset($arr_search["article_id"]) && $arr_search["article_id"] > 0) {
             $_view_name = "tag_view";
-            if (isset($arr_search["type"])) {
-                switch ($arr_search["type"]) {
-                    case "tag_rank":
-                        $_str_sqlGroup = "tag_article_count, tag_id";
-                    break;
-
-                    default:
-                        $_str_sqlGroup = "tag_id";
-                    break;
-                }
-            } else {
-                $_str_sqlGroup = "tag_id";
-            }
-            $_arr_distinct = array("tag_id");
         } else {
-            $_view_name      = "tag";
-            $_arr_distinct   = false;
+            $_view_name = "tag";
         }
 
-        if (isset($arr_search["type"])) {
-            switch ($arr_search["type"]) {
-                case "tag_rank":
-                    $_str_sqlOrder = "tag_article_count DESC, tag_id DESC";
-                break;
-
-                default:
-                    $_str_sqlOrder = "tag_id DESC";
-                break;
-            }
-        } else {
-            $_str_sqlGroup = "tag_id";
-            $_str_sqlOrder = "tag_id DESC";
+        if (isset($arr_search["type"]) && $arr_search["type"] == "tag_rank") {
+            $_arr_sqlGroup = array("tag_article_count", "tag_id");
+            $_arr_sqlOrder = array(
+                array("tag_article_count", "DESC"),
+                array("tag_id", "DESC"),
+            );
         }
 
-        $_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $_str_sqlGroup, $_str_sqlOrder, $num_no, $num_except, $_arr_distinct);
+        $_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $_arr_sqlGroup, $_arr_sqlOrder, $num_no, $num_except);
 
         foreach ($_arr_tagRows as $_key=>$_value) {
             $_arr_tagRows[$_key]["urlRow"] = $this->url_process($_value);
@@ -489,9 +470,11 @@ class MODEL_TAG {
 
 
     private function url_process($_arr_tagRow) {
+        $_str_pageExt = "";
+
         switch (BG_VISIT_TYPE) {
-            case "pstatic":
             case "static":
+            case "pstatic":
                 $_str_tagUrl        = BG_URL_ROOT . "tag/tag-" . urlencode($_arr_tagRow["tag_name"]) . "/";
                 $_str_pageAttach    = "page-";
             break;
@@ -505,6 +488,7 @@ class MODEL_TAG {
         return array(
             "tag_url"       => $_str_tagUrl,
             "page_attach"   => $_str_pageAttach,
+            "page_ext"      => $_str_pageExt,
         );
     }
 
@@ -512,11 +496,11 @@ class MODEL_TAG {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND tag_name LIKE '%" . $arr_search["key"] . "%'";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND tag_status='" . $arr_search["status"] . "'";
         }
 

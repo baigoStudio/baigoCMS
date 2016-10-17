@@ -1,11 +1,10 @@
-{*cate_order.php 栏目编辑界面*}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     {$adminMod.cate.main.title} - {$lang.page.order}
 </div>
 <div class="modal-body">
     <form name="cate_order" id="cate_order" class="form_input">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="order">
         <input type="hidden" name="cate_id" value="{$tplData.cateRow.cate_id}">
         <input type="hidden" name="cate_parent_id" value="{$tplData.cateRow.cate_parent_id}">

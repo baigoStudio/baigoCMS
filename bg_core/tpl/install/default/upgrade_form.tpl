@@ -1,4 +1,3 @@
-{* upgrade_base.tpl 登录界面 *}
 {$cfg = [
     sub_title  => $opt[$tplData.act_get].title,
     mod_help   => "upgrade",
@@ -8,7 +7,7 @@
 {include "{$smarty.const.BG_PATH_TPLSYS}install/default/include/upgrade_head.tpl" cfg=$cfg}
 
     <form name="upgrade_form" id="upgrade_form">
-        <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+        <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
         <input type="hidden" name="act_post" value="{$tplData.act_get}">
 
         {if $tplData.act_get == "sso"}
@@ -40,7 +39,7 @@
                         </select>
                     {else if $value.type == "radio"}
                         {foreach $value.option as $key_opt=>$value_opt}
-                            <div class="radio">
+                            <div class="radio_baigo">
                                 <label for="opt_{$tplData.act_get}_{$key}_{$key_opt}">
                                     <input type="radio" {if $this_value == $key_opt}checked{/if} value="{$key_opt}" data-validate="opt_{$tplData.act_get}_{$key}" name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}_{$key_opt}">
                                     {$value_opt.value}
@@ -67,15 +66,6 @@
                         {if $value["type"] == "dir"}
                             <option {if $smarty.const.BG_SITE_TPL == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
                         {/if}
-                    {/foreach}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">{$lang.label.excerptDefault}<span id="msg_base_BG_SITE_EXCERPTTYPE">*</span></label>
-                <select name="opt[base][BG_SITE_EXCERPTTYPE]" id="opt_base_BG_SITE_EXCERPTTYPE" data-validate class="form-control input-lg">
-                    {foreach $tplData.excerptType as $key=>$value}
-                        <option {if $smarty.const.BG_SITE_EXCERPTTYPE == $key}selected{/if} value="{$key}">{$value}</option>
                     {/foreach}
                 </select>
             </div>
@@ -114,12 +104,6 @@
             len: { min: 1, max: 900 },
             validate: { type: "select" },
             msg: { selector: "#msg_base_BG_SITE_TPL", too_few: "{$alert.x060201}{$lang.label.tpl}" }
-        };
-
-        opts_validator_form.opt_base_BG_SITE_EXCERPTTYPE = {
-            len: { min: 1, max: 0 },
-            validate: { type: "select" },
-            msg: { selector: "#msg_base_BG_SITE_EXCERPTTYPE", too_few: "{$alert.x060201}{$lang.label.excerptDefault}" }
         };
     {/if}
 

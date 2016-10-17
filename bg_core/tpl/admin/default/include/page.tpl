@@ -1,4 +1,3 @@
-{* html_foot.tpl HTML 底部通用 *}
     <ul class="pagination pagination-sm">
         {if $tplData.pageRow.page > 1}
             <li>

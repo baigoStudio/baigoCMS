@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -17,6 +17,16 @@ return array(
         "pub"     => "发布", //发布
         "wait"    => "待审", //等待审核
         "hide"    => "隐藏", //隐藏
+    ),
+
+    "gen" => array(
+        "not" => "未生成",
+        "yes" => "已生成",
+    ),
+
+    "pasv" => array(
+        "off" => "关闭",
+        "on"  => "开启",
     ),
 
     "app" => array(

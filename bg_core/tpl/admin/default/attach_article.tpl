@@ -1,4 +1,3 @@
-{*attach_list.php 上传管理*}
 {$cfg = [
     title          => "{$adminMod.article.main.title} - {$lang.page.attachArticle}",
     menu_active    => "article",
@@ -66,20 +65,25 @@
                 {if $tplData.articleRow.article_box == "normal"}
                     {if $tplData.articleRow.article_time_pub > $smarty.now}
                         {$css_status = "info"}
-                        {$str_status = "{$lang.label.deadline} {$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+                        {$str_status = "{$lang.label.timePub} {$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                     {else}
-                        {if $tplData.articleRow.article_top == 1}
-                            {$css_status = "primary"}
-                            {$str_status = $lang.label.top}
+                        {if $value.article_time_hide > 0 && $value.article_time_pub < $smarty.now}
+                            {$css_status = "default"}
+                            {$str_status = "{$lang.label.timeHide} {$value.article_time_hide|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                         {else}
-                            {if $tplData.articleRow.article_status == "pub"}
-                                {$css_status = "success"}
-                            {else if $tplData.articleRow.article_status == "wait"}
-                                {$css_status = "warning"}
+                            {if $tplData.articleRow.article_top == 1}
+                                {$css_status = "primary"}
+                                {$str_status = $lang.label.top}
                             {else}
-                                {$css_status = "default"}
+                                {if $tplData.articleRow.article_status == "pub"}
+                                    {$css_status = "success"}
+                                {else if $tplData.articleRow.article_status == "wait"}
+                                    {$css_status = "warning"}
+                                {else}
+                                    {$css_status = "default"}
+                                {/if}
+                                {$str_status = $status.article[$tplData.articleRow.article_status]}
                             {/if}
-                            {$str_status = $status.article[$tplData.articleRow.article_status]}
                         {/if}
                     {/if}
                 {else}
@@ -115,7 +119,7 @@
         </div>
         <div class="col-md-9">
             <form name="attach_list" id="attach_list">
-                <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                 <input type="hidden" name="article_id" value="{$tplData.articleRow.article_id}">
                 <div class="panel panel-default">
                     <div class="table-responsive">

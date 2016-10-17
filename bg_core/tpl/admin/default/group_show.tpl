@@ -1,4 +1,3 @@
-{* admin_groupForm.tpl 管理组编辑界面 *}
 {$cfg = [
     title          => "{$adminMod.group.main.title} - {$lang.page.show}",
     menu_active    => "group",
@@ -59,6 +58,10 @@
                                     <li>
                                         <span class="glyphicon glyphicon-{if isset($tplData.groupRow.group_allow.opt.app)}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
                                         {$lang.page.app}
+                                    </li>
+                                    <li>
+                                        <span class="glyphicon glyphicon-{if isset($tplData.groupRow.group_allow.opt.chkver)}ok-circle text-success{else}remove-circle text-danger{/if}"></span>
+                                        {$lang.page.chkver}
                                     </li>
                                     <li>
                                         <span class="glyphicon glyphicon-{if isset($tplData.groupRow.group_allow.opt.dbconfig)}ok-circle text-success{else}remove-circle text-danger{/if}"></span>

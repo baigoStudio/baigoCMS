@@ -1,4 +1,3 @@
-{* install_1.tpl 登录界面 *}
 {$cfg = [
     sub_title  => $lang.page.installDbTable,
     mod_help   => "install",

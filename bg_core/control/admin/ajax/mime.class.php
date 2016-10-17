@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -18,6 +18,7 @@ class AJAX_MIME {
     private $adminLogged;
     private $obj_ajax;
     private $mdl_mime;
+    private $is_super = false;
 
     function __construct() { //构造函数
         $this->adminLogged    = $GLOBALS["adminLogged"]; //获取已登录信息
@@ -28,6 +29,12 @@ class AJAX_MIME {
         if ($this->adminLogged["alert"] != "y020102") { //未登录，抛出错误信息
             $this->obj_ajax->halt_alert($this->adminLogged["alert"]);
         }
+
+        if ($this->adminLogged["admin_type"] == "super") {
+            $this->is_super = true;
+        }
+
+        $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
     }
 
 
@@ -38,7 +45,7 @@ class AJAX_MIME {
      * @return void
      */
     function ajax_submit() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
+        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x080302");
         }
 
@@ -61,7 +68,7 @@ class AJAX_MIME {
      * @return void
      */
     function ajax_del() {
-        if (!isset($this->adminLogged["groupRow"]["group_allow"]["attach"]["mime"])) {
+        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
             $this->obj_ajax->halt_alert("x080304");
         }
 
@@ -86,9 +93,13 @@ class AJAX_MIME {
     function ajax_chkname() {
         $_str_mimeName    = fn_getSafe(fn_get("mime_name"), "txt", "");
         $_num_mimeId      = fn_getSafe(fn_get("mime_id"), "int", 0);
-        $_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
-        if ($_arr_mimeRow["alert"] == "y080102") {
-            $this->obj_ajax->halt_re("x080206");
+
+        if (!fn_isEmpty($_str_mimeName)) {
+            $_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
+
+            if ($_arr_mimeRow["alert"] == "y080102") {
+                $this->obj_ajax->halt_re("x080206");
+            }
         }
 
         $arr_re = array(

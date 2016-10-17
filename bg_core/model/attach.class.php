@@ -5,11 +5,11 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-if(!defined("BG_UPLOAD_URL")) {
+if (!defined("BG_UPLOAD_URL")) {
     define("BG_UPLOAD_URL", "");
 }
 
@@ -38,8 +38,12 @@ class MODEL_ATTACH {
         );
 
 
-        if (BG_MODULE_FTP == 1 && defined("BG_UPLOAD_FTPHOST") && strlen(BG_UPLOAD_FTPHOST) > 1) {
-            $this->attachPre = BG_UPLOAD_URL . "/";
+        if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) {
+            if (defined("BG_UPLOAD_URL") && !fn_isEmpty(BG_UPLOAD_URL)) {
+                $this->attachPre = BG_UPLOAD_URL . "/";
+            } else {
+                $this->attachPre = BG_URL_ATTACH;
+            }
         } else {
             $this->attachPre = BG_URL_ATTACH;
         }
@@ -54,7 +58,7 @@ class MODEL_ATTACH {
             "attach_time"        => "int NOT NULL COMMENT '时间'",
             "attach_size"        => "mediumint NOT NULL COMMENT '大小'",
             "attach_name"        => "varchar(1000) NOT NULL COMMENT '原始文件名'",
-            "attach_admin_id"    => "int NOT NULL COMMENT '上传用户 ID'",
+            "attach_admin_id"    => "int NOT NULL COMMENT '上传用户ID'",
             "attach_box"         => "enum('normal','recycle') NOT NULL COMMENT '盒子'",
         );
 
@@ -112,21 +116,16 @@ class MODEL_ATTACH {
         }
 
         if (in_array("upfile_admin_id", $_arr_col)) {
-            $_arr_alert["upfile_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户 ID'", "attach_admin_id");
+            $_arr_alert["upfile_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户ID'", "attach_admin_id");
         }
 
         if (in_array("attach_admin_id", $_arr_col)) {
-            $_arr_alert["attach_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户 ID'", "attach_admin_id");
+            $_arr_alert["attach_admin_id"] = array("CHANGE", "smallint NOT NULL COMMENT '上传用户ID'", "attach_admin_id");
         }
 
         if (!in_array("attach_box", $_arr_col)) {
             $_arr_alert["attach_box"] = array("ADD", "enum('normal','recycle') NOT NULL COMMENT '盒子'");
         }
-
-        $_arr_attachData = array(
-            "attach_box" => "normal",
-        );
-        $this->obj_db->update(BG_DB_TABLE . "attach", $_arr_attachData, "LENGTH(attach_box) < 1"); //更新数据
 
         if (!in_array("attach_mime", $_arr_col)) {
             $_arr_alert["attach_mime"] = array("ADD", "varchar(30) NOT NULL COMMENT 'MIME'");
@@ -139,6 +138,10 @@ class MODEL_ATTACH {
 
             if ($_reselt) {
                 $_str_alert = "y070106";
+                $_arr_attachData = array(
+                    "attach_box" => "normal",
+                );
+                $this->obj_db->update(BG_DB_TABLE . "attach", $_arr_attachData, "LENGTH(attach_box) < 1"); //更新数据
             }
         }
 
@@ -278,7 +281,11 @@ class MODEL_ATTACH {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_attachRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "attach_id DESC", $num_no, $num_except);
+        $_arr_order = array(
+            array("attach_id", "DESC"),
+        );
+
+        $_arr_attachRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except);
 
         $_arr_mimeImage = array_flip($this->mime_image);
 
@@ -370,7 +377,7 @@ class MODEL_ATTACH {
         );
 
         $_str_sqlWhere    = "LENGTH(attach_ext) > 0";
-        $_arr_attachRows  = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "", 100, 0, false, true);
+        $_arr_attachRows  = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "", 100, 0, true);
 
         return $_arr_attachRows;
     }
@@ -390,7 +397,11 @@ class MODEL_ATTACH {
 
         $_str_sqlWhere = "attach_time > 0";
 
-        $_arr_yearRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", "attach_time ASC", 100, 0, false, true);
+        $_arr_order = array(
+            array("attach_time", "ASC"),
+        );
+
+        $_arr_yearRows = $this->obj_db->select(BG_DB_TABLE . "attach", $_arr_attachSelect, $_str_sqlWhere, "", $_arr_order, 100, 0, true);
 
         return $_arr_yearRows;
     }
@@ -403,7 +414,7 @@ class MODEL_ATTACH {
         }
 
         foreach ($this->thumbRows as $_key=>$_value) {
-            $_arr_attachRow["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = $this->attachPre . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
+            $_arr_attachRow["thumb_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"]] = $this->attachPre . date("Y", $_arr_attachRow["attach_time"]) . "/" . date("m", $_arr_attachRow["attach_time"]) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"] . "." . $_arr_attachRow["attach_ext"];
         }
 
         return $_arr_attachRow;
@@ -424,8 +435,13 @@ class MODEL_ATTACH {
         );
 
         $_str_sqlWhere    = "article_attach_id=" . $num_attachId;
+
+        $_arr_order = array(
+            array("article_id", "ASC"),
+        );
+
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_id ASC", 1, 0);
+        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_articleRows);
         if (isset($_arr_articleRows[0])) {
@@ -437,7 +453,7 @@ class MODEL_ATTACH {
 
         $_str_sqlWhere    = "article_excerpt LIKE '%" . $_str_chk . "%'";
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", "article_id ASC", 1, 0);
+        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article", $_arr_articleSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_articleRows);
         if (isset($_arr_articleRows[0])) {
@@ -449,7 +465,7 @@ class MODEL_ATTACH {
 
         $_str_sqlWhere    = "article_content LIKE '%" . $_str_chk . "%'";
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article_content", $_arr_articleSelect, $_str_sqlWhere, "", "article_id ASC", 1, 0);
+        $_arr_articleRows = $this->obj_db->select(BG_DB_TABLE . "article_content", $_arr_articleSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_articleRows);
         if (isset($_arr_articleRows[0])) {
@@ -464,8 +480,13 @@ class MODEL_ATTACH {
         );
 
         $_str_sqlWhere    = "cate_content LIKE '%" . $_str_chk . "%'";
+
+        $_arr_order = array(
+            array("cate_id", "ASC"),
+        );
+
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_cateRows = $this->obj_db->select(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, "", "cate_id ASC", 1, 0);
+        $_arr_cateRows = $this->obj_db->select(BG_DB_TABLE . "cate", $_arr_cateSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_cateRows);
         if (isset($_arr_cateRows[0])) {
@@ -480,8 +501,13 @@ class MODEL_ATTACH {
         );
 
         $_str_sqlWhere    = "spec_content LIKE '%" . $_str_chk . "%'";
+
+        $_arr_order = array(
+            array("spec_id", "ASC"),
+        );
+
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_specRows = $this->obj_db->select(BG_DB_TABLE . "spec", $_arr_specSelect, $_str_sqlWhere, "", "spec_id ASC", 1, 0);
+        $_arr_specRows = $this->obj_db->select(BG_DB_TABLE . "spec", $_arr_specSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_specRows);
         if (isset($_arr_specRows[0])) {
@@ -497,7 +523,12 @@ class MODEL_ATTACH {
 
         $_str_sqlWhere   = "value_custom_value=" . $num_attachId;
         //print_r($_str_sqlWhere . "<br>");
-        $_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "custom_value", $_arr_customSelect, $_str_sqlWhere, "", "value_id ASC", 1, 0);
+
+        $_arr_order = array(
+            array("value_id", "ASC"),
+        );
+
+        $_arr_customRows = $this->obj_db->select(BG_DB_TABLE . "custom_value", $_arr_customSelect, $_str_sqlWhere, "", $_arr_order, 1, 0);
 
         //print_r($_arr_customRows);
         if (isset($_arr_customRows[0])) {
@@ -575,7 +606,7 @@ class MODEL_ATTACH {
     function thumb_process($num_attachId, $num_attachTime, $num_attachExt) {
 
         foreach ($this->thumbRows as $_key=>$_value) {
-            $_arr_attach[$_key]["thumb_url"]     = $this->attachPre . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" .$_value["thumb_type"] . "." . $num_attachExt;
+            $_arr_attach[$_key]["thumb_url"]     = $this->attachPre . date("Y", $num_attachTime) . "/" . date("m", $num_attachTime) . "/" . $num_attachId . "_" . $_value["thumb_width"] . "_" . $_value["thumb_height"] . "_" . $_value["thumb_type"] . "." . $num_attachExt;
             $_arr_attach[$_key]["thumb_width"]   = $_value["thumb_width"];
             $_arr_attach[$_key]["thumb_height"]  = $_value["thumb_height"];
             $_arr_attach[$_key]["thumb_type"]    = $_value["thumb_type"];
@@ -588,23 +619,23 @@ class MODEL_ATTACH {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND attach_name LIKE '%" . $arr_search["key"] . "%'";
         }
 
-        if (isset($arr_search["year"]) && $arr_search["year"]) {
+        if (isset($arr_search["year"]) && !fn_isEmpty($arr_search["year"])) {
             $_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%Y')='" . $arr_search["year"] . "'";
         }
 
-        if (isset($arr_search["month"]) && $arr_search["month"]) {
+        if (isset($arr_search["month"]) && !fn_isEmpty($arr_search["month"])) {
             $_str_sqlWhere .= " AND FROM_UNIXTIME(attach_time, '%m')='" . $arr_search["month"] . "'";
         }
 
-        if (isset($arr_search["ext"]) && $arr_search["ext"]) {
+        if (isset($arr_search["ext"]) && !fn_isEmpty($arr_search["ext"])) {
             $_str_sqlWhere .= " AND attach_ext='" . $arr_search["ext"] . "'";
         }
 
-        if (isset($arr_search["box"]) && $arr_search["box"]) {
+        if (isset($arr_search["box"]) && !fn_isEmpty($arr_search["box"])) {
             $_str_sqlWhere .= " AND attach_box='" . $arr_search["box"] . "'";
         }
 
@@ -617,12 +648,12 @@ class MODEL_ATTACH {
             $_str_sqlWhere .= " AND attach_admin_id=" . $arr_search["admin_id"];
         }
 
-        if (isset($arr_search["begin_id"]) && $arr_search["begin_id"] > 0) {
-            $_str_sqlWhere .= " AND attach_id>=" . $arr_search["begin_id"];
+        if (isset($arr_search["min_id"]) && $arr_search["min_id"] > 0) {
+            $_str_sqlWhere .= " AND attach_id>=" . $arr_search["min_id"];
         }
 
-        if (isset($arr_search["end_id"]) && $arr_search["end_id"] > 0) {
-            $_str_sqlWhere .= " AND attach_id<=" . $arr_search["end_id"];
+        if (isset($arr_search["max_id"]) && $arr_search["max_id"] > 0) {
+            $_str_sqlWhere .= " AND attach_id<=" . $arr_search["max_id"];
         }
 
         return $_str_sqlWhere;

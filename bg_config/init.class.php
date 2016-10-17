@@ -9,7 +9,7 @@ class CLASS_INIT {
     private $arr_visit     = array();
 
     function __construct() {
-        $this->str_pathRoot = str_replace("\\", "/", substr(dirname(__FILE__), 0, strrpos(dirname(__FILE__), $this->str_nameConfig)));
+        $this->str_pathRoot = str_ireplace("\\", "/", substr(dirname(__FILE__), 0, strrpos(dirname(__FILE__), $this->str_nameConfig)));
 
         $this->arr_config = array(
             "IN_BAIGO"               => array(1, "num"),
@@ -47,7 +47,7 @@ class CLASS_INIT {
             "BG_NAME_INSTALL"        => array("bg_install", "str"),
             "BG_NAME_API"            => array("bg_api", "str"),
             "BG_NAME_STATIC"         => array("bg_static", "str"),
-            "BG_PATH_ROOT"           => array("str_replace(\"\\\\\", \"/\", substr(dirname(__FILE__), 0, strrpos(dirname(__FILE__), BG_NAME_CONFIG)))", "const"),
+            "BG_PATH_ROOT"           => array("str_ireplace(\"\\\\\", \"/\", substr(dirname(__FILE__), 0, strrpos(dirname(__FILE__), BG_NAME_CONFIG)))", "const"),
             "BG_PATH_CONFIG"         => array("BG_PATH_ROOT . BG_NAME_CONFIG . \"/\"", "const"),
             "BG_PATH_CACHE"          => array("BG_PATH_ROOT . BG_NAME_CACHE . \"/\"", "const"),
             "BG_PATH_TPL"            => array("BG_PATH_ROOT . BG_NAME_TPL . \"/\"", "const"),
@@ -85,19 +85,17 @@ class CLASS_INIT {
         );
 
         $this->arr_base = array(
-            "BG_SITE_NAME"          => array("baigo SSO", "str"),
+            "BG_SITE_NAME"          => array("baigo CMS", "str"),
             "BG_SITE_DOMAIN"        => array("\$_SERVER[\"SERVER_NAME\"]", "const"),
             "BG_SITE_URL"           => array("\"http://\" . \$_SERVER[\"SERVER_NAME\"]", "const"),
             "BG_SITE_PERPAGE"       => array(30, "num"),
             "BG_SITE_ASSOCIATE"     => array(10, "num"),
-            "BG_SITE_EXCERPT"       => array(100, "num"),
             "BG_SITE_TIMEZONE"      => array("Asia/Shanghai", "str"),
             "BG_SITE_DATE"          => array("Y-m-d", "str"),
             "BG_SITE_DATESHORT"     => array("m-d", "str"),
             "BG_SITE_TIME"          => array("H:i:s", "str"),
             "BG_SITE_TIMESHORT"     => array("H:i", "str"),
             "BG_SITE_TPL"           => array("default", "str"),
-            "BG_SITE_EXCERPTTYPE"   => array("txt", "str"),
             "BG_SITE_SSIN"          => array($this->rand(6), "str"),
         );
 
@@ -118,27 +116,41 @@ class CLASS_INIT {
             "BG_UPLOAD_FTPUSER" => array("", "str"),
             "BG_UPLOAD_FTPPASS" => array("", "str"),
             "BG_UPLOAD_FTPPATH" => array("", "str"),
-            "BG_UPLOAD_FTPPASV" => array(true, "const"),
+            "BG_UPLOAD_FTPPASV" => array("off", "str"),
         );
 
         $this->arr_visit = array(
             "BG_VISIT_TYPE" => array("pstatic", "str"),
             "BG_VISIT_FILE" => array("html", "str"),
+            "BG_VISIT_PAGE" => array(10, "num"),
+        );
+
+        $this->arr_spec = array(
+            "BG_SPEC_URL"     => array("\"http://\" . \$_SERVER[\"SERVER_NAME\"]", "const"),
+            "BG_SPEC_FTPHOST" => array("", "str"),
+            "BG_SPEC_FTPPORT" => array(21, "num"),
+            "BG_SPEC_FTPUSER" => array("", "str"),
+            "BG_SPEC_FTPPASS" => array("", "str"),
+            "BG_SPEC_FTPPATH" => array("", "str"),
+            "BG_SPEC_FTPPASV" => array(true, "const"),
         );
     }
 
 
     function config_gen($is_install = false) {
         $this->file_gen($this->arr_dbconfig, "opt_dbconfig", $is_install); //数据库配置
+        $this->file_gen($this->arr_config, "config", $is_install); //全局配置
         $this->file_gen($this->arr_base, "opt_base", $is_install); //基本配置
         $this->file_gen($this->arr_sso, "opt_sso", $is_install); //SSO 配置
         $this->file_gen($this->arr_upload, "opt_upload", $is_install); //上传配置
         $this->file_gen($this->arr_visit, "opt_visit", $is_install); //访问方式配置
-        $this->file_gen($this->arr_config, "config", $is_install); //全局配置
+        $this->file_gen($this->arr_spec, "opt_spec", $is_install); //专题分发配置
     }
 
 
     private function file_gen($arr_configSrc, $str_file, $is_install = false) {
+        $_str_constConfig   = "";
+        $_str_config        = "";
         if (file_exists($this->str_pathRoot . "bg_config/" . $str_file . ".inc.php")) { //如果文件存在
             if ($is_install) { //如果是安装状态，一一对比
                 include_once($this->str_pathRoot . "bg_config/" . $str_file . ".inc.php"); //载入配置
@@ -151,16 +163,21 @@ class CLASS_INIT {
                             $_str_constConfig = "define(\"" . $_key_m . "\", " . $_value_m[0] . ");" . PHP_EOL;
                         }
 
-                        if ($str_file == "config") { //如果为全局配置，则忽略末尾5行
-                            array_splice($_arr_config, -6, 0, $_str_constConfig);
-                        }
+                        array_push($_arr_config, $_str_constConfig);
                     }
                 }
 
-                $_str_config = "";
                 foreach ($_arr_config as $_key_m=>$_value_m) { //拼接
                     $_str_config .= $_value_m;
                 }
+
+                $_str_config = preg_replace("/include_once\(\S+\s\.\s\"\S+\"\);\n?/i", "", $_str_config);
+
+                if ($str_file == "config") { //如果为全局配置，则增加 8 行
+                    $_str_config = $this->end_process($_str_config);
+                }
+
+                $_str_config = str_replace("?>", "", $_str_config); //去除旧版本配置文件的 php 结尾
 
                 //print_r($_str_config);
                 file_put_contents($this->str_pathRoot . "bg_config/" . $str_file . ".inc.php", $_str_config);
@@ -175,13 +192,8 @@ class CLASS_INIT {
                 }
             }
 
-            if ($str_file == "config") { //如果为全局配置，则增加 5 行
-                $_str_config .= "include_once(BG_PATH_INC . \"version.inc.php\");" . PHP_EOL;
-                $_str_config .= "include_once(BG_PATH_CONFIG . \"opt_dbconfig.inc.php\");" . PHP_EOL;
-                $_str_config .= "include_once(BG_PATH_CONFIG . \"opt_base.inc.php\");" . PHP_EOL;
-                $_str_config .= "include_once(BG_PATH_CONFIG . \"opt_sso.inc.php\");" . PHP_EOL;
-                $_str_config .= "include_once(BG_PATH_CONFIG . \"opt_upload.inc.php\");" . PHP_EOL;
-                $_str_config .= "include_once(BG_PATH_CONFIG . \"opt_visit.inc.php\");" . PHP_EOL;
+            if ($str_file == "config") { //如果为全局配置，则增加 8 行
+                $_str_config = $this->end_process($_str_config);
             }
 
             file_put_contents($this->str_pathRoot . "bg_config/" . $str_file . ".inc.php", $_str_config);
@@ -203,5 +215,18 @@ class CLASS_INIT {
             $_str_rnd .= substr($_str_char, (rand(0, strlen($_str_char))), 1);
         }
         return $_str_rnd;
+    }
+
+
+    private function end_process($str_config) {
+        $str_config .= "include_once(BG_PATH_INC . \"version.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_dbconfig.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_base.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_sso.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_upload.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_visit.inc.php\");" . PHP_EOL;
+        $str_config .= "include_once(BG_PATH_CONFIG . \"opt_spec.inc.php\");" . PHP_EOL;
+
+        return $str_config;
     }
 }

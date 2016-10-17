@@ -1,6 +1,5 @@
 <?php
-return "<a name=\"list\"></a>
-    <h3>栏目列表</h3>
+return "<h3>栏目列表</h3>
     <p class=\"text-info\">接口说明</p>
     <p>用于显示栏目树形结构。</p>
 
@@ -14,9 +13,9 @@ return "<a name=\"list\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -63,7 +62,15 @@ return "<a name=\"list\"></a>
 
     <p>返回多维数组，详情请查看 <a href=\"#result\">栏目显示返回结果</a>。</p>
 
+    <p>&nbsp;</p>
+    <div class=\"text-right\">
+        <a href=\"#top\">
+            <span class=\"glyphicon glyphicon-chevron-up\"></span>
+            top
+        </a>
+    </div>
     <hr>
+    <p>&nbsp;</p>
 
     <a name=\"get\"></a>
     <h3>栏目显示</h3>
@@ -80,9 +87,9 @@ return "<a name=\"list\"></a>
     <p>JSON</p>
 
     <div class=\"panel panel-default\">
-        <div class=\"panel-heading\">接口参数</div>
+        <div class=\"panel-heading\">请求参数</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -124,11 +131,11 @@ return "<a name=\"list\"></a>
     <p>&nbsp;</p>
 
     <a name=\"result\"></a>
-    <h4>返回结果</h4>
 
     <div class=\"panel panel-default\">
+        <div class=\"panel-heading\">返回结果</div>
         <div class=\"table-responsive\">
-            <table class=\"table\">
+            <table class=\"table table-bordered\">
                 <thead>
                     <tr>
                         <th class=\"text-nowrap\">名称</th>
@@ -217,7 +224,9 @@ return "<a name=\"list\"></a>
     &quot;cate_content&quot;: &quot;&quot;, //内容
     &quot;urlRow&quot;: {
         &quot;cate_url&quot;: &quot;/cms/cate/support/id-2/&quot;, //URL
-        &quot;page_attach&quot;: &quot;page-&quot; //分页附加
+        &quot;cate_urlMore&quot;: &quot;/cms/cate/support/id-2/&quot;, //更多分页 URL
+        &quot;page_attach&quot;: &quot;page-&quot;, //分页附加
+        &quot;page_ext&quot;: &quot;.html&quot;
     },
     &quot;cate_trees&quot;: { //当前栏目的树形结构
         [
@@ -228,7 +237,9 @@ return "<a name=\"list\"></a>
                 &quot;cate_domain&quot;: &quot;&quot;,
                 &quot;urlRow&quot;: {
                     &quot;cate_url&quot;: &quot;/cms/cate/support/id-2/&quot;,
-                    &quot;page_attach&quot;: &quot;page-&quot;
+                    &quot;cate_urlMore&quot;: &quot;/cms/cate/support/id-2/&quot;, //更多分页 URL
+                    &quot;page_attach&quot;: &quot;page-&quot;,
+                    &quot;page_ext&quot;: &quot;.html&quot;
                 }
             }
         ]

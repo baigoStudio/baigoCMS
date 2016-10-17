@@ -6,7 +6,7 @@
 .attach_overflow { overflow: hidden; }
 
 .page_baigo .pagination { margin: 0 0 15px 0; }
-.content_baigo { max-width: 100%!important; }
+.content_baigo, .content_baigo * { max-width: 100%!important; }
 
 .sub_normal { background: #eee!important; }
 .sub_normal:hover { background: #ddd!important; }
@@ -99,8 +99,8 @@ table td.child_6 { padding-left: 83px!important; }
     margin-right: 5px;
 }
 
+.list_ul li { margin-bottom: 5px!important; }
+
 .dl_baigo { margin-bottom: 5px!important; }
 
-.list_dl dd {
-    margin-bottom: 10px;
-}
+.list_dl dd { margin-bottom: 10px; }

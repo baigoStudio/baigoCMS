@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -25,7 +25,7 @@ class CLASS_DIR {
 
             foreach ($_arr_dir as $_key=>$_value) {
                 if ($_value["type"] == "file") {
-                    unlink($str_path . "/" . $_value["name"]);  //删除
+                    $this->del_file($str_path . "/" . $_value["name"]);  //删除
                 } else {
                     $this->del_dir($str_path . "/" . $_value["name"]); //递归
                 }
@@ -36,33 +36,44 @@ class CLASS_DIR {
 
     }
 
+
+    function del_file($str_path) {
+        $bool_return = false;
+        if (file_exists($str_path)) {
+            unlink($str_path);  //删除
+            $bool_return = true;
+        }
+        return $bool_return;
+    }
+
+
     /*============生成目录============
     @str_path 路径
 
     返回返回代码
     */
     function mk_dir($str_path) {
-
-        if (is_dir($str_path)) { //已存在
-            $_str_alert = "y030201";
+        if (stristr($str_path, ".")) {
+            $str_path = dirname($str_path);
+        }
+        if (is_dir($str_path) || stristr($str_path, ".")) { //已存在
+            $this->dir_status = true;
         } else {
-            $_arr_dir = $this->mk_dir(dirname($str_path));
             //创建目录
-            if ($_arr_dir["alert"] == "y030201") {
+            if ($this->mk_dir(dirname($str_path))) { //递归
                 if (mkdir($str_path)) { //创建成功
-                    $_str_alert = "y030201";
+                    $this->dir_status = true;
                 } else {
-                    $_str_alert = "x030201"; //失败
+                    $this->dir_status = false; //失败
                 }
             } else {
-                $_str_alert = "x030201";
+                $this->dir_status = false;
             }
         }
 
-        return array(
-            "alert" => $_str_alert,
-        );
+        return $this->dir_status;
     }
+
 
     /*============逐级列出目录============
     @str_path 路径
@@ -72,6 +83,8 @@ class CLASS_DIR {
         name 目录名
     */
     function list_dir($str_path) {
+
+        $this->mk_dir($str_path);
 
         $_arr_return  = array();
         $_arr_dir     = scandir($str_path);
@@ -91,5 +104,12 @@ class CLASS_DIR {
         }
 
         return $_arr_return;
+    }
+
+
+    function put_file($str_path, $str_content) {
+        $this->mk_dir($str_path);
+        $_num_size = file_put_contents($str_path, $str_content);
+        return $_num_size;
     }
 }

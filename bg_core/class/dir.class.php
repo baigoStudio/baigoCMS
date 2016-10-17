@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -30,7 +30,7 @@ class CLASS_DIR {
 
             foreach ($_arr_dir as $_key=>$_value) {
                 if ($_value["type"] == "file") {
-                    unlink($str_path . "/" . $_value["name"]);  //删除
+                    $this->del_file($str_path . "/" . $_value["name"]);  //删除
                 } else {
                     $this->del_dir($str_path . "/" . $_value["name"]); //递归
                 }
@@ -49,8 +49,10 @@ class CLASS_DIR {
      * @return void
      */
     function mk_dir($str_path) {
-
-        if (is_dir($str_path)) { //已存在
+        if (stristr($str_path, ".")) {
+            $str_path = dirname($str_path);
+        }
+        if (is_dir($str_path) || stristr($str_path, ".")) { //已存在
             $this->dir_status = true;
         } else {
             //创建目录
@@ -78,6 +80,8 @@ class CLASS_DIR {
      */
     function list_dir($str_path) {
 
+        $this->mk_dir($str_path);
+
         $_arr_return  = array();
         $_arr_dir     = scandir($str_path);
 
@@ -99,9 +103,29 @@ class CLASS_DIR {
     }
 
 
-    function put_file($str_path, $str_file, $str_config) {
+    function del_file($str_path) {
+        $bool_return = false;
+        if (file_exists($str_path)) {
+            unlink($str_path);  //删除
+            $bool_return = true;
+        }
+        return $bool_return;
+    }
+
+
+    function put_file($str_path, $str_content) {
         $this->mk_dir($str_path);
-        $_num_size = file_put_contents($str_path . $str_file, $str_config);
+        $_num_size = file_put_contents($str_path, $str_content);
         return $_num_size;
+    }
+
+
+    function copy_file($str_src, $str_dst) {
+        $bool_return = false;
+        $this->mk_dir($str_dst);
+        if (file_exists($str_src)) {
+            $bool_return = copy($str_src, $str_dst);
+        }
+        return $bool_return;
     }
 }

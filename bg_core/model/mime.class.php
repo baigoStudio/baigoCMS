@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -149,7 +149,11 @@ class MODEL_MIME {
             "mime_note",
         );
 
-        $_arr_mimeRows = $this->obj_db->select(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "", "", "mime_id DESC", $num_no, $num_except); //查询数据
+        $_arr_order = array(
+            array("mime_id", "DESC"),
+        );
+
+        $_arr_mimeRows = $this->obj_db->select(BG_DB_TABLE . "mime",  $_arr_mimeSelect, "", "", $_arr_order, $num_no, $num_except); //查询数据
 
         return $_arr_mimeRows;
     }

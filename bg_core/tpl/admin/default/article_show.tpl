@@ -1,4 +1,3 @@
-{* article_form.tpl 文章编辑 *}
 {function custom_list arr=""}
     {foreach $arr as $key=>$value}
         {if $value.custom_childs}
@@ -73,14 +72,14 @@
 
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.articleContent}</label>
-                        <p class="form-control-static input-lg content_baigo">
+                        <p class="content_baigo">
                             {$tplData.articleRow.article_content}
                         </p>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label static_label">{$lang.label.articleExcerpt}</label>
-                        <p class="form-control-static input-lg">
+                        <p class="content_baigo">
                             {$tplData.articleRow.article_excerpt}
                         </p>
                     </div>
@@ -117,6 +116,34 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="control-label static_label">{$lang.label.articleUrl}</label>
+                        <p class="form-control-static">
+                            <a href="{$tplData.articleRow.urlRow.article_url}" target="_blank">{$tplData.articleRow.urlRow.article_url}</a>
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label static_label">{$lang.label.articlePath}</label>
+                        <p class="form-control-static">
+                            {$tplData.articleRow.urlRow.article_pathFull}
+                        </p>
+                    </div>
+
+                    {if $smarty.const.BG_MODULE_GEN > 0 && $smarty.const.BG_VISIT_TYPE == "static"}
+                        {if $tplData.articleRow.article_is_gen == "yes"}
+                            {$css_gen = "default"}
+                        {else}
+                            {$css_gen = "danger"}
+                        {/if}
+                        <div class="form-group">
+                            <label class="control-label static_label">{$lang.label.staticFile}</label>
+                            <p class="form-control-static label_baigo">
+                                <span class="label label-{$css_gen}">{$status.gen[$tplData.articleRow.article_is_gen]}</span>
+                            </p>
+                        </div>
+                    {/if}
+
+                    <div class="form-group">
                         <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$tplData.articleRow.article_id}">
                             <span class="glyphicon glyphicon-edit"></span>
                             {$lang.href.edit}
@@ -146,20 +173,25 @@
                 {if $tplData.articleRow.article_box == "normal"}
                     {if $tplData.articleRow.article_time_pub > $smarty.now}
                         {$css_status = "info"}
-                        {$str_status = "{$lang.label.deadline} {$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+                        {$str_status = "{$lang.label.timePub} {$tplData.articleRow.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                     {else}
-                        {if $tplData.articleRow.article_top == 1}
-                            {$css_status = "primary"}
-                            {$str_status = $lang.label.top}
+                        {if $tplData.articleRow.article_time_hide > 0 && $tplData.articleRow.article_time_pub < $smarty.now}
+                            {$css_status = "default"}
+                            {$str_status = "{$lang.label.timeHide} {$tplData.articleRow.article_time_hide|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                         {else}
-                            {if $tplData.articleRow.article_status == "pub"}
-                                {$css_status = "success"}
-                            {else if $tplData.articleRow.article_status == "wait"}
-                                {$css_status = "warning"}
+                            {if $tplData.articleRow.article_top == 1}
+                                {$css_status = "primary"}
+                                {$str_status = $lang.label.top}
                             {else}
-                                {$css_status = "default"}
+                                {if $tplData.articleRow.article_status == "pub"}
+                                    {$css_status = "success"}
+                                {else if $tplData.articleRow.article_status == "wait"}
+                                    {$css_status = "warning"}
+                                {else}
+                                    {$css_status = "default"}
+                                {/if}
+                                {$str_status = $status.article[$tplData.articleRow.article_status]}
                             {/if}
-                            {$str_status = $status.article[$tplData.articleRow.article_status]}
                         {/if}
                     {/if}
                 {else}
@@ -193,6 +225,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label static_label">{$lang.label.articleSpec}</label>
+                    <p class="form-control-static">
+                        <ul class="list-inline">
+                            {foreach $tplData.specRows as $key=>$value}
+                                <li>{$value.spec_name}</li>
+                            {/foreach}
+                        </ul>
+                    </p>
+                </div>
+
+                <div class="form-group">
                     <a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=form&article_id={$tplData.articleRow.article_id}">
                         <span class="glyphicon glyphicon-edit"></span>
                         {$lang.href.edit}
@@ -205,4 +248,3 @@
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_foot.tpl" cfg=$cfg}
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/html_foot.tpl" cfg=$cfg}
-

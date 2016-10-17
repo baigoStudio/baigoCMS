@@ -5,7 +5,7 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if(!defined("IN_BAIGO")) {
+if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
@@ -13,6 +13,7 @@ if(!defined("IN_BAIGO")) {
 class MODEL_ADMIN {
     private $obj_db;
     public $adminStatus = array();
+    public $adminTypes = array();
 
     function __construct() { //构造函数
         $this->obj_db     = $GLOBALS["obj_db"]; //设置数据库对象
@@ -30,6 +31,12 @@ class MODEL_ADMIN {
             $_arr_status[] = $_key;
         }
         $_str_status = implode("','", $_arr_status);
+
+        foreach ($this->adminTypes as $_key=>$_value) {
+            $_arr_types[] = $_key;
+        }
+        $_str_types = implode("','", $_arr_types);
+
         $_arr_adminCreate = array(
             "admin_id"              => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
             "admin_name"            => "varchar(30) NOT NULL COMMENT '用户名'",
@@ -41,6 +48,7 @@ class MODEL_ADMIN {
             "admin_time"            => "int NOT NULL COMMENT '登录时间'",
             "admin_time_login"      => "int NOT NULL COMMENT '最后登录'",
             "admin_status"          => "enum('" . $_str_status . "') NOT NULL COMMENT '状态'",
+            "admin_type"            => "enum('" . $_str_types . "') NOT NULL COMMENT '类型'",
             "admin_ip"              => "char(15) NOT NULL COMMENT 'IP'",
             "admin_allow_profile"   => "varchar(1000) NOT NULL COMMENT '个人权限'",
         );
@@ -87,6 +95,12 @@ class MODEL_ADMIN {
             $_arr_status[] = $_key;
         }
         $_str_status = implode("','", $_arr_status);
+
+        foreach ($this->adminTypes as $_key=>$_value) {
+            $_arr_types[] = $_key;
+        }
+        $_str_types = implode("','", $_arr_types);
+
         $_arr_col     = $this->mdl_column();
         $_arr_alert   = array();
 
@@ -103,17 +117,12 @@ class MODEL_ADMIN {
         }
 
         if (in_array("admin_group_id", $_arr_col)) {
-            $_arr_alert["admin_group_id"] = array("CHANGE", "smallint NOT NULL COMMENT '从属用户组 ID'", "admin_group_id");
+            $_arr_alert["admin_group_id"] = array("CHANGE", "smallint NOT NULL COMMENT '从属用户组ID'", "admin_group_id");
         }
 
         if (in_array("admin_status", $_arr_col)) {
             $_arr_alert["admin_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "admin_status");
         }
-
-        $_arr_adminData = array(
-            "admin_status" => $_arr_status[0],
-        );
-        $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "LENGTH(admin_status) < 1"); //更新数据
 
         if (in_array("admin_rand", $_arr_col)) {
             $_arr_alert["admin_rand"] = array("CHANGE", "char(6) NOT NULL COMMENT '随机码'", "admin_rand");
@@ -127,6 +136,10 @@ class MODEL_ADMIN {
             $_arr_alert["admin_allow_cate"] = array("CHANGE", "text NOT NULL COMMENT '栏目权限'", "admin_allow_cate");
         }
 
+        if (!in_array("admin_type", $_arr_col)) {
+            $_arr_alert["admin_type"] = array("ADD", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'");
+        }
+
         $_str_alert = "y020111";
 
         if ($_arr_alert) {
@@ -134,6 +147,15 @@ class MODEL_ADMIN {
 
             if ($_reselt) {
                 $_str_alert = "y020106";
+                $_arr_adminData = array(
+                    "admin_status" => $_arr_status[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "LENGTH(admin_status) < 1"); //更新数据
+
+                $_arr_adminData = array(
+                    "admin_type" => $_arr_types[0],
+                );
+                $this->obj_db->update(BG_DB_TABLE . "admin", $_arr_adminData, "LENGTH(admin_type) < 1"); //更新数据
             }
         }
 
@@ -214,6 +236,7 @@ class MODEL_ADMIN {
             "admin_note"            => $this->adminSubmit["admin_note"],
             "admin_nick"            => $this->adminSubmit["admin_nick"],
             "admin_status"          => $this->adminSubmit["admin_status"],
+            "admin_type"            => $this->adminSubmit["admin_type"],
             "admin_allow_cate"      => $this->adminSubmit["admin_allow_cate"],
             "admin_allow_profile"   => $this->adminSubmit["admin_allow_profile"],
         );
@@ -331,6 +354,7 @@ class MODEL_ADMIN {
             "admin_rand",
             "admin_group_id",
             "admin_status",
+            "admin_type",
             "admin_time",
             "admin_ip",
             "admin_allow_cate",
@@ -347,22 +371,35 @@ class MODEL_ADMIN {
             );
         }
 
-        if (isset($_arr_adminRow["admin_allow_cate"])) {
-            $_arr_adminRow["admin_allow_cate"]    = fn_jsonDecode($_arr_adminRow["admin_allow_cate"], "no"); //json解码
-        } else {
+        if (fn_isEmpty($_arr_adminRow["admin_allow_cate"])) {
             $_arr_adminRow["admin_allow_cate"]    = array();
+        } else {
+            $_arr_adminRow["admin_allow_cate"]    = fn_jsonDecode($_arr_adminRow["admin_allow_cate"], "no"); //json解码
         }
 
-        if (isset($_arr_adminRow["admin_allow_profile"])) {
-            $_arr_adminRow["admin_allow_profile"] = fn_jsonDecode($_arr_adminRow["admin_allow_profile"], "no"); //json解码
-        } else {
+        if (fn_isEmpty($_arr_adminRow["admin_allow_profile"])) {
             $_arr_adminRow["admin_allow_profile"] = array();
+        } else {
+            $_arr_adminRow["admin_allow_profile"] = fn_jsonDecode($_arr_adminRow["admin_allow_profile"], "no"); //json解码
         }
 
         $_arr_adminRow["alert"] = "y020102";
 
         return $_arr_adminRow;
 
+    }
+
+
+    function mdl_prefer() {
+        foreach ($this->arr_prefer as $_key=>$_value) {
+            foreach ($_value as $_key_s=>$_value_s) {
+                fn_cookie("prefer_" . $_key . "_" . $_key_s, "mk", $_value_s);
+            }
+        }
+
+        $_arr_adminRow["alert"] = "y020112";
+
+        return $_arr_adminRow;
     }
 
 
@@ -384,11 +421,16 @@ class MODEL_ADMIN {
             "admin_nick",
             "admin_group_id",
             "admin_status",
+            "admin_type",
         );
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_adminRows = $this->obj_db->select(BG_DB_TABLE . "admin", $_arr_adminSelect, $_str_sqlWhere, "", "admin_id DESC", $num_no, $num_except); //查询数据
+        $_arr_order = array(
+            array("admin_id", "DESC"),
+        );
+
+        $_arr_adminRows = $this->obj_db->select(BG_DB_TABLE . "admin", $_arr_adminSelect, $_str_sqlWhere, "", $_arr_order, $num_no, $num_except); //查询数据
 
         //print_r($_arr_adminRows);
 
@@ -658,7 +700,19 @@ class MODEL_ADMIN {
         case "ok":
             $this->adminSubmit["admin_status"] = $_arr_adminStatus["str"];
             break;
+        }
 
+        $_arr_adminType = validateStr(fn_post("admin_type"), 1, 0);
+        switch ($_arr_adminType["status"]) {
+        case "too_short":
+            return array(
+                "alert" => "x020219",
+            );
+            break;
+
+        case "ok":
+            $this->adminSubmit["admin_type"] = $_arr_adminType["str"];
+            break;
         }
 
         $this->adminSubmit["admin_allow_cate"]      = fn_jsonEncode(fn_post("admin_allow_cate"), "no");
@@ -677,9 +731,11 @@ class MODEL_ADMIN {
      */
     function input_login() {
         $_arr_adminLogin["forward"] = fn_getSafe(fn_post("forward"), "txt", "");
-        if (!$_arr_adminLogin["forward"]) {
-            $_arr_adminLogin["forward"] = base64_encode(BG_URL_ADMIN . "ctl.php");
+        if (fn_isEmpty($_arr_adminLogin["forward"])) {
+            $_arr_adminLogin["forward"] = fn_forward(BG_URL_ADMIN . "ctl.php");
         }
+
+        //$_arr_adminLogin["forward"] = str_ireplace("&#61;", "", $_arr_adminLogin["forward"]);
 
         if (!fn_seccode()) { //验证码
             return array(
@@ -745,6 +801,13 @@ class MODEL_ADMIN {
     }
 
 
+    function input_prefer() {
+        $this->arr_prefer = fn_post("prefer");
+
+        return $this->arr_prefer;
+    }
+
+
     /** 批量操作选择
      * input_ids function.
      *
@@ -788,12 +851,16 @@ class MODEL_ADMIN {
     private function sql_process($arr_search = array()) {
         $_str_sqlWhere = "1=1";
 
-        if (isset($arr_search["key"]) && $arr_search["key"]) {
+        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
             $_str_sqlWhere .= " AND (admin_name LIKE '%" . $arr_search["key"] . "%' OR admin_note LIKE '%" . $arr_search["key"] . "%' OR admin_nick LIKE '%" . $arr_search["key"] . "%')";
         }
 
-        if (isset($arr_search["status"]) && $arr_search["status"]) {
+        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
             $_str_sqlWhere .= " AND admin_status='" . $arr_search["status"] . "'";
+        }
+
+        if (isset($arr_search["type"]) && !fn_isEmpty($arr_search["type"])) {
+            $_str_sqlWhere .= " AND admin_type='" . $arr_search["type"] . "'";
         }
 
         if (isset($arr_search["group_id"]) && $arr_search["group_id"] > 0) {

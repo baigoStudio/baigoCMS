@@ -16,7 +16,7 @@
 {/function}
 
 {$cfg = [
-    title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.tag.title}",
+    title          => "{$adminMod.article.main.title} - {$adminMod.article.sub.spec.title}",
     menu_active    => "article",
     sub_active     => "spec",
     baigoCheckall  => "true",
@@ -25,13 +25,13 @@
     tinymce        => "true",
     upload         => "true",
     tokenReload    => "true",
-    str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=select&{$tplData.query}"
+    str_url        => "{$smarty.const.BG_URL_ADMIN}ctl.php?mod=spec&act_get=select&spec_id={$tplData.specRow.spec_id}&{$tplData.query}"
 ]}
 
 {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_head.tpl" cfg=$cfg}
 
     <li><a href="{$smarty.const.BG_URL_ADMIN}ctl.php?mod=article&act_get=list">{$adminMod.article.main.title}</a></li>
-    <li>{$adminMod.article.sub.tag.title}</li>
+    <li>{$adminMod.article.sub.spec.title}</li>
 
     {include "{$smarty.const.BG_PATH_TPLSYS}admin/default/include/admin_left.tpl" cfg=$cfg}
 
@@ -85,7 +85,7 @@
             </div>
 
             <form name="belong_form" id="belong_form">
-                <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
 
                 <div class="panel panel-default">
                     <div class="table-responsive">
@@ -100,7 +100,7 @@
                                     </th>
                                     <th class="text-nowrap td_mn">{$lang.label.id}</th>
                                     <th>{$lang.label.articleTitle}</th>
-                                    <th class="text-nowrap td_md">{$lang.label.status}</th>
+                                    <th class="text-nowrap td_lg">{$lang.label.status}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,20 +108,25 @@
                                     {if $value.article_box == "normal"}
                                         {if $value.article_time_pub > $smarty.now}
                                             {$css_status = "info"}
-                                            {$str_status = "{$lang.label.deadline} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+                                            {$str_status = "{$lang.label.timePub} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                         {else}
-                                            {if $value.article_top == 1}
-                                                {$css_status = "primary"}
-                                                {$str_status = $lang.label.top}
+                                            {if $value.article_time_hide > 0 && $value.article_time_pub < $smarty.now}
+                                                {$css_status = "default"}
+                                                {$str_status = "{$lang.label.timeHide} {$value.article_time_hide|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                             {else}
-                                                {if $value.article_status == "pub"}
-                                                    {$css_status = "success"}
-                                                {else if $value.article_status == "wait"}
-                                                    {$css_status = "warning"}
+                                                {if $value.article_top == 1}
+                                                    {$css_status = "primary"}
+                                                    {$str_status = $lang.label.top}
                                                 {else}
-                                                    {$css_status = "default"}
+                                                    {if $value.article_status == "pub"}
+                                                        {$css_status = "success"}
+                                                    {else if $value.article_status == "wait"}
+                                                        {$css_status = "warning"}
+                                                    {else}
+                                                        {$css_status = "default"}
+                                                    {/if}
+                                                    {$str_status = $status.article[$value.article_status]}
                                                 {/if}
-                                                {$str_status = $status.article[$value.article_status]}
                                             {/if}
                                         {/if}
                                     {else}
@@ -138,7 +143,7 @@
                                                 {$lang.label.noname}
                                             {/if}
                                         </td>
-                                        <td class="text-nowrap td_md">
+                                        <td class="text-nowrap td_lg">
                                             <ul class="list-unstyled">
                                                 <li class="label_baigo">
                                                     <span class="label label-{$css_status}">{$str_status}</span>
@@ -153,7 +158,7 @@
                                 <tr>
                                     <td colspan="2"><span id="msg_belong_id"></span></td>
                                     <td colspan="2">
-                                        <input type="hidden" name="act_post" value="exc">
+                                        <input type="hidden" name="act_post" value="belongDel">
                                         <button type="button" id="go_del" class="btn btn-primary btn-sm">{$lang.btn.belongDel}</button>
                                     </td>
                                 </tr>
@@ -202,7 +207,7 @@
             </div>
 
             <form name="select_form" id="select_form">
-                <input type="hidden" name="token_session" class="token_session" value="{$common.token_session}">
+                <input type="hidden" name="{$common.tokenRow.name_session}" value="{$common.tokenRow.token}">
                 <input type="hidden" name="spec_id" value="{$tplData.specRow.spec_id}">
 
                 <div class="panel panel-default">
@@ -218,7 +223,7 @@
                                     </th>
                                     <th class="text-nowrap td_mn">{$lang.label.id}</th>
                                     <th>{$lang.label.articleTitle} / {$lang.label.articleSpec}</th>
-                                    <th class="text-nowrap td_md">{$lang.label.status}</th>
+                                    <th class="text-nowrap td_lg">{$lang.label.status}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -226,20 +231,25 @@
                                     {if $value.article_box == "normal"}
                                         {if $value.article_time_pub > $smarty.now}
                                             {$css_status = "info"}
-                                            {$str_status = "{$lang.label.deadline} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
+                                            {$str_status = "{$lang.label.timePub} {$value.article_time_pub|date_format:"{$smarty.const.BG_SITE_DATE} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                         {else}
-                                            {if $value.article_top == 1}
-                                                {$css_status = "primary"}
-                                                {$str_status = $lang.label.top}
+                                            {if $value.article_time_hide > 0 && $value.article_time_pub < $smarty.now}
+                                                {$css_status = "default"}
+                                                {$str_status = "{$lang.label.timeHide} {$value.article_time_hide|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}"}
                                             {else}
-                                                {if $value.article_status == "pub"}
-                                                    {$css_status = "success"}
-                                                {else if $value.article_status == "wait"}
-                                                    {$css_status = "warning"}
+                                                {if $value.article_top == 1}
+                                                    {$css_status = "primary"}
+                                                    {$str_status = $lang.label.top}
                                                 {else}
-                                                    {$css_status = "default"}
+                                                    {if $value.article_status == "pub"}
+                                                        {$css_status = "success"}
+                                                    {else if $value.article_status == "wait"}
+                                                        {$css_status = "warning"}
+                                                    {else}
+                                                        {$css_status = "default"}
+                                                    {/if}
+                                                    {$str_status = $status.article[$value.article_status]}
                                                 {/if}
-                                                {$str_status = $status.article[$value.article_status]}
                                             {/if}
                                         {/if}
                                     {else}
@@ -267,9 +277,9 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        <td class="text-nowrap td_md">
+                                        <td class="text-nowrap td_lg">
                                             <ul class="list-unstyled">
-                                                <li>
+                                                <li class="label_baigo">
                                                     <span class="label label-{$css_status}">{$str_status}</span>
                                                 </li>
                                                 <li>{$value.article_time|date_format:"{$smarty.const.BG_SITE_DATESHORT} {$smarty.const.BG_SITE_TIMESHORT}"}</li>
@@ -282,7 +292,7 @@
                                 <tr>
                                     <td colspan="2"><span id="msg_select_ids"></span></td>
                                     <td colspan="2">
-                                        <input type="hidden" name="act_post" value="to">
+                                        <input type="hidden" name="act_post" value="belongAdd">
                                         <button type="button" id="go_add" class="btn btn-primary btn-sm">{$lang.btn.belongAdd}</button>
                                     </td>
                                 </tr>

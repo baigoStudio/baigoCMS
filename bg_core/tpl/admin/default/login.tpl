@@ -10,7 +10,7 @@
     <!--jQuery 库-->
     <script src="{$smarty.const.BG_URL_STATIC}js/jquery.min.js" type="text/javascript"></script>
     <link href="{$smarty.const.BG_URL_STATIC}js/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="{$smarty.const.BG_URL_STATIC}admin/{$config.ui}/css/admin_logon.css" type="text/css" rel="stylesheet">
+    <link href="{$smarty.const.BG_URL_STATIC}admin/{$smarty.const.BG_DEFAULT_UI}/css/admin_logon.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>
@@ -24,13 +24,21 @@
                 <span class="glyphicon glyphicon-user"></span>
                 {$lang.label.loging}
             </h4>
+            <p>&nbsp;</p>
+            <p>
+                {$lang.text.notForward}
+            </p>
+            <p>&nbsp;</p>
+            <p>
+                <a href="{$smarty.const.BG_URL_ADMIN}ctl.php" class="btn btn-primary">{$lang.href.forward}</a>
+            </p>
         </div>
 
     </div>
 
     <script type="text/javascript">
     $(document).ready(function(){
-        {if isset($tplData.sync.urlRows)}
+        {if isset($smarty.cookies["prefer_sync_sync_{$smarty.const.BG_SITE_SSIN}"]) && $smarty.cookies["prefer_sync_sync_{$smarty.const.BG_SITE_SSIN}"] == "on" && isset($tplData.sync.urlRows) && $tplData.sync.urlRows}
             {foreach $tplData.sync.urlRows as $key=>$value}
                 $.ajax({
                     url: "{$value}", //url
@@ -44,7 +52,7 @@
                 });
             {/foreach}
         {else}
-            window.location.href = "{$tplData.forward}";
+            window.location.href = "{$tplData.forward}"; //test
         {/if}
     });
     </script>
