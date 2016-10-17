@@ -72,6 +72,7 @@ class AJAX_ARTICLE {
         }
 
         if (defined("BG_MODULE_GEN") && BG_MODULE_GEN > 0 && defined("BG_VISIT_TYPE") && BG_VISIT_TYPE == "static") {
+            include_once(BG_PATH_MODEL . "call.class.php");
             include_once(BG_PATH_MODEL . "articlePub.class.php");
             include_once(BG_PATH_MODEL . "attach.class.php");
             include_once(BG_PATH_MODEL . "thumb.class.php");
