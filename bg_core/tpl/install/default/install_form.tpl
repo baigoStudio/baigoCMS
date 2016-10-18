@@ -31,7 +31,7 @@
                     <label class="control-label">{$value.label}<span id="msg_{$tplData.act_get}_{$key}">{if $value.min > 0}*{/if}</span></label>
 
                     {if $value.type == "select"}
-                        <select name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate class="form-control input-lg">
+                        <select name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate="opt_{$tplData.act_get}_{$key}" class="form-control input-lg">
                             {foreach $value.option as $key_opt=>$value_opt}
                                 <option {if $this_value == $key_opt}selected{/if} value="{$key_opt}">{$value_opt}</option>
                             {/foreach}
@@ -47,9 +47,9 @@
                             {if isset($value_opt.note)}<p class="help-block">{$value_opt.note}</p>{/if}
                         {/foreach}
                     {else if $value.type == "textarea"}
-                        <textarea name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate class="form-control text_md">{$this_value}</textarea>
+                        <textarea name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate="opt_{$tplData.act_get}_{$key}" class="form-control text_md">{$this_value}</textarea>
                     {else}
-                        <input type="text" value="{$this_value}" name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate class="form-control input-lg">
+                        <input type="text" value="{$this_value}" name="opt[{$tplData.act_get}][{$key}]" id="opt_{$tplData.act_get}_{$key}" data-validate="opt_{$tplData.act_get}_{$key}" class="form-control input-lg">
                     {/if}
 
                     {if isset($value.note)}<p class="help-block">{$value.note}</p>{/if}
@@ -60,7 +60,7 @@
         {if $tplData.act_get == "base"}
             <div class="form-group">
                 <label class="control-label">{$lang.label.tpl}<span id="msg_base_BG_SITE_TPL">*</span></label>
-                <select name="opt[base][BG_SITE_TPL]" id="opt_base_BG_SITE_TPL" data-validate class="form-control input-lg">
+                <select name="opt[base][BG_SITE_TPL]" id="opt_base_BG_SITE_TPL" data-validate="opt_{$tplData.act_get}_{$key}" class="form-control input-lg">
                     {foreach $tplData.tplRows as $key=>$value}
                         {if $value["type"] == "dir"}
                             <option {if $smarty.const.BG_SITE_TPL == $value.name}selected{/if} value="{$value.name}">{$value.name}</option>
