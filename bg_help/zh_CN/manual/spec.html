@@ -1,0 +1,65 @@
+<h3>专题分发配置</h3>
+<p>文件名：<span class="text-primary">opt_spec.inc.php</span></p>
+<p>
+    定义专题分发至其他服务器的配置，主要为 FTP 以及认证信息。
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">配置项说明</div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">常量</th>
+                    <th class="text-nowrap">说明</th>
+                    <th>示例</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_URL</td>
+                    <td class="text-nowrap">URL 前缀</td>
+                    <td>http://spec.domain.com</td>
+                    <td>专题分发目标服务器的 URL 前缀</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPHOST</td>
+                    <td class="text-nowrap">分发目标服务器的 FTP 地址</td>
+                    <td>spec.domain.com</td>
+                    <td>FTP 认证信息详情请咨询服务器提供商</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPPORT</td>
+                    <td class="text-nowrap">服务器端口号</td>
+                    <td>21</td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPUSER</td>
+                    <td class="text-nowrap">用户名</td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPPASS</td>
+                    <td class="text-nowrap">密码</td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPPATH</td>
+                    <td class="text-nowrap">FTP 远程路径</td>
+                    <td>/web/wwwroot/spec</td>
+                    <td>目标服务器所在的目录，末尾请勿加 <kbd>/</kbd></td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">BG_SPEC_FTPPASV</td>
+                    <td class="text-nowrap">是否开启被动模式</td>
+                    <td>true</td>
+                    <td>true 为开启，false 为关闭。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

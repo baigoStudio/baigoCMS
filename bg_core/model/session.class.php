@@ -9,9 +9,8 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
+/*------会话模型------*/
 class MODEL_SESSION {
-    // session-lifetime
-    private $lifeTime;
 
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
@@ -27,13 +26,13 @@ class MODEL_SESSION {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "session", $_arr_ssinCreat, "session_id", "SESSION", "InnoDB");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y030105"; //更新成功
+            $_str_rcode = "y030105"; //更新成功
         } else {
-            $_str_alert = "x030105"; //更新失败
+            $_str_rcode = "x030105"; //更新失败
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -63,7 +62,7 @@ class MODEL_SESSION {
     function mdl_read($str_ssinId) {
         $_arr_ssinRow = $this->mdl_readDb($str_ssinId, time());
 
-        if ($_arr_ssinRow["alert"] != "y030102") {
+        if ($_arr_ssinRow["rcode"] != "y030102") {
             return "";
         }
 
@@ -84,8 +83,8 @@ class MODEL_SESSION {
 
         //print_r(strlen($str_ssinData));
 
-        if ($_arr_ssinRow["alert"] == "y030102") {
-            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "session", $_arr_ssinData, "session_id='" . $str_ssinId . "'");
+        if ($_arr_ssinRow["rcode"] == "y030102") {
+            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "session", $_arr_ssinData, "`session_id`='" . $str_ssinId . "'");
 
             if ($_num_mysql > 0) { //数据库更新是否成功
                 return true;
@@ -109,7 +108,7 @@ class MODEL_SESSION {
 
     function mdl_destroy($str_ssinId) {
         // delete session-data
-        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "session",  "session_id='" . $str_ssinId . "'"); //删除数据
+        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "session",  "`session_id`='" . $str_ssinId . "'"); //删除数据
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
@@ -123,7 +122,7 @@ class MODEL_SESSION {
 
 
     function mdl_gc($sessMaxLifeTime) {
-        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "session",  "session_expire<" . time()); //删除数据
+        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "session",  "`session_expire`<" . time()); //删除数据
 
         if ($_num_mysql > 0) {
             return true;
@@ -140,9 +139,9 @@ class MODEL_SESSION {
             "session_expire",
         );
 
-        $_str_sqlWhere  = "session_id='" . $str_ssinId . "'";
+        $_str_sqlWhere  = "`session_id`='" . $str_ssinId . "'";
         if ($tm_expire > 0) {
-            $_str_sqlWhere .= " AND session_expire>" . $tm_expire;
+            $_str_sqlWhere .= " AND `session_expire`>" . $tm_expire;
         }
         $_arr_ssinRows   = $this->obj_db->select(BG_DB_TABLE . "session", $_arr_ssinSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
 
@@ -150,11 +149,11 @@ class MODEL_SESSION {
             $_arr_ssinRow    = $_arr_ssinRows[0];
         } else {
             return array(
-                "alert" => "x030102", //不存在记录
+                "rcode" => "x030102", //不存在记录
             );
         }
 
-        $_arr_ssinRow["alert"] = "y030102";
+        $_arr_ssinRow["rcode"] = "y030102";
 
         return $_arr_ssinRow;
     }

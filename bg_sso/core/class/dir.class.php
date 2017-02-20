@@ -9,14 +9,19 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------文件操作类类-------------*/
+/*-------------文件夹操作类类-------------*/
 class CLASS_DIR {
 
-    /*============删除目录============
-    @str_path 路径
+    public $dir_status; //返回操作状态(成功/失败)
 
-    无返回
-    */
+
+    /**
+     * del_dir function.
+     *
+     * @access public
+     * @param mixed $str_path
+     * @return void
+     */
     function del_dir($str_path) {
 
         //删除目录及目录里所有的文件夹和文件
@@ -24,34 +29,25 @@ class CLASS_DIR {
             $_arr_dir = $this->list_dir($str_path); //逐级列出
 
             foreach ($_arr_dir as $_key=>$_value) {
-                if ($_value["type"] == "file") {
+                if ($_value["type"] == "file" && file_exists($str_path . "/" . $_value["name"])) {
                     $this->del_file($str_path . "/" . $_value["name"]);  //删除
-                } else {
+                } else if (is_dir($str_path . "/" . $_value["name"])) {
                     $this->del_dir($str_path . "/" . $_value["name"]); //递归
                 }
             }
 
             rmdir($str_path);
         }
-
     }
 
 
-    function del_file($str_path) {
-        $bool_return = false;
-        if (file_exists($str_path)) {
-            unlink($str_path);  //删除
-            $bool_return = true;
-        }
-        return $bool_return;
-    }
-
-
-    /*============生成目录============
-    @str_path 路径
-
-    返回返回代码
-    */
+    /**
+     * mk_dir function.
+     *
+     * @access public
+     * @param mixed $str_path
+     * @return void
+     */
     function mk_dir($str_path) {
         if (stristr($str_path, ".")) {
             $str_path = dirname($str_path);
@@ -75,30 +71,41 @@ class CLASS_DIR {
     }
 
 
-    /*============逐级列出目录============
-    @str_path 路径
-
-    返回多维数组
-        type 类型 文件，目录
-        name 目录名
-    */
-    function list_dir($str_path) {
+    /**
+     * list_dir function.
+     *
+     * @access public
+     * @param mixed $str_path
+     * @return void
+     */
+    function list_dir($str_path, $str_ext = "") {
 
         $this->mk_dir($str_path);
 
         $_arr_return  = array();
         $_arr_dir     = scandir($str_path);
 
-        if ($_arr_dir) {
+        if (!fn_isEmpty($_arr_dir)) {
             foreach ($_arr_dir as $_key=>$_value) {
                 if ($_value != "." && $_value != "..") {
-                    if (is_dir($str_path . $_value)) {
-                        $_arr_return[$_key]["type"] = "dir";
-                    } else {
-                        $_arr_return[$_key]["type"] = "file";
-                    }
 
-                    $_arr_return[$_key]["name"] = $_value;
+                    $_str_pathFull = $str_path . $_value;
+
+                    $_arr_pathinfo = pathinfo($_value);
+
+                    if (fn_isEmpty($str_ext)) {
+                        $_arr_return[] = array(
+                            "name" => $_value,
+                            "type" => filetype($_str_pathFull),
+                        );
+                    } else {
+                        if ($_arr_pathinfo["extension"] == $str_ext) {
+                            $_arr_return[] = array(
+                                "name" => $_value,
+                                "type" => filetype($_str_pathFull),
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -107,9 +114,29 @@ class CLASS_DIR {
     }
 
 
+    function del_file($str_path) {
+        $bool_return = false;
+        if (file_exists($str_path)) {
+            unlink($str_path);  //删除
+            $bool_return = true;
+        }
+        return $bool_return;
+    }
+
+
     function put_file($str_path, $str_content) {
         $this->mk_dir($str_path);
         $_num_size = file_put_contents($str_path, $str_content);
         return $_num_size;
+    }
+
+
+    function copy_file($str_src, $str_dst) {
+        $bool_return = false;
+        $this->mk_dir($str_dst);
+        if (file_exists($str_src)) {
+            $bool_return = copy($str_src, $str_dst);
+        }
+        return $bool_return;
     }
 }

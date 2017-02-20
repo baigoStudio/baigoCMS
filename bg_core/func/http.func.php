@@ -20,9 +20,7 @@ function fn_http($str_url, $arr_data, $str_method = "get") {
         //"Content-length: " . strlen($_str_data),
     );
 
-    if ($_arr_headers) {
-        curl_setopt($_obj_http, CURLOPT_HTTPHEADER, $_arr_headers);
-    }
+    curl_setopt($_obj_http, CURLOPT_HTTPHEADER, $_arr_headers);
 
     if ($str_method == "post") {
         curl_setopt($_obj_http, CURLOPT_POST, true);

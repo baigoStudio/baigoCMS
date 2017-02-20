@@ -9,15 +9,18 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-function fn_callDisplay($arr_call, $template) {
+function fn_callDisplay($call_id, $template = false) {
+    if ($template) {
+        $call_id = $call_id["call_id"];
+    }
+
     $_obj_call     = new CLASS_CALL_DISPLAY();
-    $_arr_callRow  = $_obj_call->display_init($arr_call["call_id"]); //读取调用信息
-
     $_arr_return   = array();
+    $_arr_callRow  = $_obj_call->display_init($call_id); //读取调用信息
 
-    if ($_arr_callRow["alert"] == "y170102" && $_arr_callRow["call_status"] == "enable") {
-
+    if ($_arr_callRow["rcode"] == "y170102" && $_arr_callRow["call_status"] == "enable") {
         switch ($_arr_callRow["call_type"]) {
+            //专题
             case "spec":
                 $_arr_return = $_obj_call->display_spec();
             break;
@@ -33,18 +36,23 @@ function fn_callDisplay($arr_call, $template) {
                 $_arr_return = $_obj_call->display_tag();
             break;
 
+            case "link":
+                $_arr_return = $_obj_call->display_link();
+            break;
+
             //文章列表
             default:
                 $_arr_return = $_obj_call->display_article();
             break;
         }
-
     }
 
-    //print_r($_arr_return);
-    $callRows[$arr_call["call_id"]] = $_arr_return;
-
-    $template->assign("callRows", $callRows);
+    if ($template) {
+        $callRows[$call_id] = $_arr_return;
+        $template->assign("callRows", $callRows);
+    } else {
+        return $_arr_return;
+    }
 }
 
 class CLASS_CALL_DISPLAY {
@@ -64,6 +72,7 @@ class CLASS_CALL_DISPLAY {
         $this->mdl_tag            = new MODEL_TAG();
         $this->mdl_attach         = new MODEL_ATTACH();
         $this->mdl_thumb          = new MODEL_THUMB();
+        $this->mdl_link           = new MODEL_LINK();
     }
 
 
@@ -133,6 +142,17 @@ class CLASS_CALL_DISPLAY {
     }
 
 
+    function display_link() {
+        $_arr_searchLink = array(
+            "status"    => "enable",
+            "type"      => "friend",
+        );
+        $_arr_linkRows = $this->mdl_link->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchLink);
+
+        return $_arr_linkRows;
+    }
+
+
     /**
      * display_article function.
      *
@@ -163,10 +183,10 @@ class CLASS_CALL_DISPLAY {
 
             if ($_value["article_attach_id"] > 0) {
                 $_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
-                if ($_arr_attachRow["alert"] == "y070102") {
+                if ($_arr_attachRow["rcode"] == "y070102") {
                     if ($_arr_attachRow["attach_box"] != "normal") {
                         $_arr_attachRow = array(
-                            "alert" => "x070102",
+                            "rcode" => "x070102",
                         );
                     }
                 }

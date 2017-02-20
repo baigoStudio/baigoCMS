@@ -9,8 +9,20 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-function fn_callCate($arr_call, $template) {
-    $_mdl_cate = new MODEL_CATE(); //设置上传信息对象
-    $cateRow[$arr_call["cate_id"]] = $_mdl_cate->mdl_cache(false, $arr_call["cate_id"]);
-    $template->assign("cateRows", $cateRow);
+function fn_callCate($cate_id, $template = false) {
+    $cateRows = array();
+
+    if ($template) {
+        $cate_id = $cate_id["cate_id"];
+    }
+
+    $_mdl_cate  = new MODEL_CATE(); //设置上传信息对象
+    $cateRow    = $_mdl_cate->mdl_cache(false, $cate_id);
+
+    if ($template) {
+        $cateRows[$cate_id] = $cateRow;
+        $template->assign("cateRows", $cateRows);
+    } else {
+        return $cateRow;
+    }
 }

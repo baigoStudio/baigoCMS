@@ -9,27 +9,23 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "init.func.php");
+require(BG_PATH_INC . "common.inc.php");
+require(BG_PATH_FUNC . "init.func.php");
 $arr_set = array(
     "base"          => true,
     "ssin"          => true,
-    "header"        => "Content-type: application/json; charset=utf-8",
     "db"            => true,
-    "type"          => "ajax",
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_FUNC . "session.func.php"); //载入 session 函数
-include_once(BG_PATH_CONTROL . "api/sso/sync.class.php"); //载入文章类
+$ctrl_sync = new CONTROL_API_SSO_SYNC();
 
-$api_sync = new API_SYNC();
-
-switch ($GLOBALS["act_get"]) {
+switch ($GLOBALS["act"]) {
     case "login":
-        $api_sync->api_login();
+        $ctrl_sync->ctrl_login();
     break;
 
     case "logout":
-        $api_sync->api_logout();
+        $ctrl_sync->ctrl_logout();
     break;
 }

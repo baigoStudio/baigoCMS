@@ -29,6 +29,7 @@ return array(
         //"user"    => "用户组", //用户组
     ),
 
+    /*------管理员类型------*/
     "admin" => array(
         "normal"   => "普通管理员", //简体中文
         "super"    => "超级管理员", //英语
@@ -53,6 +54,13 @@ return array(
         "cate"        => "栏目列表",
         "tag_list"    => "TAG 列表",
         "tag_rank"    => "TAG 排行",
+        "link"        => "友情链接列表",
+    ),
+
+    /*------短信类型------*/
+    "pm" => array(
+        "in"    => "收件箱",
+        "out"   => "已发送",
     ),
 
     /*------是否有图片类型------*/
@@ -64,17 +72,64 @@ return array(
 
     /*------调用生成文件------*/
     "callFile" => array(
-        "html"    => "HTML",
-        "shtml"    => "SHTML",
-        "js"      => "JS",
+        "html"      => "HTML",
+        "shtml"     => "SHTML",
+        "js"        => "JS",
         //"xml"     => "XML",
         //"json"    => "JSON",
+    ),
+
+    /*------链接类型------*/
+    "link" => array(
+        "console"   => "后台", //后台
+        "friend"    => "友情链接", //友情链接
+        "auto"      => "自动链接", //自动链接
     ),
 
     /*------缩略图------*/
     "thumb" => array(
         "ratio"   => "比例", //按比例
         "cut"     => "裁切", //裁切
+    ),
+
+    "profile" => array(
+        "info"      => array(
+            "icon"  => "user",
+            "title" => "个人信息",
+        ),
+        "prefer"    => array(
+            "icon"  => "wrench",
+            "title" => "偏好设置",
+        ),
+        "pass"      => array(
+            "icon"  => "lock",
+            "title" => "密码",
+        ),
+        "qa"        => array(
+            "icon"  => "question-sign",
+            "title" => "密保问题",
+        ),
+        "mailbox"   => array(
+            "icon"  => "inbox",
+            "title" => "更换邮箱",
+        ),
+    ),
+
+
+    "quesOften" => array(
+        "您祖母叫什么名字",
+        "您祖父叫什么名字",
+        "您的生日是什么时候",
+        "您母亲的名字",
+        "您父亲的名字",
+        "您宠物的名字叫什么",
+        "您的车号是什么",
+        "您的家乡是哪里",
+        "您小学叫什么名字",
+        "您最喜欢的颜色",
+        "您女儿/儿子的小名叫什么",
+        "谁是您儿时最好的伙伴",
+        "您最尊敬的老师的名字",
     ),
 
     /*------摘要类型------*/
@@ -96,6 +151,12 @@ return array(
         "email"    => "电子邮箱",
     ),
 
+    "forgot" => array(
+        "mail"    => "通过邮件找回",
+        "qa"      => "回答密保问题找回",
+    ),
+
+    /*------php 扩展------*/
     "ext" => array(
         "mysqli"      => "MySqli 扩展库",
         "gd"          => "GD 扩展库",

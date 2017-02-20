@@ -9,10 +9,8 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------上传类-------------*/
+/*-------------MIME 模型-------------*/
 class MODEL_MIME {
-
-    private $obj_db;
 
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
@@ -30,13 +28,13 @@ class MODEL_MIME {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "mime", $_arr_mimeCreat, "mime_id", "MIME");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y080105"; //更新成功
+            $_str_rcode = "y080105"; //更新成功
         } else {
-            $_str_alert = "x080105"; //更新成功
+            $_str_rcode = "x080105"; //更新成功
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -44,8 +42,12 @@ class MODEL_MIME {
     function mdl_column() {
         $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "mime");
 
-        foreach ($_arr_colRows as $_key=>$_value) {
-            $_arr_col[] = $_value["Field"];
+        $_arr_col = array();
+
+        if (!fn_isEmpty($_arr_colRows)) {
+            foreach ($_arr_colRows as $_key=>$_value) {
+                $_arr_col[] = $_value["Field"];
+            }
         }
 
         return $_arr_col;
@@ -57,40 +59,40 @@ class MODEL_MIME {
 
     返回多维数组
         num_mimeId ID
-        str_alert 提示
+        str_rcode 提示
     */
     function mdl_submit() {
         $_arr_mimeData = array(
-            "mime_name"  => $this->mimeSubmit["mime_name"],
-            "mime_ext"   => $this->mimeSubmit["mime_ext"],
-            "mime_note"  => $this->mimeSubmit["mime_note"],
+            "mime_name"  => $this->mimeInput["mime_name"],
+            "mime_ext"   => $this->mimeInput["mime_ext"],
+            "mime_note"  => $this->mimeInput["mime_note"],
         );
 
-        if ($this->mimeSubmit["mime_id"] < 1) {
+        if ($this->mimeInput["mime_id"] < 1) {
             $_num_mimeId = $this->obj_db->insert(BG_DB_TABLE . "mime", $_arr_mimeData);
 
             if ($_num_mimeId > 0) { //数据库插入是否成功
-                $_str_alert = "y080101";
+                $_str_rcode = "y080101";
             } else {
                 return array(
-                    "alert" => "x080101",
+                    "rcode" => "x080101",
                 );
             }
         } else {
-            $_num_mimeId = $this->mimeSubmit["mime_id"];
-            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "mime", $_arr_mimeData, "mime_id=" . $_num_mimeId);
+            $_num_mimeId = $this->mimeInput["mime_id"];
+            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "mime", $_arr_mimeData, "`mime_id`=" . $_num_mimeId);
 
             if ($_num_mysql > 0) { //数据库插入是否成功
-                $_str_alert = "y080103";
+                $_str_rcode = "y080103";
             } else {
                 return array(
-                    "alert" => "x080103",
+                    "rcode" => "x080103",
                 );
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
             "mime_id" => $_num_mimeId,
         );
     }
@@ -108,17 +110,14 @@ class MODEL_MIME {
             "mime_note",
         );
 
-        switch ($str_readBy) {
-            case "mime_id":
-                $_str_sqlWhere = $str_readBy . "=" . $str_mime;
-            break;
-            default:
-                $_str_sqlWhere = $str_readBy . "='" . $str_mime . "'";
-            break;
+        if (is_numeric($str_mime)) {
+            $_str_sqlWhere = "`" . $str_readBy . "`=" . $str_mime;
+        } else {
+            $_str_sqlWhere = "`" . $str_readBy . "`='" . $str_mime . "'";
         }
 
         if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND mime_id<>" . $num_notId;
+            $_str_sqlWhere .= " AND `mime_id`<>" . $num_notId;
         }
 
         $_arr_mimeRows = $this->obj_db->select(BG_DB_TABLE . "mime",  $_arr_mimeSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
@@ -127,11 +126,11 @@ class MODEL_MIME {
             $_arr_mimeRow = $_arr_mimeRows[0];
         } else {
             return array(
-                "alert" => "x080102", //不存在记录
+                "rcode" => "x080102", //不存在记录
             );
         }
 
-        $_arr_mimeRow["alert"] = "y080102";
+        $_arr_mimeRow["rcode"] = "y080102";
 
         return $_arr_mimeRow;
     }
@@ -176,41 +175,41 @@ class MODEL_MIME {
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y080104";
+            $_str_rcode = "y080104";
         } else {
-            $_str_alert = "x080104";
+            $_str_rcode = "x080104";
         }
 
         return array(
-            "alert" => $_str_alert
+            "rcode" => $_str_rcode
         );
     }
 
 
-    function mdl_alert_table() {
+    function mdl_alter_table() {
         $_arr_col     = $this->mdl_column();
-        $_arr_alert   = array();
+        $_arr_alter   = array();
 
         if (in_array("mime_id", $_arr_col)) {
-            $_arr_alert["mime_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mime_id");
+            $_arr_alter["mime_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mime_id");
         }
 
         if (in_array("mime_ext", $_arr_col)) {
-            $_arr_alert["mime_ext"] = array("CHANGE", "char(4) NOT NULL COMMENT '扩展名'", "mime_ext");
+            $_arr_alter["mime_ext"] = array("CHANGE", "char(4) NOT NULL COMMENT '扩展名'", "mime_ext");
         }
 
-        $_str_alert = "y080111";
+        $_str_rcode = "y080111";
 
-        if ($_arr_alert) {
-            $_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "mime", $_arr_alert);
+        if (!fn_isEmpty($_arr_alter)) {
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "mime", $_arr_alter);
 
-            if ($_reselt) {
-                $_str_alert = "y080106";
+            if (!fn_isEmpty($_reselt)) {
+                $_str_rcode = "y080106";
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -218,15 +217,15 @@ class MODEL_MIME {
     function input_submit() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
-        $this->mimeSubmit["mime_id"] = fn_getSafe(fn_post("mime_id"), "int", 0);
+        $this->mimeInput["mime_id"] = fn_getSafe(fn_post("mime_id"), "int", 0);
 
-        if ($this->mimeSubmit["mime_id"] > 0) {
-            $_arr_mimeRow = $this->mdl_read($this->mimeSubmit["mime_id"]);
-            if ($_arr_mimeRow["alert"] != "y080102") {
+        if ($this->mimeInput["mime_id"] > 0) {
+            $_arr_mimeRow = $this->mdl_read($this->mimeInput["mime_id"]);
+            if ($_arr_mimeRow["rcode"] != "y080102") {
                 return $_arr_mimeRow;
             }
         }
@@ -235,25 +234,25 @@ class MODEL_MIME {
         switch ($_arr_mimeName["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x080201",
+                    "rcode" => "x080201",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x080202",
+                    "rcode" => "x080202",
                 );
             break;
 
             case "ok":
-                $this->mimeSubmit["mime_name"] = $_arr_mimeName["str"];
+                $this->mimeInput["mime_name"] = $_arr_mimeName["str"];
             break;
         }
 
-        $_arr_mimeRow = $this->mdl_read($this->mimeSubmit["mime_name"], "mime_name", $this->mimeSubmit["mime_id"]);
-        if ($_arr_mimeRow["alert"] == "y080102") {
+        $_arr_mimeRow = $this->mdl_read($this->mimeInput["mime_name"], "mime_name", $this->mimeInput["mime_id"]);
+        if ($_arr_mimeRow["rcode"] == "y080102") {
             return array(
-                "alert" => "x080206",
+                "rcode" => "x080206",
             );
         }
 
@@ -261,18 +260,18 @@ class MODEL_MIME {
         switch ($_arr_mimeExt["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x080203",
+                    "rcode" => "x080203",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x080204",
+                    "rcode" => "x080204",
                 );
             break;
 
             case "ok":
-                $this->mimeSubmit["mime_ext"] = $_arr_mimeExt["str"];
+                $this->mimeInput["mime_ext"] = $_arr_mimeExt["str"];
             break;
 
         }
@@ -281,18 +280,18 @@ class MODEL_MIME {
         switch ($_arr_mimeNote["status"]) {
             case "too_long":
                 return array(
-                    "alert" => "x080205",
+                    "rcode" => "x080205",
                 );
             break;
 
             case "ok":
-                $this->mimeSubmit["mime_note"] = $_arr_mimeNote["str"];
+                $this->mimeInput["mime_note"] = $_arr_mimeNote["str"];
             break;
 
         }
 
-        $this->mimeSubmit["alert"] = "ok";
-        return $this->mimeSubmit;
+        $this->mimeInput["rcode"] = "ok";
+        return $this->mimeInput;
     }
 
 
@@ -305,24 +304,24 @@ class MODEL_MIME {
     function input_ids() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
         $_arr_mimeIds = fn_post("mime_ids");
 
-        if ($_arr_mimeIds) {
+        if (fn_isEmpty($_arr_mimeIds)) {
+            $_str_rcode = "x030202";
+        } else {
             foreach ($_arr_mimeIds as $_key=>$_value) {
                 $_arr_mimeIds[$_key] = fn_getSafe($_value, "int", 0);
             }
-            $_str_alert = "ok";
-        } else {
-            $_str_alert = "x030202";
+            $_str_rcode = "ok";
         }
 
         $this->mimeIds = array(
-            "alert"     => $_str_alert,
-            "mime_ids"  => $_arr_mimeIds
+            "rcode"     => $_str_rcode,
+            "mime_ids"  => array_unique($_arr_mimeIds),
         );
 
         return $this->mimeIds;

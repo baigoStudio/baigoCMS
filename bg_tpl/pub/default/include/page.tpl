@@ -9,15 +9,15 @@
 
         {if $tplData.pageRow.p * 10 > 0}
             <li>
-                <a href="{page_process thisPage=$tplData.pageRow.p * 10}" title="{$lang.href.pagePrevList}">{$lang.href.pagePrevList}</a>
+                <a href="{page_process thisPage=$tplData.pageRow.p * 10}" title="{$lang.href.pagePrevList}">...</a>
             </li>
         {/if}
 
         <li class="{if $tplData.pageRow.page <= 1}disabled{/if}">
             {if $tplData.pageRow.page <= 1}
-                <span title="{$lang.href.pagePrev}">&laquo;</span>
+                <span title="{$lang.href.pagePrev}"><span class="glyphicon glyphicon-menu-left"></span></span>
             {else}
-                <a href="{page_process thisPage=$tplData.pageRow.page - 1}" title="{$lang.href.pagePrev}">&laquo;</a>
+                <a href="{page_process thisPage=$tplData.pageRow.page - 1}" title="{$lang.href.pagePrev}"><span class="glyphicon glyphicon-menu-left"></span></a>
             {/if}
         </li>
 
@@ -33,15 +33,15 @@
 
         <li class="{if $tplData.pageRow.page >= $tplData.pageRow.total}disabled{/if}">
             {if $tplData.pageRow.page >= $tplData.pageRow.total}
-                <span title="{$lang.href.pageNext}">&raquo;</span>
+                <span title="{$lang.href.pageNext}"><span class="glyphicon glyphicon-menu-right"></span></span>
             {else}
-                <a href="{page_process thisPage=$tplData.pageRow.page + 1}" title="{$lang.href.pageNext}">&raquo;</a>
+                <a href="{page_process thisPage=$tplData.pageRow.page + 1}" title="{$lang.href.pageNext}"><span class="glyphicon glyphicon-menu-right"></span></a>
             {/if}
         </li>
 
         {if $tplData.pageRow.end < $tplData.pageRow.total}
             <li>
-                <a href="{page_process thisPage=$iii}" title="{$lang.href.pageNextList}">{$lang.href.pageNextList}</a>
+                <a href="{page_process thisPage=$iii}" title="{$lang.href.pageNextList}">...</a>
             </li>
         {/if}
 

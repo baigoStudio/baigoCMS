@@ -9,10 +9,9 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------用户类-------------*/
+/*-------------专题模型-------------*/
 class MODEL_SPEC {
 
-    private $obj_db;
     private $is_magic;
     public $specStatus = array();
 
@@ -49,13 +48,13 @@ class MODEL_SPEC {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "spec", $_arr_specCreat, "spec_id", "专题");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y180105"; //更新成功
+            $_str_rcode = "y180105"; //更新成功
         } else {
-            $_str_alert = "x180105"; //更新成功
+            $_str_rcode = "x180105"; //更新成功
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -63,55 +62,59 @@ class MODEL_SPEC {
     function mdl_column() {
         $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "spec");
 
-        foreach ($_arr_colRows as $_key=>$_value) {
-            $_arr_col[] = $_value["Field"];
+        $_arr_col = array();
+
+        if (!fn_isEmpty($_arr_colRows)) {
+            foreach ($_arr_colRows as $_key=>$_value) {
+                $_arr_col[] = $_value["Field"];
+            }
         }
 
         return $_arr_col;
     }
 
 
-    function mdl_alert_table() {
+    function mdl_alter_table() {
         foreach ($this->specStatus as $_key=>$_value) {
             $_arr_status[] = $_key;
         }
         $_str_status = implode("','", $_arr_status);
 
         $_arr_col     = $this->mdl_column();
-        $_arr_alert   = array();
+        $_arr_alter   = array();
 
         if (!in_array("spec_attach_id", $_arr_col)) {
-            $_arr_alert["spec_attach_id"] = array("ADD", "int NOT NULL COMMENT '附件ID'");
+            $_arr_alter["spec_attach_id"] = array("ADD", "int NOT NULL COMMENT '附件ID'");
         }
 
         if (in_array("spec_id", $_arr_col)) {
-            $_arr_alert["spec_id"] = array("CHANGE", "int NOT NULL AUTO_INCREMENT COMMENT 'ID'", "spec_id");
+            $_arr_alter["spec_id"] = array("CHANGE", "int NOT NULL AUTO_INCREMENT COMMENT 'ID'", "spec_id");
         }
 
         if (in_array("spec_status", $_arr_col)) {
-            $_arr_alert["spec_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "spec_status");
+            $_arr_alter["spec_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "spec_status");
         }
 
         if (in_array("spec_content", $_arr_col)) {
-            $_arr_alert["spec_content"] = array("CHANGE", "text NOT NULL COMMENT '专题内容'", "spec_content");
+            $_arr_alter["spec_content"] = array("CHANGE", "text NOT NULL COMMENT '专题内容'", "spec_content");
         }
 
-        $_str_alert = "y180111";
+        $_str_rcode = "y180111";
 
-        if ($_arr_alert) {
-            $_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "spec", $_arr_alert);
+        if (!fn_isEmpty($_arr_alter)) {
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "spec", $_arr_alter);
 
-            if ($_reselt) {
-                $_str_alert = "y180106";
+            if (!fn_isEmpty($_reselt)) {
+                $_str_rcode = "y180106";
                 $_arr_specData = array(
                     "spec_status" => $_arr_status[0],
                 );
-                $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "LENGTH(spec_status) < 1"); //更新数据
+                $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "LENGTH(`spec_status`) < 1"); //更新数据
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -129,42 +132,40 @@ class MODEL_SPEC {
     function mdl_submit() {
 
         $_arr_specData = array(
-            "spec_name"         => $this->specSubmit["spec_name"],
-            "spec_status"       => $this->specSubmit["spec_status"],
-            "spec_content"      => $this->specSubmit["spec_content"],
-            "spec_attach_id"    => $this->specSubmit["spec_attach_id"],
+            "spec_name"         => $this->specInput["spec_name"],
+            "spec_status"       => $this->specInput["spec_status"],
+            "spec_content"      => $this->specInput["spec_content"],
+            "spec_attach_id"    => $this->specInput["spec_attach_id"],
         );
 
-        if ($this->specSubmit["spec_id"] < 1) {
-
+        if ($this->specInput["spec_id"] < 1) {
             $_num_specId = $this->obj_db->insert(BG_DB_TABLE . "spec", $_arr_specData);
 
             if ($_num_specId > 0) { //数据库插入是否成功
-                $_str_alert = "y180101";
+                $_str_rcode = "y180101";
             } else {
                 return array(
                     "spec_id"   => $_num_specId,
-                    "alert"     => "x180101",
+                    "rcode"     => "x180101",
                 );
             }
-
         } else {
-            $_num_specId = $this->specSubmit["spec_id"];
-            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "spec_id=" . $_num_specId);
+            $_num_specId = $this->specInput["spec_id"];
+            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "`spec_id`=" . $_num_specId);
 
             if ($_num_mysql > 0) {
-                $_str_alert = "y180103";
+                $_str_rcode = "y180103";
             } else {
                 return array(
                     "spec_id"   => $_num_specId,
-                    "alert"     => "x180103",
+                    "rcode"     => "x180103",
                 );
             }
         }
 
         return array(
             "spec_id"   => $_num_specId,
-            "alert"     => $_str_alert,
+            "rcode"     => $_str_rcode,
         );
     }
 
@@ -179,7 +180,7 @@ class MODEL_SPEC {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function mdl_read($str_spec, $str_readBy = "spec_id", $num_notId = 0, $is_max = false) {
+    function mdl_read($num_specId, $is_max = false) {
         $_arr_specSelect = array(
             "spec_id",
             "spec_name",
@@ -189,24 +190,13 @@ class MODEL_SPEC {
         );
 
         if ($is_max) {
-            if ($str_spec > 0) {
-                $_str_sqlWhere = $str_readBy . "<" . $str_spec;
+            if (is_numeric($num_specId) && $num_specId > 0) {
+                $_str_sqlWhere = "`spec_id`<" . $num_specId;
             } else {
                 $_str_sqlWhere = "1=1";
             }
         } else {
-            switch ($str_readBy) {
-                case "spec_id":
-                    $_str_sqlWhere = $str_readBy . "=" . $str_spec;
-                break;
-                default:
-                    $_str_sqlWhere = $str_readBy . "='" . $str_spec . "'";
-                break;
-            }
-        }
-
-        if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND spec_id<>" . $num_notId;
+            $_str_sqlWhere = "`spec_id`=" . $num_specId;
         }
 
         $_arr_order = array(
@@ -219,13 +209,13 @@ class MODEL_SPEC {
             $_arr_specRow = $_arr_specRows[0];
         } else {
             return array(
-                "alert" => "x180102", //不存在记录
+                "rcode" => "x180102", //不存在记录
             );
         }
 
         $_arr_specRow["spec_content"]   = stripslashes($_arr_specRow["spec_content"]);
         $_arr_specRow["urlRow"]         = $this->url_process($_arr_specRow);
-        $_arr_specRow["alert"]          = "y180102";
+        $_arr_specRow["rcode"]          = "y180102";
 
         return $_arr_specRow;
     }
@@ -239,17 +229,17 @@ class MODEL_SPEC {
             "spec_status" => $str_status,
         );
 
-        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specUpdate, "spec_id IN (" . $_str_specId . ")"); //删除数据
+        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specUpdate, "`spec_id` IN (" . $_str_specId . ")"); //删除数据
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y180103";
+            $_str_rcode = "y180103";
         } else {
-            $_str_alert = "x180103";
+            $_str_rcode = "x180103";
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -262,12 +252,12 @@ class MODEL_SPEC {
         //print_r($_arr_specData);
 
         $_num_specId = $this->specPrimary["spec_id"];
-        $_num_mysql     = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "spec_id=" . $_num_specId); //更新数据
+        $_num_mysql     = $this->obj_db->update(BG_DB_TABLE . "spec", $_arr_specData, "`spec_id`=" . $_num_specId); //更新数据
 
         if ($_num_mysql > 0) {
-            $_str_alert  = "y180103";
+            $_str_rcode  = "y180103";
         } else {
-            $_str_alert  = "x180103";
+            $_str_rcode  = "x180103";
         }
 
         /*print_r($_arr_userRow);
@@ -275,7 +265,7 @@ class MODEL_SPEC {
 
         return array(
             "spec_id"   => $_num_specId,
-            "alert"     => $_str_alert,
+            "rcode"     => $_str_rcode,
         );
     }
 
@@ -344,17 +334,17 @@ class MODEL_SPEC {
     function mdl_del() {
         $_str_specIds = implode(",", $this->specIds["spec_ids"]);
 
-        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "spec",  "spec_id IN (" . $_str_specIds . ")"); //删除数据
+        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "spec",  "`spec_id` IN (" . $_str_specIds . ")"); //删除数据
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y180104";
+            $_str_rcode = "y180104";
         } else {
-            $_str_alert = "x180104";
+            $_str_rcode = "x180104";
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         ); //成功
     }
 
@@ -362,15 +352,15 @@ class MODEL_SPEC {
     function input_submit() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
-        $this->specSubmit["spec_id"] = fn_getSafe(fn_post("spec_id"), "int", 0);
+        $this->specInput["spec_id"] = fn_getSafe(fn_post("spec_id"), "int", 0);
 
-        if ($this->specSubmit["spec_id"] > 0) {
-            $_arr_specRow = $this->mdl_read($this->specSubmit["spec_id"]);
-            if ($_arr_specRow["alert"] != "y180102") {
+        if ($this->specInput["spec_id"] > 0) {
+            $_arr_specRow = $this->mdl_read($this->specInput["spec_id"]);
+            if ($_arr_specRow["rcode"] != "y180102") {
                 return $_arr_specRow;
             }
         }
@@ -379,18 +369,18 @@ class MODEL_SPEC {
         switch ($_arr_specName["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x180201",
+                    "rcode" => "x180201",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x180202",
+                    "rcode" => "x180202",
                 );
             break;
 
             case "ok":
-                $this->specSubmit["spec_name"] = $_arr_specName["str"];
+                $this->specInput["spec_name"] = $_arr_specName["str"];
             break;
         }
 
@@ -398,38 +388,39 @@ class MODEL_SPEC {
         switch ($_arr_specStatus["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x180201",
+                    "rcode" => "x180201",
                 );
             break;
 
             case "ok":
-                $this->specSubmit["spec_status"] = $_arr_specStatus["str"];
+                $this->specInput["spec_status"] = $_arr_specStatus["str"];
             break;
         }
 
-        $this->specSubmit["spec_content"] = fn_post("spec_content");
+        $this->specInput["spec_content"] = fn_post("spec_content");
 
-        $_arr_attachIds = fn_getAttach($this->specSubmit["spec_content"]);
-        if ($_arr_attachIds) {
-            $this->specSubmit["spec_attach_id"] = $_arr_attachIds[0];
+        $_arr_attachIds = fn_getAttach($this->specInput["spec_content"]);
+
+        if (fn_isEmpty($_arr_attachIds)) {
+            $this->specInput["spec_attach_id"] = 0;
         } else {
-            $this->specSubmit["spec_attach_id"] = 0;
+            $this->specInput["spec_attach_id"] = $_arr_attachIds[0];
         }
 
         if (!$this->is_magic) {
-            $this->specSubmit["spec_content"]   = addslashes($this->specSubmit["spec_content"]);
+            $this->specInput["spec_content"]   = addslashes($this->specInput["spec_content"]);
         }
 
-        $this->specSubmit["alert"] = "ok";
+        $this->specInput["rcode"] = "ok";
 
-        return $this->specSubmit;
+        return $this->specInput;
     }
 
 
     function input_primary() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
@@ -437,7 +428,7 @@ class MODEL_SPEC {
         switch ($_arr_specId["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x180204",
+                    "rcode" => "x180204",
                 );
             break;
 
@@ -447,7 +438,7 @@ class MODEL_SPEC {
         }
 
         $_arr_specRow  = $this->mdl_read($this->specPrimary["spec_id"]);
-        if ($_arr_specRow["alert"] != "y180102") {
+        if ($_arr_specRow["rcode"] != "y180102") {
             return $_arr_specRow;
         }
 
@@ -455,7 +446,7 @@ class MODEL_SPEC {
         switch ($_arr_attachId["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x180206",
+                    "rcode" => "x180206",
                 );
             break;
 
@@ -464,7 +455,7 @@ class MODEL_SPEC {
             break;
         }
 
-        $this->specPrimary["alert"]  = "ok";
+        $this->specPrimary["rcode"]  = "ok";
 
         return $this->specPrimary;
     }
@@ -479,24 +470,24 @@ class MODEL_SPEC {
     function input_ids() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
         $_arr_specIds = fn_post("spec_ids");
 
-        if ($_arr_specIds) {
+        if (fn_isEmpty($_arr_specIds)) {
+            $_str_rcode = "x030202";
+        } else {
             foreach ($_arr_specIds as $_key=>$_value) {
                 $_arr_specIds[$_key] = fn_getSafe($_value, "int", 0);
             }
-            $_str_alert = "ok";
-        } else {
-            $_str_alert = "x030202";
+            $_str_rcode = "ok";
         }
 
         $this->specIds = array(
-            "alert"     => $_str_alert,
-            "spec_ids"  => $_arr_specIds
+            "rcode"     => $_str_rcode,
+            "spec_ids"  => array_unique($_arr_specIds),
         );
 
         return $this->specIds;
@@ -528,7 +519,7 @@ class MODEL_SPEC {
             break;
 
             default:
-                $_str_specUrl       = $this->attachPre . "index.php?mod=spec&act_get=list";
+                $_str_specUrl       = $this->attachPre . "index.php?mod=spec&act=list";
                 $_str_pageAttach    = "&page=";
             break;
         }
@@ -575,7 +566,7 @@ class MODEL_SPEC {
             break;
 
             default:
-                $_str_specUrl       = $this->attachPre . "index.php?mod=spec&act_get=show&spec_id=" . $_arr_specRow["spec_id"];
+                $_str_specUrl       = $this->attachPre . "index.php?mod=spec&act=show&spec_id=" . $_arr_specRow["spec_id"];
                 $_str_pageAttach    = "&page=";
             break;
         }
@@ -595,20 +586,20 @@ class MODEL_SPEC {
         $_str_sqlWhere = "1=1";
 
         if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
-            $_str_sqlWhere .= " AND spec_name LIKE '%" . $arr_search["key"] . "%'";
+            $_str_sqlWhere .= " AND `spec_name` LIKE '%" . $arr_search["key"] . "%'";
         }
 
         if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
-            $_str_sqlWhere .= " AND spec_status='" . $arr_search["status"] . "'";
+            $_str_sqlWhere .= " AND `spec_status`='" . $arr_search["status"] . "'";
         }
 
-        if (isset($arr_search["spec_ids"]) && $arr_search["spec_ids"]) {
+        if (isset($arr_search["spec_ids"]) && !fn_isEmpty($arr_search["spec_ids"])) {
             $_str_specIds    = implode(",", $arr_search["spec_ids"]);
-            $_str_sqlWhere  .= " AND spec_id IN (" . $_str_specIds . ")";
+            $_str_sqlWhere  .= " AND `spec_id` IN (" . $_str_specIds . ")";
         }
 
         if (isset($arr_search["article_id"]) && $arr_search["article_id"] > 0) {
-            $_str_sqlWhere .= " AND belong_article_id=" . $arr_search["article_id"];
+            $_str_sqlWhere .= " AND `belong_article_id`=" . $arr_search["article_id"];
         }
 
         return $_str_sqlWhere;

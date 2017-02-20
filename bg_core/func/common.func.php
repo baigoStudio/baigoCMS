@@ -87,17 +87,17 @@ function fn_token($token_action = "mk") {
 
     switch ($token_action) {
         case "chk":
-            $_str_nameSession  = fn_getSafe(fn_post($_str_nameSession), "txt", "");
-            $_str_nameCookie   = fn_cookie($_str_nameCookie);
+            $_str_inputSession  = fn_getSafe(fn_post($_str_nameSession), "txt", "");
+            $_str_inputCookie   = fn_cookie($_str_nameCookie);
 
             if (BG_SWITCH_TOKEN == 1) {
-                 if ($_str_nameSession != fn_session($_str_nameSession) || $_str_nameCookie != fn_session($_str_nameCookie)) {
-                    $_str_return = false;
+                 if ($_str_inputSession != fn_session($_str_nameSession) || $_str_inputCookie != fn_session($_str_nameCookie)) {
+                    return false;
                  } else {
-                    $_str_return = true;
+                    return true;
                  }
             } else {
-                $_str_return = true;
+                return true;
             }
         break;
 
@@ -126,7 +126,7 @@ function fn_token($token_action = "mk") {
     return array(
         "token"         => $_str_return,
         "name_session"  => $_str_nameSession,
-        "name_sookie"   => $_str_nameCookie,
+        "name_cookie"   => $_str_nameCookie,
     );
 }
 
@@ -286,12 +286,12 @@ function fn_page($_num_count, $num_per = BG_DEFAULT_PERPAGE, $method = "get") {
  * @return void
  */
 function fn_jsonEncode($arr_json = "", $method = "") {
-    if ($arr_json) {
+    if (fn_isEmpty($arr_json)) {
+        $str_json = "";
+    } else {
         $arr_json = fn_eachArray($arr_json, $method);
         //print_r($method);
         $str_json = json_encode($arr_json); //json编码
-    } else {
-        $str_json = "";
     }
     return $str_json;
 }
@@ -327,11 +327,11 @@ function fn_jsonDecode($str_json = "", $method = "") {
  */
 function fn_eachArray($arr, $method = "encode") {
     $_is_magic = get_magic_quotes_gpc();
-    if (is_array($arr)) {
+    if (is_array($arr) && !fn_isEmpty($arr)) {
         foreach ($arr as $_key=>$_value) {
-            if (is_array($_value)) {
+            if (is_array($_value) && !fn_isEmpty($_value)) {
                 $arr[$_key] = fn_eachArray($_value, $method);
-            } else {
+            } else if (!fn_isEmpty($_value)) {
                 switch ($method) {
                     case "encode":
                         if (!$_is_magic) {
@@ -360,30 +360,45 @@ function fn_eachArray($arr, $method = "encode") {
                         $arr[$_key] = $_str;
                     break;
                 }
+            } else {
+                $arr[$_key] = "";
             }
         }
     } else {
         $arr = array();
     }
+
     return $arr;
 }
 
 
 /**
- * fn_baigoEncrypt function.
+ * fn_baigoCrypt function.
  *
  * @access public
  * @param mixed $str
- * @param mixed $rand
+ * @param mixed $salt
  * @return void
  */
-function fn_baigoEncrypt($str, $rand, $is_md5 = false) {
-    if ($is_md5) {
-        $_str = $str;
-    } else {
-        $_str = md5($str);
+function fn_baigoCrypt($str, $salt) {
+    $_obj_dir   = new CLASS_DIR();
+
+    $_str_rand  = fn_rand();
+
+    if (!file_exists(BG_PATH_CACHE . "sys/crypt_key_pub.php")) {
+        $_str_key = "<?php return \"" . $_str_rand . "\"; ?>";
+        $_obj_dir->put_file(BG_PATH_CACHE . "sys/crypt_key_pub.php", $_str_key);
     }
-    $_str_return = md5($_str . $rand);
+
+    $key_pub = require(BG_PATH_CACHE . "sys/crypt_key_pub.php");
+
+    $_str           = md5($str);
+    $_salt          = md5($salt); //用 md5 加密盐
+    $_key_pub       = md5($key_pub); //用 md5 加密公钥
+    $_str_return    = sha1($_key_pub . $_salt . sha1(md5($_str)) . $_salt . $_key_pub); //初步加密
+    $_str_return    = crypt($_str_return, $_salt); //php 内置加密
+    $_str_return    = md5($_str_return); //最终加密
+
     return $_str_return;
 }
 
@@ -428,40 +443,41 @@ function fn_regChk($str_chk, $str_reg, $str_wild = false) {
  * @return void
  */
 function fn_getAttach($_str_content) {
-    //print_r($_str_content);
+    //正则，匹配系统内置图片，排除外链
+    if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST) && defined("BG_UPLOAD_URL")) {
+        $_attachPre = BG_UPLOAD_URL . "/";
+    } else {
+        $_attachPre = BG_URL_ATTACH;
+    }
 
-    $_pattern_1        = "/<img.*?id=[\"|']?baigo_.*?[\"|']?\s.*?>/i";
-    $_pattern_2        = "/\sid=[\"|']?baigo_.*?[\"|']?\s/i";
-    $_str_contentTemp   = fn_htmlcode($_str_content, "decode");
-    $_str_contentTemp   = str_ireplace("\\", "", $_str_contentTemp);
-
-    //print_r($_pattern_1);
-    //print_r($_pattern_2);
-    //print_r($_str_contentTemp);
+    $_pattern_1         = "/<img.*?src=[\"|']?" . str_ireplace("/", "\/", $_attachPre) . ".*?[\"|']?\s.*?>/i"; //匹配系统内置图片
+    $_pattern_2         = "/\ssrc=[\"|']?.*?[\"|']?\s/i"; //匹配图片src
+    $_str_contentTemp   = fn_htmlcode($_str_content, "decode"); //html解码
+    $_str_contentTemp   = str_ireplace("\\", "", $_str_contentTemp); //替换反斜杠
 
     preg_match_all($_pattern_1, $_str_contentTemp, $_arr_match);
-
-    //print_r($_arr_match);
 
     $_num_attachId     = 0;
     $_arr_attachIds    = array();
 
-    if (isset($_arr_match[0])) {
-        foreach ($_arr_match[0] as $_key=>$_value) {
+    if (isset($_arr_match[0])) { //匹配成功
+        foreach ($_arr_match[0] as $_key=>$_value) { //遍历匹配结果
             preg_match($_pattern_2, $_value, $_match_2);
-            $_str_attach      = trim($_match_2[0]);
-            $_str_attach      = str_ireplace("id=", "", $_str_attach);
-            $_str_attach      = str_ireplace("baigo_", "", $_str_attach);
-            $_str_attach      = str_ireplace("\"", "", $_str_attach);
-            $_str_attach      = trim($_str_attach);
-            $_num_attachId    = str_ireplace("'", "", $_str_attach);
-            $_arr_attachIds[] = $_num_attachId;
+            $_str_attach    = trim($_match_2[0]);
+            $_str_attach    = str_ireplace("src=", "", $_str_attach); //剔除属性
+            $_str_attach    = str_ireplace("\"", "", $_str_attach);
+            $_str_attach    = str_ireplace("'", "", $_str_attach);
+            $_str_attach    = trim($_str_attach);
+
+            $_arr_attach    = explode("/", $_str_attach); //将路径转换成数组
+            $_str_name      = end($_arr_attach); //得到文件名
+            $_arr_name      = explode(".", $_str_name); //将文件名转换成数组
+
+            $_arr_attachIds[] = $_arr_name[0]; //得到文件id
         }
     }
 
-    //print_r($_arr_attachIds);
-
-    if (!$_arr_attachIds) {
+    if (fn_isEmpty($_arr_attachIds)) {
         $_arr_attachIds = array(0);
     }
 
@@ -510,10 +526,10 @@ function fn_post($key) {
  * @param string $value (default: "")
  * @return void
  */
-function fn_cookie($key, $method = "get", $value = "") {
+function fn_cookie($key, $method = "get", $value = "", $tm = 300) {
     switch ($method) {
         case "mk":
-            setcookie($key . "_" . BG_SITE_SSIN, $value);
+            setcookie($key . "_" . BG_SITE_SSIN, $value, time()+$tm);
         break;
 
         case "unset":
@@ -688,7 +704,6 @@ function fn_safe($str_string) {
     $_str_return = str_ireplace(":", "&#58;", $_str_return);
     $_str_return = str_ireplace("=", "&#61;", $_str_return);
     $_str_return = str_ireplace("?", "&#63;", $_str_return);
-    //$_str_return = str_ireplace("@", "&#64;", $_str_return);
     $_str_return = str_ireplace("[", "&#91;", $_str_return);
     $_str_return = str_ireplace("]", "&#93;", $_str_return);
     $_str_return = str_ireplace("^", "&#94;", $_str_return);
@@ -716,12 +731,10 @@ function fn_htmlcode($str_html, $method = "encode", $spec = false) {
                     $str_html = str_ireplace("|", ",", $str_html);
                 break;
                 case "url": //转换 加密 特殊字符
+                    $str_html = str_ireplace("&#58;", ":", $str_html);
                     $str_html = str_ireplace("&#45;", "-", $str_html);
                     $str_html = str_ireplace("&#61;", "=", $str_html);
                     $str_html = str_ireplace("&#63;", "?", $str_html);
-                break;
-                case "crypt": //转换 加密 特殊字符
-                    $str_html = str_ireplace("&#37;", "%", $str_html);
                 break;
                 case "base64": //转换 base64 特殊字符
                     $str_html = str_ireplace("&#61;", "=", $str_html);
@@ -746,15 +759,21 @@ function fn_strtotime($str_time) {
 }
 
 
-function fn_isEmpty($str_var) {
-    if (!isset($str_var)) {
+function fn_isEmpty($data) {
+    if (!isset($data)) {
     	return true;
     }
-	if ($str_var === null) {
+	if ($data === null) {
 		return true;
 	}
-	if (trim($str_var) === "") {
-		return true;
+	if (is_array($data) || is_object($data)) {
+    	if (empty($data)) {
+    		return true;
+    	}
+	} else {
+    	if (empty($data) || trim($data) === "") {
+    		return true;
+    	}
 	}
 
 	return false;
@@ -776,4 +795,12 @@ function fn_forward($str_forward, $method = "encode") {
             return urlencode(base64_encode($str_forward));
         break;
     }
+}
+
+
+function fn_numFormat($str_num, $fload = 0) {
+    if (!is_numeric($str_num)) {
+        $str_num = floatval($str_num);
+    }
+    return number_format($str_num, $fload);
 }

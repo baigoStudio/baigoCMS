@@ -4,7 +4,7 @@
 以下为系统文件，请勿修改
 -----------------------------------------------------------------*/
 
-$arr_mod = array("index", "cate", "article", "search", "tag", "spec", "alert");
+$arr_mod = array("index", "cate", "article", "search", "tag", "spec");
 
 if (isset($_GET["mod"])) {
     $mod = $_GET["mod"];
@@ -16,14 +16,14 @@ if (!in_array($mod, $arr_mod)) {
     exit("Access Denied");
 }
 
-$base = dirname(__FILE__) . "/";
+$base = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
-include_once($base . "bg_config/init.class.php");
+require($base . "bg_config/config.class.php");
 
-$obj_init = new CLASS_INIT();
+$obj_init = new CLASS_CONFIG();
 
 $obj_init->config_gen();
 
-include_once($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
+require($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
 
-include_once(BG_PATH_MODULE. "pub/ctl/" . $mod . ".php");
+require(BG_PATH_MODULE . "pub/ui/" . $mod . ".php");

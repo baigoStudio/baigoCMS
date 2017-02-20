@@ -9,162 +9,152 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_CLASS . "api.class.php"); //载入模板类
-include_once(BG_PATH_MODEL . "app.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "cate.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "custom.class.php");
-include_once(BG_PATH_MODEL . "articlePub.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "tag.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "thumb.class.php"); //载入后台用户类
-include_once(BG_PATH_MODEL . "attach.class.php"); //载入后台用户类
-//include_once(BG_PATH_MODEL . "articleCustom.class.php"); //载入后台用户类
-
 /*-------------文章类-------------*/
-class API_ARTICLE {
-
-    private $obj_api;
-    private $mdl_app;
-    private $mdl_cate;
-    private $mdl_articlePub;
-    private $mdl_tag;
-    private $mdl_attach;
-    private $mdl_thumb;
+class CONTROL_API_API_ARTICLE {
 
     function __construct() { //构造函数
         $this->obj_api          = new CLASS_API();
-        $this->obj_api->chk_install();
-        $this->mdl_app          = new MODEL_APP(); //设置管理组模型
+        //$this->obj_api->chk_install();
+
         $this->mdl_cate         = new MODEL_CATE(); //设置文章对象
         $this->mdl_custom       = new MODEL_CUSTOM();
+        $_arr_customRows        = $this->mdl_custom->mdl_cache();
+
         $this->mdl_articlePub   = new MODEL_ARTICLE_PUB(); //设置文章对象
-        $this->article_init();
+        $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
+
         $this->mdl_tag          = new MODEL_TAG();
         $this->mdl_thumb        = new MODEL_THUMB(); //设置上传信息对象
+
         $this->mdl_attach       = new MODEL_ATTACH(); //设置文章对象
+        $this->mdl_attach->thumbRows = $this->mdl_thumb->mdl_cache();
     }
 
 
-    function api_hits() {
+    function ctrl_hits() {
         $_num_articleId   = fn_getSafe(fn_get("article_id"), "int", 0);
 
         if ($_num_articleId < 1) {
             $_arr_return = array(
-                "alert" => "x120212",
+                "rcode" => "x120212",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         $_arr_articleRow = $this->mdl_articlePub->mdl_read($_num_articleId);
 
-        if ($_arr_articleRow["alert"] != "y120102") {
-            $this->obj_api->halt_re($_arr_articleRow);
+        if ($_arr_articleRow["rcode"] != "y120102") {
+            $this->obj_api->show_result($_arr_articleRow);
         }
 
         $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_arr_articleRow["article_cate_id"]);
-        if ($_arr_cateRow["alert"] != "y110102") {
-            $this->obj_api->halt_re($_arr_cateRow);
+        if ($_arr_cateRow["rcode"] != "y250102") {
+            $this->obj_api->show_result($_arr_cateRow);
         }
 
         if ($_arr_cateRow["cate_status"] != "show") {
             $_arr_return = array(
-                "alert" => "x110102",
+                "rcode" => "x250102",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         if (isset($_arr_cateRow["cate_type"]) && $_arr_cateRow["cate_type"] == "link" && isset($_arr_cateRow["cate_link"]) && !fn_isEmpty($_arr_cateRow["cate_link"])) {
             $_arr_return = array(
-                "alert" => "x110218",
+                "rcode" => "x250218",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         if (fn_isEmpty($_arr_articleRow["article_title"]) || $_arr_articleRow["article_status"] != "pub" || $_arr_articleRow["article_box"] != "normal" || $_arr_articleRow["article_time_pub"] > time() || ($_arr_articleRow["article_time_hide"] > 0 && $_arr_articleRow["article_time_hide"] < time())) {
             $_arr_return = array(
-                "alert" => "x120102",
+                "rcode" => "x120102",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         if (!fn_isEmpty($_arr_articleRow["article_link"])) {
             $_arr_return = array(
-                "alert"         => "x120213",
+                "rcode"         => "x120213",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         $this->mdl_articlePub->mdl_hits($_arr_articleRow["article_id"]);
 
         $_arr_return = array(
-            "alert" => "y120405",
+            "rcode" => "y120405",
         );
-        $this->obj_api->halt_re($_arr_return, true);
+        $this->obj_api->show_result($_arr_return, true);
     }
 
 
     /**
-     * api_list function.
+     * ctrl_list function.
      *
      * @access public
      * @return void
      */
-    function api_read() {
-        $this->app_check("get");
+    function ctrl_read() {
+        $_arr_appChk = $this->obj_api->app_chk();
+        if ($_arr_appChk["rcode"] != "ok") {
+            $this->obj_api->show_result($_arr_appChk);
+        }
 
         $_num_articleId   = fn_getSafe(fn_get("article_id"), "int", 0);
 
         if ($_num_articleId < 1) {
             $_arr_return = array(
-                "alert" => "x120212",
+                "rcode" => "x120212",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         $_arr_articleRow = $this->mdl_articlePub->mdl_read($_num_articleId);
 
-        if ($_arr_articleRow["alert"] != "y120102") {
-            $this->obj_api->halt_re($_arr_articleRow);
+        if ($_arr_articleRow["rcode"] != "y120102") {
+            $this->obj_api->show_result($_arr_articleRow);
         }
 
         unset($_arr_articleRow["urlRow"]);
 
         $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_arr_articleRow["article_cate_id"]);
-        if ($_arr_cateRow["alert"] != "y110102") {
-            $this->obj_api->halt_re($_arr_cateRow);
+        if ($_arr_cateRow["rcode"] != "y250102") {
+            $this->obj_api->show_result($_arr_cateRow);
         }
 
         if ($_arr_cateRow["cate_status"] != "show") {
             $_arr_return = array(
-                "alert" => "x110102",
+                "rcode" => "x250102",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         unset($_arr_cateRow["urlRow"]);
 
         if ($_arr_cateRow["cate_type"] == "link" && !fn_isEmpty($_arr_cateRow["cate_link"])) {
             $_arr_return = array(
-                "alert" => "x110218",
+                "rcode" => "x250218",
                 "cate_link" => $_arr_cateRow["cate_link"],
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         $_arr_articleRow["cateRow"] = $_arr_cateRow;
 
         if (fn_isEmpty($_arr_articleRow["article_title"]) || $_arr_articleRow["article_status"] != "pub" || $_arr_articleRow["article_box"] != "normal" || $_arr_articleRow["article_time_pub"] > time() || ($_arr_articleRow["article_time_hide"] > 0 && $_arr_articleRow["article_time_hide"] < time())) {
             $_arr_return = array(
-                "alert" => "x120102",
+                "rcode" => "x120102",
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         if (!fn_isEmpty($_arr_articleRow["article_link"])) {
             $_arr_return = array(
-                "alert"         => "x120213",
+                "rcode"         => "x120213",
                 "article_link"  => $_arr_articleRow["article_link"],
             );
-            $this->obj_api->halt_re($_arr_return);
+            $this->obj_api->show_result($_arr_return);
         }
 
         $_arr_searchTag = array(
@@ -176,10 +166,10 @@ class API_ARTICLE {
         if ($_arr_articleRow["article_attach_id"] > 0) {
             $_arr_attachRow = $this->mdl_attach->mdl_url($_arr_articleRow["article_attach_id"]);
 
-            if ($_arr_attachRow["alert"] == "y070102") {
+            if ($_arr_attachRow["rcode"] == "y070102") {
                 if ($_arr_attachRow["attach_box"] != "normal") {
                     $_arr_attachRow = array(
-                        "alert" => "x070102",
+                        "rcode" => "x070102",
                     );
                 }
             }
@@ -189,13 +179,18 @@ class API_ARTICLE {
 
         $this->mdl_articlePub->mdl_hits($_arr_articleRow["article_id"]);
 
-        $this->obj_api->halt_re($_arr_articleRow, true);
+        //print_r($_arr_articleRow);
+
+        $this->obj_api->show_result($_arr_articleRow, true);
     }
 
 
 
-    function api_list() {
-        $this->app_check("get");
+    function ctrl_list() {
+        $_arr_appChk = $this->obj_api->app_chk();
+        if ($_arr_appChk["rcode"] != "ok") {
+            $this->obj_api->show_result($_arr_appChk);
+        }
 
         $_str_markIds   = fn_getSafe(fn_get("mark_ids"), "txt", "");
         $_str_tagIds    = fn_getSafe(fn_get("tag_ids"), "txt", "");
@@ -237,7 +232,7 @@ class API_ARTICLE {
         }
 
         $_arr_customSearch = array();
-        if ($_arr_customs) {
+        if (!fn_isEmpty($_arr_customs)) {
             foreach ($_arr_customs as $_key=>$_value) {
                 if (stristr($_value, "=")) {
                     $_arr_customRow = explode("=", $_value);
@@ -252,7 +247,7 @@ class API_ARTICLE {
         $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_num_cateId);
 
         if ($_num_cateId > 0) {
-            if ($_arr_cateRow["alert"] == "y110102" && $_arr_cateRow["cate_status"] == "show") {
+            if ($_arr_cateRow["rcode"] == "y250102" && $_arr_cateRow["cate_status"] == "show") {
                 $_arr_cateIds = $_arr_cateRow["cate_ids"];
             }
         }
@@ -277,7 +272,7 @@ class API_ARTICLE {
 
             $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
 
-            if ($_arr_cateRow["alert"] == "y110102") {
+            if ($_arr_cateRow["rcode"] == "y250102") {
                 unset($_arr_cateRow["urlRow"]);
             }
             $_arr_searchTag = array(
@@ -288,10 +283,10 @@ class API_ARTICLE {
 
             if ($_value["article_attach_id"] > 0) {
                 $_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
-                if ($_arr_attachRow["alert"] == "y070102") {
+                if ($_arr_attachRow["rcode"] == "y070102") {
                     if ($_arr_attachRow["attach_box"] != "normal") {
                         $_arr_attachRow = array(
-                            "alert" => "x070102",
+                            "rcode" => "x070102",
                         );
                     }
                 }
@@ -307,42 +302,6 @@ class API_ARTICLE {
 
         //print_r($_arr_return);
 
-        $this->obj_api->halt_re($_arr_return, true);
-    }
-
-
-    /**
-     * app_check function.
-     *
-     * @access private
-     * @param mixed $num_appId
-     * @param string $str_method (default: "get")
-     * @return void
-     */
-    private function app_check($str_method = "get") {
-        $this->appGet = $this->obj_api->app_get($str_method);
-
-        if ($this->appGet["alert"] != "ok") {
-            $this->obj_api->halt_re($this->appGet);
-        }
-
-        $_arr_appRow = $this->mdl_app->mdl_read($this->appGet["app_id"]);
-        if ($_arr_appRow["alert"] != "y190102") {
-            $this->obj_api->halt_re($_arr_appRow);
-        }
-        $this->appAllow = $_arr_appRow["app_allow"];
-
-        $_arr_appChk = $this->obj_api->app_chk($this->appGet, $_arr_appRow);
-        if ($_arr_appChk["alert"] != "ok") {
-            $this->obj_api->halt_re($_arr_appChk);
-        }
-
-        $this->mdl_attach->thumbRows = $this->mdl_thumb->mdl_cache();;
-    }
-
-
-    private function article_init() {
-        $_arr_customRows    = $this->mdl_custom->mdl_cache();
-        $this->mdl_articlePub->custom_columns   = $_arr_customRows["article_customs"];
+        $this->obj_api->show_result($_arr_return, true);
     }
 }

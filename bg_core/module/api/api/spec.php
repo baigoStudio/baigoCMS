@@ -9,26 +9,26 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "init.func.php");
+require(BG_PATH_INC . "common.inc.php");
 $arr_set = array(
     "base"          => true,
-    "header"        => "Content-type: application/json; charset=utf-8",
     "db"            => true,
-    "type"          => "ajax",
+    "dsp_type"      => "result",
 );
+fn_chkPHP($arr_set);
+
+require(BG_PATH_FUNC . "init.func.php");
 fn_init($arr_set);
 
-include_once(BG_PATH_CONTROL . "api/api/spec.class.php"); //载入商家控制器
+$ctrl_spec = new CONTROL_API_API_SPEC();
 
-$api_spec = new API_SPEC();
-
-switch ($GLOBALS["act_get"]) {
+switch ($GLOBALS["act"]) {
     case "read":
     case "get":
-        $api_spec->api_read();
+        $ctrl_spec->ctrl_read();
     break;
 
     default:
-        $api_spec->api_list();
+        $ctrl_spec->ctrl_list();
     break;
 }

@@ -9,10 +9,9 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------上传类-------------*/
+/*-------------缩略图模型-------------*/
 class MODEL_THUMB {
 
-    private $obj_db;
     public $thumbTypes = array();
 
     function __construct() { //构造函数
@@ -36,13 +35,13 @@ class MODEL_THUMB {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "thumb", $_arr_thumbCreat, "thumb_id", "缩略图");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y090105"; //更新成功
+            $_str_rcode = "y090105"; //更新成功
         } else {
-            $_str_alert = "x090105"; //更新成功
+            $_str_rcode = "x090105"; //更新成功
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -50,55 +49,59 @@ class MODEL_THUMB {
     function mdl_column() {
         $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "thumb");
 
-        foreach ($_arr_colRows as $_key=>$_value) {
-            $_arr_col[] = $_value["Field"];
+        $_arr_col = array();
+
+        if (!fn_isEmpty($_arr_colRows)) {
+            foreach ($_arr_colRows as $_key=>$_value) {
+                $_arr_col[] = $_value["Field"];
+            }
         }
 
         return $_arr_col;
     }
 
 
-    function mdl_alert_table() {
+    function mdl_alter_table() {
         foreach ($this->thumbTypes as $_key=>$_value) {
             $_arr_types[] = $_key;
         }
         $_str_types = implode("','", $_arr_types);
 
         $_arr_col     = $this->mdl_column();
-        $_arr_alert   = array();
+        $_arr_alter   = array();
 
         if (in_array("thumb_id", $_arr_col)) {
-            $_arr_alert["thumb_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "thumb_id");
+            $_arr_alter["thumb_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "thumb_id");
         }
 
         if (in_array("thumb_width", $_arr_col)) {
-            $_arr_alert["thumb_width"] = array("CHANGE", "smallint NOT NULL COMMENT '宽度'", "thumb_width");
+            $_arr_alter["thumb_width"] = array("CHANGE", "smallint NOT NULL COMMENT '宽度'", "thumb_width");
         }
 
         if (in_array("thumb_height", $_arr_col)) {
-            $_arr_alert["thumb_height"] = array("CHANGE", "smallint NOT NULL COMMENT '高度'", "thumb_height");
+            $_arr_alter["thumb_height"] = array("CHANGE", "smallint NOT NULL COMMENT '高度'", "thumb_height");
         }
 
         if (in_array("thumb_type", $_arr_col)) {
-            $_arr_alert["thumb_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "thumb_type");
+            $_arr_alter["thumb_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "thumb_type");
         }
 
-        $_str_alert = "y090111";
+        $_str_rcode = "y090111";
 
-        if ($_arr_alert) {
-            $_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "thumb", $_arr_alert);
+        if (!fn_isEmpty($_arr_alter)) {
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "thumb", $_arr_alter);
 
-            if ($_reselt) {
-                $_str_alert = "y090106";
+            if (!fn_isEmpty($_reselt)) {
+                $_str_rcode = "y090106";
                 $_arr_thumbData = array(
                     "thumb_type" => $_arr_types[0],
                 );
-                $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData, "LENGTH(thumb_type) < 1"); //更新数据
+                $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData, "LENGTH(`thumb_type`) < 1"); //更新数据
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -110,41 +113,41 @@ class MODEL_THUMB {
 
     返回多维数组
         num_thumbId ID
-        str_alert 提示
+        str_rcode 提示
     */
     function mdl_submit() {
         $_arr_thumbData = array(
-            "thumb_width"    => $this->thumbSubmit["thumb_width"],
-            "thumb_height"   => $this->thumbSubmit["thumb_height"],
-            "thumb_type"     => $this->thumbSubmit["thumb_type"],
+            "thumb_width"    => $this->thumbInput["thumb_width"],
+            "thumb_height"   => $this->thumbInput["thumb_height"],
+            "thumb_type"     => $this->thumbInput["thumb_type"],
         );
 
-        if ($this->thumbSubmit["thumb_id"] < 1) {
+        if ($this->thumbInput["thumb_id"] < 1) {
             $_num_thumbId = $this->obj_db->insert(BG_DB_TABLE . "thumb", $_arr_thumbData);
 
             if ($_num_thumbId > 0) { //数据库插入是否成功
-                $_str_alert = "y090101";
+                $_str_rcode = "y090101";
             } else {
                 return array(
-                    "alert" => "x090101",
+                    "rcode" => "x090101",
                 );
             }
         } else {
-            $_num_thumbId    = $this->thumbSubmit["thumb_id"];
-            $_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData,"thumb_id=" . $_num_thumbId);
+            $_num_thumbId    = $this->thumbInput["thumb_id"];
+            $_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "thumb", $_arr_thumbData, "`thumb_id`=" . $_num_thumbId);
 
             if ($_num_mysql > 0) { //数据库插入是否成功
-                $_str_alert = "y090103";
+                $_str_rcode = "y090103";
             } else {
                 return array(
-                    "alert" => "x090103",
+                    "rcode" => "x090103",
                 );
             }
         }
 
         return array(
             "thumb_id"   => $_num_thumbId,
-            "alert"  => $_str_alert,
+            "rcode"  => $_str_rcode,
         );
     }
 
@@ -157,7 +160,7 @@ class MODEL_THUMB {
             "thumb_type",
         );
 
-        $_str_sqlWhere    = "thumb_id=" . $num_thumbId;
+        $_str_sqlWhere    = "`thumb_id`=" . $num_thumbId;
 
         $_arr_thumbRows   = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
 
@@ -165,11 +168,11 @@ class MODEL_THUMB {
             $_arr_thumbRow    = $_arr_thumbRows[0];
         } else {
             return array(
-                "alert" => "x090102", //不存在记录
+                "rcode" => "x090102", //不存在记录
             );
         }
 
-        $_arr_thumbRow["alert"] = "y090102";
+        $_arr_thumbRow["rcode"] = "y090102";
 
         return $_arr_thumbRow;
     }
@@ -181,7 +184,7 @@ class MODEL_THUMB {
                 "thumb_width"   => 100,
                 "thumb_height"  => 100,
                 "thumb_type"    => "cut",
-                "alert"         => "y090102", //存在记录
+                "rcode"         => "y090102", //存在记录
             );
         }
 
@@ -195,19 +198,19 @@ class MODEL_THUMB {
         $_str_sqlWhere = "1=1";
 
         if ($num_thumbWidth > 0) {
-            $_str_sqlWhere .= " AND thumb_width=" . $num_thumbWidth;
+            $_str_sqlWhere .= " AND `thumb_width`=" . $num_thumbWidth;
         }
 
         if ($num_thumbHeight > 0) {
-            $_str_sqlWhere .= " AND thumb_height=" . $num_thumbHeight;
+            $_str_sqlWhere .= " AND `thumb_height`=" . $num_thumbHeight;
         }
 
         if (!fn_isEmpty($str_thumbType)) {
-            $_str_sqlWhere .= " AND thumb_type='" . $str_thumbType . "'";
+            $_str_sqlWhere .= " AND `thumb_type`='" . $str_thumbType . "'";
         }
 
         if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND thumb_id<>" . $num_notId;
+            $_str_sqlWhere .= " AND `thumb_id`<>" . $num_notId;
         }
 
         $_arr_thumbRows = $this->obj_db->select(BG_DB_TABLE . "thumb",  $_arr_thumbSelect, $_str_sqlWhere, "", "", 1, 0); //查询数据
@@ -216,11 +219,11 @@ class MODEL_THUMB {
             $_arr_thumbRow = $_arr_thumbRows[0];
         } else {
             return array(
-                "alert" => "x090102", //不存在记录
+                "rcode" => "x090102", //不存在记录
             );
         }
 
-        $_arr_thumbRow["alert"] = "y090102";
+        $_arr_thumbRow["rcode"] = "y090102";
 
         return $_arr_thumbRow;
     }
@@ -282,13 +285,13 @@ class MODEL_THUMB {
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y090104";
+            $_str_rcode = "y090104";
         } else {
-            $_str_alert = "x090104";
+            $_str_rcode = "x090104";
         }
 
         return array(
-            "alert" => $_str_alert
+            "rcode" => $_str_rcode
         );
     }
 
@@ -312,7 +315,7 @@ class MODEL_THUMB {
             $_num_size = $this->obj_dir->put_file(BG_PATH_CACHE . "sys/thumb_list.php", $_str_outPut);
         }
 
-        $_arr_cacheReturn = include(BG_PATH_CACHE . "sys/thumb_list.php");
+        $_arr_cacheReturn = require(BG_PATH_CACHE . "sys/thumb_list.php");
 
         return $_arr_cacheReturn;
     }
@@ -321,15 +324,15 @@ class MODEL_THUMB {
     function input_submit() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
-        $this->thumbSubmit["thumb_id"] = fn_getSafe(fn_post("thumb_id"), "int", 0);
+        $this->thumbInput["thumb_id"] = fn_getSafe(fn_post("thumb_id"), "int", 0);
 
-        if ($this->thumbSubmit["thumb_id"] > 0) {
-            $_arr_thumbRow = $this->mdl_read($this->thumbSubmit["thumb_id"]);
-            if ($_arr_thumbRow["alert"] != "y090102") {
+        if ($this->thumbInput["thumb_id"] > 0) {
+            $_arr_thumbRow = $this->mdl_read($this->thumbInput["thumb_id"]);
+            if ($_arr_thumbRow["rcode"] != "y090102") {
                 return $_arr_thumbRow;
             }
         }
@@ -338,18 +341,18 @@ class MODEL_THUMB {
         switch ($_arr_thumbWidth["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x090201",
+                    "rcode" => "x090201",
                 );
             break;
 
             case "format_err":
                 return array(
-                    "alert" => "x090202",
+                    "rcode" => "x090202",
                 );
             break;
 
             case "ok":
-                $this->thumbSubmit["thumb_width"] = $_arr_thumbWidth["str"];
+                $this->thumbInput["thumb_width"] = $_arr_thumbWidth["str"];
             break;
 
         }
@@ -358,18 +361,18 @@ class MODEL_THUMB {
         switch ($_arr_thumbHeight["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x090203",
+                    "rcode" => "x090203",
                 );
             break;
 
             case "format_err":
                 return array(
-                    "alert" => "x090204",
+                    "rcode" => "x090204",
                 );
             break;
 
             case "ok":
-                $this->thumbSubmit["thumb_height"] = $_arr_thumbHeight["str"];
+                $this->thumbInput["thumb_height"] = $_arr_thumbHeight["str"];
             break;
 
         }
@@ -378,25 +381,25 @@ class MODEL_THUMB {
         switch ($_arr_thumbType["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x090205",
+                    "rcode" => "x090205",
                 );
             break;
 
             case "ok":
-                $this->thumbSubmit["thumb_type"] = $_arr_thumbType["str"];
+                $this->thumbInput["thumb_type"] = $_arr_thumbType["str"];
             break;
 
         }
 
-        $_arr_thumbRow = $this->mdl_check($this->thumbSubmit["thumb_width"], $this->thumbSubmit["thumb_height"], $this->thumbSubmit["thumb_type"], $this->thumbSubmit["thumb_id"]);
-        if ($_arr_thumbRow["alert"] == "y090102") {
+        $_arr_thumbRow = $this->mdl_check($this->thumbInput["thumb_width"], $this->thumbInput["thumb_height"], $this->thumbInput["thumb_type"], $this->thumbInput["thumb_id"]);
+        if ($_arr_thumbRow["rcode"] == "y090102") {
             return array(
-                "alert" => "x090206",
+                "rcode" => "x090206",
             );
         }
 
-        $this->thumbSubmit["alert"] = "ok";
-        return $this->thumbSubmit;
+        $this->thumbInput["rcode"] = "ok";
+        return $this->thumbInput;
     }
 
 
@@ -409,24 +412,24 @@ class MODEL_THUMB {
     function input_ids() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
         $_arr_thumbIds = fn_post("thumb_ids");
 
-        if ($_arr_thumbIds) {
+        if (fn_isEmpty($_arr_thumbIds)) {
+            $_str_rcode = "x030202";
+        } else {
             foreach ($_arr_thumbIds as $_key=>$_value) {
                 $_arr_thumbIds[$_key] = fn_getSafe($_value, "int", 0);
             }
-            $_str_alert = "ok";
-        } else {
-            $_str_alert = "x030202";
+            $_str_rcode = "ok";
         }
 
         $this->thumbIds = array(
-            "alert"     => $_str_alert,
-            "thumb_ids" => $_arr_thumbIds
+            "rcode"     => $_str_rcode,
+            "thumb_ids" => array_unique($_arr_thumbIds),
         );
 
         return $this->thumbIds;

@@ -8,18 +8,20 @@ return array(
         "install" => array(
             "title"  => "安装 / 升级",
             "sub"    => array(
-                "install"   => "安装",
+                "setup"     => "安装",
                 "upgrade"   => "升级",
+                "manual"    => "手动安装 / 升级",
                 "deploy"    => "高级部署",
             ),
         ),
-        "admin" => array(
+        "console" => array(
             "title" => "管理后台"
         ),
         "doc" => array(
             "title"  => "开发文档",
             "sub"    => array(
-                "tpl"   => "模板文档",
+                "php"   => "PHP 模板文档",
+                "tpl"   => "Smarty 模板文档",
                 "api"   => "API 接口文档",
             ),
         ),

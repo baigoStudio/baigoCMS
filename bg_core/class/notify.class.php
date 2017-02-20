@@ -13,6 +13,10 @@ if (!defined("IN_BAIGO")) {
 /*-------------NOTIFY 接口类-------------*/
 class CLASS_NOTIFY {
 
+    function __construct() { //构造函数
+        $this->obj_dir = new CLASS_DIR();
+    }
+
     /** 验证 app
      * app_chk function.
      *
@@ -27,13 +31,13 @@ class CLASS_NOTIFY {
         switch ($_arr_appId["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x220206",
+                    "rcode" => "x220206",
                 );
             break;
 
             case "format_err":
                 return array(
-                    "alert" => "x220207",
+                    "rcode" => "x220207",
                 );
             break;
 
@@ -44,27 +48,27 @@ class CLASS_NOTIFY {
 
         if ($_arr_appChk["app_id"] != BG_SSO_APPID) {
             return array(
-                "alert" => "x220208",
+                "rcode" => "x220208",
             );
         }
 
-        $_arr_appKey = validateStr($str_appKey, 1, 64, "str", "alphabetDigit");
+        $_arr_appKey = validateStr($str_appKey, 1, 32, "str", "alphabetDigit");
         switch ($_arr_appKey["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x220209",
+                    "rcode" => "x220209",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x220210",
+                    "rcode" => "x220210",
                 );
             break;
 
             case "format_err":
                 return array(
-                    "alert" => "x220211",
+                    "rcode" => "x220211",
                 );
             break;
 
@@ -75,11 +79,11 @@ class CLASS_NOTIFY {
 
         if ($_arr_appChk["app_key"] != BG_SSO_APPKEY) {
             return array(
-                "alert" => "x220212",
+                "rcode" => "x220212",
             );
         }
 
-        $_arr_appChk["alert"] = "ok";
+        $_arr_appChk["rcode"] = "ok";
 
         return $_arr_appChk;
     }
@@ -96,19 +100,19 @@ class CLASS_NOTIFY {
 
         switch ($str_method) {
             case "post":
-                $_str_time                      = fn_post("time");
-                $_str_signature                 = fn_post("signature");
-                $_str_code                      = fn_post("code");
-                $this->jsonp_callback           = fn_getSafe(fn_post("callback"), "txt", "callback");
-                $_arr_notifyInput["act_post"]   = fn_getSafe(fn_post("act_post"), "txt", "");
+                $_str_time                  = fn_post("time");
+                $_str_signature             = fn_post("signature");
+                $_str_code                  = fn_post("code");
+                $this->jsonp_callback       = fn_getSafe(fn_post("c"), "txt", "f");
+                $_arr_notifyInput["act"]    = fn_getSafe($GLOBALS["act"], "txt", "");
             break;
 
             default:
-                $_str_time                      = fn_get("time");
-                $_str_signature                 = fn_get("signature");
-                $_str_code                      = fn_get("code");
-                $this->jsonp_callback           = fn_getSafe(fn_get("callback"), "txt", "callback");
-                $_arr_notifyInput["act_get"]    = fn_getSafe(fn_get("act_get"), "txt", "");
+                $_str_time                  = fn_get("time");
+                $_str_signature             = fn_get("signature");
+                $_str_code                  = fn_get("code");
+                $this->jsonp_callback       = fn_getSafe(fn_get("c"), "txt", "f");
+                $_arr_notifyInput["act"]    = fn_getSafe($GLOBALS["act"], "txt", "");
             break;
         }
 
@@ -116,7 +120,7 @@ class CLASS_NOTIFY {
         switch ($_arr_time["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x220201",
+                    "rcode" => "x220201",
                 );
             break;
 
@@ -129,7 +133,7 @@ class CLASS_NOTIFY {
         switch ($_arr_signature["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x220203",
+                    "rcode" => "x220203",
                 );
             break;
 
@@ -142,7 +146,7 @@ class CLASS_NOTIFY {
         switch ($_arr_code["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x220204",
+                    "rcode" => "x220204",
                 );
             break;
 
@@ -151,46 +155,63 @@ class CLASS_NOTIFY {
             break;
         }
 
-        $_arr_notifyInput["alert"] = "ok";
+        $_arr_notifyInput["rcode"] = "ok";
 
         return $_arr_notifyInput;
     }
 
 
-    /** 返回结果
-     * halt_re function.
-     *
-     * @access public
-     * @param mixed $arr_re
-     * @return void
-     */
-    function halt_re($arr_re, $is_encode = false, $is_jsonp = false) {
+    function show_result($arr_tplData = array(), $is_encode = false, $type = "json") {
+        header("Content-type: application/json; charset=utf-8");
+        header("Cache-Control: no-cache, no-store, max-age=0, must-revalidate");
+
+        $_str_msg = "";
+
+        if (isset($arr_tplData["msg"]) && !fn_isEmpty($arr_tplData["msg"])) {
+            $_str_msg = $arr_tplData["msg"];
+        } else if (isset($arr_tplData["rcode"]) && !fn_isEmpty($arr_tplData["rcode"]) && isset($this->rcode[$arr_tplData["rcode"]])) {
+            $_str_msg = $this->rcode[$arr_tplData["rcode"]];
+        }
+
+        $arr_tplData["msg"] = $_str_msg;
+
         if ($is_encode) {
-            $_str_return = fn_jsonEncode($arr_re, "encode");
+            $_str_return = fn_jsonEncode($arr_tplData, "encode");
         } else {
-            $_str_return = json_encode($arr_re);
+            $_str_return = json_encode($arr_tplData);
         }
-        if ($is_jsonp) {
-            $_str_return = $this->jsonp_callback . "(" . $_str_return . ")";
+
+        switch($type) {
+            case "jsonp":
+                $_str_return = $this->jsonp_callback . "(" . $_str_return . ")";
+            break;
         }
+
         exit($_str_return); //输出错误信息
     }
 
 
     function chk_install() {
-        if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-            include_once(BG_PATH_CONFIG . "is_install.php");
-            if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-                $_arr_return = array(
-                    "alert" => "x030416"
-                );
-                $this->halt_re($_arr_return);
-            }
-        } else {
-            $_arr_return = array(
-                "alert" => "x030415"
+        $_str_rcode = "";
+
+        if (file_exists(BG_PATH_CONFIG . "installed.php")) { //如果新文件存在
+            require(BG_PATH_CONFIG . "installed.php"); //载入
+        } else if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //如果旧文件存在
+            $this->obj_dir->copy_file(BG_PATH_CONFIG . "is_install.php", BG_PATH_CONFIG . "installed.php"); //拷贝
+            require(BG_PATH_CONFIG . "installed.php"); //载入
+        } else { //如已安装文件不存在
+            $_str_rcode = "x030416";
+        }
+
+        if (defined("BG_INSTALL_PUB") && PRD_CMS_PUB > BG_INSTALL_PUB) { //如果小于当前版本
+            $_str_rcode = "x030415";
+        }
+
+        if (!fn_isEmpty($_str_rcode)) {
+            $_arr_tplData = array(
+                "rcode" => $_str_rcode,
             );
-            $this->halt_re($_arr_return);
+            $this->show_result($_arr_tplData);
         }
     }
 }

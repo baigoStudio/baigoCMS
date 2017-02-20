@@ -29,6 +29,11 @@ return array(
         "on"  => "开启",
     ),
 
+    "link" => array(
+        "enable"  => "启用", //生效
+        "disable" => "禁用", //禁用
+    ),
+
     "app" => array(
         "enable"  => "启用", //生效
         "disable" => "禁用", //禁用
@@ -55,6 +60,11 @@ return array(
     "group" => array(
         "enable"  => "启用", //发布
         "disable" => "禁用", //隐藏
+    ),
+
+    "pm" => array(
+        "wait"    => "未读",
+        "read"    => "已读",
     ),
 
     "call" => array(

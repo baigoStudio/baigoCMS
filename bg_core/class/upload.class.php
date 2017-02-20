@@ -78,18 +78,18 @@ class CLASS_UPLOAD {
 
             if (!$this->ftp_status_conn) {
                 return array(
-                    "alert" => "x030301",
+                    "rcode" => "x030301",
                 );
             }
             if (!$this->ftp_status_login) {
                 return array(
-                    "alert" => "x030302",
+                    "rcode" => "x030302",
                 );
             }
         }
 
         return array(
-            "alert" => "y070403",
+            "rcode" => "y070403",
         );
     }
 
@@ -106,32 +106,32 @@ class CLASS_UPLOAD {
         switch ($this->attachFiles["error"]) { //返回错误
             case 1:
                 return array(
-                    "alert" => "x100201",
+                    "rcode" => "x100201",
                 );
             break;
             case 2:
                 return array(
-                    "alert" => "x100202",
+                    "rcode" => "x100202",
                 );
             break;
             case 3:
                 return array(
-                    "alert" => "x100203",
+                    "rcode" => "x100203",
                 );
             break;
             case 4:
                 return array(
-                    "alert" => "x100204",
+                    "rcode" => "x100204",
                 );
             break;
             case 6:
                 return array(
-                    "alert" => "x100206",
+                    "rcode" => "x100206",
                 );
             break;
             case 7:
                 return array(
-                    "alert" => "x100207",
+                    "rcode" => "x100207",
                 );
             break;
         }
@@ -139,18 +139,22 @@ class CLASS_UPLOAD {
 
         $_obj_finfo                   = new finfo();
         $this->attachFiles["mime"]    = $_obj_finfo->file($this->attachFiles["tmp_name"], FILEINFO_MIME_TYPE);
-        $_str_ext                     = $this->mimeRows[$this->attachFiles["mime"]];
+        if (isset($this->mimeRows[$this->attachFiles["mime"]])) {
+            $_str_ext = $this->mimeRows[$this->attachFiles["mime"]];
+        } else {
+            $_str_ext = pathinfo($this->attachFiles["name"], PATHINFO_EXTENSION); //取得扩展名
+        }
         $this->attachFiles["ext"]     = strtolower($_str_ext); //扩展名
 
         if (!array_key_exists($this->attachFiles["mime"], $this->mimeRows)) { //是否允许
             return array(
-                "alert" => "x070202",
+                "rcode" => "x070202",
             );
         }
 
         if ($this->attachFiles["size"] > $this->uploadSize) { //是否超过尺寸
             return array(
-                "alert" => "x070203",
+                "rcode" => "x070203",
             );
         }
 
@@ -160,7 +164,7 @@ class CLASS_UPLOAD {
             "attach_mime"   => $this->attachFiles["mime"],
             "attach_name"   => $this->attachFiles["name"],
             "attach_size"   => $this->attachFiles["size"],
-            "alert"         => "y100201",
+            "rcode"         => "y100201",
         );
     }
 
@@ -188,7 +192,7 @@ class CLASS_UPLOAD {
 
         if (!$this->obj_dir->mk_dir($this->attachPath)) { //建目录失败
             return array(
-                "alert" => "x100101",
+                "rcode" => "x100101",
             );
         }
 
@@ -199,18 +203,18 @@ class CLASS_UPLOAD {
         if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //如果定义了FTP服务器，则上传到FTP
             if (!$this->ftp_status_conn) {
                 return array(
-                    "alert" => "x030301",
+                    "rcode" => "x030301",
                 );
             }
             if (!$this->ftp_status_login) {
                 return array(
-                    "alert" => "x030302",
+                    "rcode" => "x030302",
                 );
             }
             $_ftp_status = $this->obj_ftp->up_file($this->attachPath . $this->attachName . "." . $this->attachFiles["ext"], BG_UPLOAD_FTPPATH . $this->attachFtp . $this->attachName . "." . $this->attachFiles["ext"]);
             if (!$_ftp_status) {
                 return array(
-                    "alert" => "x030303",
+                    "rcode" => "x030303",
                 );
             }
         }
@@ -232,7 +236,7 @@ class CLASS_UPLOAD {
             "attach_path"    => $this->attachPath . $this->attachName . "." . $this->attachFiles["ext"],
             "attach_url"     => $_str_attachUrl . $this->attachName . "." . $this->attachFiles["ext"],
             "attach_type"    => $_str_attachType,
-            "alert"          => "y070401",
+            "rcode"          => "y070401",
         );
     }
 
@@ -256,12 +260,12 @@ class CLASS_UPLOAD {
             if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //是否定义FTP服务器
                 if (!$this->ftp_status_conn) {
                     return array(
-                        "alert" => "x030301",
+                        "rcode" => "x030301",
                     );
                 }
                 if (!$this->ftp_status_login) {
                     return array(
-                        "alert" => "x030302",
+                        "rcode" => "x030302",
                     );
                 }
                 $this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . "/" . $_str_filePath);
@@ -276,12 +280,12 @@ class CLASS_UPLOAD {
                     if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) {
                         if (!$this->ftp_status_conn) {
                             return array(
-                                "alert" => "x030301",
+                                "rcode" => "x030301",
                             );
                                     }
                         if (!$this->ftp_status_login) {
                             return array(
-                                "alert" => "x030302",
+                                "rcode" => "x030302",
                             );
                                     }
                         $this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . "/" . $_str_thumbPath);
@@ -341,6 +345,12 @@ class CLASS_UPLOAD {
             break;
         }
 
+        if (!$_src_image) {
+            return array(
+                "rcode" => "x070402",
+            );
+        }
+
         $_width_src       = imagesx($_src_image); //取得源图片的尺寸
         $_height_src      = imagesy($_src_image);
         $_arr_thumb_size  = $this->size_process($num_width, $num_height, $_width_src, $_height_src, $str_type); //计算缩略图尺寸
@@ -351,18 +361,18 @@ class CLASS_UPLOAD {
             if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //如果定义了FTP服务器，则上传
                 if (!$this->ftp_status_conn) {
                     return array(
-                        "alert" => "x030301",
+                        "rcode" => "x030301",
                     );
                 }
                 if (!$this->ftp_status_login) {
                     return array(
-                        "alert" => "x030302",
+                        "rcode" => "x030302",
                     );
                 }
                 $_ftp_status = $this->obj_ftp->up_file($_str_dstPath, BG_UPLOAD_FTPPATH . $this->attachFtp . $_str_dstFile);
                 if (!$_ftp_status) {
                     return array(
-                        "alert" => "x030303",
+                        "rcode" => "x030303",
                     );
                 }
                 /*if (file_exists($_str_dstPath)) {
@@ -371,7 +381,7 @@ class CLASS_UPLOAD {
             }
 
             return array(
-                "alert" => "x070402",
+                "rcode" => "x070402",
             );
         }
 
@@ -420,18 +430,18 @@ class CLASS_UPLOAD {
         if (BG_MODULE_FTP > 0 && defined("BG_UPLOAD_FTPHOST") && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //如果定义了FTP服务器，则上传
             if (!$this->ftp_status_conn) {
                 return array(
-                    "alert" => "x030301",
+                    "rcode" => "x030301",
                 );
             }
             if (!$this->ftp_status_login) {
                 return array(
-                    "alert" => "x030302",
+                    "rcode" => "x030302",
                 );
             }
             $_ftp_status = $this->obj_ftp->up_file($_str_dstPath, BG_UPLOAD_FTPPATH . $this->attachFtp . $_str_dstFile);
             if (!$_ftp_status) {
                 return array(
-                    "alert" => "x030303",
+                    "rcode" => "x030303",
                 );
             }
             /*if (file_exists($_str_dstPath)) {
@@ -440,7 +450,7 @@ class CLASS_UPLOAD {
         }
 
         return array(
-            "alert" => "y070402",
+            "rcode" => "y070402",
         );
     }
 

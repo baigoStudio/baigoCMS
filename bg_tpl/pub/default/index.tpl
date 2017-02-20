@@ -34,6 +34,8 @@
 
     {call_display call_id=7}
 
+    {*$callRows|@debug_print_var*}
+
     {foreach $callRows.7 as $key=>$value}
         <p>{$key}</p>
     {/foreach}

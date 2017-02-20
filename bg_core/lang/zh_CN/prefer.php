@@ -46,24 +46,19 @@ return array(
     "excerpt" => array(
         "title" => "文章摘要",
         "list"  => array(
+            "type" => array(
+                "label"      => "默认截取方式",
+                "type"       => "select",
+                "min"        => 1,
+                "default"    => 100,
+                "option" => array(),
+            ),
             "count" => array(
                 "label"      => "截取字数",
                 "type"       => "str",
                 "format"     => "int",
                 "min"        => 1,
                 "default"    => 100,
-            ),
-            "type" => array(
-                "label"      => "默认类型",
-                "type"       => "select",
-                "min"        => 1,
-                "default"    => 100,
-                "option" => array(
-                    "auto"      => "自动截取",
-                    "txt"       => "仅截取文本",
-                    "none"      => "不要摘要",
-                    "manual"    => "手工编辑",
-                ),
             ),
         ),
     ),

@@ -1,28 +1,39 @@
-<?php
-/*-----------------------------------------------------------------
-！！！！警告！！！！
-以下为系统文件，请勿修改
------------------------------------------------------------------*/
-$arr_mod = array("user", "pm", "app", "log", "verify", "admin", "opt", "profile", "logon", "alert"); //允许的模块
+<!DOCTYPE html>
+<html lang="zh">
+<head>
 
-if (isset($_GET["mod"])) {
-    $mod = $_GET["mod"];
-} else {
-    $mod = $arr_mod[0];
-}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>管理后台已变更</title>
+    <link href="../static/lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="../static/css/common.css" type="text/css" rel="stylesheet">
+    <meta http-equiv="refresh" content="3; url=../console">
 
-if (!in_array($mod, $arr_mod)) { //非法调用
-    exit("Access Denied");
-}
+</head>
+<body>
 
-$base = $_SERVER["DOCUMENT_ROOT"] . str_ireplace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"])); //初始路径
+    <div class="container">
+        <div class="bg-panel">
+            <div class="alert alert-info">
+                <h4>
+                    <span class="glyphicon glyphicon-warning-sign"></span>
+                    管理后台已变更！
+                </h4>
+                <p>The console has been moved!</p>
 
-include_once($base . "config/init.class.php"); //载入初始化类
+                <hr>
 
-$obj_init = new CLASS_INIT(); //配置初始化
+                <p>管理后台已变更为 <code>./console</code> 3 秒后将自动带您前往，或点击链接立刻前往。</p>
 
-$obj_init->config_gen(); //检查并生成配置文件
+                <div>&nbsp;</div>
 
-include_once($obj_init->str_pathRoot . "config/config.inc.php"); //载入配置
+                <div class="form-group">
+                    <a class="btn btn-primary" href="../console">立刻前往新后台</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-include_once(BG_PATH_MODULE . "admin/ctl/" . $mod . ".php"); //调用模块
+</body>
+</html>

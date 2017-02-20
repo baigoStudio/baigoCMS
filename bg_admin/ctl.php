@@ -1,28 +1,39 @@
-<?php
-/*-----------------------------------------------------------------
-！！！！警告！！！！
-以下为系统文件，请勿修改
------------------------------------------------------------------*/
-$arr_mod = array("article", "tag", "mark", "spec", "cate", "attach", "mime", "thumb", "call", "user", "admin", "group", "opt", "app", "custom", "alert", "profile", "logon", "seccode", "help");
+<!DOCTYPE html>
+<html lang="zh">
+<head>
 
-if (isset($_GET["mod"])) {
-    $mod = $_GET["mod"];
-} else {
-    $mod = $arr_mod[0];
-}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>管理后台已变更</title>
+    <link href="../bg_static/lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="../bg_static/css/common.css" type="text/css" rel="stylesheet">
+    <meta http-equiv="refresh" content="3; url=../bg_console">
 
-if (!in_array($mod, $arr_mod)) {
-    exit("Access Denied");
-}
+</head>
+<body>
 
-$base = $_SERVER["DOCUMENT_ROOT"] . str_ireplace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
+    <div class="container">
+        <div class="bg-panel">
+            <div class="alert alert-info">
+                <h4>
+                    <span class="glyphicon glyphicon-warning-sign"></span>
+                    管理后台已变更！
+                </h4>
+                <p>The console has been moved!</p>
 
-include_once($base . "bg_config/init.class.php");
+                <hr>
 
-$obj_init = new CLASS_INIT();
+                <p>管理后台已变更为 <code>./bg_console</code> 3 秒后将自动带您前往，或点击链接立刻前往。</p>
 
-$obj_init->config_gen();
+                <div>&nbsp;</div>
 
-include_once($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
+                <div class="form-group">
+                    <a class="btn btn-primary" href="../bg_console">立刻前往新后台</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-include_once(BG_PATH_MODULE. "admin/ctl/" . $mod . ".php");
+</body>
+</html>

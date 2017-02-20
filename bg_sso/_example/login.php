@@ -3,10 +3,10 @@ define(BG_SSO_URL, "http://www.domain.com/api/api.php"); //SSO 地址
 define(BG_SSO_APPID, 1); //APP ID
 define(BG_SSO_APPKEY, ""); //APP KEY
 
-include_once("func.php");
-include_once("notify.class.php");
-include_once("sso.class.php");
-include_once("sync.class.php");
+require("func.php");
+require("notify.class.php");
+require("sso.class.php");
+require("sync.class.php");
 
 $obj_sso = new CLASS_SSO();
 

@@ -17,12 +17,12 @@ if (!in_array($mod, $arr_mod)) {
 
 $base = $_SERVER["DOCUMENT_ROOT"] . str_ireplace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
 
-include_once($base . "bg_config/init.class.php");
+require($base . "bg_config/config.class.php");
 
-$obj_init = new CLASS_INIT();
+$obj_init = new CLASS_CONFIG();
 
 $obj_init->config_gen();
 
-include_once($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
+require($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
 
-include_once(BG_PATH_MODULE . "api/api/" . $mod . ".php");
+require(BG_PATH_MODULE . "api/api/" . $mod . ".php");

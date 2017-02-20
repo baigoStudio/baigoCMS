@@ -34,7 +34,6 @@ return array(
         "title" => "TAG",
         "allow" => array(
             "read"  => "读取",
-            "list"  => "列表",
         ),
     ),
 
@@ -44,6 +43,38 @@ return array(
         "allow" => array(
             "read"  => "读取",
             "list"  => "列表",
+        ),
+    ),
+
+    /*------自定义字段------*/
+    "custom" => array(
+        "title" => "自定义字段",
+        "allow" => array(
+            "list"  => "列表",
+        ),
+    ),
+
+    /*------标记------*/
+    "mark" => array(
+        "title" => "标记",
+        "allow" => array(
+            "list"  => "列表",
+        ),
+    ),
+
+    /*------调用------*/
+    "call" => array(
+        "title" => "调用",
+        "allow" => array(
+            "read"  => "读取",
+        ),
+    ),
+
+    /*------附件------*/
+    "attach" => array(
+        "title" => "附件",
+        "allow" => array(
+            "read"  => "读取",
         ),
     ),
 );

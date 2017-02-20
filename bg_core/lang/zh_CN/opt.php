@@ -49,6 +49,20 @@ return array(
                 "min"        => 1,
                 "default"    => 10,
             ),
+            "BG_SITE_EXCERPT_TYPE" => array(
+                "label"      => "文章摘要默认截取方式",
+                "type"       => "select",
+                "min"        => 1,
+                "default"    => "auto",
+                "option" => array(),
+            ),
+            "BG_SITE_EXCERPT_COUNT" => array(
+                "label"      => "文章摘要默认截取字数",
+                "type"       => "str",
+                "format"     => "int",
+                "min"        => 1,
+                "default"    => 100,
+            ),
             "BG_SITE_DATE" => array(
                 "label"      => "日期格式",
                 "type"       => "select",
@@ -195,7 +209,7 @@ return array(
                 "option" => array(
                     "default"   => array(
                         "value"    => "默认",
-                        "note"     => "例：" . BG_SITE_URL . "/index.php?mod=article&act_get=show&article_id=123",
+                        "note"     => "例：" . BG_SITE_URL . "/index.php?mod=article&act=show&article_id=123",
                     ),
                     "pstatic"   => array(
                         "value"    => "伪静态",
@@ -309,7 +323,7 @@ return array(
                 "default"    => "",
             ),
             "BG_SSO_APPKEY" => array(
-                "label"      => "APP KEY",
+                "label"      => "APP KEY 通信密钥",
                 "type"       => "str",
                 "format"     => "text",
                 "min"        => 1,

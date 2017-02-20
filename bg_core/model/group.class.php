@@ -9,12 +9,11 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------用户类-------------*/
+/*-------------群组模型-------------*/
 class MODEL_GROUP {
 
-    public $obj_db;
     public $groupStatus = array();
-    public $groupTypes = array();
+    public $groupTypes  = array();
 
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
@@ -44,13 +43,13 @@ class MODEL_GROUP {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "group", $_arr_groupCreat, "group_id", "群组");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y040105"; //更新成功
+            $_str_rcode = "y040105"; //更新成功
         } else {
-            $_str_alert = "x040105"; //更新成功
+            $_str_rcode = "x040105"; //更新成功
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -58,15 +57,19 @@ class MODEL_GROUP {
     function mdl_column() {
         $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "group");
 
-        foreach ($_arr_colRows as $_key=>$_value) {
-            $_arr_col[] = $_value["Field"];
+        $_arr_col = array();
+
+        if (!fn_isEmpty($_arr_colRows)) {
+            foreach ($_arr_colRows as $_key=>$_value) {
+                $_arr_col[] = $_value["Field"];
+            }
         }
 
         return $_arr_col;
     }
 
 
-    function mdl_alert_table() {
+    function mdl_alter_table() {
         foreach ($this->groupStatus as $_key=>$_value) {
             $_arr_status[] = $_key;
         }
@@ -78,43 +81,43 @@ class MODEL_GROUP {
         $_str_types = implode("','", $_arr_types);
 
         $_arr_col     = $this->mdl_column();
-        $_arr_alert   = array();
+        $_arr_alter   = array();
 
         if (in_array("group_status", $_arr_col)) {
-            $_arr_alert["group_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "group_status");
+            $_arr_alter["group_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "group_status");
         } else {
-            $_arr_alert["group_status"] = array("ADD", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'");
+            $_arr_alter["group_status"] = array("ADD", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'");
         }
 
         if (in_array("group_id", $_arr_col)) {
-            $_arr_alert["group_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "group_id");
+            $_arr_alter["group_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "group_id");
         }
 
         if (in_array("group_type", $_arr_col)) {
-            $_arr_alert["group_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "group_type");
+            $_arr_alter["group_type"] = array("CHANGE", "enum('" . $_str_types . "') NOT NULL COMMENT '类型'", "group_type");
         }
 
-        $_str_alert = "y040111";
+        $_str_rcode = "y040111";
 
-        if ($_arr_alert) {
-            $_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "group", $_arr_alert);
+        if (!fn_isEmpty($_arr_alter)) {
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "group", $_arr_alter);
 
-            if ($_reselt) {
-                $_str_alert = "y040106";
+            if (!fn_isEmpty($_reselt)) {
+                $_str_rcode = "y040106";
                 $_arr_groupData = array(
                     "group_status" => $_arr_status[0],
                 );
-                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_status) < 1"); //更新数据
+                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(`group_status`) < 1"); //更新数据
 
                 $_arr_groupData = array(
                     "group_type" => $_arr_types[0],
                 );
-                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(group_type) < 1"); //更新数据
+                $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "LENGTH(`group_type`) < 1"); //更新数据
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -133,39 +136,39 @@ class MODEL_GROUP {
     function mdl_submit() {
 
         $_arr_groupData = array(
-            "group_name"     => $this->groupSubmit["group_name"],
-            "group_type"     => $this->groupSubmit["group_type"],
-            "group_note"     => $this->groupSubmit["group_note"],
-            "group_allow"    => $this->groupSubmit["group_allow"],
-            "group_status"   => $this->groupSubmit["group_status"],
+            "group_name"     => $this->groupInput["group_name"],
+            "group_type"     => $this->groupInput["group_type"],
+            "group_note"     => $this->groupInput["group_note"],
+            "group_allow"    => $this->groupInput["group_allow"],
+            "group_status"   => $this->groupInput["group_status"],
         );
 
-        if ($this->groupSubmit["group_id"] < 1) { //插入
+        if ($this->groupInput["group_id"] < 1) { //插入
             $_num_groupId = $this->obj_db->insert(BG_DB_TABLE . "group", $_arr_groupData);
 
             if ($_num_groupId > 0) { //数据库插入是否成功
-                $_str_alert = "y040101";
+                $_str_rcode = "y040101";
             } else {
                 return array(
-                    "alert" => "x040101",
+                    "rcode" => "x040101",
                 );
             }
         } else {
-            $_num_groupId    = $this->groupSubmit["group_id"];
-            $_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "group_id=" . $_num_groupId);
+            $_num_groupId    = $this->groupInput["group_id"];
+            $_num_mysql      = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupData, "`group_id`=" . $_num_groupId);
 
             if ($_num_mysql > 0) { //数据库更新是否成功
-                $_str_alert = "y040103";
+                $_str_rcode = "y040103";
             } else {
                 return array(
-                    "alert" => "x040103",
+                    "rcode" => "x040103",
                 );
             }
         }
 
         return array(
             "group_id"  => $_num_groupId,
-            "alert"     => $_str_alert,
+            "rcode"     => $_str_rcode,
         );
 
     }
@@ -191,17 +194,14 @@ class MODEL_GROUP {
             "group_status",
         );
 
-        switch ($str_readBy) {
-            case "group_id":
-                $_str_sqlWhere = $str_readBy . "=" . $str_group;
-            break;
-            default:
-                $_str_sqlWhere = $str_readBy . "='" . $str_group . "'";
-            break;
+        if (is_numeric($str_group)) {
+            $_str_sqlWhere = "`" . $str_readBy . "`=" . $str_group;
+        } else {
+            $_str_sqlWhere = "`" . $str_readBy . "`='" . $str_group . "'";
         }
 
         if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND group_id<>" . $num_notId;
+            $_str_sqlWhere .= " AND `group_id`<>" . $num_notId;
         }
 
         $_arr_groupRows = $this->obj_db->select(BG_DB_TABLE . "group",  $_arr_groupSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
@@ -211,7 +211,7 @@ class MODEL_GROUP {
         } else {
             return array(
                 "group_allow"   => array(),
-                "alert"         => "x040102", //不存在记录
+                "rcode"         => "x040102", //不存在记录
             );
         }
 
@@ -221,7 +221,7 @@ class MODEL_GROUP {
             $_arr_groupRow["group_allow"] = fn_jsonDecode($_arr_groupRow["group_allow"], "no"); //json解码
         }
 
-        $_arr_groupRow["alert"]   = "y040102";
+        $_arr_groupRow["rcode"]   = "y040102";
 
         return $_arr_groupRow;
     }
@@ -235,17 +235,17 @@ class MODEL_GROUP {
             "group_status" => $str_status,
         );
 
-        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupUpdate, "group_id IN (" . $_str_groupId . ")"); //删除数据
+        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "group", $_arr_groupUpdate, "`group_id` IN (" . $_str_groupId . ")"); //删除数据
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y040103";
+            $_str_rcode = "y040103";
         } else {
-            $_str_alert = "x040103";
+            $_str_rcode = "x040103";
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         ); //成功
 
     }
@@ -315,13 +315,13 @@ class MODEL_GROUP {
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y040104";
+            $_str_rcode = "y040104";
         } else {
-            $_str_alert = "x040104";
+            $_str_rcode = "x040104";
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
 
     }
@@ -330,16 +330,16 @@ class MODEL_GROUP {
     function input_submit() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
-        $this->groupSubmit["group_id"] = fn_getSafe(fn_post("group_id"), "int", 0);
+        $this->groupInput["group_id"] = fn_getSafe(fn_post("group_id"), "int", 0);
 
-        if ($this->groupSubmit["group_id"]) {
-            $_arr_groupRow = $this->mdl_read($this->groupSubmit["group_id"]);
-            if ($_arr_groupRow["alert"] != "y040102") {
-                $this->obj_ajax->halt_alert($_arr_groupRow["alert"]);
+        if ($this->groupInput["group_id"] > 0) {
+            $_arr_groupRow = $this->mdl_read($this->groupInput["group_id"]);
+            if ($_arr_groupRow["rcode"] != "y040102") {
+                return $_arr_groupRow;
             }
         }
 
@@ -347,27 +347,27 @@ class MODEL_GROUP {
         switch ($_arr_groupName["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x040201",
+                    "rcode" => "x040201",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x040202",
+                    "rcode" => "x040202",
                 );
             break;
 
             case "ok":
-                $this->groupSubmit["group_name"] = $_arr_groupName["str"];
+                $this->groupInput["group_name"] = $_arr_groupName["str"];
             break;
 
         }
 
-        $_arr_groupRow = $this->mdl_read($this->groupSubmit["group_name"], "group_name", $this->groupSubmit["group_id"]);
+        $_arr_groupRow = $this->mdl_read($this->groupInput["group_name"], "group_name", $this->groupInput["group_id"]);
 
-        if ($_arr_groupRow["alert"] == "y040102") {
+        if ($_arr_groupRow["rcode"] == "y040102") {
             return array(
-                "alert" => "x040203",
+                "rcode" => "x040203",
             );
         }
 
@@ -375,12 +375,12 @@ class MODEL_GROUP {
         switch ($_arr_groupNote["status"]) {
             case "too_long":
                 return array(
-                    "alert" => "x040204",
+                    "rcode" => "x040204",
                 );
             break;
 
             case "ok":
-                $this->groupSubmit["group_note"] = $_arr_groupNote["str"];
+                $this->groupInput["group_note"] = $_arr_groupNote["str"];
             break;
         }
 
@@ -388,12 +388,12 @@ class MODEL_GROUP {
         switch ($_arr_groupType["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x040205",
+                    "rcode" => "x040205",
                 );
             break;
 
             case "ok":
-                $this->groupSubmit["group_type"] = $_arr_groupType["str"];
+                $this->groupInput["group_type"] = $_arr_groupType["str"];
             break;
         }
 
@@ -401,19 +401,19 @@ class MODEL_GROUP {
         switch ($_arr_groupStatus["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x040207",
+                    "rcode" => "x040207",
                 );
             break;
 
             case "ok":
-                $this->groupSubmit["group_status"] = $_arr_groupStatus["str"];
+                $this->groupInput["group_status"] = $_arr_groupStatus["str"];
             break;
         }
 
-        $this->groupSubmit["group_allow"] = fn_jsonEncode(fn_post("group_allow"), "no");
-        $this->groupSubmit["alert"]   = "ok";
+        $this->groupInput["group_allow"] = fn_jsonEncode(fn_post("group_allow"), "no");
+        $this->groupInput["rcode"]   = "ok";
 
-        return $this->groupSubmit;
+        return $this->groupInput;
     }
 
 
@@ -426,24 +426,24 @@ class MODEL_GROUP {
     function input_ids() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
         $_arr_groupIds = fn_post("group_ids");
 
-        if ($_arr_groupIds) {
+        if (fn_isEmpty($_arr_groupIds)) {
+            $_str_rcode = "x030202";
+        } else {
             foreach ($_arr_groupIds as $_key=>$_value) {
                 $_arr_groupIds[$_key] = fn_getSafe($_value, "int", 0);
             }
-            $_str_alert = "ok";
-        } else {
-            $_str_alert = "x030202";
+            $_str_rcode = "ok";
         }
 
         $this->groupIds = array(
-            "alert"   => $_str_alert,
-            "group_ids"   => $_arr_groupIds
+            "rcode"     => $_str_rcode,
+            "group_ids" => array_unique($_arr_groupIds),
         );
 
         return $this->groupIds;
@@ -454,15 +454,15 @@ class MODEL_GROUP {
         $_str_sqlWhere = "1=1";
 
         if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
-            $_str_sqlWhere .= " AND group_name LIKE '%" . $arr_search["key"] . "%' OR group_note LIKE '%" . $arr_search["key"] . "%'";
+            $_str_sqlWhere .= " AND `group_name` LIKE '%" . $arr_search["key"] . "%' OR `group_note` LIKE '%" . $arr_search["key"] . "%'";
         }
 
         if (isset($arr_search["type"]) && !fn_isEmpty($arr_search["type"])) {
-            $_str_sqlWhere .= " AND group_type='" . $arr_search["type"] . "'";
+            $_str_sqlWhere .= " AND `group_type`='" . $arr_search["type"] . "'";
         }
 
         if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
-            $_str_sqlWhere .= " AND group_status='" . $arr_search["status"] . "'";
+            $_str_sqlWhere .= " AND `group_status`='" . $arr_search["status"] . "'";
         }
 
         return $_str_sqlWhere;

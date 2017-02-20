@@ -9,15 +9,13 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "init.func.php"); //验证是否已登录
+require(BG_PATH_INC . "common.inc.php");
+require(BG_PATH_FUNC . "init.func.php"); //验证是否已登录
 $arr_set = array(
     "base"          => true,
-    "header"        => "Content-Type: text/html; charset=utf-8",
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_CONTROL . "help/help.class.php"); //载入文章类
+$ctrl_help = new CONTROL_HELP_HELP();
 
-$ctl_help = new CONTROL_HELP();
-
-$ctl_help->ctl_show();
+$ctrl_help->ctrl_show();

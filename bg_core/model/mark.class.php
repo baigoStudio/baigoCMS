@@ -9,10 +9,8 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-/*-------------用户类-------------*/
+/*-------------标记模型-------------*/
 class MODEL_MARK {
-
-    private $obj_db;
 
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
@@ -29,13 +27,13 @@ class MODEL_MARK {
         $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "mark", $_arr_markCreat, "mark_id", "标记");
 
         if ($_num_mysql > 0) {
-            $_str_alert = "y140105"; //更新成功
+            $_str_rcode = "y140105"; //更新成功
         } else {
-            $_str_alert = "x140105"; //更新成功
+            $_str_rcode = "x140105"; //更新成功
         }
 
         return array(
-            "alert" => $_str_alert, //更新成功
+            "rcode" => $_str_rcode, //更新成功
         );
     }
 
@@ -43,34 +41,38 @@ class MODEL_MARK {
     function mdl_column() {
         $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "mark");
 
-        foreach ($_arr_colRows as $_key=>$_value) {
-            $_arr_col[] = $_value["Field"];
+        $_arr_col = array();
+
+        if (!fn_isEmpty($_arr_colRows)) {
+            foreach ($_arr_colRows as $_key=>$_value) {
+                $_arr_col[] = $_value["Field"];
+            }
         }
 
         return $_arr_col;
     }
 
 
-    function mdl_alert_table() {
+    function mdl_alter_table() {
         $_arr_col     = $this->mdl_column();
-        $_arr_alert   = array();
+        $_arr_alter   = array();
 
         if (in_array("mark_id", $_arr_col)) {
-            $_arr_alert["mark_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mark_id");
+            $_arr_alter["mark_id"] = array("CHANGE", "smallint NOT NULL AUTO_INCREMENT COMMENT 'ID'", "mark_id");
         }
 
-        $_str_alert = "y140111";
+        $_str_rcode = "y140111";
 
-        if ($_arr_alert) {
-            $_reselt = $this->obj_db->alert_table(BG_DB_TABLE . "mark", $_arr_alert);
+        if (!fn_isEmpty($_arr_alter)) {
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "mark", $_arr_alter);
 
-            if ($_reselt) {
-                $_str_alert = "y140106";
+            if (!fn_isEmpty($_reselt)) {
+                $_str_rcode = "y140106";
             }
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         );
     }
 
@@ -88,37 +90,37 @@ class MODEL_MARK {
     function mdl_submit() {
 
         $_arr_markData = array(
-            "mark_name"   => $this->markSubmit["mark_name"],
+            "mark_name"   => $this->markInput["mark_name"],
         );
 
-        if ($this->markSubmit["mark_id"] < 1) {
+        if ($this->markInput["mark_id"] < 1) {
 
             $_num_markId = $this->obj_db->insert(BG_DB_TABLE . "mark", $_arr_markData);
 
             if ($_num_markId > 0) { //数据库插入是否成功
-                $_str_alert = "y140101";
+                $_str_rcode = "y140101";
             } else {
                 return array(
-                    "alert" => "x140101",
+                    "rcode" => "x140101",
                 );
             }
 
         } else {
-            $_num_markId = $this->markSubmit["mark_id"];
-            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "mark", $_arr_markData, "mark_id=" . $_num_markId);
+            $_num_markId = $this->markInput["mark_id"];
+            $_num_mysql  = $this->obj_db->update(BG_DB_TABLE . "mark", $_arr_markData, "`mark_id`=" . $_num_markId);
 
             if ($_num_mysql > 0) {
-                $_str_alert = "y140103";
+                $_str_rcode = "y140103";
             } else {
                 return array(
-                    "alert" => "x140103",
+                    "rcode" => "x140103",
                 );
             }
         }
 
         return array(
             "mark_id"   => $_num_markId,
-            "alert"     => $_str_alert,
+            "rcode"     => $_str_rcode,
         );
     }
 
@@ -139,17 +141,14 @@ class MODEL_MARK {
             "mark_name",
         );
 
-        switch ($str_readBy) {
-            case "mark_id":
-                $_str_sqlWhere = $str_readBy . "=" . $str_mark;
-            break;
-            default:
-                $_str_sqlWhere = $str_readBy . "='" . $str_mark . "'";
-            break;
+        if (is_numeric($str_mark)) {
+            $_str_sqlWhere = "`" . $str_readBy . "`=" . $str_mark;
+        } else {
+            $_str_sqlWhere = "`" . $str_readBy . "`='" . $str_mark . "'";
         }
 
         if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND mark_id<>" . $num_notId;
+            $_str_sqlWhere .= " AND `mark_id`<>" . $num_notId;
         }
 
         $_arr_markRows = $this->obj_db->select(BG_DB_TABLE . "mark",  $_arr_markSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
@@ -158,11 +157,11 @@ class MODEL_MARK {
             $_arr_markRow = $_arr_markRows[0];
         } else {
             return array(
-                "alert" => "x140102", //不存在记录
+                "rcode" => "x140102", //不存在记录
             );
         }
 
-        $_arr_markRow["alert"] = "y140102";
+        $_arr_markRow["rcode"] = "y140102";
 
         return $_arr_markRow;
     }
@@ -219,13 +218,13 @@ class MODEL_MARK {
 
         //如车影响行数小于0则返回错误
         if ($_num_mysql > 0) {
-            $_str_alert = "y140104";
+            $_str_rcode = "y140104";
         } else {
-            $_str_alert = "x140104";
+            $_str_rcode = "x140104";
         }
 
         return array(
-            "alert" => $_str_alert,
+            "rcode" => $_str_rcode,
         ); //成功
     }
 
@@ -233,15 +232,15 @@ class MODEL_MARK {
     function input_submit() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
-        $this->markSubmit["mark_id"] = fn_getSafe(fn_post("mark_id"), "int", 0);
+        $this->markInput["mark_id"] = fn_getSafe(fn_post("mark_id"), "int", 0);
 
-        if ($this->markSubmit["mark_id"] > 0) {
-            $_arr_markRow = $this->mdl_read($this->markSubmit["mark_id"]);
-            if ($_arr_markRow["alert"] != "y140102") {
+        if ($this->markInput["mark_id"] > 0) {
+            $_arr_markRow = $this->mdl_read($this->markInput["mark_id"]);
+            if ($_arr_markRow["rcode"] != "y140102") {
                 return $_arr_markRow;
             }
         }
@@ -250,31 +249,31 @@ class MODEL_MARK {
         switch ($_arr_markName["status"]) {
             case "too_short":
                 return array(
-                    "alert" => "x140201",
+                    "rcode" => "x140201",
                 );
             break;
 
             case "too_long":
                 return array(
-                    "alert" => "x140202",
+                    "rcode" => "x140202",
                 );
             break;
 
             case "ok":
-                $this->markSubmit["mark_name"] = $_arr_markName["str"];
+                $this->markInput["mark_name"] = $_arr_markName["str"];
             break;
 
         }
 
-        $_arr_markRow = $this->mdl_read($this->markSubmit["mark_name"], "mark_name", $this->markSubmit["mark_id"]);
-        if ($_arr_markRow["alert"] == "y140102") {
+        $_arr_markRow = $this->mdl_read($this->markInput["mark_name"], "mark_name", $this->markInput["mark_id"]);
+        if ($_arr_markRow["rcode"] == "y140102") {
             return array(
-                "alert" => "x140203",
+                "rcode" => "x140203",
             );
         }
 
-        $this->markSubmit["alert"] = "ok";
-        return $this->markSubmit;
+        $this->markInput["rcode"] = "ok";
+        return $this->markInput;
     }
 
 
@@ -287,24 +286,24 @@ class MODEL_MARK {
     function input_ids() {
         if (!fn_token("chk")) { //令牌
             return array(
-                "alert" => "x030206",
+                "rcode" => "x030206",
             );
         }
 
         $_arr_markIds = fn_post("mark_ids");
 
-        if ($_arr_markIds) {
+        if (fn_isEmpty($_arr_markIds)) {
+            $_str_rcode = "x030202";
+        } else {
             foreach ($_arr_markIds as $_key=>$_value) {
                 $_arr_markIds[$_key] = fn_getSafe($_value, "int", 0);
             }
-            $_str_alert = "ok";
-        } else {
-            $_str_alert = "x030202";
+            $_str_rcode = "ok";
         }
 
         $this->markIds = array(
-            "alert"     => $_str_alert,
-            "mark_ids"  => $_arr_markIds
+            "rcode"     => $_str_rcode,
+            "mark_ids"  => array_unique($_arr_markIds),
         );
 
         return $this->markIds;
@@ -315,7 +314,7 @@ class MODEL_MARK {
         $_str_sqlWhere = "1=1";
 
         if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
-            $_str_sqlWhere .= " AND mark_name LIKE '%" . $arr_search["key"] . "%'";
+            $_str_sqlWhere .= " AND `mark_name` LIKE '%" . $arr_search["key"] . "%'";
         }
 
         return $_str_sqlWhere;

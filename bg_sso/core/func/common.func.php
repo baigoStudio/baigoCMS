@@ -88,17 +88,17 @@ function fn_token($token_action = "mk") {
 
     switch ($token_action) {
         case "chk":
-            $_str_nameSession  = fn_getSafe(fn_post($_str_nameSession), "txt", "");
-            $_str_nameCookie   = fn_cookie($_str_nameCookie);
+            $_str_inputSession  = fn_getSafe(fn_post($_str_nameSession), "txt", "");
+            $_str_inputCookie   = fn_cookie($_str_nameCookie);
 
             if (BG_SWITCH_TOKEN == 1) {
-                 if ($_str_nameSession != fn_session($_str_nameSession) || $_str_nameCookie != fn_session($_str_nameCookie)) {
-                    $_str_return = false;
+                 if ($_str_inputSession != fn_session($_str_nameSession) || $_str_inputCookie != fn_session($_str_nameCookie)) {
+                    return false;
                  } else {
-                    $_str_return = true;
+                    return true;
                  }
             } else {
-                $_str_return = true;
+                return true;
             }
         break;
 
@@ -127,9 +127,10 @@ function fn_token($token_action = "mk") {
     return array(
         "token"         => $_str_return,
         "name_session"  => $_str_nameSession,
-        "name_sookie"   => $_str_nameCookie,
+        "name_cookie"   => $_str_nameCookie,
     );
 }
+
 
 /*============清除全部cookie============
 无返回
@@ -274,12 +275,12 @@ function fn_page($num_count, $num_per = BG_DEFAULT_PERPAGE) {
  * @return void
  */
 function fn_jsonEncode($arr_json = "", $method = "") {
-    if ($arr_json) {
+    if (fn_isEmpty($arr_json)) {
+        $str_json = "";
+    } else {
         $arr_json = fn_eachArray($arr_json, $method);
         //print_r($method);
         $str_json = json_encode($arr_json); //json编码
-    } else {
-        $str_json = "";
     }
 
     return $str_json;
@@ -317,11 +318,11 @@ function fn_jsonDecode($str_json = "", $method = "") {
  */
 function fn_eachArray($arr, $method = "encode") {
     $_is_magic = get_magic_quotes_gpc();
-    if (is_array($arr)) {
+    if (is_array($arr) && !fn_isEmpty($arr)) {
         foreach ($arr as $_key=>$_value) {
-            if (is_array($_value)) {
+            if (is_array($_value) && !fn_isEmpty($_value)) {
                 $arr[$_key] = fn_eachArray($_value, $method);
-            } else {
+            } else if (!fn_isEmpty($_value)) {
                 switch ($method) {
                     case "encode":
                         if (!$_is_magic) {
@@ -350,6 +351,8 @@ function fn_eachArray($arr, $method = "encode") {
                         $arr[$_key] = $_str;
                     break;
                 }
+            } else {
+                $arr[$_key] = "";
             }
         }
     } else {
@@ -363,38 +366,54 @@ function fn_eachArray($arr, $method = "encode") {
 
 
 /**
- * fn_baigoEncrypt function.
+ * fn_baigoCrypt function.
  *
  * @access public
  * @param mixed $str
- * @param mixed $rand
+ * @param mixed $salt
  * @param bool $is_md5 (default: false)
-
- * @param bool $is_upgrade (default: true)
- v1.2.1 升级密码加盐方式,
- 将原来“单纯的保存在数据库中的盐值”
- 升级为“数据库中的盐值 + 系统公钥”
- 此参数判断使用哪一种方式加盐
-
  * @return void
  */
-function fn_baigoEncrypt($str, $rand, $is_md5 = false, $is_upgrade = true) {
+function fn_baigoCrypt($str, $salt, $is_md5 = false, $crypt_type = 0) {
     $_obj_dir = new CLASS_DIR();
-    if (!file_exists(BG_PATH_CACHE . "sys/crypt_key_pub.txt")) {
-        $_obj_dir->put_file(BG_PATH_CACHE . "sys/crypt_key_pub.txt", fn_rand());
+
+    if (file_exists(BG_PATH_CACHE . "sys/crypt_key_pub.txt")) {
+        $_str_rand = file_get_contents(BG_PATH_CACHE . "sys/crypt_key_pub.txt");
+        $_obj_dir->del_file(BG_PATH_CACHE . "sys/crypt_key_pub.txt");
+    } else {
+        $_str_rand = fn_rand();
     }
 
-    $key_pub = file_get_contents(BG_PATH_CACHE . "sys/crypt_key_pub.txt");
+    if (!file_exists(BG_PATH_CACHE . "sys/crypt_key_pub.php")) {
+        $_str_key = "<?php return \"" . $_str_rand . "\"; ?>";
+        $_obj_dir->put_file(BG_PATH_CACHE . "sys/crypt_key_pub.php", $_str_key);
+    }
+
+    $key_pub = require(BG_PATH_CACHE . "sys/crypt_key_pub.php");
 
     if ($is_md5) {
         $_str = $str;
     } else {
         $_str = md5($str);
     }
-    if ($is_upgrade) {
-        $_str_return = md5($_str . $rand . $key_pub);
-    } else {
-        $_str_return = md5($_str . $rand);
+
+    $_salt      = md5($salt); //用 md5 加密盐
+    $_key_pub   = md5($key_pub); //用 md5 加密公钥
+
+    switch ($crypt_type) {
+        case 0:
+            $_str_return = md5($_str . $salt); //保留历史加密方式
+        break;
+
+        case 1:
+            $_str_return = md5($_str . $salt . $key_pub); //保留历史加密方式
+        break;
+
+        default:
+            $_str_return = sha1($_key_pub . $_salt . sha1(md5($_str)) . $_salt . $_key_pub); //初步加密
+            $_str_return = crypt($_str_return, $_salt); //php 内置加密
+            $_str_return = md5($_str_return); //最终加密
+        break;
     }
 
     return $_str_return;
@@ -472,10 +491,10 @@ function fn_post($key) {
  * @param mixed $key
  * @return void
  */
-function fn_cookie($key, $method = "get", $value = "") {
+function fn_cookie($key, $method = "get", $value = "", $tm = 300) {
     switch ($method) {
         case "mk":
-            setcookie($key . "_" . BG_SITE_SSIN, $value);
+            setcookie($key . "_" . BG_SITE_SSIN, $value, time()+$tm);
         break;
 
         case "unset":
@@ -669,6 +688,7 @@ function fn_htmlcode($str_html, $method = "encode", $spec = false) {
                     $str_html = str_ireplace("|", ",", $str_html);
                 break;
                 case "url": //转换 加密 特殊字符
+                    $str_html = str_ireplace("&#58;", ":", $str_html);
                     $str_html = str_ireplace("&#45;", "-", $str_html);
                     $str_html = str_ireplace("&#61;", "=", $str_html);
                     $str_html = str_ireplace("&#63;", "?", $str_html);
@@ -697,15 +717,22 @@ function fn_strtotime($str_time) {
     return $_tm_return;
 }
 
-function fn_isEmpty($string) {
-    if (!isset($string)) {
+
+function fn_isEmpty($data) {
+    if (!isset($data)) {
     	return true;
     }
-	if ($string === null) {
+	if ($data === null) {
 		return true;
 	}
-	if (trim($string) === "") {
-		return true;
+	if (is_array($data) || is_object($data)) {
+    	if (empty($data)) {
+    		return true;
+    	}
+	} else {
+    	if (empty($data) || trim($data) === "") {
+    		return true;
+    	}
 	}
 
 	return false;

@@ -136,7 +136,7 @@ class CLASS_FTP {
 
         //print_r($_arr_dir);
 
-        if ($_arr_dir) {
+        if (!fn_isEmpty($_arr_dir)) {
             foreach ($_arr_dir as $_key=>$_value) {
                 if (stristr($_value, ".")) {
                     $_arr_return[$_key]["type"] = "file";

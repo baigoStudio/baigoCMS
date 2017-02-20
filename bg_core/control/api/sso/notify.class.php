@@ -10,7 +10,7 @@ if (!defined("IN_BAIGO")) {
 }
 
 /*-------------文章类-------------*/
-class API_NOTIFY {
+class CONTROL_API_SSO_NOTIFY {
 
     /**
      * notify_list function.
@@ -18,7 +18,7 @@ class API_NOTIFY {
      * @access public
      * @return void
      */
-    function api_test() {
+    function ctrl_test() {
         $_str_echostr     = fn_get("echostr");
 
         echo $_str_echostr;

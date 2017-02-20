@@ -5,11 +5,11 @@
         {else}
             <div class="form-group">
                 <label class="control-label">{$value.custom_name}</label>
-                <p class="form-control-static">
+                <div class="form-control-static">
                     {if isset($tplData.articleRow.article_customs["custom_{$value.custom_id}"])}
                         {$tplData.articleRow.article_customs["custom_{$value.custom_id}"]}
                     {/if}
-                </p>
+                </div>
             </div>
         {/if}
 

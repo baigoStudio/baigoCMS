@@ -13,154 +13,108 @@ if (!defined("IN_BAIGO")) {
 /*-------------API 接口类-------------*/
 class CLASS_API {
 
+    function __construct() { //构造函数
+        $this->obj_base = $GLOBALS["obj_base"];
+        $this->config   = $this->obj_base->config;
+
+        $this->mdl_app  = new MODEL_APP(); //设置管理组模型
+
+        $this->rcode    = require(BG_PATH_LANG . $this->config["lang"] . "/rcode.php"); //载入返回代码
+
+        $this->obj_dir  = new CLASS_DIR();
+    }
+
     /** 验证 app
      * app_chk function.
      *
      * @access public
-     * @param mixed $arr_appGet
-     * @param mixed $arr_appRow
      * @return void
      */
-    function app_chk($arr_appGet, $arr_appRow) {
-        if ($arr_appGet["alert"] != "ok") {
-            return $arr_appRow;
+    function app_chk($str_method = "get") {
+        $this->appInput = $this->mdl_app->input_api($str_method);
+        if ($this->appInput["rcode"] != "ok") {
+            return $this->appInput;
         }
 
-        if ($arr_appRow["app_status"] != "enable") {
+        $this->appRow = $this->mdl_app->mdl_read($this->appInput["app_id"]);
+        if ($this->appRow["rcode"] != "y190102") {
+            return $this->appRow;
+        }
+
+        if ($this->appRow["app_status"] != "enable") {
             return array(
-                "alert" => "x190402",
+                "rcode" => "x190402",
             );
         }
 
-        $_str_ip = fn_getIp(false);
+        $_str_ip = fn_getIp();
 
-        if (!fn_isEmpty($arr_appRow["app_ip_allow"])) {
-            $_str_ipAllow = str_ireplace(PHP_EOL, "|", $arr_appRow["app_ip_allow"]);
+        if (!fn_isEmpty($this->appRow["app_ip_allow"])) {
+            $_str_ipAllow = str_ireplace(PHP_EOL, "|", $this->appRow["app_ip_allow"]);
             if (!fn_regChk($_str_ip, $_str_ipAllow, true)) {
                 return array(
-                    "alert" => "x190212",
+                    "rcode" => "x190212",
                 );
             }
-        } else if (!fn_isEmpty($arr_appRow["app_ip_bad"])) {
-            $_str_ipBad = str_ireplace(PHP_EOL, "|", $arr_appRow["app_ip_bad"]);
+        } else if (!fn_isEmpty($this->appRow["app_ip_bad"])) {
+            $_str_ipBad = str_ireplace(PHP_EOL, "|", $this->appRow["app_ip_bad"]);
             if (fn_regChk($_str_ip, $_str_ipBad)) {
                 return array(
-                    "alert" => "x190213",
+                    "rcode" => "x190213",
                 );
             }
         }
 
-        if ($arr_appRow["app_key"] != $arr_appGet["app_key"]) {
+        if ($this->appInput["app_key"] != fn_baigoCrypt($this->appRow["app_key"], $this->appRow["app_name"])) {
             return array(
-                "alert" => "x190217",
+                "rcode" => "x190217",
             );
         }
 
         return array(
-            "alert" => "ok",
+            "rcode"     => "ok",
+            "appInput"  => $this->appInput,
+            "appRow"    => $this->appRow,
         );
     }
 
 
-    /** 读取 app 信息
-     * app_get function.
-     *
-     * @access public
-     * @param bool $chk_token (default: false)
-     * @return void
-     */
-    function app_get($str_method = "get", $chk_token = false) {
-        if ($str_method == "post") {
-            $num_appId       = fn_post("app_id");
-            $str_appKey      = fn_post("app_key");
-        } else {
-            $num_appId       = fn_get("app_id");
-            $str_appKey      = fn_get("app_key");
+    function show_result($arr_tplData = array(), $is_encode = false, $type = "json") {
+        header("Content-type: application/json; charset=utf-8");
+        header("Cache-Control: no-cache, no-store, max-age=0, must-revalidate");
+
+        $_str_msg   = "";
+        $_str_rcode = "";
+        $_arr_tpl   = array();
+
+        if (isset($arr_tplData["rcode"])) {
+            $_str_rcode = $arr_tplData["rcode"];
         }
 
-        $_arr_appId = validateStr($num_appId, 1, 0, "str", "int");
-        switch ($_arr_appId["status"]) {
-            case "too_short":
-                return array(
-                    "alert" => "x190203",
-                );
-            break;
-
-            case "format_err":
-                return array(
-                    "alert" => "x190204",
-                );
-            break;
-
-            case "ok":
-                $_arr_appGet["app_id"] = $_arr_appId["str"];
-            break;
-
+        if (!fn_isEmpty($_str_rcode) && isset($this->rcode[$_str_rcode])) {
+            $_str_msg = $this->rcode[$arr_tplData["rcode"]];
         }
 
-        $_arr_appKey = validateStr($str_appKey, 1, 64, "str", "alphabetDigit");
-        switch ($_arr_appKey["status"]) {
-            case "too_short":
-                return array(
-                    "alert" => "x190214",
-                );
-            break;
-
-            case "too_long":
-                return array(
-                    "alert" => "x190215",
-                );
-            break;
-
-            case "format_err":
-                return array(
-                    "alert" => "x190216",
-                );
-            break;
-
-            case "ok":
-                $_arr_appGet["app_key"] = $_arr_appKey["str"];
-            break;
-
+        if (isset($arr_tplData["msg"]) && !fn_isEmpty($arr_tplData["msg"])) {
+            $_str_msg = $arr_tplData["msg"];
         }
 
-        $_arr_appGet["alert"] = "ok";
+        if (!fn_isEmpty($_str_rcode)) {
+            $_arr_tpl["rcode"] = $_str_rcode;
+        }
 
-        return $_arr_appGet;
-    }
+        if (!fn_isEmpty($_str_msg)) {
+            $_arr_tpl["msg"] = $_str_msg;
+        }
 
+        $_arr_tplData = array_merge($arr_tplData, $_arr_tpl);
 
-    /** 返回结果
-     * halt_re function.
-     *
-     * @access public
-     * @param mixed $arr_re
-     * @return void
-     */
-    function halt_re($arr_re, $is_encode = false) {
         if ($is_encode) {
-            $_str_return = fn_jsonEncode($arr_re, "encode");
+            $_str_return = fn_jsonEncode($_arr_tplData, "encode");
         } else {
-            $_str_return = json_encode($arr_re);
+            $_str_return = json_encode($_arr_tplData);
         }
+
         exit($_str_return); //输出错误信息
-    }
-
-
-    function chk_install() {
-        if (file_exists(BG_PATH_CONFIG . "is_install.php")) { //验证是否已经安装
-            include_once(BG_PATH_CONFIG . "is_install.php");
-            if (!defined("BG_INSTALL_PUB") || PRD_CMS_PUB > BG_INSTALL_PUB) {
-                $_arr_return = array(
-                    "alert" => "x030416"
-                );
-                $this->halt_re($_arr_return);
-            }
-        } else {
-            $_arr_return = array(
-                "alert" => "x030415"
-            );
-            $this->halt_re($_arr_return);
-        }
     }
 }

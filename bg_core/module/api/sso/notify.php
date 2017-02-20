@@ -9,25 +9,18 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "init.func.php");
+require(BG_PATH_INC . "common.inc.php");
+require(BG_PATH_FUNC . "init.func.php");
 $arr_set = array(
     "base"          => true,
-    "header"        => "Content-type: application/json; charset=utf-8",
     "db"            => true,
-    "type"          => "ajax",
 );
 fn_init($arr_set);
 
-include_once(BG_PATH_CONTROL . "api/sso/notify.class.php"); //载入文章类
+$ctrl_notify = new CONTROL_API_SSO_NOTIFY();
 
-$api_notify = new API_NOTIFY();
-
-switch ($GLOBALS["act_post"]) {
-    default:
-        switch ($GLOBALS["act_get"]) {
-            case "test":
-                $api_notify->api_test();
-            break;
-        }
+switch ($GLOBALS["act"]) {
+    case "test":
+        $ctrl_notify->ctrl_test();
     break;
 }

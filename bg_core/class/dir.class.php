@@ -29,9 +29,9 @@ class CLASS_DIR {
             $_arr_dir = $this->list_dir($str_path); //逐级列出
 
             foreach ($_arr_dir as $_key=>$_value) {
-                if ($_value["type"] == "file") {
+                if ($_value["type"] == "file" && file_exists($str_path . "/" . $_value["name"])) {
                     $this->del_file($str_path . "/" . $_value["name"]);  //删除
-                } else {
+                } else if (is_dir($str_path . "/" . $_value["name"])) {
                     $this->del_dir($str_path . "/" . $_value["name"]); //递归
                 }
             }
@@ -78,23 +78,33 @@ class CLASS_DIR {
      * @param mixed $str_path
      * @return void
      */
-    function list_dir($str_path) {
+    function list_dir($str_path, $str_ext = "") {
 
         $this->mk_dir($str_path);
 
         $_arr_return  = array();
         $_arr_dir     = scandir($str_path);
 
-        if ($_arr_dir) {
+        if (!fn_isEmpty($_arr_dir)) {
             foreach ($_arr_dir as $_key=>$_value) {
                 if ($_value != "." && $_value != "..") {
-                    if (is_dir($str_path . $_value)) {
-                        $_arr_return[$_key]["type"] = "dir";
-                    } else {
-                        $_arr_return[$_key]["type"] = "file";
-                    }
+                    $_str_pathFull = $str_path . $_value;
 
-                    $_arr_return[$_key]["name"] = $_value;
+                    if (fn_isEmpty($str_ext)) {
+                        $_arr_return[] = array(
+                            "name" => $_value,
+                            "type" => filetype($_str_pathFull),
+                        );
+                    } else {
+                        $_arr_pathinfo = pathinfo($_value);
+
+                        if ($_arr_pathinfo["extension"] == $str_ext) {
+                            $_arr_return[] = array(
+                                "name" => $_value,
+                                "type" => filetype($_str_pathFull),
+                            );
+                        }
+                    }
                 }
             }
         }

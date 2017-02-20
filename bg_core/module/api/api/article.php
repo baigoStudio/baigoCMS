@@ -9,31 +9,31 @@ if (!defined("IN_BAIGO")) {
     exit("Access Denied");
 }
 
-include_once(BG_PATH_FUNC . "init.func.php");
+require(BG_PATH_INC . "common.inc.php");
 $arr_set = array(
     "base"          => true,
-    "header"        => "Content-type: application/json; charset=utf-8",
     "db"            => true,
-    "type"          => "ajax",
+    "dsp_type"      => "result",
 );
+fn_chkPHP($arr_set);
+
+require(BG_PATH_FUNC . "init.func.php");
 fn_init($arr_set);
 
-include_once(BG_PATH_CONTROL . "api/api/article.class.php"); //载入文章类
+$ctrl_article = new CONTROL_API_API_ARTICLE();
 
-$api_article = new API_ARTICLE();
-
-switch ($GLOBALS["act_get"]) {
+switch ($GLOBALS["act"]) {
     case "hits":
-        $api_article->api_hits();
+        $ctrl_article->ctrl_hits();
     break;
 
 
     case "read":
     case "get":
-        $api_article->api_read();
+        $ctrl_article->ctrl_read();
     break;
 
     default:
-        $api_article->api_list();
+        $ctrl_article->ctrl_list();
     break;
 }
