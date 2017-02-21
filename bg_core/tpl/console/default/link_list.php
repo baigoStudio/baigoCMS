@@ -9,6 +9,7 @@
     "str_url"        => BG_URL_CONSOLE . "index.php?mod=link&act=list&" . $this->tplData["query"],
 );
 
+include($cfg["pathInclude"] . "function.php");
 include($cfg["pathInclude"] . "console_head.php"); ?>
 
     <div class="form-group clearfix">
@@ -34,7 +35,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             <form name="link_search" id="link_search" action="<?php echo BG_URL_CONSOLE; ?>index.php" method="get" class="form-inline">
                 <input type="hidden" name="mod" value="link">
                 <input type="hidden" name="act" value="list">
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="type" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allType"]; ?></option>
                         <?php foreach ($this->type["link"] as $key=>$value) { ?>
@@ -42,7 +43,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="status" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allStatus"]; ?></option>
                         <?php foreach ($this->status["link"] as $key=>$value) { ?>
@@ -114,7 +115,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                                     <?php echo $this->type["link"][$value["link_type"]]; ?>
                                 </td>
                                 <td class="text-nowrap bg-td-sm">
-                                    <?php link_status_process($value["link_status"], $this->status); ?>
+                                    <?php link_status_process($value["link_status"], $this->status["link"]); ?>
                                 </td>
                             </tr>
                         <?php } ?>

@@ -30,8 +30,14 @@ class CONTROL_CONSOLE_UI_LOGIN {
         $_str_forward     = fn_getSafe(fn_get("forward"), "txt", "");
         $_str_rcode       = fn_getSafe(fn_get("rcode"), "txt", "");
 
+        $_str_forward = fn_forward($_str_forward, "decode");
+
+        if (fn_isEmpty($_str_forward)) {
+            $_str_forward = BG_URL_CONSOLE . "index.php";
+        }
+
         $_arr_tplData = array(
-            "forward"    => fn_forward($_str_forward, "decode"),
+            "forward"    => $_str_forward,
             "rcode"      => $_str_rcode,
         );
 

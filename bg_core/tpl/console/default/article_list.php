@@ -58,7 +58,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                 <input type="hidden" name="mod" value="article">
                 <input type="hidden" name="act" value="list">
                 <input type="hidden" name="box" value="<?php echo $this->tplData["search"]["box"]; ?>">
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="cate_id" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allCate"]; ?></option>
                         <?php cate_list_opt($this->tplData["cateRows"], $this->tplData["search"]["cate_id"]); ?>
@@ -67,7 +67,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         </option>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="year" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allYear"]; ?></option>
                         <?php foreach ($this->tplData["articleYear"] as $key=>$value) { ?>
@@ -75,7 +75,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="month" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allMonth"]; ?></option>
                         <?php for ($iii = 1 ; $iii <= 12; $iii++) {
@@ -89,7 +89,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="mark_id" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allMark"]; ?></option>
                         <?php foreach ($this->tplData["markRows"] as $key=>$value) { ?>
@@ -97,7 +97,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="status" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allStatus"]; ?></option>
                         <?php foreach ($this->status["article"] as $key=>$value) { ?>

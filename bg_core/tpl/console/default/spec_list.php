@@ -35,7 +35,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             <form name="spec_search" id="spec_search" action="<?php echo BG_URL_CONSOLE; ?>index.php" method="get" class="form-inline">
                 <input type="hidden" name="mod" value="spec">
                 <input type="hidden" name="act" value="list">
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="status" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allStatus"]; ?></option>
                         <?php foreach ($this->status["spec"] as $key=>$value) { ?>

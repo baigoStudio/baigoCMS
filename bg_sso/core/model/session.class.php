@@ -12,6 +12,10 @@ if (!defined("IN_BAIGO")) {
 /*-------------session 模型-------------*/
 class MODEL_SESSION {
 
+    public $obj_db;
+    public $lifeTime;
+    public $dbHandle;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }

@@ -12,6 +12,10 @@ if (!defined("IN_BAIGO")) {
 /*-------------设置项模型-------------*/
 class MODEL_OPT {
 
+    public $obj_dir;
+    public $arr_const;
+    public $dbconfigInput;
+
     function __construct() { //构造函数
         $this->obj_dir = new CLASS_DIR();
     }
@@ -309,6 +313,10 @@ class MODEL_OPT {
             $this->ver_process($method);
             $_str_ver = file_get_contents(BG_PATH_CACHE . "sys/latest_ver.json");
             $_arr_ver = json_decode($_str_ver, true);
+        }
+
+        if (isset($_arr_ver["prd_pub"])) {
+            $_arr_ver["prd_pub"] = strtotime($_arr_ver["prd_pub"]);
         }
 
         return $_arr_ver;

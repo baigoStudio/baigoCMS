@@ -12,12 +12,15 @@ if (!defined("IN_BAIGO")) {
 /*-------------管理员模型-------------*/
 class MODEL_ADMIN_INSTALL extends MODEL_ADMIN {
 
+    public $obj_db;
+    public $adminInput;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }
 
 
-    /** api 创建验证
+    /** 安装时创建
      * input_install_add_add function.
      *
      * @access public
@@ -68,7 +71,7 @@ class MODEL_ADMIN_INSTALL extends MODEL_ADMIN {
                 $_arr_tplData = array(
                     "rcode"     => "x010224",
                 );
-                $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+                return $_arr_tplData;
             break;
 
             case "ok":
@@ -80,7 +83,7 @@ class MODEL_ADMIN_INSTALL extends MODEL_ADMIN {
             $_arr_tplData = array(
                 "rcode"     => "x010225",
             );
-            $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+            return $_arr_tplData;
         }
 
         $this->adminInput["admin_nick"]    = $this->adminInput["admin_name"];
@@ -94,6 +97,12 @@ class MODEL_ADMIN_INSTALL extends MODEL_ADMIN {
     }
 
 
+    /** 安装时授权
+     * input_install_auth function.
+     *
+     * @access public
+     * @return void
+     */
     function input_install_auth() {
         if (!fn_token("chk")) { //令牌
             return array(
@@ -131,6 +140,12 @@ class MODEL_ADMIN_INSTALL extends MODEL_ADMIN {
     }
 
 
+    /** 通过 api 安装
+     * input_install_api function.
+     *
+     * @access public
+     * @return void
+     */
     function input_install_api() {
         $_arr_adminName = validateStr(fn_post("admin_name"), 1, 30);
         switch ($_arr_adminName["status"]) {

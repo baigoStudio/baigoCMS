@@ -14,6 +14,15 @@ require(BG_PATH_FUNC . "http.func.php"); //载入模板类
 /*-------------API 接口类-------------*/
 class CLASS_API {
 
+    public $obj_base;
+    public $obj_dir;
+    public $obj_crypt;
+    public $obj_sign;
+    public $arr_return;
+    public $config;
+    public $mdl_app;
+    public $appRows;
+
     function __construct($is_install = false) { //构造函数
         $this->obj_base = $GLOBALS["obj_base"];
         $this->config   = $this->obj_base->config;

@@ -448,10 +448,10 @@ class MODEL_ATTACH {
     function mdl_chkAttach($num_attachId, $str_attachExt, $tm_attachTime) {
         $_str_attachUrl = date("Y", $tm_attachTime) . "/" . date("m", $tm_attachTime) . "/" . $num_attachId . "." . $str_attachExt;
 
-        if (!$this->is_magic) {
-            $_str_chk   = addslashes($_str_attachUrl);
-        } else {
+        if ($this->is_magic) {
             $_str_chk   = $_str_attachUrl;
+        } else {
+            $_str_chk   = addslashes($_str_attachUrl);
         }
 
         $_arr_articleSelect = array(

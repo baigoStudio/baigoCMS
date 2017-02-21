@@ -334,10 +334,10 @@ function fn_eachArray($arr, $method = "encode") {
             } else if (!fn_isEmpty($_value)) {
                 switch ($method) {
                     case "encode":
-                        if (!$_is_magic) {
-                            $_str = addslashes($_value);
-                        } else {
+                        if ($_is_magic) {
                             $_str = $_value;
+                        } else {
+                            $_str = addslashes($_value);
                         }
                         $arr[$_key] = base64_encode($_str);
                     break;
@@ -352,10 +352,10 @@ function fn_eachArray($arr, $method = "encode") {
                     break;
 
                     default:
-                        if (!$_is_magic) {
-                            $_str = addslashes($_value);
-                        } else {
+                        if ($_is_magic) {
                             $_str = $_value;
+                        } else {
+                            $_str = addslashes($_value);
                         }
                         $arr[$_key] = $_str;
                     break;
@@ -787,6 +787,8 @@ function fn_forward($str_forward, $method = "encode") {
             $str_forward = urldecode($str_forward);
             $str_forward = fn_htmlcode($str_forward, "decode", "base64");
             $str_forward = base64_decode($str_forward);
+            $str_forward = fn_htmlcode($str_forward, "decode", "url");
+            $str_forward = fn_safe($str_forward);
             $str_forward = fn_htmlcode($str_forward, "decode", "url");
             return $str_forward;
         break;

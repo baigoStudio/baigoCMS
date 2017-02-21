@@ -11,6 +11,10 @@ if (!defined("IN_BAIGO")) {
 
 /*-------------短消息模型-------------*/
 class MODEL_PM {
+
+    public $obj_db;
+    public $pmInput;
+    public $pmIds;
     public $pmStatus    = array(); //状态
     public $pmTypes     = array(); //类型
 

@@ -12,6 +12,12 @@ if (!defined("IN_BAIGO")) {
 /*-------------管理员模型-------------*/
 class MODEL_ADMIN_PROFILE extends MODEL_ADMIN {
 
+    public $obj_db;
+    public $infoInput;
+    public $qaInput;
+    public $passInput;
+    public $mailboxInput;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }
@@ -91,6 +97,12 @@ class MODEL_ADMIN_PROFILE extends MODEL_ADMIN {
     }
 
 
+    /**
+     * input_qa function.
+     *
+     * @access public
+     * @return void
+     */
     function input_qa() {
         if (!fn_token("chk")) { //令牌
             return array(
@@ -145,6 +157,12 @@ class MODEL_ADMIN_PROFILE extends MODEL_ADMIN {
     }
 
 
+    /**
+     * input_pass function.
+     *
+     * @access public
+     * @return void
+     */
     function input_pass() {
         if (!fn_token("chk")) { //令牌
             return array(
@@ -203,6 +221,12 @@ class MODEL_ADMIN_PROFILE extends MODEL_ADMIN {
     }
 
 
+    /**
+     * input_mailbox function.
+     *
+     * @access public
+     * @return void
+     */
     function input_mailbox() {
         if (!fn_token("chk")) { //令牌
             return array(

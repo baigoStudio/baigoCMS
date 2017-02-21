@@ -51,7 +51,7 @@ class CONTROL_CONSOLE_UI_OPT {
         }
 
         $this->tplData["latest_ver"]    = $this->mdl_opt->chk_ver();
-        $this->tplData["install_pub"]   = strtotime(BG_INSTALL_PUB);
+        $this->tplData["installed_pub"] = strtotime(PRD_SSO_PUB);
 
         $this->obj_tpl->tplDisplay("opt_chkver", $this->tplData);
     }

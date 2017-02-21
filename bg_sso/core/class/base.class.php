@@ -12,6 +12,8 @@ if (!defined("IN_BAIGO")) {
 /*-------------基类-------------*/
 class CLASS_BASE {
 
+    public $config;
+
     function __construct() { //构造函数
         //$this->getUi(); //获取界面类型
 

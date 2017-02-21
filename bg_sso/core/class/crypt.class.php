@@ -12,6 +12,9 @@ if (!defined("IN_BAIGO")) {
 
 class CLASS_CRYPT {
 
+    public $obj_dir;
+    public $key_pub;
+
     function __construct() { //构造函数
         $this->obj_dir = new CLASS_DIR();
 

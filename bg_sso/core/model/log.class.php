@@ -11,6 +11,9 @@ if (!defined("IN_BAIGO")) {
 
 /*-------------日志模型-------------*/
 class MODEL_LOG {
+
+    public $obj_db;
+    public $logIds;
     public $logStatus   = array(); //状态
     public $logTypes    = array(); //类型
     public $logTargets  = array(); //目标

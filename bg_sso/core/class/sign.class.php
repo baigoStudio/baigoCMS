@@ -11,6 +11,7 @@ if (!defined("IN_BAIGO")) {
 }
 
 class CLASS_SIGN {
+
     //生成签名
     function sign_make($arr_params) {
         unset($arr_params["signature"], $arr_params["rcode"]);

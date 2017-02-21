@@ -111,7 +111,7 @@ class CLASS_DATABASE {
         $this->obj_mysqli->close();
     }
 
-    function create_table($table, $data, $primary, $comment = "", $engine = "MyISAM") {
+    function create_table($table, $data, $primary, $comment = "", $engine = "InnoDB") {
         $sql      = "CREATE TABLE IF NOT EXISTS `" . $table . "` (";
         $values   = array();
         foreach ($data as $key => $value) {
@@ -159,7 +159,7 @@ class CLASS_DATABASE {
         return $this->db_rs;
     }
 
-    function copy_table($table, $table_src, $data, $primary, $comment = "", $engine = "MyISAM") {
+    function copy_table($table, $table_src, $data, $primary, $comment = "", $engine = "InnoDB") {
         $sql  = "CREATE TABLE IF NOT EXISTS `" . $table . "` (";
 
         $values   = array();

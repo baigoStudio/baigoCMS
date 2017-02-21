@@ -26,8 +26,8 @@ class CLASS_TPL {
     public $config; //配置
     public $arr_cfg = array(); //需要载入语言文档的配置
 
-    function __construct($str_pathTpl, $_arr_cfg = false) { //构造函数
-        $this->arr_cfg  = $_arr_cfg;
+    function __construct($str_pathTpl, $arr_cfg = false) { //构造函数
+        $this->arr_cfg  = $arr_cfg;
         $this->obj_base = $GLOBALS["obj_base"];
         $this->config   = $this->obj_base->config;
         $this->pathTpl  = $str_pathTpl;

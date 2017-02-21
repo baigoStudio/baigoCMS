@@ -42,7 +42,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             <form name="admin_search" id="admin_search" action="<?php echo BG_URL_CONSOLE; ?>index.php" method="get" class="form-inline">
                 <input type="hidden" name="mod" value="admin">
                 <input type="hidden" name="act" value="list">
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="type" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allType"]; ?></option>
                         <?php foreach ($this->type["admin"] as $key=>$value) { ?>
@@ -50,7 +50,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="status" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allStatus"]; ?></option>
                         <?php foreach ($this->status["admin"] as $key=>$value) { ?>

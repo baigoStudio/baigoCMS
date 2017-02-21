@@ -40,6 +40,7 @@ class CONTROL_CONSOLE_REQUEST_USER {
         }
 
         $this->mdl_user         = new MODEL_USER(); //设置管理员模型
+        $this->mdl_user_import  = new MODEL_USER_IMPORT(); //设置管理员模型
         $this->mdl_log          = new MODEL_LOG(); //设置管理员模型
 
         $this->charsetRows              = require(BG_PATH_LANG . $this->config["lang"] . "/charset.php");
@@ -58,12 +59,12 @@ class CONTROL_CONSOLE_REQUEST_USER {
             $this->obj_tpl->tplDisplay("result", $_arr_tplData);
         }
 
-        $_arr_userInput = $this->mdl_user->input_convert();
+        $_arr_userInput = $this->mdl_user_import->input_convert();
         if ($_arr_userInput["rcode"] != "ok") {
             $this->obj_tpl->tplDisplay("result", $_arr_userInput);
         }
 
-        $_arr_userRow = $this->mdl_user->mdl_convert();
+        $_arr_userRow = $this->mdl_user_import->mdl_convert();
 
         $this->obj_tpl->tplDisplay("result", $_arr_userRow);
     }
@@ -259,7 +260,7 @@ class CONTROL_CONSOLE_REQUEST_USER {
     }
 
 
-    function ctrl_getname() {
+    function ctrl_readname() {
         $_arr_userName = $this->mdl_user->input_name();
 
         if ($_arr_userName["rcode"] != "ok") {

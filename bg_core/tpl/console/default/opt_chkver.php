@@ -36,7 +36,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
         </div>
     </form>
 
-    <?php if (BG_INSTALL_PUB < $this->tplData["latest_ver"]["prd_pub"]) { ?>
+    <?php if ($this->tplData["installed_pub"] < $this->tplData["latest_ver"]["prd_pub"]) { ?>
         <div class="alert alert-warning">
             <span class="glyphicon glyphicon-warning-sign"></span>
             <?php echo $this->lang["text"]["haveNewVer"]; ?>
@@ -49,12 +49,10 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
     <?php } ?>
 
     <div class="panel panel-default">
+        <div class="panel-heading">
+            <?php echo $this->lang["label"]["installVer"]; ?>
+        </div>
         <table class="table">
-            <thead>
-                <tr>
-                    <th colspan="2"><?php echo $this->lang["label"]["installVer"]; ?></th>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                     <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["installVer"]; ?></td>
@@ -62,7 +60,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                 </tr>
                 <tr>
                     <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["pubTime"]; ?></td>
-                    <td><?php echo date(BG_SITE_DATE, $this->tplData["install_pub"]); ?></td>
+                    <td><?php echo date(BG_SITE_DATE, $this->tplData["installed_pub"]); ?></td>
                 </tr>
                 <tr>
                     <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["installTime"]; ?></td>
@@ -72,14 +70,12 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
         </table>
     </div>
 
-    <?php if (BG_INSTALL_PUB < $this->tplData["latest_ver"]["prd_pub"]) { ?>
-        <div class="panel panel-default">
+    <?php if ($this->tplData["installed_pub"] < $this->tplData["latest_ver"]["prd_pub"]) { ?>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <?php echo $this->lang["label"]["latestVer"]; ?>
+            </div>
             <table class="table">
-                <thead>
-                    <tr>
-                        <th colspan="2"><?php echo $this->lang["label"]["latestVer"]; ?></th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
                         <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["latestVer"]; ?></td>
@@ -87,7 +83,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                     </tr>
                     <tr>
                         <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["pubTime"]; ?></td>
-                        <td><?php echo $this->tplData["latest_ver"]["prd_pub"]; ?></td>
+                        <td><?php echo date(BG_SITE_DATE, $this->tplData["latest_ver"]["prd_pub"]); ?></td>
                     </tr>
                     <tr>
                         <td class="nowrap bg-td-lg"><?php echo $this->lang["label"]["announcement"]; ?></td>
@@ -101,7 +97,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             </table>
         </div>
     <?php }
-        
+
 include($cfg["pathInclude"] . "console_foot.php"); ?>
 
     <script type="text/javascript">

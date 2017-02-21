@@ -12,47 +12,44 @@ if (!defined("IN_BAIGO")) {
 /*-------------数据库类-------------*/
 class CLASS_DATABASE {
 
+    public $db_host     = "localhost";
+    public $db_port     = "3306";
+    public $db_user     = "root";
+    public $db_pass     = "";
+    public $db_name     = "";
+    public $db_charset  = "utf8";
+    public $db_debug    = false;
+    public $obj_mysqli;
+    public $status;
+    public $db_rs;
+
     function __construct($cfg_host) {
         if (isset($cfg_host["host"])) {
             $this->db_host      = $cfg_host["host"];
-        } else {
-            $this->db_host      = "localhost";
         }
 
         if (isset($cfg_host["port"])) {
             $this->db_port      = $cfg_host["port"];
-        } else {
-            $this->db_port      = "3306";
         }
 
         if (isset($cfg_host["user"])) {
             $this->db_user      = $cfg_host["user"];
-        } else {
-            $this->db_user      = "root";
         }
 
         if (isset($cfg_host["pass"])) {
             $this->db_pass      = $cfg_host["pass"];
-        } else {
-            $this->db_pass      = "";
         }
 
         if (isset($cfg_host["name"])) {
             $this->db_name      = $cfg_host["name"];
-        } else {
-            $this->db_name      = "";
         }
 
         if (isset($cfg_host["charset"])) {
             $this->db_charset   = $cfg_host["charset"];
-        } else {
-            $this->db_charset   = "utf8";
         }
 
         if (isset($cfg_host["debug"])) {
             $this->db_debug     = $cfg_host["debug"];
-        } else {
-            $this->db_debug     = false;
         }
 
         $this->connect();
@@ -111,7 +108,7 @@ class CLASS_DATABASE {
         $this->obj_mysqli->close();
     }
 
-    function create_table($table, $data, $primary, $comment = "", $engine = "MyISAM") {
+    function create_table($table, $data, $primary, $comment = "", $engine = "InnoDB") {
         $sql      = "CREATE TABLE IF NOT EXISTS `" . $table . "` (";
         $values   = array();
         foreach ($data as $key => $value) {
@@ -159,7 +156,7 @@ class CLASS_DATABASE {
         return $this->db_rs;
     }
 
-    function copy_table($table, $table_src, $data, $primary, $comment = "", $engine = "MyISAM") {
+    function copy_table($table, $table_src, $data, $primary, $comment = "", $engine = "InnoDB") {
         $sql  = "CREATE TABLE IF NOT EXISTS `" . $table . "` (";
 
         $values   = array();

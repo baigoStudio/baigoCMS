@@ -56,8 +56,8 @@ switch ($GLOBALS["method"]) {
 
     default:
         switch ($GLOBALS["act"]) {
-            case "getname":
-                $ctrl_user->ctrl_getname(); //验证用户名
+            case "readname":
+                $ctrl_user->ctrl_readname(); //验证用户名
             break;
 
             case "chkname":

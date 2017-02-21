@@ -302,6 +302,10 @@ class MODEL_OPT {
             $_arr_ver = json_decode($_str_ver, true);
         }
 
+        if (isset($_arr_ver["prd_pub"])) {
+            $_arr_ver["prd_pub"] = strtotime($_arr_ver["prd_pub"]);
+        }
+
         return $_arr_ver;
     }
 

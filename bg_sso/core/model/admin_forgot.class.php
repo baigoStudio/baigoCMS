@@ -12,10 +12,21 @@ if (!defined("IN_BAIGO")) {
 /*-------------管理员模型-------------*/
 class MODEL_ADMIN_FORGOT extends MODEL_ADMIN {
 
+    public $obj_db;
+    public $inputBymail;
+    public $inputByqa;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }
 
+
+    /** 通过邮件找回密码, 输入验证
+     * input_bymail function.
+     *
+     * @access public
+     * @return void
+     */
     function input_bymail() {
         if (!fn_token("chk")) { //令牌
             return array(
@@ -23,7 +34,7 @@ class MODEL_ADMIN_FORGOT extends MODEL_ADMIN {
             );
         }
 
-        $_arr_adminName = validateStr(fn_post("admin_name"), 1, 0);
+        $_arr_adminName = validateStr(fn_post("admin_name"), 1, 0); //用户名
         switch ($_arr_adminName["status"]) {
             case "too_short":
                 return array(
@@ -42,6 +53,12 @@ class MODEL_ADMIN_FORGOT extends MODEL_ADMIN {
     }
 
 
+    /** 通过密保问题找回密码, 输入验证
+     * input_byqa function.
+     *
+     * @access public
+     * @return void
+     */
     function input_byqa() {
         if (!fn_token("chk")) { //令牌
             return array(

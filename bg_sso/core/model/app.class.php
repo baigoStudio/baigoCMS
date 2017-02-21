@@ -11,6 +11,10 @@ if (!defined("IN_BAIGO")) {
 
 /*-------------应用模型-------------*/
 class MODEL_APP {
+
+    public $obj_db;
+    public $appInput;
+    public $appIds;
     public $appStatus   = array(); //状态
     public $appSyncs    = array(); //是否同步
 
@@ -700,6 +704,12 @@ class MODEL_APP {
     }
 
 
+    /**
+     * input_setup function.
+     *
+     * @access public
+     * @return void
+     */
     function input_setup() {
         $_arr_appName = validateStr(fn_post("app_name"), 1, 30);
         switch ($_arr_appName["status"]) {

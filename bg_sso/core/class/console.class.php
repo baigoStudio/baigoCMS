@@ -13,6 +13,10 @@ if (!defined("IN_BAIGO")) {
 /*-------------控制中心通用类-------------*/
 class CLASS_CONSOLE {
 
+    public $obj_base;
+    public $obj_dir;
+    public $obj_tpl;
+    public $config;
     public $dspType = "";
 
     function __construct() { //构造函数

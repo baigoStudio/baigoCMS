@@ -11,6 +11,11 @@ if (!defined("IN_BAIGO")) {
 
 /*-------------管理员模型-------------*/
 class MODEL_ADMIN {
+
+    public $obj_db;
+    public $adminInput;
+    public $loginInput;
+    public $adminIds;
     public $adminStatus = array(); //状态
     public $adminTypes  = array(); //类型
 

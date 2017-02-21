@@ -12,6 +12,8 @@ if (!defined("IN_BAIGO")) {
 /*-------------应用归属-------------*/
 class MODEL_BELONG {
 
+    public $obj_db;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }

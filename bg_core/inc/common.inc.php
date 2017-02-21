@@ -39,7 +39,7 @@ function fn_chkPHP($arr_set) {
         switch ($arr_set["dsp_type"]) {
             case "result":
                 $_arr_return = array(
-                    "rcode" => "x030113",
+                    "rcode" => "x030213",
                     "msg"   => "err_php_ver",
                 );
                 exit(json_encode($_arr_return));

@@ -46,7 +46,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             <form name="attach_search" id="attach_search" action="<?php echo BG_URL_CONSOLE; ?>index.php" method="get" class="form-inline">
                 <input type="hidden" name="mod" value="attach">
                 <input type="hidden" name="act" value="list">
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="year" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allYear"]; ?></option>
                         <?php foreach ($this->tplData["yearRows"] as $key=>$value) { ?>
@@ -54,7 +54,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="month" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allMonth"]; ?></option>
                         <?php for ($iii = 1 ; $iii <= 12; $iii++) {
@@ -67,7 +67,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group hidden-xs">
+                <div class="form-group hidden-sm hidden-xs">
                     <select name="ext" class="form-control input-sm">
                         <option value=""><?php echo $this->lang["option"]["allExt"]; ?></option>
                         <?php foreach ($this->tplData["extRows"] as $key=>$value) { ?>

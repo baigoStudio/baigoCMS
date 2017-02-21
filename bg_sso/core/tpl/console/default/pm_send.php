@@ -82,7 +82,7 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
             len: { min: 1, max: 0 },
             validate: { type: "ajax", format: "text", group: "#group_pm_to" },
             msg: { selector: "#msg_pm_to", too_short: "<?php echo $this->rcode["x110205"]; ?>", ajaxIng: "<?php echo $this->rcode["x030401"]; ?>", ajax_err: "<?php echo $this->rcode["x030402"]; ?>" },
-            ajax: { url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=user&act=getname", key: "user_name", type: "str" }
+            ajax: { url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=user&act=readname", key: "user_name", type: "str" }
         }
     };
 

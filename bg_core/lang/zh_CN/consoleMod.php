@@ -230,8 +230,8 @@ return array(
         ),
         "sub" => array(
             "list" => array(
-                "title"     => "链接管理",
-                "mod"       => "link",
+                "title" => "链接管理",
+                "mod"   => "link",
                 "act"   => "list",
             ),
         ),

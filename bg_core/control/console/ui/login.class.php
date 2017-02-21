@@ -40,9 +40,15 @@ class CONTROL_CONSOLE_UI_LOGIN {
 
         //print_r($_arr_sync);
 
+        $_str_forward = fn_forward($_str_forward, "decode");
+
+        if (fn_isEmpty($_str_forward)) {
+            $_str_forward = BG_URL_CONSOLE . "index.php";
+        }
+
         $_arr_tplData = array(
             "sync"       => $_arr_sync,
-            "forward"    => fn_forward($_str_forward, "decode"),
+            "forward"    => $_str_forward,
         );
 
         $this->obj_tpl->tplDisplay("login_sync", $_arr_tplData);
@@ -61,6 +67,10 @@ class CONTROL_CONSOLE_UI_LOGIN {
             $_str_forward = BG_URL_CONSOLE . "index.php?mod=login&act=sync&forward=" . $_str_forward;
         } else {
             $_str_forward = fn_forward($_str_forward, "decode");
+        }
+
+        if (fn_isEmpty($_str_forward)) {
+            $_str_forward = BG_URL_CONSOLE . "index.php";
         }
 
         $_arr_tplData = array(

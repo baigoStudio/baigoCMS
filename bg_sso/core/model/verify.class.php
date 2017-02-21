@@ -12,6 +12,9 @@ if (!defined("IN_BAIGO")) {
 /*-------------验证模型-------------*/
 class MODEL_VERIFY {
 
+    public $obj_db;
+    public $verifyInput;
+    public $verifyIds;
     public $verifyStatus    = array();
     public $verifyTypes     = array();
 

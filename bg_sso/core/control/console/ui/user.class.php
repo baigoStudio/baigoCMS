@@ -34,7 +34,8 @@ class CONTROL_CONSOLE_UI_USER {
             $this->is_super = true;
         }
 
-        $this->mdl_user                 = new MODEL_USER(); //设置管理员模型
+        $this->mdl_user         = new MODEL_USER(); //设置管理员模型
+        $this->mdl_user_import  = new MODEL_USER_IMPORT(); //设置管理员模型
 
         $this->charsetRows              = require(BG_PATH_LANG . $this->config["lang"] . "/charset.php");
         $this->charsetOften             = array_keys($this->charsetRows["often"]["list"]);
@@ -54,7 +55,7 @@ class CONTROL_CONSOLE_UI_USER {
 
         $_str_charset = fn_htmlcode($_str_charset, "decode", "url");
 
-        $_arr_csvRows = $this->mdl_user->mdl_import($_str_charset);
+        $_arr_csvRows = $this->mdl_user_import->mdl_import($_str_charset);
 
         //print_r(stream_get_filters());
         //print_r($_arr_csvRows);

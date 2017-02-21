@@ -12,6 +12,12 @@ if (!defined("IN_BAIGO")) {
 /*-------------用户模型-------------*/
 class MODEL_USER_API extends MODEL_USER {
 
+    public $obj_db;
+    public $regInput;
+    public $editInput;
+    public $loginInput;
+    public $tokenInput;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }

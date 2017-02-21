@@ -12,6 +12,12 @@ if (!defined("IN_BAIGO")) {
 /*-------------用户模型-------------*/
 class MODEL_USER_PROFILE extends MODEL_USER {
 
+    public $obj_db;
+    public $qaInput;
+    public $infoInput;
+    public $mailboxInput;
+    public $tokenInput;
+
     function __construct() { //构造函数
         $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
     }

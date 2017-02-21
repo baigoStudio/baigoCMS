@@ -747,6 +747,8 @@ function fn_forward($str_forward, $method = "encode") {
             $str_forward = fn_htmlcode($str_forward, "decode", "base64");
             $str_forward = base64_decode($str_forward);
             $str_forward = fn_htmlcode($str_forward, "decode", "url");
+            $str_forward = fn_safe($str_forward);
+            $str_forward = fn_htmlcode($str_forward, "decode", "url");
             return $str_forward;
         break;
 

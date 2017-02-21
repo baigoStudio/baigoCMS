@@ -11,7 +11,19 @@ if (!defined("IN_BAIGO")) {
 
 /*-------------验证码类-------------*/
 class CLASS_SECCODE {
+
     private $chars = "abdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ23456789";
+    private $len;
+    private $fontSize;
+    private $fontFile;
+    private $width;
+    private $height;
+    private $code;
+    private $image;
+    private $back;
+    private $colorFont;
+    private $colorShadow;
+    private $colorPix;
 
     //设置验证码
     function secSet($sec_size = 20, $sec_len = 4, $sec_font = "FetteSteinschrift.ttf") {

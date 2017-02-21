@@ -13,6 +13,21 @@ if (!defined("IN_BAIGO")) {
 /*-------------模板类-------------*/
 class CLASS_TPL {
 
+    public $obj_base;
+    public $config;
+    public $pathTpl;
+    public $consoleMod;
+    public $install;
+    public $log;
+    public $common;
+    public $lang;
+    public $type;
+    public $allow;
+    public $status;
+    public $opt;
+    public $rcode;
+    public $tplData;
+
     function __construct($str_pathTpl = "", $arr_cfg = false) { //构造函数
         $this->obj_base = $GLOBALS["obj_base"];
         $this->config   = $this->obj_base->config;
