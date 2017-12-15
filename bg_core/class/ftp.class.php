@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 /**
@@ -16,6 +16,7 @@ class CLASS_FTP {
 
     public $ftp_status; //返回操作状态(成功/失败)
     public $ftp_conn; //FTP连接
+    public $arr_pasv = array('off', 'on');
 
 
     /**v连接FTP服务器
@@ -78,7 +79,7 @@ class CLASS_FTP {
 
 
     function del_dir($path_remote) {
-        if (stristr($path_remote, ".")) {
+        if (stristr($path_remote, '.')) {
             $path_remote = dirname($path_remote);
         }
         $_arr_dir = $this->list_dir($path_remote); //逐级列出
@@ -86,10 +87,10 @@ class CLASS_FTP {
         //print_r($_arr_dir);
 
         foreach ($_arr_dir as $_key=>$_value) {
-            if ($_value["type"] == "file") {
-                $this->del_file($_value["name"]);  //删除
+            if ($_value['type'] == 'file') {
+                $this->del_file($_value['name']);  //删除
             } else {
-                $this->del_dir($_value["name"]); //递归
+                $this->del_dir($_value['name']); //递归
             }
         }
 
@@ -105,10 +106,10 @@ class CLASS_FTP {
      * @return void
      */
     function mk_dir($path_remote) {
-        if (stristr($path_remote, ".")) {
+        if (stristr($path_remote, '.')) {
             $path_remote = dirname($path_remote);
         }
-        if (@ftp_chdir($this->ftp_conn, $path_remote) || stristr($path_remote, ".")) { //已存在
+        if (@ftp_chdir($this->ftp_conn, $path_remote) || stristr($path_remote, '.')) { //已存在
             $this->ftp_status = true;
         } else {
             //创建目录
@@ -128,7 +129,7 @@ class CLASS_FTP {
 
 
     function list_dir($path_remote) {
-        if (stristr($path_remote, ".")) {
+        if (stristr($path_remote, '.')) {
             $path_remote = dirname($path_remote);
         }
         $_arr_return  = array();
@@ -138,13 +139,13 @@ class CLASS_FTP {
 
         if (!fn_isEmpty($_arr_dir)) {
             foreach ($_arr_dir as $_key=>$_value) {
-                if (stristr($_value, ".")) {
-                    $_arr_return[$_key]["type"] = "file";
+                if (stristr($_value, '.')) {
+                    $_arr_return[$_key]['type'] = 'file';
                 } else {
-                    $_arr_return[$_key]["type"] = "dir";
+                    $_arr_return[$_key]['type'] = 'dir';
                 }
 
-                $_arr_return[$_key]["name"] = $_value;
+                $_arr_return[$_key]['name'] = $_value;
             }
         }
 

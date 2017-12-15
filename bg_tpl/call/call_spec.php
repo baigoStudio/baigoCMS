@@ -1,7 +1,7 @@
-    <ul role="<?php echo $this->tplData["callRow"]["call_name"]; ?>">
-        <?php foreach ($this->tplData["specRows"] as $key=>$value) { ?>
+    <ul role="<?php echo $this->tplData['callRow']['call_name']; ?>">
+        <?php foreach ($this->tplData['specRows'] as $key=>$value) { ?>
             <li>
-                <a href="<?php echo $value["urlRow"]["spec_url"]; ?>"><?php echo $value["spec_name"]; ?></a>
+                <a href="<?php echo $value['urlRow']['spec_url']; ?>"><?php echo $value['spec_name']; ?></a>
             </li>
         <?php } ?>
     </ul>

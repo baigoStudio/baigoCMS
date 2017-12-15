@@ -1,5 +1,5 @@
 <h3>搜索</h3>
-<p>文件名：<span class="text-primary">search_show.tpl</span></p>
+<p>文件名：<span class="text-primary">search_show.php</span></p>
 <p>
     用于显示搜索结果。
 </p>
@@ -16,37 +16,37 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-nowrap">{$tplData.articleRows}</td>
+                    <td class="text-nowrap">$this->tplData['articleRows']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">文章列表</td>
-                    <td>搜索结果。详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=article#articleRow" target="_blank">文章</a>。</td>
+                    <td>搜索结果。详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=article#articleRow" target="_blank">文章</a>。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.search}</td>
+                    <td class="text-nowrap">$this->tplData['search']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">搜索参数</td>
-                    <td>显示文章列表所需要的搜索参数，查看 <a href="#search">{$tplData.search}</a>。</td>
+                    <td>显示文章列表所需要的搜索参数，查看 <a href="#search">$this->tplData['search']</a>。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.customs}</td>
+                    <td class="text-nowrap">$this->tplData['customs']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">自定义字段搜索数组</td>
                     <td>多维数组，格式为 <code>"custom_自定义字段 ID" => "关键词"</code>，多个自定义字段时的例子：<code>array("custom_2" => "关键词", "custom_5" => "关键词")</code></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.query}</td>
+                    <td class="text-nowrap">$this->tplData['query']</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">搜索参数序列化字符串</td>
                     <td>搜索参数序列化为字符串以后的结果。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.urlRow}</td>
+                    <td class="text-nowrap">$this->tplData['urlRow']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">搜索 URL 数组</td>
                     <td>search_url 为搜索 URL，page_attach 为分页附加参数，主要用于分页。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.pageRow}</td>
+                    <td class="text-nowrap">$this->tplData['pageRow']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">分页参数</td>
                     <td>详情请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=page">分页参数</a></td>
@@ -59,7 +59,7 @@
 <div>&nbsp;</div>
 
 <a name="search"></a>
-<h4><code>{$tplData.search}</code> 数组</h4>
+<h4><code>$this->tplData['search']</code> 数组</h4>
 
 <p>显示文章列表所需要的搜索参数。</p>
 
@@ -143,7 +143,7 @@
 
 <p>在 HTML 页面中，建议使用 JavaScript 或 VBScript 以及 jQuery 等脚本将搜索内容序列化。</p>
 
-<p>关于 <mark>Base64</mark> 的编码方法，本系统内置一个 Base64 编码的 JavaScript 的插件，位于 ./bg_static/lib/base64.js，只需在适当的地方载入该脚本，然后在需要进行 Base64 编码的地方使用函数 <code>Base64.encode(‘字符串’)</code> 即可，您还可在需要的时候，使用 <code>Base64.decode(‘Base64 字符串’)</code> 函数进行解码。</p>
+<p>关于 <mark>Base64</mark> 的编码方法，本系统内置一个 Base64 编码的 JavaScript 的插件，位于 ./bg_static/lib/base64.js，只需在适当的地方载入该脚本，然后在需要进行 Base64 编码的地方使用函数 <code>Base64.encode('字符串')</code> 即可，您还可在需要的时候，使用 <code>Base64.decode('Base64 字符串')</code> 函数进行解码。</p>
 
 <div>&nbsp;</div>
 
@@ -165,12 +165,12 @@
         &lt;input type=&quot;text&quot; name=&quot;custom_5&quot; value=&quot;&quot; class=&quot;customs form-control&quot; placeholder=&quot;序列号&quot;&gt;
     &lt;/div&gt;
     &lt;button type=&quot;button&quot; id=&quot;search_go&quot; class=&quot;btn btn-primary&quot;&gt;搜索&lt;/button&gt;
-&lt;/form&gt;</code></pre>
+    &lt;/form&gt;</code></pre>
     </p>
 
     <p>jQuery</p>
     <p>
-<pre><code class="language-javascript">$(document).ready(function(){
+    <pre><code class="language-javascript">$(document).ready(function(){
     $(&quot;#search_go&quot;).click(function(){
         var _key = $(&quot;#key&quot;).val();
         var _customs = $(&quot;.customs&quot;).serialize();

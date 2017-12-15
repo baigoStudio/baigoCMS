@@ -5,107 +5,70 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    "image/jpeg" => array(
-        "ext"     => "jpg",
-        "note"    => "JPG 图片",
+    'jpg' => array(
+        'note'    => 'JPG 图片',
     ),
-    "image/pjpeg" => array(
-        "ext"     => "jpg",
-        "note"    => "JPG 图片",
+    'jpeg' => array(
+        'note'    => 'JPG 图片',
     ),
-    "image/gif" => array(
-        "ext"     => "gif",
-        "note"    => "GIF 图片",
+    'jpe' => array(
+        'note'    => 'JPG 图片',
     ),
-    "image/png" => array(
-        "ext"     => "png",
-        "note"    => "PNG 图片",
+    'gif' => array(
+        'note'    => 'GIF 图片',
     ),
-    "image/x-png" => array(
-        "ext"     => "png",
-        "note"    => "PNG 图片",
+    'png' => array(
+        'note'    => 'PNG 图片',
     ),
-    "image/bmp" => array(
-        "ext"     => "bmp",
-        "note"    => "BMP 图片",
+    'bmp' => array(
+        'note'    => 'BMP 图片',
     ),
-    "image/x-ms-bmp" => array(
-        "ext"     => "bmp",
-        "note"    => "BMP 图片",
+    'tif' => array(
+        'note'    => 'TIF 图片',
     ),
-    "image/x-windows-bmp" => array(
-        "ext"     => "bmp",
-        "note"    => "BMP 图片",
+    'tiff' => array(
+        'note'    => 'TIF 图片',
     ),
-    "image/tiff" => array(
-        "ext"     => "tif",
-        "note"    => "TIF 图片",
+    'svg' => array(
+        'note'    => 'SVG 图片',
     ),
-    "image/vnd.wap.wbmp" => array(
-        "ext"     => "wbmp",
-        "note"    => "BMP 图片",
+    'doc' => array(
+        'note'    => 'Word 文档',
     ),
-    "image/x-icon" => array(
-        "ext"     => "ico",
-        "note"    => "ICO 图标",
+    'xls' => array(
+        'note'    => 'Excel 表格',
     ),
-    "image/x-jng" => array(
-        "ext"     => "jng",
-        "note"    => "JNG 图片",
+    'ppt' => array(
+        'note'    => 'PPT 演示文档',
     ),
-    "image/svg+xml" => array(
-        "ext"     => "svg",
-        "note"    => "SVG 图片",
+    'docx' => array(
+        'note'    => 'Word X 文档',
     ),
-    "image/webp" => array(
-        "ext" => "webp",
-        "note"    => "WebP 图片",
+    'xlsx' => array(
+        'note'    => 'Excel X 表格',
     ),
-
-    "application/msword" => array(
-        "ext"     => "doc",
-        "note"    => "Word 文档",
+    'pptx' => array(
+        'note'    => 'PPT X 演示文档',
     ),
-    "application/vnd.ms-word" => array(
-        "ext"     => "doc",
-        "note"    => "Word 文档",
+    'rtf' => array(
+        'note'    => 'RTF 文档',
     ),
-    "application/excel" => array(
-        "ext"     => "xls",
-        "note"    => "Excel 表格",
+    'pdf' => array(
+        'note'    => 'PDF 文档',
     ),
-    "application/x-excel" => array(
-        "ext"     => "xls",
-        "note"    => "Excel 表格",
+    'txt' => array(
+        'note'    => 'TXT 文本文档',
     ),
-    "application/vnd.ms-excel" => array(
-        "ext"     => "xls",
-        "note"    => "Excel 表格",
+    'zip' => array(
+        'note'    => 'ZIP 压缩包',
     ),
-    "application/rtf" => array(
-        "ext"     => "rtf",
-        "note"    => "RTF 文档",
-    ),
-    "application/x-rtf" => array(
-        "ext"     => "rtf",
-        "note"    => "RTF 文档",
-    ),
-    "application/pdf" => array(
-        "ext"     => "pdf",
-        "note"    => "PDF 文档",
-    ),
-    "application/zip" => array(
-        "ext"     => "zip",
-        "note"    => "ZIP 压缩包",
-    ),
-    "application/x-gzip" => array(
-        "ext"     => "gz",
-        "note"    => "GZ 压缩包",
+    'rar' => array(
+        'note'    => 'RAR 压缩包',
     ),
 );

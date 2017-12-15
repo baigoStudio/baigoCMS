@@ -5,20 +5,20 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 class CONTROL_API_API_CALL {
 
     function __construct() { //构造函数
-        $this->obj_api          = new CLASS_API();
-        //$this->obj_api->chk_install();
+        $this->general_api          = new GENERAL_API();
+        //$this->general_api->chk_install();
 
         $this->mdl_call         = new MODEL_CALL();
         $this->mdl_spec         = new MODEL_SPEC();
         $this->mdl_cate         = new MODEL_CATE();
-        $this->mdl_articlePub   = new MODEL_ARTICLE_PUB();
+        $this->mdl_article_pub  = new MODEL_ARTICLE_PUB();
         $this->mdl_tag          = new MODEL_TAG();
         $this->mdl_thumb        = new MODEL_THUMB(); //设置上传信息对象
         $this->mdl_attach       = new MODEL_ATTACH();
@@ -27,51 +27,51 @@ class CONTROL_API_API_CALL {
 
 
     function ctrl_read() {
-        $_arr_appChk = $this->obj_api->app_chk();
-        if ($_arr_appChk["rcode"] != "ok") {
-            $this->obj_api->show_result($_arr_appChk);
+        $_arr_appChk = $this->general_api->app_chk_api();
+        if ($_arr_appChk['rcode'] != 'ok') {
+            $this->general_api->show_result($_arr_appChk);
         }
 
-        $_num_callId = fn_getSafe(fn_get("call_id"), "int", 0);
+        $_num_callId = fn_getSafe(fn_get('call_id'), 'int', 0);
 
         if ($_num_callId < 1) {
             $_arr_return = array(
-                "rcode" => "x170201",
+                'rcode' => 'x170213',
             );
-            $this->obj_api->show_result($_arr_return);
+            $this->general_api->show_result($_arr_return);
         }
 
         $this->callRow = $this->mdl_call->mdl_read($_num_callId);
 
-        if ($this->callRow["rcode"] != "y170102") {
-            $this->obj_api->show_result($this->callRow);
+        if ($this->callRow['rcode'] != 'y170102') {
+            $this->general_api->show_result($this->callRow);
         }
 
 
-        if ($this->callRow["call_status"] != "enable") {
+        if ($this->callRow['call_status'] != 'enable') {
             $_arr_return = array(
-                "rcode" => "x170201",
+                'rcode' => 'x170102',
             );
-            $this->obj_api->show_result($_arr_return);
+            $this->general_api->show_result($_arr_return);
         }
 
-        switch ($this->callRow["call_type"]) {
-            case "spec":
+        switch ($this->callRow['call_type']) {
+            case 'spec':
                 $_arr_return = $this->call_spec();
             break;
 
         //栏目列表
-            case "cate":
+            case 'cate':
                 $_arr_return = $this->call_cate();
             break;
 
             //TAG 列表
-            case "tag_list":
-            case "tag_rank":
+            case 'tag_list':
+            case 'tag_rank':
                 $_arr_return = $this->call_tag();
             break;
 
-            case "link":
+            case 'link':
                 $_arr_return = $this->call_link();
             break;
 
@@ -83,7 +83,7 @@ class CONTROL_API_API_CALL {
 
         //print_r($_arr_return);
 
-        $this->obj_api->show_result($_arr_return, true);
+        $this->general_api->show_result($_arr_return, $_arr_appChk['isBase64']);
     }
 
     /**
@@ -94,12 +94,12 @@ class CONTROL_API_API_CALL {
      */
     private function call_cate() {
         $_arr_searchCate = array(
-            "status"    => "show",
-            "excepts"   => $this->callRow["call_cate_excepts"],
-            "parent_id" => $this->callRow["call_cate_id"],
+            'status'    => 'show',
+            'excepts'   => $this->callRow['call_cate_excepts'],
+            'parent_id' => $this->callRow['call_cate_id'],
         );
 
-        $_arr_cateRows = $this->mdl_cate->mdl_listPub($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchCate);
+        $_arr_cateRows = $this->mdl_cate->mdl_listPub($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchCate);
 
         return $_arr_cateRows;
     }
@@ -113,12 +113,12 @@ class CONTROL_API_API_CALL {
      */
     private function call_spec() {
         $_arr_search = array(
-            "status" => "show",
+            'status' => 'show',
         );
-        $_arr_specRows = $this->mdl_spec->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_search);
+        $_arr_specRows = $this->mdl_spec->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_search);
 
         foreach ($_arr_specRows as $_key=>$_value) {
-            unset($_arr_specRows[$_key]["urlRow"]);
+            unset($_arr_specRows[$_key]['urlRow']);
         }
 
         return $_arr_specRows;
@@ -127,13 +127,13 @@ class CONTROL_API_API_CALL {
 
     private function call_link() {
         $_arr_searchLink = array(
-            "status"        => "enable",
-            "type"          => "friend",
+            'status'        => 'enable',
+            'type'          => 'friend',
         );
-        $_arr_linkRows = $this->mdl_link->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchLink);
+        $_arr_linkRows = $this->mdl_link->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchLink);
 
         foreach ($_arr_linkRows as $_key=>$_value) {
-            unset($_arr_linkRows[$_key]["urlRow"]);
+            unset($_arr_linkRows[$_key]['urlRow']);
         }
 
         return $_arr_linkRows;
@@ -148,13 +148,13 @@ class CONTROL_API_API_CALL {
      */
     private function call_tag() {
         $_arr_searchTag = array(
-            "status"        => "show",
-            "type"          => $this->callRow["call_type"],
+            'status'        => 'show',
+            'type'          => $this->callRow['call_type'],
         );
-        $_arr_tagRows = $this->mdl_tag->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_searchTag);
+        $_arr_tagRows = $this->mdl_tag->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchTag);
 
         foreach ($_arr_tagRows as $_key=>$_value) {
-            unset($_arr_tagRows[$_key]["urlRow"]);
+            unset($_arr_tagRows[$_key]['urlRow']);
         }
 
         return $_arr_tagRows;
@@ -169,42 +169,42 @@ class CONTROL_API_API_CALL {
      */
     private function call_article() {
         $_arr_search = array(
-            "cate_ids"      => $this->callRow["call_cate_ids"],
-            "mark_ids"      => $this->callRow["call_mark_ids"],
-            "spec_ids"      => $this->callRow["call_spec_ids"],
-            "attach_type"   => $this->callRow["call_attach"],
+            'cate_ids'      => $this->callRow['call_cate_ids'],
+            'mark_ids'      => $this->callRow['call_mark_ids'],
+            'spec_ids'      => $this->callRow['call_spec_ids'],
+            'attach_type'   => $this->callRow['call_attach'],
         );
 
-        $_arr_articleRows = $this->mdl_articlePub->mdl_list($this->callRow["call_amount"]["top"], $this->callRow["call_amount"]["except"], $_arr_search, $this->callRow["call_type"]);
+        $_arr_articleRows = $this->mdl_article_pub->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_search, $this->callRow['call_type']);
 
         if (!fn_isEmpty($_arr_articleRows)) {
             foreach ($_arr_articleRows as $_key=>$_value) {
-                unset($_arr_articleRows[$_key]["urlRow"]["article_url"]);
+                unset($_arr_articleRows[$_key]['urlRow']['article_url']);
 
-                $_arr_cateRow = $this->mdl_cate->mdl_cache(false, $_value["article_cate_id"]);
+                $_arr_cateRow = $this->mdl_cate->mdl_cache($_value['article_cate_id']);
 
-                if ($_arr_cateRow["rcode"] == "y250102") {
-                    unset($_arr_cateRow["urlRow"]);
+                if ($_arr_cateRow['rcode'] == 'y250102') {
+                    unset($_arr_cateRow['urlRow']);
                 }
                 $_arr_searchTag = array(
-                    "status"        => "show",
-                    "article_id"    => $_value["article_id"],
+                    'status'        => 'show',
+                    'article_id'    => $_value['article_id'],
                 );
-                $_arr_articleRows[$_key]["tagRows"] = $this->mdl_tag->mdl_list(10, 0, $_arr_searchTag);
+                $_arr_articleRows[$_key]['tagRows'] = $this->mdl_tag->mdl_list(10, 0, $_arr_searchTag);
 
-                if ($_value["article_attach_id"] > 0) {
-                    $_arr_attachRow = $this->mdl_attach->mdl_url($_value["article_attach_id"]);
-                    if ($_arr_attachRow["rcode"] == "y070102") {
-                        if ($_arr_attachRow["attach_box"] != "normal") {
+                if ($_value['article_attach_id'] > 0) {
+                    $_arr_attachRow = $this->mdl_attach->mdl_url($_value['article_attach_id']);
+                    if ($_arr_attachRow['rcode'] == 'y070102') {
+                        if ($_arr_attachRow['attach_box'] != 'normal') {
                             $_arr_attachRow = array(
-                                "rcode" => "x070102",
+                                'rcode' => 'x070102',
                             );
                         }
                     }
-                    $_arr_articleRows[$_key]["attachRow"]    = $_arr_attachRow;
+                    $_arr_articleRows[$_key]['attachRow']    = $_arr_attachRow;
                 }
 
-                $_arr_articleRows[$_key]["cateRow"] = $_arr_cateRow;
+                $_arr_articleRows[$_key]['cateRow'] = $_arr_cateRow;
             }
         }
 

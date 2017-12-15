@@ -1,4 +1,4 @@
-.bg-navbar { background: #444; }
+.bg-navbar { background: #444; margin-bottom: 15px; }
 .bg-navbar .list-inline { margin: 0; }
 
 .bg-navbar .bg-navbar-btn { color: #ccc; display: inline-block; padding: 10px; text-decoration: none; }
@@ -18,8 +18,6 @@
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .3);
     box-shadow: 0 3px 6px rgba(0, 0, 0, .3);
 }
-
-.bg-overflow { overflow: hidden; }
 
 .bg-content, .bg-content * { max-width: 100% !important; }
 

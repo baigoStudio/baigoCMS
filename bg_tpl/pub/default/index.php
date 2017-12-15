@@ -1,8 +1,8 @@
 <?php $cfg = array(
-    "title" => "首页",
+    'title' => '首页',
 );
 
-include("include/pub_head.php"); ?>
+include('include' . DS . 'pub_head.php'); ?>
 
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
@@ -14,10 +14,10 @@ include("include/pub_head.php"); ?>
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
             <div class="item active">
-                <img src="<?php echo BG_URL_STATIC; ?>pub/<?php echo BG_SITE_TPL; ?>/image/index_slide_1.jpg">
+                <img src="<?php echo BG_URL_STATIC; ?>pub/default/image/index_slide_1.jpg">
             </div>
             <div class="item">
-                <img src="<?php echo BG_URL_STATIC; ?>pub/<?php echo BG_SITE_TPL; ?>/image/index_slide_2.jpg">
+                <img src="<?php echo BG_URL_STATIC; ?>pub/default/image/index_slide_2.jpg">
             </div>
         </div>
 
@@ -35,8 +35,8 @@ include("include/pub_head.php"); ?>
     <?php $callRow = fn_callDisplay(7);
 
     foreach ($callRow as $key=>$value) { ?>
-        <p><?php echo $key; ?></p>
+        <div><?php echo $key; ?></div>
     <?php }
 
-include("include/pub_foot.php");
-include("include/html_foot.php"); ?>
+include('include' . DS . 'pub_foot.php');
+include('include' . DS . 'html_foot.php'); ?>

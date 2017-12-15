@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 
@@ -17,21 +17,21 @@ class CONTROL_CONSOLE_REQUEST_MIME {
     private $is_super       = false;
 
     function __construct() { //构造函数
-        $this->obj_console  = new CLASS_CONSOLE();
-        $this->obj_console->dspType = "result";
-        $this->obj_console->chk_install();
+        $this->general_console  = new GENERAL_CONSOLE();
+        $this->general_console->dspType = 'result';
+        $this->general_console->chk_install();
 
-        $this->adminLogged  = $this->obj_console->ssin_begin();
-        $this->obj_console->is_admin($this->adminLogged);
+        $this->adminLogged  = $this->general_console->ssin_begin();
+        $this->general_console->is_admin($this->adminLogged);
 
-        $this->obj_tpl      = $this->obj_console->obj_tpl;
+        $this->obj_tpl      = $this->general_console->obj_tpl;
 
-        if ($this->adminLogged["admin_type"] == "super") {
+        if ($this->adminLogged['admin_type'] == 'super') {
             $this->is_super = true;
         }
 
-        if (isset($this->adminLogged["groupRow"]["group_allow"])) {
-            $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
+        if (isset($this->adminLogged['groupRow']['group_allow'])) {
+            $this->group_allow = $this->adminLogged['groupRow']['group_allow'];
         }
 
         $this->mdl_mime     = new MODEL_MIME();
@@ -45,22 +45,22 @@ class CONTROL_CONSOLE_REQUEST_MIME {
      * @return void
      */
     function ctrl_submit() {
-        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
+        if (!isset($this->group_allow['attach']['mime']) && !$this->is_super) {
             $_arr_tplData = array(
-                "rcode" => "x080302",
+                'rcode' => 'x080302',
             );
-            $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+            $this->obj_tpl->tplDisplay('result', $_arr_tplData);
         }
 
         $_arr_mimeInput = $this->mdl_mime->input_submit();
 
-        if ($_arr_mimeInput["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_mimeInput);
+        if ($_arr_mimeInput['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_mimeInput);
         }
 
         $_arr_mimeRow = $this->mdl_mime->mdl_submit();
 
-        $this->obj_tpl->tplDisplay("result", $_arr_mimeRow);
+        $this->obj_tpl->tplDisplay('result', $_arr_mimeRow);
     }
 
 
@@ -71,49 +71,49 @@ class CONTROL_CONSOLE_REQUEST_MIME {
      * @return void
      */
     function ctrl_del() {
-        if (!isset($this->group_allow["attach"]["mime"]) && !$this->is_super) {
+        if (!isset($this->group_allow['attach']['mime']) && !$this->is_super) {
             $_arr_tplData = array(
-                "rcode" => "x080304",
+                'rcode' => 'x080304',
             );
-            $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+            $this->obj_tpl->tplDisplay('result', $_arr_tplData);
         }
 
         $_arr_mimeIds = $this->mdl_mime->input_ids();
-        if ($_arr_mimeIds["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_mimeIds);
+        if ($_arr_mimeIds['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_mimeIds);
         }
 
         $_arr_mimeRow = $this->mdl_mime->mdl_del();
 
-        $this->obj_tpl->tplDisplay("result", $_arr_mimeRow);
+        $this->obj_tpl->tplDisplay('result', $_arr_mimeRow);
     }
 
 
 
     /**
-     * ajax_chkname function.
+     * ajax_chkext function.
      *
      * @access public
      * @return void
      */
-    function ctrl_chkname() {
-        $_str_mimeName    = fn_getSafe(fn_get("mime_name"), "txt", "");
+    function ctrl_chkext() {
+        $_str_mimeName    = fn_get('mime_name');
 
         if (!fn_isEmpty($_str_mimeName)) {
-            $_num_mimeId      = fn_getSafe(fn_get("mime_id"), "int", 0);
-            $_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, "mime_name", $_num_mimeId);
+            $_num_mimeId      = fn_getSafe(fn_get('mime_id'), 'int', 0);
+            $_arr_mimeRow     = $this->mdl_mime->mdl_read($_str_mimeName, 'mime_name', $_num_mimeId);
 
-            if ($_arr_mimeRow["rcode"] == "y080102") {
+            if ($_arr_mimeRow['rcode'] == 'y080102') {
                 $_arr_tplData = array(
-                    "rcode" => "x080206",
+                    'rcode' => 'x080206',
                 );
-                $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+                $this->obj_tpl->tplDisplay('result', $_arr_tplData);
             }
         }
 
         $_arr_tplData = array(
-            "msg" => "ok"
+            'msg' => 'ok'
         );
-        $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+        $this->obj_tpl->tplDisplay('result', $_arr_tplData);
     }
 }

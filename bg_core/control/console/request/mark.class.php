@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 /*-------------用户类-------------*/
@@ -16,21 +16,21 @@ class CONTROL_CONSOLE_REQUEST_MARK {
     private $is_super       = false;
 
     function __construct() { //构造函数
-        $this->obj_console  = new CLASS_CONSOLE();
-        $this->obj_console->dspType = "result";
-        $this->obj_console->chk_install();
+        $this->general_console  = new GENERAL_CONSOLE();
+        $this->general_console->dspType = 'result';
+        $this->general_console->chk_install();
 
-        $this->adminLogged  = $this->obj_console->ssin_begin();
-        $this->obj_console->is_admin($this->adminLogged);
+        $this->adminLogged  = $this->general_console->ssin_begin();
+        $this->general_console->is_admin($this->adminLogged);
 
-        $this->obj_tpl      = $this->obj_console->obj_tpl;
+        $this->obj_tpl      = $this->general_console->obj_tpl;
 
-        if ($this->adminLogged["admin_type"] == "super") {
+        if ($this->adminLogged['admin_type'] == 'super') {
             $this->is_super = true;
         }
 
-        if (isset($this->adminLogged["groupRow"]["group_allow"])) {
-            $this->group_allow = $this->adminLogged["groupRow"]["group_allow"];
+        if (isset($this->adminLogged['groupRow']['group_allow'])) {
+            $this->group_allow = $this->adminLogged['groupRow']['group_allow'];
         }
 
         $this->mdl_mark     = new MODEL_MARK();
@@ -44,22 +44,22 @@ class CONTROL_CONSOLE_REQUEST_MARK {
      * @return void
      */
     function ctrl_submit() {
-        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
+        if (!isset($this->group_allow['article']['mark']) && !$this->is_super) {
             $_arr_tplData = array(
-                "rcode" => "x140302",
+                'rcode' => 'x140302',
             );
-            $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+            $this->obj_tpl->tplDisplay('result', $_arr_tplData);
         }
 
         $_arr_markInput = $this->mdl_mark->input_submit();
 
-        if ($_arr_markInput["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_markInput);
+        if ($_arr_markInput['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_markInput);
         }
 
         $_arr_markRow = $this->mdl_mark->mdl_submit();
 
-        $this->obj_tpl->tplDisplay("result", $_arr_markRow);
+        $this->obj_tpl->tplDisplay('result', $_arr_markRow);
     }
 
 
@@ -70,21 +70,21 @@ class CONTROL_CONSOLE_REQUEST_MARK {
      * @return void
      */
     function ctrl_del() {
-        if (!isset($this->group_allow["article"]["mark"]) && !$this->is_super) {
+        if (!isset($this->group_allow['article']['mark']) && !$this->is_super) {
             $_arr_tplData = array(
-                "rcode" => "x140304",
+                'rcode' => 'x140304',
             );
-            $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+            $this->obj_tpl->tplDisplay('result', $_arr_tplData);
         }
 
         $_arr_markIds = $this->mdl_mark->input_ids();
-        if ($_arr_markIds["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_markIds);
+        if ($_arr_markIds['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_markIds);
         }
 
         $_arr_markRow = $this->mdl_mark->mdl_del();
 
-        $this->obj_tpl->tplDisplay("result", $_arr_markRow);
+        $this->obj_tpl->tplDisplay('result', $_arr_markRow);
     }
 
 
@@ -95,23 +95,23 @@ class CONTROL_CONSOLE_REQUEST_MARK {
      * @return void
      */
     function ctrl_chkname() {
-        $_str_markName    = fn_getSafe(fn_get("mark_name"), "txt", "");
+        $_str_markName    = fn_getSafe(fn_get('mark_name'), 'txt', '');
 
         if (!fn_isEmpty($_str_markName)) {
-            $_num_markId      = fn_getSafe(fn_get("mark_id"), "int", 0);
-            $_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, "mark_name", $_num_markId);
+            $_num_markId      = fn_getSafe(fn_get('mark_id'), 'int', 0);
+            $_arr_markRow     = $this->mdl_mark->mdl_read($_str_markName, 'mark_name', $_num_markId);
 
-            if ($_arr_markRow["rcode"] == "y140102") {
+            if ($_arr_markRow['rcode'] == 'y140102') {
                 $_arr_tplData = array(
-                    "rcode" => "x140203",
+                    'rcode' => 'x140203',
                 );
-                $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+                $this->obj_tpl->tplDisplay('result', $_arr_tplData);
             }
         }
 
         $_arr_tplData = array(
-            "msg" => "ok"
+            'msg' => 'ok'
         );
-        $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+        $this->obj_tpl->tplDisplay('result', $_arr_tplData);
     }
 }

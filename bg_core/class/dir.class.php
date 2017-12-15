@@ -5,14 +5,15 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 /*-------------文件夹操作类类-------------*/
 class CLASS_DIR {
 
     public $dir_status; //返回操作状态(成功/失败)
+    public $perms = 0771;
 
 
     /**
@@ -29,14 +30,16 @@ class CLASS_DIR {
             $_arr_dir = $this->list_dir($str_path); //逐级列出
 
             foreach ($_arr_dir as $_key=>$_value) {
-                if ($_value["type"] == "file" && file_exists($str_path . "/" . $_value["name"])) {
-                    $this->del_file($str_path . "/" . $_value["name"]);  //删除
-                } else if (is_dir($str_path . "/" . $_value["name"])) {
-                    $this->del_dir($str_path . "/" . $_value["name"]); //递归
+                if ($_value['type'] == 'file' && file_exists($str_path . DS . $_value['name'])) {
+                    $this->del_file($str_path . DS . $_value['name']);  //删除
+                } else if (is_dir($str_path . DS . $_value['name'])) {
+                    $this->del_dir($str_path . DS . $_value['name']); //递归
                 }
             }
 
-            rmdir($str_path);
+            if (is_dir($str_path)) {
+                rmdir($str_path);
+            }
         }
     }
 
@@ -49,16 +52,19 @@ class CLASS_DIR {
      * @return void
      */
     function mk_dir($str_path) {
-        if (stristr($str_path, ".")) {
+        $old_umask = umask(0);
+
+        if (stristr($str_path, '.')) {
             $str_path = dirname($str_path);
         }
-        if (is_dir($str_path) || stristr($str_path, ".")) { //已存在
+        if (is_dir($str_path) || stristr($str_path, '.')) { //已存在
             $this->dir_status = true;
         } else {
             //创建目录
             if ($this->mk_dir(dirname($str_path))) { //递归
-                if (mkdir($str_path)) { //创建成功
+                if (mkdir($str_path, $this->perms, true)) { //创建成功
                     $this->dir_status = true;
+                    //chmod($str_path, $this->perms);
                 } else {
                     $this->dir_status = false; //失败
                 }
@@ -66,6 +72,9 @@ class CLASS_DIR {
                 $this->dir_status = false;
             }
         }
+
+        //print_r($old_umask);
+        umask($old_umask);
 
         return $this->dir_status;
     }
@@ -78,7 +87,7 @@ class CLASS_DIR {
      * @param mixed $str_path
      * @return void
      */
-    function list_dir($str_path, $str_ext = "") {
+    function list_dir($str_path, $str_ext = '') {
 
         $this->mk_dir($str_path);
 
@@ -87,21 +96,21 @@ class CLASS_DIR {
 
         if (!fn_isEmpty($_arr_dir)) {
             foreach ($_arr_dir as $_key=>$_value) {
-                if ($_value != "." && $_value != "..") {
+                if ($_value != '.' && $_value != '..') {
                     $_str_pathFull = $str_path . $_value;
 
                     if (fn_isEmpty($str_ext)) {
                         $_arr_return[] = array(
-                            "name" => $_value,
-                            "type" => filetype($_str_pathFull),
+                            'name' => $_value,
+                            'type' => filetype($_str_pathFull),
                         );
                     } else {
                         $_arr_pathinfo = pathinfo($_value);
 
-                        if ($_arr_pathinfo["extension"] == $str_ext) {
+                        if ($_arr_pathinfo['extension'] == $str_ext) {
                             $_arr_return[] = array(
-                                "name" => $_value,
-                                "type" => filetype($_str_pathFull),
+                                'name' => $_value,
+                                'type' => filetype($_str_pathFull),
                             );
                         }
                     }
@@ -133,7 +142,7 @@ class CLASS_DIR {
     function copy_file($str_src, $str_dst) {
         $bool_return = false;
         $this->mk_dir($str_dst);
-        if (file_exists($str_src)) {
+        if (file_exists($str_src) && is_dir(dirname($str_dst))) {
             $bool_return = copy($str_src, $str_dst);
         }
         return $bool_return;

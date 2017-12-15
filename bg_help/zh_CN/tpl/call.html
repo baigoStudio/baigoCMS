@@ -5,7 +5,7 @@
     纯静态模式下，调用将会生成静态文件，调用方式可以在后台管理的查看调用中查询，推荐生成 html 文件，然后在需要显示调用的地方，用“服务器端嵌入 Server Side Include（SSI）”的方式来调用，如：<code>&lt;!--#include file=&quot;./call/9.html&quot; --&gt;</code>。
 </p>
 <p>
-    调用模板位于 <mark>./bg_tpl/call</mark> 目录下，如默认模板 <mark>./bg_tpl/call/call_cate.tpl</mark>。注：模板文件名必须使用 <mark>英文</mark> 与 <mark>数字</mark>，不能使用中文、符号等。
+    调用模板位于 <mark>./bg_tpl/call</mark> 目录下，如默认模板 <mark>./bg_tpl/call/call_cate.php</mark>。注：模板文件名必须使用 <mark>英文</mark> 与 <mark>数字</mark>，不能使用中文、符号等。
 </p>
 
 <div class="panel panel-default">
@@ -22,60 +22,75 @@
             <tbody>
                 <tr>
                     <td>文章列表、日排行、周排行、月排行、年排行、总排行</td>
-                    <td class="text-nowrap">call_article.tpl</td>
+                    <td class="text-nowrap">call_article.php</td>
                     <td>
                         <ul class="list-unstyled">
                             <li>
-                                <code>{$tplData.callRow}</code> 调用 <a href="#callRow">查看详情</a>
+                                <code>$this->tplData['callRow']</code> 调用 <a href="#callRow">查看详情</a>
                             </li>
                             <li>
-                                <code>{$tplData.articleRows}</code> 文章列表
-                                <a href="{BG_URL_HELP}index.php?mod=tpl&act=article#articleRow">查看详情</a>
+                                <code>$this->tplData['articleRows']</code> 文章列表
+                                <a href="{BG_URL_HELP}index.php?mod=php&act=article#articleRow">查看详情</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
                     <td>栏目列表</td>
-                    <td class="text-nowrap">call_cate.tpl</td>
+                    <td class="text-nowrap">call_cate.php</td>
                     <td>
                         <ul class="list-unstyled">
                             <li>
-                                <code>{$tplData.callRow}</code> 调用 <a href="#callRow">查看详情</a>
+                                <code>$this->tplData['callRow']</code> 调用 <a href="#callRow">查看详情</a>
                             </li>
                             <li>
-                                <code>{$tplData.cateRows}</code> 栏目列表
-                                <a href="{BG_URL_HELP}index.php?mod=tpl&act=cate#cateRow">查看详情</a>
+                                <code>$this->tplData['cateRows']</code> 栏目列表
+                                <a href="{BG_URL_HELP}index.php?mod=php&act=cate#cateRow">查看详情</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
                     <td>专题列表</td>
-                    <td class="text-nowrap">call_spec.tpl</td>
+                    <td class="text-nowrap">call_spec.php</td>
                     <td>
                         <ul class="list-unstyled">
                             <li>
-                                <code>{$tplData.callRow}</code> 调用 <a href="#callRow">查看详情</a>
+                                <code>$this->tplData['callRow']</code> 调用 <a href="#callRow">查看详情</a>
                             </li>
                             <li>
-                                <code>{$tplData.specRows}</code> 专题列表
-                                <a href="{BG_URL_HELP}index.php?mod=tpl&act=spec#specRow">查看详情</a>
+                                <code>$this->tplData['specRows']</code> 专题列表
+                                <a href="{BG_URL_HELP}index.php?mod=php&act=spec#specRow">查看详情</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
                     <td>TAG 列表、TAG 排行</td>
-                    <td class="text-nowrap">call_tag.tpl</td>
+                    <td class="text-nowrap">call_tag.php</td>
                     <td>
                         <ul class="list-unstyled">
                             <li>
-                                <code>{$tplData.callRow}</code> 调用 <a href="#callRow">查看详情</a>
+                                <code>$this->tplData['callRow']</code> 调用 <a href="#callRow">查看详情</a>
                             </li>
                             <li>
-                                <code>{$tplData.tagRows}</code> TAG 列表
-                                <a href="{BG_URL_HELP}index.php?mod=tpl&act=tag#tagRow">查看详情</a>
+                                <code>$this->tplData['tagRows']</code> TAG 列表
+                                <a href="{BG_URL_HELP}index.php?mod=php&act=tag#tagRow">查看详情</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>友情链接</td>
+                    <td class="text-nowrap">call_link.php</td>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li>
+                                <code>$this->tplData['callRow']</code> 调用 <a href="#callRow">查看详情</a>
+                            </li>
+                            <li>
+                                <code>$this->tplData['linkRows']</code> 友情链接
+                                详情请查看通用资源 <a href="{BG_URL_HELP}index.php?mod=php&act=common#link">友情链接</a> 与后台管理 <a href="{BG_URL_HELP}index.php?mod=console&act=link">链接</a>
                             </li>
                         </ul>
                     </td>
@@ -89,7 +104,7 @@
 <div>&nbsp;</div>
 
 <a name="callRow"></a>
-<h4><code>{$tplData.callRow}</code> 数组</h4>
+<h4><code>$this->tplData['callRow']</code> 数组</h4>
 
 <p>当前栏目详细信息</p>
 
@@ -163,7 +178,7 @@
                     <td class="text-nowrap">call_amount</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">显示数量</td>
-                    <td><code>{$tplData.callRow.call_amount.top}</code> 为显示数量、<code>{$tplData.callRow.call_amount.except}</code> 为排除数量</td>
+                    <td><code>$this->tplData['callRow']['call_amount']['top']</code> 为显示数量、<code>$this->tplData['callRow']['call_amount']['except']</code> 为排除数量</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">call_attach</td>
@@ -198,7 +213,7 @@
 
 <h4>其他模式下</h4>
 <p>
-    在任何模板内，均可以用函数 <code>{call_display call_id=调用 ID}</code> 的方式来调用，执行此函数后，模板会生成一个 <code>{$callRows}</code> 数组，可以通过遍历 <code>{$callRows.调用 ID}</code> 的方式来显示调用结果，<code>{$callRows}</code> 数组会根据不同的调用类型有所不同，详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=article#articleRow">文章</a>、<a href="{BG_URL_HELP}index.php?mod=tpl&act=cate#cateRow">栏目</a>、<a href="{BG_URL_HELP}index.php?mod=tpl&act=tag#tagRow">TAG</a>、<a href="{BG_URL_HELP}index.php?mod=tpl&act=spec#specRow">专题</a> 等有关信息。关于调用以及调用 ID 请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=call">调用管理</a>。
+    在任何模板内，均可以用函数 <code>fn_callDisplay(调用 ID)</code> 的方式来调用，执行此函数后，会返回一个多维数组，可以通过遍历数组的方式来显示调用结果，返回数组会根据不同的调用类型有所不同，详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=article#articleRow">文章</a>、<a href="{BG_URL_HELP}index.php?mod=php&act=cate#cateRow">栏目</a>、<a href="{BG_URL_HELP}index.php?mod=php&act=tag#tagRow">TAG</a>、<a href="{BG_URL_HELP}index.php?mod=php&act=spec#specRow">专题</a>、<a href="{BG_URL_HELP}index.php?mod=php&act=common#link">友情链接</a> 等有关信息。关于调用以及调用 ID 请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=call">调用管理</a>。
 </p>
 
 <div>&nbsp;</div>
@@ -214,7 +229,7 @@
 <a name="callAttach"></a>
 <h3>调用附件</h3>
 <p>
-    在任何模板内，均可以用函数 <code>{call_attach attach_id=附件 ID}</code> 的方式来调用，执行此函数后，模板会生成一个 <code>{$attachRows}</code> 数组，可以通过遍历 <code>{$attachRows.附件 ID}</code> 的方式来显示调用结果，详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=attach">附件 / 缩略图</a>。
+    在任何模板内，均可以用函数 <code>fn_callAttach(附件 ID)</code> 的方式来调用，执行此函数后，会返回一个数组，可以通过遍历数组的方式来显示调用结果，详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=attach">附件 / 缩略图</a>。
 </p>
 
 <div>&nbsp;</div>
@@ -230,5 +245,5 @@
 <a name="callCate"></a>
 <h3>调用栏目</h3>
 <p>
-    在任何模板内，均可以用函数 <code>{call_cate cate_id=栏目 ID}</code> 的方式来调用，执行此函数后，模板会生成一个 <code>{$cateRows}</code> 数组，可以通过遍历 <code>{$cateRows.栏目 ID}</code> 的方式来显示调用结果，详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=cate">栏目</a>。
+    在任何模板内，均可以用函数 <code>fn_callCate(栏目 ID)</code> 的方式来调用，执行此函数后，会返回一个数组，可以通过遍历数组的方式来显示调用结果，详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=cate">栏目</a>。
 </p>

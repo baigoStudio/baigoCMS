@@ -3,26 +3,25 @@
 ！！！！警告！！！！
 以下为系统文件，请勿修改
 -----------------------------------------------------------------*/
-$arr_mod = array("article", "tag", "mark", "spec", "cate", "attach", "mime", "thumb", "call", "user", "admin", "group", "opt", "app", "custom", "link", "profile", "pm", "login", "forgot", "seccode", "token");
 
-if (isset($_GET["mod"])) {
-    $mod = $_GET["mod"];
+define('BG_PATH_CONFIG', $_SERVER['DOCUMENT_ROOT'] . dirname(dirname($_SERVER['PHP_SELF'])) . DIRECTORY_SEPARATOR . 'bg_config' . DIRECTORY_SEPARATOR);
+define('BG_APP', 'console');
+define('BG_TYPE', 'request');
+
+if (file_exists(BG_PATH_CONFIG . 'config.class.php')) {
+    require(BG_PATH_CONFIG . 'config.class.php'); //配置生成类
 } else {
-    $mod = $arr_mod[0];
+    exit('{"rcode":"x","msg":"Fatal Error: Config class not exists!"}');
 }
 
-if (!in_array($mod, $arr_mod)) {
-    exit("Access Denied");
+if (file_exists(BG_PATH_CONFIG . 'config.inc.php')) {
+    require(BG_PATH_CONFIG . 'config.inc.php'); //载入配置
+} else {
+    exit('{"rcode":"x","msg":"Fatal Error: Config file not exists!"}');
 }
 
-$base = $_SERVER["DOCUMENT_ROOT"] . str_ireplace(basename(dirname($_SERVER["PHP_SELF"])), "", dirname($_SERVER["PHP_SELF"]));
-
-require($base . "bg_config/config.class.php");
-
-$obj_init = new CLASS_CONFIG();
-
-$obj_init->config_gen();
-
-require($obj_init->str_pathRoot . "bg_config/config.inc.php"); //载入配置
-
-require(BG_PATH_MODULE . "console/request/" . $mod . ".php");
+if (file_exists(BG_PATH_CORE . 'runtime.php')) {
+    require(BG_PATH_CORE . 'runtime.php');
+} else {
+    exit('{"rcode":"x","msg":"Fatal Error: Runtime not exists!"}');
+}

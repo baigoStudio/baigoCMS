@@ -75,9 +75,9 @@
 
 <div>
     <a name="module"></a>
-    <h4>问：如何开启“静态页面生成模块”和“FTP 分发模块”？</h4>
+    <h4>问：如何开启“静态页面生成模块”？</h4>
 
-    <p>答：开启方法是修改 ./bg_config/config.inc.php 文件，找到 BG_MODULE_GEN 和 BG_MODULE_FTP 两个常量，这两个常量分别控制“静态页面生成模块”和“FTP 分发模块”的开启与关闭，将常量定义为 1 即表示开启，定义为 0 即表示关闭，如：</p>
+    <p>答：开启方法是修改 ./bg_config/config.inc.php 文件，找到 BG_MODULE_GEN 常量（如未定义可以自行增加），这个常量控制“静态页面生成模块”的开启与关闭，将常量定义为 1 即表示开启，定义为 0 即表示关闭，如：</p>
     <p>
 <pre><code class="language-php">define(&quot;BG_MODULE_GEN&quot;, 1);
 define(&quot;BG_MODULE_FTP&quot;, 1);
@@ -97,11 +97,35 @@ define(&quot;BG_MODULE_FTP&quot;, 1);
 
 <div>
     <a name="module"></a>
-    <h4>问：如何切换 Smarty 模板和 PHP 模板？</h4>
+    <h4>问：如何开启“FTP 分发模块”？</h4>
 
-    <p>答：开启方法是修改 ./bg_config/config.inc.php 文件，找到 BG_DEFAULT_TPL 常量，这常量控制系统采用何种模板引擎，可选值为：php 与 tpl</p>
+    <p>答：开启方法是修改 ./bg_config/config.inc.php 文件，找到 BG_MODULE_FTP 常量（如未定义可以自行增加），这个常量控制“FTP 分发模块”的开启与关闭，将常量定义为 1 即表示开启，定义为 0 即表示关闭，如：</p>
     <p>
-<pre><code class="language-php">define(&quot;BG_DEFAULT_TPL&quot;, "php");</code></pre>
+<pre><code class="language-php">define(&quot;BG_MODULE_GEN&quot;, 1);
+define(&quot;BG_MODULE_FTP&quot;, 1);
+</code></pre>
+    </p>
+</div>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<div>
+    <a name="module"></a>
+    <h4>问：如何开启“采集模块”？</h4>
+
+    <p>答：开启方法是修改 ./bg_config/config.inc.php 文件，找到 BG_MODULE_GATHER 常量（如未定义可以自行增加），这个常量控制“采集模块”的开启与关闭，将常量定义为 1 即表示开启，定义为 0 即表示关闭，如：</p>
+    <p>
+<pre><code class="language-php">define(&quot;BG_MODULE_GEN&quot;, 1);
+define(&quot;BG_MODULE_FTP&quot;, 1);
+</code></pre>
     </p>
 </div>
 
@@ -135,7 +159,7 @@ define(&quot;BG_MODULE_FTP&quot;, 1);
 <div>&nbsp;</div>
 
 <a name="cate_urlMore"></a>
-<h4>问：栏目内的 <code>$this->tplData["cateRow"]["cate_urlMore"]</code> 更多分页 URL 与 <code>$this->tplData"]["cateRow"]["cate_url"]</code> 当前栏目 URL 有什么区别？为何如此设定？</h4>
+<h4>问：栏目内的 <code>$this->tplData['cateRow']['cate_urlMore']</code> 更多分页 URL 与 <code>$this->tplData"]['cateRow']['cate_url']</code> 当前栏目 URL 有什么区别？为何如此设定？</h4>
 
 <p>答：cate_urlMore 是专门为纯静态模式设置的。</p>
 

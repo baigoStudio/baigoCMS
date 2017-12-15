@@ -1,16 +1,16 @@
 <?php $cfg = array(
-    "title"      => $this->tplData["cateRow"]["cate_name"]
+    'title'      => $this->tplData['cateRow']['cate_name']
 );
 
-include("include/pub_head.php");
+include('include' . DS . 'pub_head.php');
 
-    include("include/breadcrumb.php"); ?>
+    include('include' . DS . 'breadcrumb.php'); ?>
 
-    <h3><?php echo $this->tplData["cateRow"]["cate_name"]; ?></h3>
+    <h3><?php echo $this->tplData['cateRow']['cate_name']; ?></h3>
 
-    <p>
-        <?php echo $this->tplData["cateRow"]["cate_content"]; ?>
-    </p>
+    <div>
+        <?php echo $this->tplData['cateRow']['cate_content']; ?>
+    </div>
 
-<?php include("include/pub_foot.php");
-include("include/html_foot.php"); ?>
+<?php include('include' . DS . 'pub_foot.php');
+include('include' . DS . 'html_foot.php'); ?>

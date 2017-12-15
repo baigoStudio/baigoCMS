@@ -5,85 +5,82 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 /*-------------TAG 模型-------------*/
 class MODEL_TAG {
 
-    public $tagStatus = array();
+    public $arr_status = array('show', 'hide');
 
     function __construct() { //构造函数
-        $this->obj_db = $GLOBALS["obj_db"]; //设置数据库对象
+        $this->obj_db = $GLOBALS['obj_db']; //设置数据库对象
     }
 
 
     function mdl_create_table() {
-        foreach ($this->tagStatus as $_key=>$_value) {
-            $_arr_status[] = $_key;
-        }
-        $_str_status = implode("','", $_arr_status);
+        $_str_status = implode('\',\'', $this->arr_status);
 
         $_arr_tagCreat = array(
-            "tag_id"             => "int NOT NULL AUTO_INCREMENT COMMENT 'ID'",
-            "tag_name"           => "varchar(30) NOT NULL COMMENT '标题'",
-            "tag_status"         => "enum('" . $_str_status . "') NOT NULL COMMENT '状态'",
-            "tag_article_count"  => "int NOT NULL COMMENT '文章数'",
+            'tag_id'             => 'int NOT NULL AUTO_INCREMENT COMMENT \'ID\'',
+            'tag_name'           => 'varchar(30) NOT NULL COMMENT \'标题\'',
+            'tag_status'         => 'enum(\'' . $_str_status . '\') NOT NULL COMMENT \'状态\'',
+            'tag_article_count'  => 'int NOT NULL COMMENT \'文章数\'',
         );
 
-        $_num_mysql = $this->obj_db->create_table(BG_DB_TABLE . "tag", $_arr_tagCreat, "tag_id", "标签");
+        $_num_db = $this->obj_db->create_table(BG_DB_TABLE . 'tag', $_arr_tagCreat, 'tag_id', '标签');
 
-        if ($_num_mysql > 0) {
-            $_str_rcode = "y130105"; //更新成功
+        if ($_num_db > 0) {
+            $_str_rcode = 'y130105'; //更新成功
         } else {
-            $_str_rcode = "x130105"; //更新成功
+            $_str_rcode = 'x130105'; //更新成功
         }
 
         return array(
-            "rcode" => $_str_rcode, //更新成功
+            'rcode' => $_str_rcode, //更新成功
         );
     }
 
 
     function mdl_create_index() {
-        $_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . "tag");
+        $_arr_indexRow    = $this->obj_db->show_index(BG_DB_TABLE . 'tag');
         $is_exists        = false;
 
         foreach ($_arr_indexRow as $_key=>$_value) {
-            if (in_array("search", $_value)) {
+            if (in_array('search', $_value)) {
                 $is_exists = true;
                 break;
             }
         }
 
         $_arr_tagIndex = array(
-            "tag_article_count",
-            "tag_id",
+            'tag_article_count',
+            'tag_id',
         );
 
-        $_num_mysql = $this->obj_db->create_index("search", BG_DB_TABLE . "tag", $_arr_tagIndex, "BTREE", $is_exists);
+        $_num_db = $this->obj_db->create_index('search', BG_DB_TABLE . 'tag', $_arr_tagIndex, 'BTREE', $is_exists);
 
-        if ($_num_mysql > 0) {
-            $_str_rcode = "y130109"; //更新成功
+        if ($_num_db > 0) {
+            $_str_rcode = 'y130109'; //更新成功
         } else {
-            $_str_rcode = "x130109"; //更新成功
+            $_str_rcode = 'x130109'; //更新成功
         }
 
         return array(
-            "rcode" => $_str_rcode, //更新成功
+            'rcode' => $_str_rcode, //更新成功
         );
     }
 
 
     function mdl_column() {
-        $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . "tag");
+        $_arr_colRows = $this->obj_db->show_columns(BG_DB_TABLE . 'tag');
 
         $_arr_col = array();
 
         if (!fn_isEmpty($_arr_colRows)) {
             foreach ($_arr_colRows as $_key=>$_value) {
-                $_arr_col[] = $_value["Field"];
+                $_arr_col[] = $_value['Field'];
             }
         }
 
@@ -92,38 +89,35 @@ class MODEL_TAG {
 
 
     function mdl_alter_table() {
-        foreach ($this->tagStatus as $_key=>$_value) {
-            $_arr_status[] = $_key;
-        }
-        $_str_status = implode("','", $_arr_status);
+        $_str_status = implode('\',\'', $this->arr_status);
 
         $_arr_col     = $this->mdl_column();
         $_arr_alter   = array();
 
-        if (in_array("tag_status", $_arr_col)) {
-            $_arr_alter["tag_status"] = array("CHANGE", "enum('" . $_str_status . "') NOT NULL COMMENT '状态'", "tag_status");
+        if (in_array('tag_status', $_arr_col)) {
+            $_arr_alter['tag_status'] = array('CHANGE', 'enum(\'' . $_str_status . '\') NOT NULL COMMENT \'状态\'', 'tag_status');
         }
 
-        if (in_array("tag_article_count", $_arr_col)) {
-            $_arr_alter["tag_article_count"] = array("CHANGE", "int NOT NULL COMMENT '文章数'", "tag_article_count");
+        if (in_array('tag_article_count', $_arr_col)) {
+            $_arr_alter['tag_article_count'] = array('CHANGE', 'int NOT NULL COMMENT \'文章数\'', 'tag_article_count');
         }
 
-        $_str_rcode = "y130111";
+        $_str_rcode = 'y130111';
 
         if (!fn_isEmpty($_arr_alter)) {
-            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . "tag", $_arr_alter);
+            $_reselt = $this->obj_db->alter_table(BG_DB_TABLE . 'tag', $_arr_alter);
 
             if (!fn_isEmpty($_reselt)) {
-                $_str_rcode = "y130106";
+                $_str_rcode = 'y130106';
                 $_arr_tagData = array(
-                    "tag_status" => $_arr_status[0],
+                    'tag_status' => $this->arr_status[0],
                 );
-                $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "LENGTH(`tag_status`) < 1"); //更新数据
+                $this->obj_db->update(BG_DB_TABLE . 'tag', $_arr_tagData, 'LENGTH(`tag_status`)<1'); //更新数据
             }
         }
 
         return array(
-            "rcode" => $_str_rcode,
+            'rcode' => $_str_rcode,
         );
     }
 
@@ -135,50 +129,50 @@ class MODEL_TAG {
      * @param mixed $num_tagId
      * @param mixed $str_tagName
      * @param mixed $str_tagType
-     * @param mixed $str_tagStatus
+     * @param mixed $str_status
      * @return void
      */
-    function mdl_submit($str_tagName = "", $str_tagStatus = "") {
+    function mdl_submit($str_tagName = '', $str_status = '') {
         $_arr_tagData = array();
 
-        if (fn_isEmpty($str_tagName)) {
-            $_arr_tagData["tag_name"] = $this->tagInput["tag_name"];
-        } else {
-            $_arr_tagData["tag_name"] = $str_tagName;
+        if (!fn_isEmpty($str_tagName)) {
+            $_arr_tagData['tag_name'] = $str_tagName;
+        } else if (isset($this->tagInput['tag_name'])) {
+            $_arr_tagData['tag_name'] = $this->tagInput['tag_name'];
         }
 
-        if (fn_isEmpty($str_tagStatus)) {
-            $_arr_tagData["tag_status"] = $this->tagInput["tag_status"];
-        } else {
-            $_arr_tagData["tag_status"] = $str_tagStatus;
+        if (!fn_isEmpty($str_status)) {
+            $_arr_tagData['tag_status'] = $str_status;
+        } else if (isset($this->tagInput['tag_status'])) {
+            $_arr_tagData['tag_status'] = $this->tagInput['tag_status'];
         }
 
-        if (!isset($this->tagInput["tag_id"]) || $this->tagInput["tag_id"] < 1) {
-            $_num_tagId = $this->obj_db->insert(BG_DB_TABLE . "tag", $_arr_tagData);
+        if (!isset($this->tagInput['tag_id']) || $this->tagInput['tag_id'] < 1) {
+            $_num_tagId = $this->obj_db->insert(BG_DB_TABLE . 'tag', $_arr_tagData);
 
             if ($_num_tagId > 0) { //数据库插入是否成功
-                $_str_rcode = "y130101";
+                $_str_rcode = 'y130101';
             } else {
                 return array(
-                    "rcode" => "x130101",
+                    'rcode' => 'x130101',
                 );
             }
         } else {
-            $_num_tagId = $this->tagInput["tag_id"];
-            $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "`tag_id`=" . $_num_tagId);
+            $_num_tagId = $this->tagInput['tag_id'];
+            $_num_db = $this->obj_db->update(BG_DB_TABLE . 'tag', $_arr_tagData, '`tag_id`=' . $_num_tagId);
 
-            if ($_num_mysql > 0) {
-                $_str_rcode = "y130103";
+            if ($_num_db > 0) {
+                $_str_rcode = 'y130103';
             } else {
                 return array(
-                    "rcode" => "x130103",
+                    'rcode' => 'x130103',
                 );
             }
         }
 
         return array(
-            "tag_id"     => $_num_tagId,
-            "rcode"  => $_str_rcode,
+            'tag_id'    => $_num_tagId,
+            'rcode'     => $_str_rcode,
         );
     }
 
@@ -193,21 +187,21 @@ class MODEL_TAG {
      */
     function mdl_countDo($num_tagId, $num_articleCount = 0) {
         $_arr_tagData = array(
-            "tag_article_count" => $num_articleCount,
+            'tag_article_count' => $num_articleCount,
         );
 
-        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "tag", $_arr_tagData, "`tag_id`=" . $num_tagId);
+        $_num_db = $this->obj_db->update(BG_DB_TABLE . 'tag', $_arr_tagData, '`tag_id`=' . $num_tagId);
 
-        if ($_num_mysql > 0) {
-            $_str_rcode = "y130103";
+        if ($_num_db > 0) {
+            $_str_rcode = 'y130103';
         } else {
             return array(
-                "rcode" => "x130103",
+                'rcode' => 'x130103',
             );
         }
 
         return array(
-            "rcode"  => $_str_rcode,
+            'rcode'  => $_str_rcode,
         );
     }
 
@@ -217,41 +211,41 @@ class MODEL_TAG {
      *
      * @access public
      * @param mixed $str_tag
-     * @param string $str_readBy (default: "tag_id")
+     * @param string $str_readBy (default: 'tag_id')
      * @param int $num_notThisId (default: 0)
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function mdl_read($str_tag, $str_readBy = "tag_id", $num_notId = 0) {
+    function mdl_read($str_tag, $str_readBy = 'tag_id', $num_notId = 0) {
         $_arr_tagSelect = array(
-            "tag_id",
-            "tag_name",
-            "tag_status",
-            "tag_article_count",
+            'tag_id',
+            'tag_name',
+            'tag_status',
+            'tag_article_count',
         );
 
         if (is_numeric($str_tag)) {
-            $_str_sqlWhere = "`" . $str_readBy . "`=" . $str_tag;
+            $_str_sqlWhere = '`' . $str_readBy . '`=' . $str_tag;
         } else {
-            $_str_sqlWhere = "`" . $str_readBy . "`='" . $str_tag . "'";
+            $_str_sqlWhere = '`' . $str_readBy . '`=\'' . $str_tag . '\'';
         }
 
         if ($num_notId > 0) {
-            $_str_sqlWhere .= " AND `tag_id`<>" . $num_notId;
+            $_str_sqlWhere .= ' AND `tag_id`<>' . $num_notId;
         }
 
-        $_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . "tag",  $_arr_tagSelect, $_str_sqlWhere, "", "", 1, 0); //检查本地表是否存在记录
+        $_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . 'tag',  $_arr_tagSelect, $_str_sqlWhere, '', '', 1, 0); //检查本地表是否存在记录
 
         if (isset($_arr_tagRows[0])) {
             $_arr_tagRow  = $_arr_tagRows[0];
         } else {
             return array(
-                "rcode" => "x130102", //不存在记录
+                'rcode' => 'x130102', //不存在记录
             );
         }
 
-        $_arr_tagRow["urlRow"]  = $this->url_process($_arr_tagRow);
-        $_arr_tagRow["rcode"]   = "y130102";
+        $_arr_tagRow['urlRow']  = $this->url_process($_arr_tagRow);
+        $_arr_tagRow['rcode']   = 'y130102';
 
         return $_arr_tagRow;
     }
@@ -261,45 +255,45 @@ class MODEL_TAG {
      * mdl_list function.
      *
      * @access public
-     * @param string $str_status (default: "")
-     * @param string $str_type (default: "")
+     * @param string $str_status (default: '')
+     * @param string $str_type (default: '')
      * @param int $num_parentId (default: 0)
      * @return void
      */
     function mdl_list($num_no, $num_except = 0, $arr_search = array()) {
         $_arr_tagSelect = array(
-            "tag_id",
-            "tag_name",
-            "tag_article_count",
-            "tag_status",
+            'tag_id',
+            'tag_name',
+            'tag_article_count',
+            'tag_status',
         );
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_arr_sqlGroup = array("tag_id");
+        $_arr_sqlGroup = array('tag_id');
 
         $_arr_sqlOrder = array(
-            array("tag_id", "DESC"),
+            array('tag_id', 'DESC'),
         );
 
-        if (isset($arr_search["article_id"]) && $arr_search["article_id"] > 0) {
-            $_view_name = "tag_view";
+        if (isset($arr_search['article_id']) && $arr_search['article_id'] > 0) {
+            $_view_name = 'tag_view';
         } else {
-            $_view_name = "tag";
+            $_view_name = 'tag';
         }
 
-        if (isset($arr_search["type"]) && $arr_search["type"] == "tag_rank") {
-            $_arr_sqlGroup = array("tag_article_count", "tag_id");
+        if (isset($arr_search['type']) && $arr_search['type'] == 'tag_rank') {
+            $_arr_sqlGroup = array('tag_article_count', 'tag_id');
             $_arr_sqlOrder = array(
-                array("tag_article_count", "DESC"),
-                array("tag_id", "DESC"),
+                array('tag_article_count', 'DESC'),
+                array('tag_id', 'DESC'),
             );
         }
 
         $_arr_tagRows = $this->obj_db->select(BG_DB_TABLE . $_view_name,  $_arr_tagSelect, $_str_sqlWhere, $_arr_sqlGroup, $_arr_sqlOrder, $num_no, $num_except);
 
         foreach ($_arr_tagRows as $_key=>$_value) {
-            $_arr_tagRows[$_key]["urlRow"] = $this->url_process($_value);
+            $_arr_tagRows[$_key]['urlRow'] = $this->url_process($_value);
         }
 
         return $_arr_tagRows;
@@ -310,7 +304,7 @@ class MODEL_TAG {
 
         $_str_sqlWhere = $this->sql_process($arr_search);
 
-        $_num_tagCount = $this->obj_db->count(BG_DB_TABLE . "tag", $_str_sqlWhere); //查询数据
+        $_num_tagCount = $this->obj_db->count(BG_DB_TABLE . 'tag', $_str_sqlWhere); //查询数据
 
         /*print_r($_arr_userRow);
         exit;*/
@@ -323,28 +317,28 @@ class MODEL_TAG {
      * mdl_status function.
      *
      * @access public
-     * @param mixed $this->tagIds["tag_ids"]
+     * @param mixed $this->tagIds['tag_ids']
      * @param mixed $str_status
      * @return void
      */
     function mdl_status($str_status) {
-        $_str_tagId = implode(",", $this->tagIds["tag_ids"]);
+        $_str_tagId = implode(',', $this->tagIds['tag_ids']);
 
         $_arr_tagData = array(
-            "tag_status" => $str_status,
+            'tag_status' => $str_status,
         );
 
-        $_num_mysql = $this->obj_db->update(BG_DB_TABLE . "tag",  $_arr_tagData, "`tag_id` IN (" . $_str_tagId . ")"); //更新数据
+        $_num_db = $this->obj_db->update(BG_DB_TABLE . 'tag',  $_arr_tagData, '`tag_id` IN (' . $_str_tagId . ')'); //更新数据
 
         //如车影响行数小于0则返回错误
-        if ($_num_mysql > 0) {
-            $_str_rcode = "y130103";
+        if ($_num_db > 0) {
+            $_str_rcode = 'y130103';
         } else {
-            $_str_rcode = "x130103";
+            $_str_rcode = 'x130103';
         }
 
         return array(
-            "rcode" => $_str_rcode,
+            'rcode' => $_str_rcode,
         ); //成功
     }
 
@@ -353,84 +347,84 @@ class MODEL_TAG {
      * mdl_del function.
      *
      * @access public
-     * @param mixed $this->tagIds["tag_ids"]
+     * @param mixed $this->tagIds['tag_ids']
      * @return void
      */
     function mdl_del() {
-        $_str_tagId = implode(",", $this->tagIds["tag_ids"]);
+        $_str_tagId = implode(',', $this->tagIds['tag_ids']);
 
-        $_num_mysql = $this->obj_db->delete(BG_DB_TABLE . "tag",  "tag_id IN (" . $_str_tagId . ")"); //删除数据
+        $_num_db = $this->obj_db->delete(BG_DB_TABLE . 'tag',  '`tag_id` IN (' . $_str_tagId . ')'); //删除数据
 
         //如车影响行数小于0则返回错误
-        if ($_num_mysql > 0) {
-            $_str_rcode = "y130104";
-            $this->obj_db->delete(BG_DB_TABLE . "tag_belong", "belong_tag_id IN (" . $_str_tagId . ")"); //更新数据
+        if ($_num_db > 0) {
+            $_str_rcode = 'y130104';
+            $this->obj_db->delete(BG_DB_TABLE . 'tag_belong', '`belong_tag_id` IN (' . $_str_tagId . ')'); //更新数据
         } else {
-            $_str_rcode = "x130104";
+            $_str_rcode = 'x130104';
         }
 
         return array(
-            "rcode" => $_str_rcode,
+            'rcode' => $_str_rcode,
         ); //成功
     }
 
 
     function input_submit() {
-        if (!fn_token("chk")) { //令牌
+        if (!fn_token('chk')) { //令牌
             return array(
-                "rcode" => "x030206",
+                'rcode' => 'x030206',
             );
         }
 
-        $this->tagInput["tag_id"] = fn_getSafe(fn_post("tag_id"), "int", 0);
+        $this->tagInput['tag_id'] = fn_getSafe(fn_post('tag_id'), 'int', 0);
 
-        if ($this->tagInput["tag_id"] > 0) {
-            $_arr_tagRow = $this->mdl_read($this->tagInput["tag_id"]);
-            if ($_arr_tagRow["rcode"] != "y130102") {
+        if ($this->tagInput['tag_id'] > 0) {
+            $_arr_tagRow = $this->mdl_read($this->tagInput['tag_id']);
+            if ($_arr_tagRow['rcode'] != 'y130102') {
                 return $_arr_tagRow;
             }
         }
 
-        $_arr_tagName = validateStr(fn_post("tag_name"), 1, 30);
-        switch ($_arr_tagName["status"]) {
-            case "too_short":
+        $_arr_tagName = fn_validate(fn_post('tag_name'), 1, 30);
+        switch ($_arr_tagName['status']) {
+            case 'too_short':
                 return array(
-                    "rcode" => "x130201",
+                    'rcode' => 'x130201',
                 );
             break;
 
-            case "too_long":
+            case 'too_long':
                 return array(
-                    "rcode" => "x130202",
+                    'rcode' => 'x130202',
                 );
             break;
 
-            case "ok":
-                $this->tagInput["tag_name"] = $_arr_tagName["str"];
+            case 'ok':
+                $this->tagInput['tag_name'] = $_arr_tagName['str'];
             break;
         }
 
-        $_arr_tagRow = $this->mdl_read($this->tagInput["tag_name"], "tag_name", $this->tagInput["tag_id"]);
-        if ($_arr_tagRow["rcode"] == "y130102") {
+        $_arr_tagRow = $this->mdl_read($this->tagInput['tag_name'], 'tag_name', $this->tagInput['tag_id']);
+        if ($_arr_tagRow['rcode'] == 'y130102') {
             return array(
-                "rcode" => "x130203",
+                'rcode' => 'x130203',
             );
         }
 
-        $_arr_tagStatus = validateStr(fn_post("tag_status"), 1, 0);
-        switch ($_arr_tagStatus["status"]) {
-            case "too_short":
+        $_arr_tagStatus = fn_validate(fn_post('tag_status'), 1, 0);
+        switch ($_arr_tagStatus['status']) {
+            case 'too_short':
                 return array(
-                    "rcode" => "x130204",
+                    'rcode' => 'x130204',
                 );
             break;
 
-            case "ok":
-                $this->tagInput["tag_status"] = $_arr_tagStatus["str"];
+            case 'ok':
+                $this->tagInput['tag_status'] = $_arr_tagStatus['str'];
             break;
         }
 
-        $this->tagInput["rcode"] = "ok";
+        $this->tagInput['rcode'] = 'ok';
 
         return $this->tagInput;
     }
@@ -443,26 +437,26 @@ class MODEL_TAG {
      * @return void
      */
     function input_ids() {
-        if (!fn_token("chk")) { //令牌
+        if (!fn_token('chk')) { //令牌
             return array(
-                "rcode" => "x030206",
+                'rcode' => 'x030206',
             );
         }
 
-        $_arr_tagIds = fn_post("tag_ids");
+        $_arr_tagIds = fn_post('tag_ids');
 
         if (fn_isEmpty($_arr_tagIds)) {
-            $_str_rcode = "x030202";
+            $_str_rcode = 'x030202';
         } else {
             foreach ($_arr_tagIds as $_key=>$_value) {
-                $_arr_tagIds[$_key] = fn_getSafe($_value, "int", 0);
+                $_arr_tagIds[$_key] = fn_getSafe($_value, 'int', 0);
             }
-            $_str_rcode = "ok";
+            $_str_rcode = 'ok';
         }
 
         $this->tagIds = array(
-            "rcode"     => $_str_rcode,
-            "tag_ids"   => array_unique($_arr_tagIds),
+            'rcode'     => $_str_rcode,
+            'tag_ids'   => array_filter(array_unique($_arr_tagIds)),
         );
 
         return $this->tagIds;
@@ -470,42 +464,42 @@ class MODEL_TAG {
 
 
     private function url_process($_arr_tagRow) {
-        $_str_pageExt = "";
+        //$_str_pageExt = '';
 
         switch (BG_VISIT_TYPE) {
-            case "static":
-            case "pstatic":
-                $_str_tagUrl        = BG_URL_ROOT . "tag/tag-" . urlencode($_arr_tagRow["tag_name"]) . "/";
-                $_str_pageAttach    = "page-";
+            case 'static':
+            case 'pstatic':
+                $_str_tagUrl        = BG_URL_ROOT . 'tag/tag-' . urlencode($_arr_tagRow['tag_name']) . '/';
+                $_str_pageAttach    = 'page-';
             break;
 
             default:
-                $_str_tagUrl        = BG_URL_ROOT . "index.php?mod=tag&act=show&tag_name=" . urlencode($_arr_tagRow["tag_name"]);
-                $_str_pageAttach    = "&page=";
+                $_str_tagUrl        = BG_URL_ROOT . 'index.php?mod=tag&act=show&tag_name=' . urlencode($_arr_tagRow['tag_name']);
+                $_str_pageAttach    = '&page=';
             break;
         }
 
         return array(
-            "tag_url"       => $_str_tagUrl,
-            "page_attach"   => $_str_pageAttach,
-            "page_ext"      => $_str_pageExt,
+            'tag_url'       => $_str_tagUrl,
+            'page_attach'   => $_str_pageAttach,
+            'page_ext'      => '',
         );
     }
 
 
     private function sql_process($arr_search = array()) {
-        $_str_sqlWhere = "1=1";
+        $_str_sqlWhere = '1';
 
-        if (isset($arr_search["key"]) && !fn_isEmpty($arr_search["key"])) {
-            $_str_sqlWhere .= " AND `tag_name` LIKE '%" . $arr_search["key"] . "%'";
+        if (isset($arr_search['key']) && !fn_isEmpty($arr_search['key'])) {
+            $_str_sqlWhere .= ' AND `tag_name` LIKE \'%' . $arr_search['key'] . '%\'';
         }
 
-        if (isset($arr_search["status"]) && !fn_isEmpty($arr_search["status"])) {
-            $_str_sqlWhere .= " AND `tag_status`='" . $arr_search["status"] . "'";
+        if (isset($arr_search['status']) && !fn_isEmpty($arr_search['status'])) {
+            $_str_sqlWhere .= ' AND `tag_status`=\'' . $arr_search['status'] . '\'';
         }
 
-        if (isset($arr_search["article_id"]) && $arr_search["article_id"] > 0) {
-            $_str_sqlWhere .= " AND `belong_article_id`=" . $arr_search["article_id"];
+        if (isset($arr_search['article_id']) && $arr_search['article_id'] > 0) {
+            $_str_sqlWhere .= ' AND `belong_article_id`=' . $arr_search['article_id'];
         }
 
         return $_str_sqlWhere;

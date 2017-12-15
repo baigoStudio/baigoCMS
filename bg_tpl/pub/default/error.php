@@ -1,39 +1,37 @@
 <?php $cfg = array(
-    "title"  => "提示信息"
+    'title'  => '提示信息'
 );
 
-$_str_status = substr($this->tplData["rcode"], 0, 1);
+$_str_status = substr($this->tplData['rcode'], 0, 1);
 
-include("include/pub_head.php"); ?>
+include('include' . DS . 'pub_head.php'); ?>
 
     <div class="page-header">
-        <h1>
-            <?php echo $this->lang["page"]["rcode"]; ?>
-        </h1>
+        <h1>提示信息</h1>
     </div>
 
-    <div class="alert alert-<?php if ($_str_status == "y") { ?>success<?php } else { ?>danger<?php } ?>">
+    <div class="alert alert-<?php if ($_str_status == 'y') { ?>success<?php } else { ?>danger<?php } ?>">
         <h3>
-            <span class="glyphicon glyphicon-<?php if ($_str_status == "y") { ?>ok-sign<?php } else { ?>remove-sign<?php } ?>"></span>
-            <?php if (isset($this->tplData["rcode"]) && !fn_isEmpty($this->tplData["rcode"]) && isset($this->rcode[$this->tplData["rcode"]])) {
-                echo $this->rcode[$this->tplData["rcode"]];
+            <span class="glyphicon glyphicon-<?php if ($_str_status == 'y') { ?>ok-sign<?php } else { ?>remove-sign<?php } ?>"></span>
+            <?php if (isset($this->tplData['rcode']) && !fn_isEmpty($this->tplData['rcode']) && isset($this->lang['rcode'][$this->tplData['rcode']])) {
+                echo $this->lang['rcode'][$this->tplData['rcode']];
             } ?>
         </h3>
 
-        <p>
+        <div>
             <a href="javascript:history.go(-1);">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 返回
             </a>
-        </p>
+        </div>
         <hr>
-        <p>
-            提示信息 : <?php if (isset($this->tplData["rcode"]) && !fn_isEmpty($this->tplData["rcode"]) {
-                echo $this->tplData["rcode"];
-            }?>
-        </p>
+        <div>
+            提示信息 <?php if (isset($this->tplData['rcode']) && !fn_isEmpty($this->tplData['rcode'])) {
+                echo $this->tplData['rcode'];
+            } ?>
+        </div>
     </div>
 </div>
 
-<?php include("include/pub_foot.php");
-include("include/html_foot.php"); ?>
+<?php include('include' . DS . 'pub_foot.php');
+include('include' . DS . 'html_foot.php'); ?>

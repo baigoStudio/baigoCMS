@@ -9,11 +9,17 @@
 
 .bg-panel-dashed { border: dashed #ccc 2px; }
 .bg-panel-dashed .panel-body { padding: 20px; }
-
 .bg-nav-pills > li > a { padding: 4px 8px !important; }
 .bg-dl dd { margin-bottom: 10px; }
 
 .bg-margin-bottom { margin-bottom: 15px; }
+
+.bg-pre-nostyle { border: none; background: transparent !important; }
+
+.bg-overflow { overflow: hidden; }
+.bg-overflow-scroll { max-height: 200px; overflow: scroll; }
+
+.bg-line-bottom { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 5px; }
 
 .bg-nav-line {
     padding-left: 0;
@@ -33,7 +39,7 @@
 }
 
 .bg-label { margin-bottom: 5px; font-size: 90%; display: inline-block; padding: 0.4em 0.6em; }
-.bg-tooltip .tooltip-inner { max-width: 500px; }
+.bg-tooltip .tooltip-inner { max-width: 500px !important; }
 
 .panel-default .bg-panel-hr { border-color: #ddd; margin: 20px -15px; }
 
@@ -102,6 +108,8 @@
 .bg-textarea-md { height: 300px; }
 .bg-textarea-lg { height: 400px; }
 .bg-pagination { margin: 0 0 15px 0; }
+
+.bg-wrap-enforce { word-wrap: break-word; }
 
 .control-label > span { color: #c30; margin-left: 10px; }
 

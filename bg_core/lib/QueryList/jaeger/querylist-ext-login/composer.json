@@ -1,0 +1,19 @@
+{
+    "name": "jaeger/querylist-ext-login",
+    "description": "QueryList扩展，Login模拟登陆扩展",
+    "license" : "MIT",
+    "authors": [
+        {
+            "name": "Jaeger",
+            "email": "hj.q@qq.com"
+        }
+    ],
+    "require": {
+            "jaeger/querylist-ext-request":"^1.0"
+        },
+    "autoload" : {
+        "psr-4" : {
+          "QL\\Ext\\" : ""
+        }
+    }
+}

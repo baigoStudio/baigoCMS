@@ -1,7 +1,7 @@
 .bg-panel-accordion { border-color: #337ab7; }
 
 @media (min-width: 992px) {
-    .bg-panel-accordion { display: block; margin: 15px 0; border-color: #337ab7; }
+    .bg-panel-accordion { display: block; margin-bottom: 15px; border-color: #337ab7; }
     .bg-accordion li:first-child .menu a {
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;

@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
 
@@ -14,11 +14,11 @@ if (!defined("IN_BAIGO")) {
 class CONTROL_CONSOLE_REQUEST_LOGIN {
 
     function __construct() { //构造函数
-        $this->obj_console  = new CLASS_CONSOLE();
-        $this->obj_console->dspType = "result";
-        $this->obj_console->chk_install();
+        $this->general_console  = new GENERAL_CONSOLE();
+        $this->general_console->dspType = 'result';
+        $this->general_console->chk_install();
 
-        $this->obj_tpl      = $this->obj_console->obj_tpl;
+        $this->obj_tpl      = $this->general_console->obj_tpl;
 
         $this->obj_sso      = new CLASS_SSO(); //SSO
         $this->mdl_admin    = new MODEL_ADMIN(); //设置管理员对象
@@ -33,25 +33,25 @@ class CONTROL_CONSOLE_REQUEST_LOGIN {
      */
     function ctrl_login() {
         $_arr_adminLogin = $this->mdl_admin->input_login();
-        if ($_arr_adminLogin["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_adminLogin);
+        if ($_arr_adminLogin['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_adminLogin);
         }
 
-        $_arr_ssoLogin = $this->obj_sso->sso_user_login($_arr_adminLogin["admin_name"], $_arr_adminLogin["admin_pass"]); //sso验证
+        $_arr_ssoLogin = $this->obj_sso->sso_user_login($_arr_adminLogin['admin_name'], $_arr_adminLogin['admin_pass']); //sso验证
         //print_r($_arr_ssoLogin);
-        if ($_arr_ssoLogin["rcode"] != "y010401") {
-            $this->obj_tpl->tplDisplay("result", $_arr_ssoLogin);
+        if ($_arr_ssoLogin['rcode'] != 'y010401') {
+            $this->obj_tpl->tplDisplay('result', $_arr_ssoLogin);
         }
 
-        $_arr_ssin = $this->obj_console->ssin_login($_arr_ssoLogin["user_id"], $_arr_ssoLogin["user_access_token"], $_arr_ssoLogin["user_access_expire"], $_arr_ssoLogin["user_refresh_token"], $_arr_ssoLogin["user_refresh_expire"]);
+        $_arr_ssin = $this->general_console->ssin_login($_arr_ssoLogin['user_id'], $_arr_ssoLogin['user_access_token'], $_arr_ssoLogin['user_access_expire'], $_arr_ssoLogin['user_refresh_token'], $_arr_ssoLogin['user_refresh_expire'], $_arr_adminLogin['admin_remenber']);
 
-        if ($_arr_ssin["rcode"] != "ok") {
-            $this->obj_tpl->tplDisplay("result", $_arr_ssin);
+        if ($_arr_ssin['rcode'] != 'ok') {
+            $this->obj_tpl->tplDisplay('result', $_arr_ssin);
         }
 
         $_arr_tplData = array(
-            "rcode" => "y020401",
+            'rcode' => 'y020401',
         );
-        $this->obj_tpl->tplDisplay("result", $_arr_tplData);
+        $this->obj_tpl->tplDisplay('result', $_arr_tplData);
     }
 }

@@ -20,13 +20,13 @@
 	</script>
 
     <!--
-    <?php echo PRD_CMS_POWERED; ?>
-    <?php if (BG_DEFAULT_UI == "default") {
-        echo PRD_CMS_NAME;
-    } else {
-        echo BG_DEFAULT_UI . " CMS";
-    } ?>
-    <?php echo PRD_CMS_VER; ?>
+        <?php echo PRD_CMS_POWERED, ' ';
+        if (BG_DEFAULT_UI == 'default') {
+            echo PRD_CMS_NAME;
+        } else {
+            echo BG_DEFAULT_UI, ' CMS ';
+        }
+        echo PRD_CMS_VER; ?>
     -->
 
 </body>

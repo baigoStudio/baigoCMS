@@ -1,43 +1,43 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <?php echo $this->lang["page"]["custom"] . " &raquo; " . $this->lang["page"]["order"]; ?>
+        <?php echo $this->lang['consoleMod']['article']['sub']['custom'], ' &raquo; ', $this->lang['mod']['page']['order']; ?>
     </div>
     <div class="modal-body">
         <form name="custom_order" id="custom_order" class="form_input">
-            <input type="hidden" name="<?php echo $this->common["tokenRow"]["name_session"]; ?>" value="<?php echo $this->common["tokenRow"]["token"]; ?>">
+            <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
             <input type="hidden" name="act" value="order">
-            <input type="hidden" name="custom_id" value="<?php echo $this->tplData["customRow"]["custom_id"]; ?>">
-            <input type="hidden" name="custom_parent_id" value="<?php echo $this->tplData["customRow"]["custom_parent_id"]; ?>">
+            <input type="hidden" name="custom_id" value="<?php echo $this->tplData['customRow']['custom_id']; ?>">
+            <input type="hidden" name="custom_parent_id" value="<?php echo $this->tplData['customRow']['custom_parent_id']; ?>">
 
             <div class="form-group">
-                <label class="control-label"><?php echo $this->lang["label"]["id"]; ?></label>
-                <div class="form-control-static"><?php echo $this->tplData["customRow"]["custom_id"]; ?></div>
+                <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
+                <div class="form-control-static"><?php echo $this->tplData['customRow']['custom_id']; ?></div>
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?php echo $this->lang["label"]["customName"]; ?></label>
-                <div class="form-control-static"><?php echo $this->tplData["customRow"]["custom_name"]; ?></div>
+                <label class="control-label"><?php echo $this->lang['mod']['label']['custom']; ?></label>
+                <div class="form-control-static"><?php echo $this->tplData['customRow']['custom_name']; ?></div>
             </div>
 
             <div class="form-group">
                 <div id="group_order_type">
-                    <label class="control-label"><?php echo $this->lang["label"]["order"]; ?><span id="msg_order_type">*</span></label>
+                    <label class="control-label"><?php echo $this->lang['mod']['label']['order']; ?><span id="msg_order_type">*</span></label>
                     <div class="radio">
                         <label for="order_first">
                             <input type="radio" name="order_type" id="order_first" value="order_first" checked data-validate="order_type">
-                            <?php echo $this->lang["label"]["orderFirst"]; ?>
+                            <?php echo $this->lang['mod']['label']['orderFirst']; ?>
                         </label>
                     </div>
                     <div class="radio">
                         <label for="order_last">
                             <input type="radio" name="order_type" id="order_last" value="order_last" data-validate="order_type">
-                            <?php echo $this->lang["label"]["orderLast"]; ?>
+                            <?php echo $this->lang['mod']['label']['orderLast']; ?>
                         </label>
                     </div>
                     <div class="radio">
                         <label for="order_after">
                             <input type="radio" name="order_type" id="order_after" value="order_after" data-validate="order_type">
-                            <input type="text" name="order_target" class="form-control" placeholder="<?php echo $this->lang["label"]["orderAfter"]; ?>">
+                            <input type="text" name="order_target" class="form-control" placeholder="<?php echo $this->lang['mod']['label']['orderAfter']; ?>">
                         </label>
                     </div>
                 </div>
@@ -47,8 +47,8 @@
         <div class="bg-submit-box bg-submit-box-modal"></div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary bg-submit-modal"><?php echo $this->lang["btn"]["save"]; ?></button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang["btn"]["cancel"]; ?></button>
+        <button type="button" class="btn btn-primary bg-submit-modal"><?php echo $this->lang['mod']['btn']['save']; ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang['common']['btn']['close']; ?></button>
     </div>
 
     <script type="text/javascript">
@@ -56,14 +56,14 @@
         order_type: {
             len: { min: 1, max: 0 },
             validate: { selector: "input[name='order_type']", type: "radio", group: "#group_order_type" },
-            msg: { selector: "#msg_order_type", too_few: "<?php echo $this->rcode["x200210"]; ?>" }
+            msg: { selector: "#msg_order_type", too_few: "<?php echo $this->lang['rcode']['x200210']; ?>" }
         }
     };
 
     var opts_submit_order = {
         ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=custom",
         msg_text: {
-            submitting: "<?php echo $this->lang["label"]["submitting"]; ?>"
+            submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         },
         box: {
             selector: ".bg-submit-box-modal"

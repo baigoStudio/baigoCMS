@@ -1,5 +1,5 @@
 /*
-v1.0.5 jQuery baigoClear plugin 表单 ajax 清理插件
+v1.0.6 jQuery baigoClear plugin 表单 ajax 清理插件
 (c) 2013 baigo studio - http://www.baigo.net/
 License: http://www.opensource.org/licenses/mit-license.php
 */
@@ -71,10 +71,6 @@ License: http://www.opensource.org/licenses/mit-license.php
         var _count = 0;
 
 
-        var _progress_slideUp = function() {
-            $(opts.selector.progress).slideUp();
-        }
-
         var clearAjax = function(_page, _min_id, _max_id) {
             //alert(_page);
             formData = $(thisForm).serializeArray();
@@ -123,7 +119,9 @@ License: http://www.opensource.org/licenses/mit-license.php
                             appendMsg("success", _str_msgResult, "ok-sign");
                             $(opts.selector.progress + " .progress-bar").text("100%");
                             $(opts.selector.progress + " .progress-bar").css("width", "100%");
-                            setTimeout(_progress_slideUp, 3000);
+                            setTimeout(function(){
+                                $(opts.selector.progress).slideUp();
+                            }, 3000);
                             _count  = 0;
                             _page   = 1;
                         break;

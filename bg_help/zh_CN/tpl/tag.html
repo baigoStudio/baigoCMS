@@ -1,5 +1,5 @@
 <h3>TAG 显示</h3>
-<p>文件名：<span class="text-primary">tag_show.tpl</span></p>
+<p>文件名：<span class="text-primary">tag_show.php</span></p>
 <p>
     用于显示所有与此 TAG 关联的文章。
 </p>
@@ -17,22 +17,22 @@
             <tbody>
 
                 <tr>
-                    <td class="text-nowrap">{$tplData.tagRow}</td>
+                    <td class="text-nowrap">$this->tplData['tagRow']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">当前 TAG 详细信息</td>
-                    <td>查看 <a href="#tagRow">{$tplData.tagRow}</a>。</td>
+                    <td>查看 <a href="#tagRow">$this->tplData['tagRow']</a>。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.articleRows}</td>
+                    <td class="text-nowrap">$this->tplData['articleRows']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">文章列表</td>
-                    <td>所有与此 TAG 关联的文章。详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=article#articleRow" target="_blank">文章</a>。</td>
+                    <td>所有与此 TAG 关联的文章。详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=article#articleRow" target="_blank">文章</a>。</td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">{$tplData.pageRow}</td>
+                    <td class="text-nowrap">$this->tplData['pageRow']</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">分页参数</td>
-                    <td>详情请查看 <a href="{BG_URL_HELP}index.php?mod=tpl&act=page">分页参数</a></td>
+                    <td>详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=page">分页参数</a></td>
                 </tr>
             </tbody>
         </table>
@@ -42,7 +42,7 @@
 <div>&nbsp;</div>
 
 <a name="tagRow"></a>
-<h4><code>{$tplData.tagRow}</code> 数组</h4>
+<h4><code>$this->tplData['tagRow']</code> 数组</h4>
 
 <p>当前 TAG 详细信息</p>
 
@@ -102,7 +102,7 @@
 <div>&nbsp;</div>
 
 <h4>TAG 数据示例</h4>
-<code>{$tplData.tagRow|@print_r}</code>
+<code>print_r($this->tplData['tagRow'])</code>
 <p>
 <pre><code class="language-php">Array (
     [tag_id] =&gt; 94 //TAG ID

@@ -97,6 +97,12 @@
                     <td class="text-nowrap">false</td>
                     <td>每页显示文章数</td>
                 </tr>
+                <tr>
+                    <td class="text-nowrap">isBase64</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">false</td>
+                    <td>返回结果是否进行 Base64 编码。可选 true、false，如值为 false 返回结果为 json_encode 编码。</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -195,6 +201,12 @@
                     <td class="text-nowrap">true</td>
                     <td>文章 ID</td>
                 </tr>
+                <tr>
+                    <td class="text-nowrap">isBase64</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">false</td>
+                    <td>返回结果是否进行 Base64 编码。可选 true、false，如值为 false 返回结果为 json_encode 编码。</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -292,14 +304,32 @@
                 <tr>
                     <td class="text-nowrap">article_time</td>
                     <td class="text-nowrap">int</td>
-                    <td class="text-nowrap">文章添加时间</td>
-                    <td>指文章添加到数据库的时间。</td>
+                    <td class="text-nowrap">文章创建时间</td>
+                    <td>指文章创建到数据库的时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_time_show</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章显示时间</td>
+                    <td>指显示在文章中的时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_is_time_pub</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">是否定时上线</td>
+                    <td>是否定时上线，值为 1 时文章定时上线。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">article_time_pub</td>
                     <td class="text-nowrap">int</td>
                     <td class="text-nowrap">文章上线时间</td>
                     <td>指文章上线时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_is_time_hide</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">是否定时下线</td>
+                    <td>是否定时上线，值为 1 时文章定时下线。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">article_time_hide</td>
@@ -335,7 +365,25 @@
                     <td class="text-nowrap">article_customs</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">自定义字段</td>
-                    <td>自定义字段的内容。用 <code>article_customs["custom_自定义字段 ID"]</code> 的方式便可获取自定义字段的内容。详情请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=custom" target="_blank">自定义字段</a>。</td>
+                    <td>自定义字段的内容。用 <code>article_customs['custom_自定义字段 ID']</code> 的方式便可获取自定义字段的内容。详情请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=custom" target="_blank">自定义字段</a>。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_source</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章来源</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_source_url</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章来源 URL</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_author</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章作者</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">rcode</td>
@@ -365,7 +413,8 @@
     &quot;article_hits_month&quot;: &quot;0&quot;, //月点击
     &quot;article_hits_year&quot;: &quot;5&quot;, //年点击
     &quot;article_hits_all&quot;: &quot;6&quot;, //总点击
-    &quot;article_time&quot;: &quot;1438309806&quot;, //添加时间
+    &quot;article_time&quot;: &quot;1438309806&quot;, //创建时间
+    &quot;article_time_show&quot;: &quot;1438308780&quot;, //显示时间
     &quot;article_time_pub&quot;: &quot;1438308780&quot;, //上线时间
     &quot;article_time_hide&quot;: &quot;1438308780&quot;, //下线时间
     &quot;article_attach_id&quot;: &quot;2662&quot;, //附件 ID

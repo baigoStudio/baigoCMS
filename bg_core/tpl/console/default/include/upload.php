@@ -2,12 +2,12 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <a class="btn btn-default fileinput-button" id="upload_select">
-                            <?php echo $this->lang["btn"]["browse"]; ?>
+                            <?php echo $this->lang['mod']['btn']['browse']; ?>
                         </a>
 
                         <button id="upload_begin" class="btn btn-primary">
                             <span class="glyphicon glyphicon-cloud-upload"></span>
-                            <?php echo $this->lang["btn"]["upload"]; ?>
+                            <?php echo $this->lang['mod']['btn']['upload']; ?>
                         </button>
                     </div>
 
@@ -43,24 +43,20 @@
             function alert_process(_key, _class, _icon, _msg) {
                 $("#bg_" + _key).removeClass("alert-info alert-danger alert-success");
                 $("#bg_" + _key).addClass(_class);
-                $("#bg_" + _key + " i").removeClass("glyphicon-refresh glyphicon-remove-sign glyphicon-ok-sign bg-spin");
+                $("#bg_" + _key + " i").removeClass("glyphicon-refresh glyphicon-remove-sign glyphicon-ok-sign glyphicon-cloud-upload bg-spin");
                 $("#bg_" + _key + " i").addClass(_icon);
                 $("#bg_" + _key + " span").html(_msg);
             }
 
-            function alert_fadeout(_key) {
-                $("#bg_" + _key).slideUp("slow");
-            }
-
             $(document).ready(function(){
                 if (!WebUploader.Uploader.support()) {
-                    alert("<?php echo $this->lang["label"]["needH5"]; ?>");
+                    alert("<?php echo $this->lang['mod']['label']['needH5']; ?>");
                 }
 
                 var obj_wu = new WebUploader.Uploader({
                     //附加表单数据
                     formData: {
-                        <?php echo $this->common["tokenRow"]["name_session"]; ?>: "<?php echo $this->common["tokenRow"]["token"]; ?>",
+                        <?php echo $this->common['tokenRow']['name_session']; ?>: "<?php echo $this->common['tokenRow']['token']; ?>",
                         act: "submit"
                     },
                     server: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=attach", //文件接收服务端
@@ -70,10 +66,11 @@
                     //允许的 mime
                     accept: {
                         title: "file",
-                        mimeTypes: "<?php echo implode(",", $this->tplData["mimeRows"]); ?>"
+                        extensions: "<?php echo implode(',', $this->tplData['allowExtRows']); ?>",
+                        mimeTypes: "<?php echo implode(',', $this->tplData['allowMimeRows']); ?>"
                     },
                     fileNumLimit: <?php echo BG_UPLOAD_COUNT; ?>, //队列限制
-                    fileSingleSizeLimit: <?php echo $this->tplData["uploadSize"]; ?>, //单个尺寸限制
+                    fileSingleSizeLimit: <?php echo $this->tplData['uploadSize']; ?>, //单个尺寸限制
                     resize: false //不压缩 image
                 });
 
@@ -82,7 +79,7 @@
                 });
 
                 obj_wu.on("fileQueued", function(file){
-                    _str_tpl = upload_tpl(file.id, file.name, "<?php echo $this->lang["label"]["waiting"]; ?>");
+                    _str_tpl = upload_tpl(file.id, file.name, "<?php echo $this->lang['mod']['label']['waiting']; ?>");
 
                     $("#upload_list").append(_str_tpl);
                     $("#bg_" + file.id + " .bg-progress").hide();
@@ -101,23 +98,24 @@
                 });
 
                 obj_wu.on("error", function(error, size, file){
+                    //console.log(file);
                     switch(error) {
                         case "F_EXCEED_SIZE":
-                            alert(file.name + " <?php echo $this->rcode["x070203"]; ?> <?php echo BG_UPLOAD_SIZE; ?> <?php echo BG_UPLOAD_UNIT; ?>");
+                            alert(file.name + " <?php echo $this->lang['rcode']['x070203']; ?> <?php echo BG_UPLOAD_SIZE; ?> <?php echo BG_UPLOAD_UNIT; ?>");
                         break;
 
                         case "Q_EXCEED_NUM_LIMIT":
-                            alert(file.name + " <?php echo $this->rcode["x070204"]; ?> <?php echo BG_UPLOAD_COUNT; ?>");
+                            alert(file.name + " <?php echo $this->lang['rcode']['x070204']; ?> <?php echo BG_UPLOAD_COUNT; ?>");
                         break;
 
                         case "Q_TYPE_DENIED":
-                            alert(file.name + " <?php echo $this->rcode["x070202"]; ?>");
+                            alert("<?php echo $this->lang['rcode']['x070202']; ?>");
                         break;
                     }
                 });
 
                 obj_wu.on("uploadProgress", function(file, percentage){
-                    alert_process(file.id, "alert-info", "glyphicon-refresh bg-spin", "<?php echo $this->lang["label"]["uploading"]; ?>");
+                    alert_process(file.id, "alert-info", "glyphicon-refresh bg-spin", "<?php echo $this->lang['mod']['label']['uploading']; ?>");
 
                     $("#bg_" + file.id + " .bg-progress").show();
                     $("#bg_" + file.id + " .bg-progress .progress-bar").text(percentage * 100 + "%");
@@ -126,15 +124,15 @@
 
                 obj_wu.on("uploadSuccess", function(file, result){
                     var _str_msg;
-                    if (result.rcode == "y070401") {
-                        alert_process(file.id, "alert-success", "glyphicon-ok-sign", "<?php echo $this->lang["label"]["uploadSucc"]; ?>");
+                    if (result.rcode == 'y070401') {
+                        alert_process(file.id, "alert-success", "glyphicon-ok-sign", "<?php echo $this->lang['mod']['label']['uploadSucc']; ?>");
 
-                        <?php if (isset($cfg["js_insert"])) { ?>
+                        <?php if (isset($cfg['js_insert'])) { ?>
                             insertAttach(result.attach_url, result.attach_name, result.attach_id, result.attach_type, result.attach_ext);
                         <?php } ?>
                     } else {
                         if (typeof result.msg == "undefined") {
-                            _str_msg = "<?php echo $this->lang["label"]["returnErr"]; ?>";
+                            _str_msg = "<?php echo $this->lang['mod']['label']['returnErr']; ?>";
                         } else {
                             _str_msg = result.msg;
                         }
@@ -149,7 +147,9 @@
                 obj_wu.on("uploadComplete", function(file){
                     $("#bg_" + file.id + " .bg-progress").slideUp("slow");
 
-                    setTimeout("alert_fadeout('" + file.id + "')", 5000);
+                    setTimeout(function(){
+                        $("#bg_" + file.id).slideUp("slow");
+                    }, 5000);
                 });
             });
             </script>

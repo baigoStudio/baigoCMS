@@ -1,4 +1,4 @@
-<?php include($cfg["pathInclude"] . "html_head.php"); ?>
+<?php include($cfg['pathInclude'] . 'html_head.php'); ?>
 
     <header class="container-fluid bg-navbar">
         <div class="row">
@@ -16,54 +16,58 @@
             </div>
             <div class="col-xs-4 col-md-3">
                 <ul class="list-inline text-right">
-                    <li class="hidden-sm hidden-xs dropdown<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "pm") { ?> active<?php } ?>">
+                    <li class="hidden-sm hidden-xs dropdown<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == "pm") { ?> active<?php } ?>">
                         <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=pm&act=list" class="bg-navbar-btn dropdown-toggle" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-envelope"></span>
-                            <?php echo $this->lang["href"]["pm"]; ?>
+                            <?php echo $this->lang['common']['href']['pm']; ?>
                             <span id="box_pm_new" class="badge"></span>
                             <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-right bg-navbar-dropdown">
-                            <li<?php if ($GLOBALS["act"] == "send") { ?> class="active"<?php } ?>>
+                            <li<?php if ($GLOBALS['route']['bg_act'] == 'send') { ?> class="active"<?php } ?>>
                                 <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=pm&act=send">
                                     <span class="glyphicon glyphicon-edit"></span>
-                                    <?php echo $this->lang["href"]["send"]; ?>
+                                    <?php echo $this->lang['common']['href']['pmNew']; ?>
                                 </a>
                             </li>
-                            <?php foreach ($this->type["pm"] as $key=>$value) {
-                                if ($key == "in") {
-                                    $icon_type = "inbox";
+                            <?php foreach ($this->pm['type'] as $key=>$value) {
+                                if ($value == 'in') {
+                                    $icon_type = 'inbox';
                                 } else {
-                                    $icon_type = "send";
+                                    $icon_type = 'send';
                                 } ?>
-                                <li<?php if (isset($this->tplData["search"]["type"]) && $this->tplData["search"]["type"] == $key) { ?> class="active"<?php } ?>>
-                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=pm&act=list&type=<?php echo $key; ?>">
+                                <li<?php if (isset($this->tplData['search']['type']) && $this->tplData['search']['type'] == $value) { ?> class="active"<?php } ?>>
+                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=pm&act=list&type=<?php echo $value; ?>">
                                         <span class="glyphicon glyphicon-<?php echo $icon_type; ?>"></span>
-                                        <?php echo $value; ?>
+                                        <?php if (isset($this->lang['common']['pm'][$value])) {
+                                            echo $this->lang['common']['pm'][$value];
+                                        } else {
+                                            echo $value;
+                                        } ?>
                                     </a>
                                 </li>
                             <?php } ?>
                         </ul>
                     </li>
-                    <li class="dropdown<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "profile") { ?> active<?php } ?>">
+                    <li class="dropdown<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == "profile") { ?> active<?php } ?>">
                         <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=profile&act=info" class="bg-navbar-btn dropdown-toggle" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-user"></span>
                             <span class="hidden-sm hidden-xs">
-                                <?php if (isset($this->tplData["adminLogged"]["admin_nick"]) && $this->tplData["adminLogged"]["admin_nick"]) {
-                                    echo $this->tplData["adminLogged"]["admin_nick"];
+                                <?php if (isset($this->tplData['adminLogged']['admin_nick']) && $this->tplData['adminLogged']['admin_nick']) {
+                                    echo $this->tplData['adminLogged']['admin_nick'];
                                 } else {
-                                    echo $this->tplData["adminLogged"]["admin_name"];
+                                    echo $this->tplData['adminLogged']['admin_name'];
                                 } ?>
                                 <span class="caret"></span>
                             </span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right bg-navbar-dropdown">
-                            <?php include($cfg["pathInclude"] . "profile_menu.php"); ?>
+                            <?php include($cfg['pathInclude'] . 'profile_menu.php'); ?>
                             <li>
                                 <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=login&act=logout">
                                     <span class="glyphicon glyphicon-off"></span>
-                                    <?php echo $this->lang["href"]["logout"]; ?>
+                                    <?php echo $this->lang['common']['href']['logout']; ?>
                                 </a>
                             </li>
                         </ul>
@@ -80,28 +84,40 @@
                     <ul data-toggle="baigoAccordion" class="bg-accordion">
                         <?php foreach ($this->consoleMod as $key_m=>$value_m) { ?>
                             <li>
-                                <div class="clearfix menu<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == $key_m) { ?> active<?php } ?>">
+                                <div class="clearfix menu<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> active<?php } ?>">
                                     <a href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-<?php echo $value_m["main"]["icon"]; ?>"></span>
-                                        <?php echo $value_m["main"]["title"]; ?>
+                                        <?php if (isset($this->lang['consoleMod'][$key_m]['main']['icon'])) { ?>
+                                            <span class="glyphicon glyphicon-<?php echo $this->lang['consoleMod'][$key_m]['main']['icon']; ?>"></span>
+                                        <?php }
+                                        if (isset($this->lang['consoleMod'][$key_m]['main']['title'])) {
+                                            echo $this->lang['consoleMod'][$key_m]['main']['title'];
+                                        } else {
+                                            echo $value_m['main']['title'];
+                                        } ?>
                                         <span class="glyphicon glyphicon-menu-left pull-right bg-chevron"></span>
                                     </a>
                                 </div>
 
-                                <ul class="submenu<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == $key_m) { ?> in<?php } ?>">
-                                    <?php if ($key_m == "link" && !fn_isEmpty($this->linkRows)) {
+                                <ul class="submenu<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> in<?php } ?>">
+                                    <?php if ($key_m == 'link' && !fn_isEmpty($this->linkRows)) {
                                         foreach ($this->linkRows as $key_link=>$value_link) { ?>
                                             <li>
-                                                <a href="<?php echo $value_link["link_url"]; ?>"<?php if ($value_link["link_blank"] > 0) { ?> target="_blank"<?php } ?>>
-                                                    <?php echo $value_link["link_name"]; ?>
+                                                <a href="<?php echo $value_link['link_url']; ?>"<?php if ($value_link['link_blank'] > 0) { ?> target="_blank"<?php } ?>>
+                                                    <?php echo $value_link['link_name']; ?>
                                                 </a>
                                             </li>
                                         <?php }
                                     }
 
-                                    foreach ($value_m["sub"] as $key_s=>$value_s) { ?>
-                                        <li<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == $key_m && isset($cfg["sub_active"]) && $cfg["sub_active"] == $key_s) { ?> class="active"<?php } ?>>
-                                            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=<?php echo $value_s["mod"]; ?>&act=<?php echo $value_s["act"]; ?>"><?php echo $value_s["title"]; ?></a>
+                                    foreach ($value_m['sub'] as $key_s=>$value_s) { ?>
+                                        <li<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m && isset($cfg['sub_active']) && $cfg['sub_active'] == $key_s) { ?> class="active"<?php } ?>>
+                                            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=<?php echo $value_s['mod']; ?>&act=<?php echo $value_s['act']; ?>">
+                                                <?php if (isset($this->lang['consoleMod'][$key_m]['sub'][$key_s])) {
+                                                    echo $this->lang['consoleMod'][$key_m]['sub'][$key_s];
+                                                } else {
+                                                    echo $value_s['title'];
+                                                } ?>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -109,46 +125,112 @@
                         <?php } ?>
 
                         <li>
-                            <div class="clearfix menu<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt") { ?> active<?php } ?>">
+                            <div class="clearfix menu<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?> active<?php } ?>">
                                 <a href="javascript:void(0);">
                                     <span class="glyphicon glyphicon-cog"></span>
-                                    <?php echo $this->lang["href"]["opt"]; ?>
+                                    <?php echo $this->lang['common']['page']['opt']; ?>
                                     <span class="glyphicon glyphicon-menu-left pull-right bg-chevron"></span>
                                 </a>
                             </div>
 
-                            <ul class="submenu<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt") { ?> in<?php } ?>">
+                            <ul class="submenu<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?> in<?php } ?>">
                                 <?php foreach ($this->opt as $key_opt=>$value_opt) { ?>
-                                    <li<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt" && isset($cfg["sub_active"]) && $cfg["sub_active"] == $key_opt) { ?> class="active"<?php } ?>>
-                                        <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=<?php echo $key_opt; ?>"><?php echo $value_opt["title"]; ?></a>
+                                    <li<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt' && isset($cfg['sub_active']) && $cfg['sub_active'] == $key_opt) { ?> class="active"<?php } ?>>
+                                        <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=<?php echo $key_opt; ?>">
+                                            <?php if (isset($this->lang['opt'][$key_opt]['title'])) {
+                                                echo $this->lang['opt'][$key_opt]['title'];
+                                            } else {
+                                                echo $key_opt;
+                                            } ?>
+                                        </a>
                                     </li>
                                 <?php } ?>
-                                <li<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt" && isset($cfg["sub_active"]) && $cfg["sub_active"] == "app") { ?> class="active"<?php } ?>>
+                                <li<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt' && isset($cfg['sub_active']) && $cfg['sub_active'] == "app") { ?> class="active"<?php } ?>>
                                     <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=app&act=list">
-                                        <?php echo $this->lang["page"]["app"]; ?>
+                                        <?php echo $this->lang['common']['page']['optApp']; ?>
                                     </a>
                                 </li>
-                                <li<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt" && isset($cfg["sub_active"]) && $cfg["sub_active"] == "dbconfig") { ?> class="active"<?php } ?>>
-                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=dbconfig"><?php echo $this->lang["page"]["setupDbConfig"]; ?></a>
+                                <li<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt' && isset($cfg['sub_active']) && $cfg['sub_active'] == "dbconfig") { ?> class="active"<?php } ?>>
+                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=dbconfig">
+                                        <?php echo $this->lang['common']['page']['dbconfig']; ?>
+                                    </a>
                                 </li>
-                                <li<?php if (isset($cfg["menu_active"]) && $cfg["menu_active"] == "opt" && isset($cfg["sub_active"]) && $cfg["sub_active"] == "chkver") { ?> class="active"<?php } ?>>
-                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=chkver"><?php echo $this->lang["page"]["chkver"]; ?></a>
+                                <li<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt' && isset($cfg['sub_active']) && $cfg['sub_active'] == "chkver") { ?> class="active"<?php } ?>>
+                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=opt&act=chkver">
+                                        <?php echo $this->lang['common']['page']['chkver']; ?>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-
-                <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == "static") { ?>
-                    <div class="form-group hidden-sm hidden-xs">
-                        <button data-url="<?php echo BG_URL_CONSOLE; ?>gen.php?mod=article&act=1by1&overall=true" class="btn btn-success btn-block" data-toggle="modal" data-target="#gen_modal">
-                            <span class="glyphicon glyphicon-refresh"></span>
-                            <?php echo $this->lang["btn"]["genOverall"]; ?>
-                        </button>
-                    </div>
-                <?php } ?>
             </div>
 
             <div class="col-md-9 col-lg-10">
-                <h4><?php echo $cfg["title"]; ?></h4>
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h4><?php echo $cfg['title']; ?></h4>
+                    </div>
+                    <div class="pull-right">
+                        <?php if (defined('BG_MODULE_GEN') && BG_MODULE_GEN > 0 && defined('BG_VISIT_TYPE') && BG_VISIT_TYPE == 'static') { ?>
+                            <div class="btn-group btn-group-sm hidden-sm hidden-xs">
+                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                    <?php echo $this->lang['common']['btn']['gen']; ?>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=article_gen&act=list&overall=true&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['genOverall']; ?>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><?php echo $this->lang['common']['label']['article']; ?></li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=article_gen&act=list&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['gen1by1']; ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=article_gen&act=list&view=iframe&enforce=true" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['genEnforce']; ?>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><?php echo $this->lang['common']['label']['cate']; ?></li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=cate_gen&act=1by1&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['gen1by1']; ?>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><?php echo $this->lang['common']['label']['spec']; ?></li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=spec_gen&act=1by1&overall=true&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['genOverall']; ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=spec_gen&act=list&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['genList']; ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=spec_gen&act=1by1&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['gen1by1']; ?>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><?php echo $this->lang['common']['label']['call']; ?></li>
+                                    <li>
+                                        <a data-url="<?php echo BG_URL_CONSOLE; ?>index.php?mod=call_gen&act=list&view=iframe" data-toggle="modal" href="#gen_modal">
+                                            <?php echo $this->lang['common']['btn']['gen1by1']; ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
                 <hr>

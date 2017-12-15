@@ -1,37 +1,37 @@
 <?php $cfg = array(
-    "title"          => $this->lang["page"]["opt"] . " &raquo; " . $this->lang["page"]["app"],
-    "menu_active"    => "opt",
-    "sub_active"     => "app",
-    "baigoCheckall"  => "true",
-    "baigoValidator" => "true",
-    "baigoSubmit"    => "true",
-    "pathInclude"    => BG_PATH_TPLSYS . "console/default/include/",
-    "str_url"        => BG_URL_CONSOLE . "index.php?mod=app"
+    'title'          => $this->lang['common']['page']['opt'] . ' &raquo; ' . $this->lang['common']['page']['optApp'],
+    'menu_active'    => "opt",
+    'sub_active'     => "app",
+    'baigoCheckall'  => 'true',
+    'baigoValidator' => 'true',
+    'baigoSubmit'    => 'true',
+    'pathInclude'    => BG_PATH_TPLSYS . 'console' . DS . 'default' . DS . 'include' . DS,
+    'str_url'        => BG_URL_CONSOLE . "index.php?mod=app"
 );
 
-include($cfg["pathInclude"] . "console_head.php"); ?>
+include($cfg['pathInclude'] . 'console_head.php'); ?>
 
     <div class="form-group">
         <ul class="nav nav-pills bg-nav-pills">
             <li>
                 <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=app&act=list">
                     <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang["href"]["back"]; ?>
+                    <?php echo $this->lang['common']['href']['back']; ?>
                 </a>
             </li>
             <li>
                 <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=app#form" target="_blank">
                     <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang["href"]["help"]; ?>
+                    <?php echo $this->lang['mod']['href']['help']; ?>
                 </a>
             </li>
         </ul>
     </div>
 
     <form name="app_form" id="app_form">
-        <input type="hidden" name="<?php echo $this->common["tokenRow"]["name_session"]; ?>" value="<?php echo $this->common["tokenRow"]["token"]; ?>">
+        <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
         <input type="hidden" name="act" value="submit">
-        <input type="hidden" name="app_id" value="<?php echo $this->tplData["appRow"]["app_id"]; ?>">
+        <input type="hidden" name="app_id" value="<?php echo $this->tplData['appRow']['app_id']; ?>">
 
         <div class="row">
             <div class="col-md-9">
@@ -39,33 +39,43 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
                     <div class="panel-body">
                         <div class="form-group">
                             <div id="group_app_name">
-                                <label class="control-label"><?php echo $this->lang["label"]["appName"]; ?><span id="msg_app_name">*</span></label>
-                                <input type="text" name="app_name" id="app_name" value="<?php echo $this->tplData["appRow"]["app_name"]; ?>" data-validate class="form-control">
+                                <label class="control-label"><?php echo $this->lang['mod']['label']['appName']; ?><span id="msg_app_name">*</span></label>
+                                <input type="text" name="app_name" id="app_name" value="<?php echo $this->tplData['appRow']['app_name']; ?>" data-validate class="form-control">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang["label"]["appAllow"]; ?><span id="msg_app_allow">*</span></label>
+                            <label class="control-label"><?php echo $this->lang['mod']['label']['allow']; ?><span id="msg_app_allow">*</span></label>
                             <dl class="bg-dl">
                                 <dd>
                                     <div class="bg-checkbox">
                                         <label for="chk_all">
                                             <input type="checkbox" id="chk_all" data-parent="first">
-                                            <?php echo $this->lang["label"]["all"]; ?>
+                                            <?php echo $this->lang['mod']['label']['all']; ?>
                                         </label>
                                     </div>
                                 </dd>
-                                <?php foreach ($this->appMod as $key_m=>$value_m) { ?>
-                                    <dt><?php echo $value_m["title"]; ?></dt>
+                                <?php foreach ($this->tplData['appMod'] as $key_m=>$value_m) { ?>
+                                    <dt>
+                                        <?php if (isset($this->lang['appMod'][$key_m]['title'])) {
+                                            echo $this->lang['appMod'][$key_m]['title'];
+                                        } else {
+                                            echo $value_m['title'];
+                                        } ?>
+                                    </dt>
                                     <dd>
                                         <label for="allow_<?php echo $key_m; ?>" class="checkbox-inline">
                                             <input type="checkbox" id="allow_<?php echo $key_m; ?>" data-parent="chk_all">
-                                            <?php echo $this->lang["label"]["all"]; ?>
+                                            <?php echo $this->lang['mod']['label']['all']; ?>
                                         </label>
-                                        <?php foreach ($value_m["allow"] as $key_s=>$value_s) { ?>
+                                        <?php foreach ($value_m['allow'] as $key_s=>$value_s) { ?>
                                             <label for="allow_<?php echo $key_m; ?>_<?php echo $key_s; ?>" class="checkbox-inline">
-                                                <input type="checkbox" name="app_allow[<?php echo $key_m; ?>][<?php echo $key_s; ?>]" value="1" id="allow_<?php echo $key_m; ?>_<?php echo $key_s; ?>" data-parent="allow_<?php echo $key_m; ?>" <?php if (isset($this->tplData["appRow"]["app_allow"][$key_m][$key_s])) { ?>checked<?php } ?>>
-                                                <?php echo $value_s; ?>
+                                                <input type="checkbox" name="app_allow[<?php echo $key_m; ?>][<?php echo $key_s; ?>]" value="1" id="allow_<?php echo $key_m; ?>_<?php echo $key_s; ?>" data-parent="allow_<?php echo $key_m; ?>" <?php if (isset($this->tplData['appRow']['app_allow'][$key_m][$key_s])) { ?>checked<?php } ?>>
+                                                <?php if (isset($this->lang['appMod'][$key_m]['allow'][$key_s])) {
+                                                    echo $this->lang['appMod'][$key_m]['allow'][$key_s];
+                                                } else {
+                                                    echo $value_s;
+                                                } ?>
                                             </label>
                                         <?php } ?>
                                     </dd>
@@ -75,52 +85,56 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
 
                         <div class="form-group">
                             <div id="group_app_ip_allow">
-                                <label class="control-label"><?php echo $this->lang["label"]["ipAllow"]; ?><span id="msg_app_ip_allow"></span></label>
-                                <textarea name="app_ip_allow" id="app_ip_allow" data-validate class="form-control bg-textarea-md"><?php echo $this->tplData["appRow"]["app_ip_allow"]; ?></textarea>
+                                <label class="control-label"><?php echo $this->lang['mod']['label']['ipAllow']; ?><span id="msg_app_ip_allow"></span></label>
+                                <textarea name="app_ip_allow" id="app_ip_allow" data-validate class="form-control bg-textarea-md"><?php echo $this->tplData['appRow']['app_ip_allow']; ?></textarea>
                             </div>
-                            <span class="help-block"><?php echo $this->lang["label"]["ipNote"]; ?></span>
+                            <span class="help-block"><?php echo $this->lang['mod']['label']['ipNote']; ?></span>
                         </div>
 
                         <div class="form-group">
                             <div id="group_app_ip_bad">
-                                <label class="control-label"><?php echo $this->lang["label"]["ipBad"]; ?><span id="msg_app_ip_bad"></span></label>
-                                <textarea name="app_ip_bad" id="app_ip_bad" data-validate class="form-control bg-textarea-md"><?php echo $this->tplData["appRow"]["app_ip_bad"]; ?></textarea>
+                                <label class="control-label"><?php echo $this->lang['mod']['label']['ipBad']; ?><span id="msg_app_ip_bad"></span></label>
+                                <textarea name="app_ip_bad" id="app_ip_bad" data-validate class="form-control bg-textarea-md"><?php echo $this->tplData['appRow']['app_ip_bad']; ?></textarea>
                             </div>
-                            <span class="help-block"><?php echo $this->lang["label"]["ipNote"]; ?></span>
+                            <span class="help-block"><?php echo $this->lang['mod']['label']['ipNote']; ?></span>
                         </div>
 
                         <div class="form-group">
                             <div id="group_app_note">
-                                <label class="control-label"><?php echo $this->lang["label"]["note"]; ?><span id="msg_app_note"></span></label>
-                                <input type="text" name="app_note" id="app_note" value="<?php echo $this->tplData["appRow"]["app_note"]; ?>" data-validate class="form-control">
+                                <label class="control-label"><?php echo $this->lang['mod']['label']['note']; ?><span id="msg_app_note"></span></label>
+                                <input type="text" name="app_note" id="app_note" value="<?php echo $this->tplData['appRow']['app_note']; ?>" data-validate class="form-control">
                             </div>
                         </div>
 
                         <div class="bg-submit-box"></div>
                     </div>
                     <div class="panel-footer">
-                        <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang["btn"]["save"]; ?></button>
+                        <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang['mod']['btn']['save']; ?></button>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="well">
-                    <?php if ($this->tplData["appRow"]["app_id"] > 0) { ?>
+                    <?php if ($this->tplData['appRow']['app_id'] > 0) { ?>
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang["label"]["id"]; ?></label>
-                            <div class="form-control-static"><?php echo $this->tplData["appRow"]["app_id"]; ?></div>
+                            <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
+                            <div class="form-control-static"><?php echo $this->tplData['appRow']['app_id']; ?></div>
                         </div>
                     <?php } ?>
 
                     <div class="form-group">
                         <div id="group_app_status">
-                            <label class="control-label"><?php echo $this->lang["label"]["status"]; ?><span id="msg_app_status">*</span></label>
-                            <?php foreach ($this->status["app"] as $key=>$value) { ?>
+                            <label class="control-label"><?php echo $this->lang['mod']['label']['status']; ?><span id="msg_app_status">*</span></label>
+                            <?php foreach ($this->tplData['status'] as $key=>$value) { ?>
                                 <div class="bg-radio">
-                                    <label for="app_status_<?php echo $key; ?>">
-                                        <input type="radio" name="app_status" id="app_status_<?php echo $key; ?>" value="<?php echo $key; ?>" <?php if ($this->tplData["appRow"]["app_status"] == $key) { ?>checked<?php } ?> data-validate="app_status">
-                                        <?php echo $value; ?>
+                                    <label for="app_status_<?php echo $value; ?>">
+                                        <input type="radio" name="app_status" id="app_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($this->tplData['appRow']['app_status'] == $value) { ?>checked<?php } ?> data-validate="app_status">
+                                        <?php if (isset($this->lang['mod']['status'][$value])) {
+                                            echo $this->lang['mod']['status'][$value];
+                                        } else {
+                                            echo $value;
+                                        } ?>
                                     </label>
                                 </div>
                             <?php } ?>
@@ -132,41 +146,41 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
 
     </form>
 
-<?php include($cfg["pathInclude"] . "console_foot.php"); ?>
+<?php include($cfg['pathInclude'] . 'console_foot.php'); ?>
 
     <script type="text/javascript">
     var opts_validator_form = {
         app_name: {
             len: { min: 1, max: 30 },
             validate: { type: "str", format: "text", group: "#group_app_name" },
-            msg: { selector: "#msg_app_name", too_short: "<?php echo $this->rcode["x190201"]; ?>", too_long: "<?php echo $this->rcode["x190202"]; ?>" }
+            msg: { selector: "#msg_app_name", too_short: "<?php echo $this->lang['rcode']['x190201']; ?>", too_long: "<?php echo $this->lang['rcode']['x190202']; ?>" }
         },
         app_ip_allow: {
             len: { min: 0, max: 3000 },
             validate: { type: "str", format: "text", group: "#group_app_ip_allow" },
-            msg: { selector: "#msg_app_ip_allow", too_long: "<?php echo $this->rcode["x190210"]; ?>" }
+            msg: { selector: "#msg_app_ip_allow", too_long: "<?php echo $this->lang['rcode']['x190210']; ?>" }
         },
         app_ip_bad: {
             len: { min: 0, max: 3000 },
             validate: { type: "str", format: "text", group: "#group_app_ip_bad" },
-            msg: { selector: "#msg_app_ip_bad", too_long: "<?php echo $this->rcode["x190211"]; ?>" }
+            msg: { selector: "#msg_app_ip_bad", too_long: "<?php echo $this->lang['rcode']['x190211']; ?>" }
         },
         app_note: {
             len: { min: 0, max: 30 },
             validate: { type: "str", format: "text", group: "#group_app_note" },
-            msg: { selector: "#msg_app_note", too_long: "<?php echo $this->rcode["x190205"]; ?>" }
+            msg: { selector: "#msg_app_note", too_long: "<?php echo $this->lang['rcode']['x190205']; ?>" }
         },
         app_status: {
             len: { min: 1, max: 0 },
             validate: { selector: "input[name='app_status']", type: "radio", group: "#group_app_status" },
-            msg: { selector: "#msg_app_status", too_few: "<?php echo $this->rcode["x190206"]; ?>" }
+            msg: { selector: "#msg_app_status", too_few: "<?php echo $this->lang['rcode']['x190206']; ?>" }
         }
     };
 
     var opts_submit_form = {
         ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=app",
         msg_text: {
-            submitting: "<?php echo $this->lang["label"]["submitting"]; ?>"
+            submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
     };
 
@@ -182,4 +196,4 @@ include($cfg["pathInclude"] . "console_head.php"); ?>
     });
     </script>
 
-<?php include($cfg["pathInclude"] . "html_foot.php"); ?>
+<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>

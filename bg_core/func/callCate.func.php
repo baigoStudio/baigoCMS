@@ -5,24 +5,15 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-if (!defined("IN_BAIGO")) {
-    exit("Access Denied");
+if (!defined('IN_BAIGO')) {
+    exit('Access Denied');
 }
 
-function fn_callCate($cate_id, $template = false) {
+function fn_callCate($cate_id) {
     $cateRows = array();
 
-    if ($template) {
-        $cate_id = $cate_id["cate_id"];
-    }
-
     $_mdl_cate  = new MODEL_CATE(); //设置上传信息对象
-    $cateRow    = $_mdl_cate->mdl_cache(false, $cate_id);
+    $cateRow    = $_mdl_cate->mdl_cache($cate_id);
 
-    if ($template) {
-        $cateRows[$cate_id] = $cateRow;
-        $template->assign("cateRows", $cateRows);
-    } else {
-        return $cateRow;
-    }
+    return $cateRow;
 }

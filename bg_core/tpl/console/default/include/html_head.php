@@ -1,6 +1,7 @@
-<?php header("Content-Type: text/html; charset=utf-8"); ?>
+<?php header("Cache-control: private, must-revalidate"); //后退保存表单内容, 支持页面回跳
+header("Content-Type: text/html; charset=utf-8"); ?>
 <!DOCTYPE html>
-<html lang="<?php echo substr($this->config["lang"], 0, 2); ?>">
+<html lang="<?php echo substr($this->config['lang'], 0, 2); ?>">
 <head>
 
     <meta charset="utf-8">
@@ -10,10 +11,10 @@
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="-1">
     <title>
-        <?php if (isset($cfg["title"]) && !fn_isEmpty($cfg["title"])) {
-            echo $cfg["title"]; ?> -
-        <?php }
-        echo $this->lang["page"]["console"]; ?> - <?php echo BG_SITE_NAME; ?>
+        <?php if (isset($cfg['title']) && !fn_isEmpty($cfg['title'])) {
+            echo $cfg['title'], " - ";
+        }
+        echo $this->lang['common']['page']['console'], " - ", BG_SITE_NAME; ?>
     </title>
 
     <!--jQuery 库-->
@@ -21,25 +22,29 @@
     <link href="<?php echo BG_URL_STATIC; ?>lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="<?php echo BG_URL_STATIC; ?>lib/baigoAccordion/baigoAccordion.min.css" type="text/css" rel="stylesheet">
 
-    <?php if (isset($cfg["tagmanager"])) { ?>
+    <?php if (isset($cfg['tagmanager'])) { ?>
         <link rel="stylesheet" href="<?php echo BG_URL_STATIC; ?>lib/typeahead/typeahead.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo BG_URL_STATIC; ?>lib/tagmanager/tagmanager.css" type="text/css" rel="stylesheet">
     <?php }
-        
-    if (isset($cfg["upload"])) { ?>
+
+    if (isset($cfg['prism'])) { ?>
+        <link href="<?php echo BG_URL_STATIC; ?>lib/prism/prism.css" type="text/css" rel="stylesheet">
+    <?php }
+
+    if (isset($cfg['upload'])) { ?>
         <link href="<?php echo BG_URL_STATIC; ?>lib/webuploader/webuploader.css" type="text/css" rel="stylesheet">
     <?php }
-        
-    if (isset($cfg["datepicker"])) { ?>
+
+    if (isset($cfg['datepicker'])) { ?>
         <link href="<?php echo BG_URL_STATIC; ?>lib/datetimepicker/jquery.datetimepicker.css" type="text/css" rel="stylesheet">
     <?php }
-        
-    if (isset($cfg["baigoValidator"])) { ?>
+
+    if (isset($cfg['baigoValidator'])) { ?>
         <!--表单验证 js-->
         <link href="<?php echo BG_URL_STATIC; ?>lib/baigoValidator/baigoValidator.css" type="text/css" rel="stylesheet">
     <?php }
-        
-    if (isset($cfg["baigoSubmit"])) { ?>
+
+    if (isset($cfg['baigoSubmit'])) { ?>
         <!--表单 ajax 提交 js-->
         <link href="<?php echo BG_URL_STATIC; ?>lib/baigoSubmit/baigoSubmit.css" type="text/css" rel="stylesheet">
     <?php } ?>

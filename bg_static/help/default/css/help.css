@@ -1,5 +1,4 @@
-.img_border { border: #ddd 1px solid; }
-.text_break { word-break: break-all; }
-.indicator_black { color: #999; }
-.indicator_black li { border:1px solid #999; }
-.indicator_black li.active { background: #999; }
+.bg-text-break { word-break: break-all; }
+.bg-indicator-black { color: #999; }
+.bg-indicator-black li { border:1px solid #999; }
+.bg-indicator-black li.active { background: #999; }
