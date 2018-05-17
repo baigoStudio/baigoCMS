@@ -27,6 +27,7 @@ return array(
     ),
 
     'href' => array(
+        'help'      => '帮助',
         'login'     => '直接登录',
         'forgot'    => '忘记密码',
         'jumping'   => '正在跳转',

@@ -1,13 +1,12 @@
 <h3>手动安装 / 升级概述</h3>
 <p>
-    当用户利用本系统提供的安装、升级程序遇到困难或者希望自己手动安装 / 升级时，请参照本文档。
+    当用户利用本系统提供的安装、升级程序遇到困难或者希望自己手动安装 / 升级时，请查看本文档。
 </p>
 <p>
-    本系统的所有配置文件保存于 ./bg_config 文件夹，每个文件均配备一个例子，文件名以 _sample 为后缀，所有配置均定义为常量，以下是详细说明。
+    本系统的所有配置文件保存于 ./bg_config 目录，每个文件均配备一个例子，文件名以 _sample 为后缀，所有配置均定义为常量，以下是详细说明。
 </p>
 
-<div class="panel panel-default">
-    <div class="panel-heading">目录结构说明</div>
+    <h4>目录结构说明</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -56,7 +55,6 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
@@ -64,7 +62,6 @@
     所有配置结束后，应执数据表创建 / 升级程序和完毕程序，详情如下表：
 </p>
 
-<div class="panel panel-default">
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -76,22 +73,21 @@
             <tbody>
 
                 <tr>
-                    <td class="text-primary">./bg_install/index.php?mod=setup&act=dbtable</td>
+                    <td class="text-primary">./bg_install/index.php?m=setup&a=dbtable</td>
                     <td class="text-nowrap">创建数据表</td>
                 </tr>
                 <tr>
-                    <td class="text-primary">./bg_install/index.php?mod=upgrade&act=dbtable</td>
+                    <td class="text-primary">./bg_install/index.php?m=upgrade&a=dbtable</td>
                     <td class="text-nowrap">升级数据表</td>
                 </tr>
                 <tr>
-                    <td class="text-primary">./bg_install/index.php?mod=setup&act=over</td>
+                    <td class="text-primary">./bg_install/index.php?m=setup&a=over</td>
                     <td class="text-nowrap">安装完毕</td>
                 </tr>
                 <tr>
-                    <td class="text-primary">./bg_install/index.php?mod=upgrade&act=over</td>
+                    <td class="text-primary">./bg_install/index.php?m=upgrade&a=over</td>
                     <td class="text-nowrap">升级完毕</td>
                 </tr>
             </tbody>
         </table>
     </div>
-</div>

@@ -25,12 +25,17 @@ return array(
         ),
         'console' => array(
             'title' => 'The Console',
+            'sub'   => array(
+                'console'   => 'The Console',
+                'gather'    => 'Content Gather',
+            ),
         ),
         'doc' => array(
             'title' => 'Documentation',
             'sub'   => array(
-                'tpl'   => 'Template Documentation',
-                'api'   => 'API Documentation',
+                'tpl'       => 'Template Documentation',
+                'api'       => 'API Documentation',
+                'plugin'    => 'Plug-in Documentation',
             ),
         ),
     ),
@@ -108,9 +113,21 @@ return array(
                 'admin'     => 'Administrator',
                 'group'     => 'Group Management',
                 'link'      => 'Link',
+                'plugin'    => 'Plug-in Management',
                 'opt'       => 'Settings',
                 'custom'    => 'Custom Fields',
                 'app'       => 'API Settings',
+            ),
+        ),
+        'gather' => array(
+            'active'    => 'console',
+            'menu'      => array(
+                'outline'       => 'Gather Sites Outline',
+                'gather_gather' => 'Content Gather',
+                'gather_list'   => 'Gathers Approved',
+                'gsite_list'    => 'Sites Management',
+                'step_list'     => 'List Parse',
+                'step_content'  => 'Content Parse',
             ),
         ),
         'tpl' => array(
@@ -143,6 +160,21 @@ return array(
                 'call'      => 'Call',
                 'attach'    => 'Attachments / Thumbnails',
                 'rcode'     => 'Return Code',
+            ),
+        ),
+        'plugin' => array(
+            'active'    => 'doc',
+            'menu'      => array(
+                'outline'       => 'Plug-in Outline',
+                'create'        => 'Create Plug-in',
+                'programming'   => 'Programming',
+                'obj_plugin'    => 'Plug-in Object',
+                'data'          => 'Saving Plug-in Data',
+                'class_file'    => 'Filesystem CLASS',
+                'obj_db'        => 'Database Object',
+                'hook'          => 'Plug-in Hooks',
+                'action'        => 'Action Hooks',
+                'filter'        => 'Filter Hooks',
             ),
         ),
     ),

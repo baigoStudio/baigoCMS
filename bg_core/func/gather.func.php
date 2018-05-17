@@ -123,6 +123,7 @@ function fn_gatherImg($arr_qlistImgs = array(), $num_adminId = 0) {
     $_arr_uploadSubmits = array();
 
     $_obj_upload        = new CLASS_UPLOAD();
+    $_obj_file          = new CLASS_FILE();
     $_mdl_attach        = new MODEL_ATTACH();
     $_mdl_thumb         = new MODEL_THUMB();
     $_mdl_mime          = new MODEL_MIME();
@@ -152,7 +153,7 @@ function fn_gatherImg($arr_qlistImgs = array(), $num_adminId = 0) {
                         $_str_tmpName   = BG_PATH_CACHE . 'ssin' . DS . $_str_tmpMd5;
                         $_arr_name      = explode('/', $_value['img_src']);
                         $_str_name      = end($_arr_name);
-                        $_num_size      = file_put_contents($_str_tmpName, $_arr_remoteFile['ret']);
+                        $_num_size      = $_obj_file->file_put($_str_tmpName, $_arr_remoteFile['ret']);
 
                         $_arr_attachFiles = array(
                             'tmp_name'  => $_str_tmpName,
@@ -177,7 +178,7 @@ function fn_gatherImg($arr_qlistImgs = array(), $num_adminId = 0) {
                                 }
                             }
                         } else {
-                            unlink($_str_tmpName);
+                            $_obj_file->file_del($_str_tmpName);
                         }
                     }
                 }

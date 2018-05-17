@@ -16,7 +16,7 @@ class CLASS_BASE {
     public $key_pub; //公钥
 
     function __construct() { //构造函数
-        //$this->getUi(); //获取界面类型
+        $this->obj_file = new CLASS_FILE();
         $this->getKeyPub(); //获取公钥
         $this->getLang(); //获取当前语言
         $this->setTimezone(); //设置时区
@@ -27,7 +27,7 @@ class CLASS_BASE {
         if (!file_exists(BG_PATH_CACHE . 'sys' . DS . 'crypt_key_pub.php')) {
             $_str_rand  = fn_rand();
             $_str_key   = '<?php return \'' . $_str_rand . '\';';
-            $this->obj_dir->put_file(BG_PATH_CACHE . 'sys' . DS . 'crypt_key_pub.php', $_str_key);
+            $this->obj_file->file_put(BG_PATH_CACHE . 'sys' . DS . 'crypt_key_pub.php', $_str_key);
         }
 
         $this->key_pub = fn_include(BG_PATH_CACHE . 'sys' . DS . 'crypt_key_pub.php');

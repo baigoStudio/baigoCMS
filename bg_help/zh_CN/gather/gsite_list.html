@@ -1,0 +1,93 @@
+<h3>采集点管理</h3>
+<p>
+    本功能需要用户具备一定的 Web、HTML 等技术基础，尤其是需要熟悉选择器，基于这些基础才能顺利完成设置。
+</p>
+<p>
+    完成内容采集需要经过如下的流程：创建采集点->数据采集->采集审核，采集完成后，如网站为纯静态模式，还需要运行生成程序才能最终在网站上发布。本部分设置完成后方可采集数据。
+</p>
+<p>
+    点左侧子菜单的“采集点管理“，进入如下界面，在此，您可以对采集点进行各项操作。
+</p>
+
+<p>
+    <a href="{$images}gsite_list.jpg" target="_blank"><img src="{$images}gsite_list.jpg" class="img-fluid img-thumbnail"></a>
+</p>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="oi oi-chevron-top"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<a name="form"></a>
+<h3>创建（编辑）采集点</h3>
+<p>
+    在采集点管理界面点“创建“或者点采集点列表的“编辑“菜单，进入如下界面，在此，您可以对采集点进行各项操作。
+</p>
+<p>
+    在编辑采集点时，界面下方将会解析出目标网站的 HTML 源代码，您可以根据需要进行操作。
+</p>
+<p>
+    在编辑采集点时，界面上方将会出现“解析列表”、“解析内容”、“解析分页列表”、“解析分页内容”等标签页，点这些标签页可以进行相应的设置。这些标签页的解释请点 <a href="#tab">名词解释</a>。
+</p>
+<p>
+    <a href="{$images}gsite_form.jpg" target="_blank"><img src="{$images}gsite_form.jpg" class="img-fluid img-thumbnail"></a>
+</p>
+
+<div>&nbsp;</div>
+
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
+        <h4 class="text-info">采集点</h4>
+        <p>采集点的名称。</p>
+
+        <h4 class="text-info">目标网站 URL</h4>
+        <p>准备采集的网站的 URL，注意：此处必须输入网址的 URL，而非域名，如：<span class="text-primary">http://www.baigo.net/cate/baigoSSO/update/</span>。</p>
+
+        <h4 class="text-info">目标网站编码</h4>
+        <p>指准备采集的网站 HTML 代码所采用的字符编码，您需要自行查看目标网站的 HTML 代码确认字符编码，也可以在右侧常用编码中选择。</p>
+
+        <h4 class="text-info">备注</h4>
+        <p>采集点的备注。</p>
+
+        <h4 class="text-info">隶属于栏目</h4>
+        <p>选择某个栏目，采集到的数据将自动分类到此栏目。</p>
+
+        <h4 class="text-info">状态</h4>
+        <p>可选启用或禁用。</p>
+    </div>
+</div>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="oi oi-chevron-top"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<a name="tab"></a>
+<h3>名词解释</h3>
+<p>
+    在编辑采集点时，界面上方将会出现“解析列表”、“解析内容”、“解析分页列表”、“解析分页内容”等标签页，这些标签页的解释如下：
+</p>
+<dl>
+    <dt>解析列表</dt>
+    <dd>用来解析目标网站 URL 中的文章列表，比如目标 URL 是一个栏目，此处的设置将会解析出此栏目的文章列表，将每一篇文章的 URL 解析出来，然后送到下一步进行处理。</dd>
+
+    <dt>解析内容</dt>
+    <dd>上一步解析列表以后，将会得到某个文章的 URL，系统会根据此处的设置解析出文章标题、文章内容、发布时间、作者等信息，然后保存到数据库。</dd>
+
+    <dt>解析分页列表</dt>
+    <dd>有些网站的部门文章可能比较长，一般会做出分页处理，第一步的到的文章 URL 往往是第一页，也就是文章的部分内容，如需要将文章的全部内容解析出来，就需要用到此处的设置，此处的设置可以将文章内容的第二页、第三页……的 URL 解析出来，然后送到下一步进行处理。</dd>
+
+    <dt>解析分页内容</dt>
+    <dd>此设置就是为了配合上一步解析分页列表而设立，在得到第二页、第三页……的 URL 以后，可以根据此处的设置解析出文章剩下的内容，然后保存到数据库。</dd>
+</dl>

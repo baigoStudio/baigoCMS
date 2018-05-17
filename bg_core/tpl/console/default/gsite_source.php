@@ -22,7 +22,7 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
 
     <div class="loading">
         <h1>
-            <span class="glyphicon glyphicon-refresh bg-spin"></span>
+            <span class="oi oi-loop-circular bg-spin"></span>
             Loading...
         </h1>
     </div>
@@ -37,4 +37,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

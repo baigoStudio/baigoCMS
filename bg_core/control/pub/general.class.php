@@ -9,7 +9,6 @@ if (!defined('IN_BAIGO')) {
     exit('Access Denied');
 }
 
-
 /*-------------前台通用类-------------*/
 class GENERAL_PUB {
 
@@ -22,7 +21,9 @@ class GENERAL_PUB {
 
         //语言文件
         $this->obj_tpl->lang = array(
-            'rcode'         => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'rcode.php'), //返回代码
+            'rcode'     => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'rcode.php'), //返回代码
         );
+
+        $GLOBALS['obj_plugin']->trigger('action_pub_init'); //前台初始化时触发
     }
 }

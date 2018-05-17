@@ -1,0 +1,83 @@
+<h3>SSO 用户信息数组</h3>
+<p>
+    此数组由 SSO 返回，详情请参考 SSO 文档。
+</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">名称</th>
+                    <th class="text-nowrap">类型</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">user_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td>用户 ID</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_name</td>
+                    <td class="text-nowrap">string</td>
+                    <td>用户名</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_mail</td>
+                    <td class="text-nowrap">string</td>
+                    <td>邮箱</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_nick</td>
+                    <td class="text-nowrap">string</td>
+                    <td>昵称</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_contact</td>
+                    <td class="text-nowrap">array</td>
+                    <td>联系方式。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_extend</td>
+                    <td class="text-nowrap">array</td>
+                    <td>扩展字段。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_status</td>
+                    <td class="text-nowrap">string</td>
+                    <td>用户状态，可能的值为 enable（启用）、wait（待审）、disable（禁用）。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_time</td>
+                    <td class="text-nowrap">int</td>
+                    <td>注册时间，Unix 时间戳。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_time_login</td>
+                    <td class="text-nowrap">int</td>
+                    <td>最后登录时间，Unix 时间戳。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">user_ip</td>
+                    <td class="text-nowrap">string</td>
+                    <td>最后登录 IP 地址</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div>&nbsp;</div>
+
+<h5>数据示例</h5>
+<p>
+<pre class="border rounded"><code class="language-php">Array (
+    [user_id] =&gt; 1
+    [user_name] =&gt; baigo
+    [user_mail] =&gt; baigo@baigo.net
+    [user_nick] =&gt; baigonick
+    [user_time] =&gt; 1423880092
+    [user_time_login] =&gt; 1423880092
+    [user_ip] =&gt; 61.153.14.159
+)</code></pre>
+</p>

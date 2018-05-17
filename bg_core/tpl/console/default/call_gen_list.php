@@ -5,52 +5,45 @@
 );
 
 include($cfg['pathInclude'] . 'html_head.php'); ?>
-    <style type="text/css">
-    body {
-        padding: 0 15px;
-    }
-    </style>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th><?php echo $this->lang['common']['label']['call']; ?> / <?php echo $this->lang['mod']['label']['id']; ?></th>
-                <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($this->tplData['callRows'] as $_key=>$_value) { ?>
-                <tr id="call_<?php echo $_value['call_id']; ?>_tr" class="text-info">
-                    <td>
-                        <h5>
-                            <?php echo $_value['call_name']; ?>
-                        </h5>
-                        <div>
-                            <?php echo $_value['call_id']; ?>
-                        </div>
-                    </td>
-                    <td class="text-right text-nowrap">
-                        <h5>
-                            <span id="call_<?php echo $_value['call_id']; ?>_icon" class="glyphicon glyphicon-refresh bg-spin"></span>
-                            <span id="call_<?php echo $_value['call_id']; ?>_text"><?php echo $this->lang['rcode']['y170402']; ?></span>
-                        </h5>
-                    </td>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><?php echo $this->lang['mod']['label']['id']; ?></th>
+                    <th><?php echo $this->lang['common']['label']['call']; ?></th>
+                    <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($this->tplData['callRows'] as $_key=>$_value) { ?>
+                    <tr id="call_<?php echo $_value['call_id']; ?>_tr" class="text-info">
+                        <td>
+                            <?php echo $_value['call_id']; ?>
+                        </td>
+                        <td>
+                            <?php echo $_value['call_name']; ?>
+                        </td>
+                        <td class="text-right text-nowrap">
+                            <span id="call_<?php echo $_value['call_id']; ?>_icon" class="oi oi-loop-circular bg-spin"></span>
+                            <span id="call_<?php echo $_value['call_id']; ?>_text"><?php echo $this->lang['rcode']['y170402']; ?></span>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function(){
         <?php if (!fn_isEmpty($this->tplData['callRows'])) {
             foreach ($this->tplData['callRows'] as $_key=>$_value) { ?>
                 $.ajax({
-                    url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=call_gen", //url
+                    url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=call_gen&c=request", //url
                     //async: false, //设置为同步
                     type: "post",
                     dataType: "json",
                     data: {
-                        act: "single",
+                        a: "single",
                         call_id: "<?php echo $_value['call_id']; ?>",
                         <?php echo $this->common['tokenRow']['name_session']; ?>: "<?php echo $this->common['tokenRow']['token']; ?>"
                     },
@@ -60,12 +53,12 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
                         switch (_rcode_status) {
                             case "x":
                                 _class  = "text-danger";
-                                _icon   = "glyphicon glyphicon-remove-sign";
+                                _icon   = "oi oi-circle-x";
                             break;
 
                             case "y":
                                 _class  = "text-success";
-                                _icon   = "glyphicon glyphicon-ok-sign";
+                                _icon   = "oi oi-circle-check";
                             break;
                         }
 
@@ -88,4 +81,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

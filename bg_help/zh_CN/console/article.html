@@ -4,13 +4,13 @@
 <p>在纯静态模式下，将会显示“逐个生成”和“强制生成”按钮，“<mark>逐个生成</mark>”按钮会将未生成的文章生成静态文件，“<mark>强制生成</mark>”按钮可以将所有文章全部生成一遍，将会消耗较长的时间和较多系统资源，请谨慎操作。</p>
 
 <p>
-    <a href="{images}article_list.jpg" target="_blank"><img src="{images}article_list.jpg" class="img-responsive thumbnail"></a>
+    <a href="{$images}article_list.jpg" target="_blank"><img src="{$images}article_list.jpg" class="img-fluid img-thumbnail"></a>
 </p>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -19,36 +19,36 @@
 
 <a name="form"></a>
 <h3>创建（编辑）文章</h3>
-<p>点左侧子菜单的“创建文章”或者点击文章列表的“编辑”菜单，进入如下界面，在此，您可以对文章进行各项操作。</p>
+<p>点左侧子菜单的“创建文章”或者点文章列表的“编辑”菜单，进入如下界面，在此，您可以对文章进行各项操作。</p>
 
 <p>
-    <a href="{images}article_form.jpg" target="_blank"><img src="{images}article_form.jpg" class="img-responsive thumbnail"></a>
+    <a href="{$images}article_form.jpg" target="_blank"><img src="{$images}article_form.jpg" class="img-fluid img-thumbnail"></a>
 </p>
 
 <div>&nbsp;</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">填写说明</div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
         <h4 class="text-info">文章标题</h4>
         <p>文章、信息或产品的标题。</p>
 
         <h4 class="text-info">文章内容</h4>
-        <p>文章、信息或产品的具体内容，点击“插入或上传”，可以上传图片、附件，或者把已上传的图片、附件插入到文章内容中。</p>
+        <p>文章、信息或产品的具体内容，点“插入或上传”，可以上传图片、附件，或者把已上传的图片、附件插入到文章内容中。</p>
 
         <h4 class="text-info">摘要类型</h4>
         <p>可选自动截取、仅截取文本、不要摘要和手工编辑四种，其中选择手机编辑将会弹出摘要编辑表单。</p>
 
         <h4 class="text-info">摘要</h4>
-        <p>文章的摘要信息，点击“插入或上传”，可以上传图片、附件，或者把已上传的图片、附件插入到文章摘要中。如空白，则自动选取文章的部分内容。</p>
+        <p>文章的摘要信息，点“插入或上传”，可以上传图片、附件，或者把已上传的图片、附件插入到文章摘要中。如空白，则自动选取文章的部分内容。</p>
 
         <h4 class="text-info">文章来源</h4>
-        <p>常用于转载文章时，表明文章的出处，以示对原作者的尊重。选择“常用来源”，可以自动填入常用来源的信息，系统可以预定一些常用的文章来源，详见 <a href="{BG_URL_HELP}index.php?mod=console&act=source">文章来源</a>。</p>
+        <p>常用于转载文章时，表明文章的出处，以示对原作者的尊重。选择“常用来源”，可以自动填入常用来源的信息，系统可以预定一些常用的文章来源，详见 <a href="{$BG_URL_HELP}index.php?m=console&a=source">文章来源</a>。</p>
 
         <h4 class="text-info">TAG（标签）</h4>
         <p>网站为了区分文章的类别所采用的 TAG，主要用于关联文章和搜索。在表单中输入的时候，系统将会搜索相关 TAG，您可以在弹出的菜单中直接选择，如果没有搜索到 TAG，可以在输入完毕后，点“创建”。</p>
         <p>
-            <a href="{images}article_tag.jpg" target="_blank"><img src="{images}article_tag.jpg" class="img-responsive thumbnail"></a>
+            <a href="{$images}article_tag.jpg" target="_blank"><img src="{$images}article_tag.jpg" class="img-fluid img-thumbnail"></a>
         </p>
 
         <h4 class="text-info">跳转至</h4>
@@ -73,7 +73,7 @@
         <p>可选正常、草稿箱或回收站。草稿箱与回收站均为本人所有，任何人均无法查看（包括最高权限的管理员），回收站可直接清空（仅清空本人存储与回收站的文章）。</p>
 
         <h4 class="text-info">标记</h4>
-        <p>网站为了区分文章的类别所采用的标记，主要用于调用，详见 <a href="{BG_URL_HELP}index.php?mod=console&act=call">调用管理</a>。</p>
+        <p>网站为了区分文章的类别所采用的标记，主要用于调用，详见 <a href="{$BG_URL_HELP}index.php?m=console&a=call">调用管理</a>。</p>
 
         <h4 class="text-info">专题</h4>
         <p>可选择加入一个专题。可以按照关键词搜索专题，点“翻页”按钮，可以实现选框内的专题翻页。</p>
@@ -83,7 +83,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -92,9 +92,9 @@
 
 <h3>上传或插入</h3>
 <p>点“上传或插入”弹出如下对话框，在此您可以上传文件或选择已上传的文件，插入到文章中。</p>
-<p>点“上传附件”标签，可以选择文件，自动上传，上出完毕以后会自动插入到文章。上传受上传设置和附件类型的限制，详见 <a href="{BG_URL_HELP}index.php?mod=console&act=opt#upfile">上传设置</a>、<a href="{BG_URL_HELP}index.php?mod=console&act=attach#mime">附件类型</a>。
+<p>点“上传附件”标签，可以选择文件，自动上传，上出完毕以后会自动插入到文章。上传受上传设置和附件类型的限制，详见 <a href="{$BG_URL_HELP}index.php?m=console&a=opt#upfile">上传设置</a>、<a href="{$BG_URL_HELP}index.php?m=console&a=attach#mime">附件类型</a>。
 </p>
-<p>点“插入附件”标签，可以浏览已上传的文件，鼠标移到缩略图上，会弹出菜单，选择插入原图或缩略图。<a href="{BG_URL_HELP}index.php?mod=console&act=attach#thumb">缩略图</a> 详情。</p>
+<p>点“插入附件”标签，可以浏览已上传的文件，鼠标移到缩略图上，会弹出菜单，选择插入原图或缩略图。<a href="{$BG_URL_HELP}index.php?m=console&a=attach#thumb">缩略图</a> 详情。</p>
 <p>在编辑文章时，点“本文”标签，可以本文中用到的附件列出，可以方便的进行重新插入等操作。</p>
 
 <p>
@@ -106,26 +106,26 @@
         </ol>
 
         <div class="carousel-inner" role="listbox">
-            <div class="item active">
-                <a href="{images}attach_form.jpg" target="_blank"><img src="{images}attach_form.jpg"></a>
+            <div class="carousel-item active">
+                <a href="{$images}attach_form.jpg" target="_blank"><img class="img-fluid" src="{$images}attach_form.jpg"></a>
                 <div class="carousel-caption">上传附件</div>
             </div>
-            <div class="item">
-                <a href="{images}attach_form_success.jpg" target="_blank"><img src="{images}attach_form_success.jpg"></a>
+            <div class="carousel-item">
+                <a href="{$images}attach_form_success.jpg" target="_blank"><img class="img-fluid" src="{$images}attach_form_success.jpg"></a>
                 <div class="carousel-caption">上传附件成功</div>
             </div>
-            <div class="item">
-                <a href="{images}attach_insert.jpg" target="_blank"><img src="{images}attach_insert.jpg"></a>
+            <div class="carousel-item">
+                <a href="{$images}attach_insert.jpg" target="_blank"><img class="img-fluid" src="{$images}attach_insert.jpg"></a>
                 <div class="carousel-caption">插入附件</div>
             </div>
         </div>
 
-        <a class="left carousel-control" href="#carousel_attach" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left"></span>
+        <a class="carousel-control-prev" href="#carousel_attach" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control" href="#carousel_attach" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right"></span>
+        <a class="carousel-control-next" href="#carousel_attach" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
             <span class="sr-only">Next</span>
         </a>
     </div>
@@ -134,7 +134,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -143,8 +143,8 @@
 
 <h3>本文附件管理</h3>
 <p>在编辑文章时，点“本文附件管理”，将转入如下界面，此处将本文的附件列出，可以选择某一图片，并设为主图。</p>
-<p>点击右上角的“转至附件管理”，将转换到附件管理界面，在此可以对本文的附件进行删除等操作。</p>
+<p>点右上角的“转至附件管理”，将转换到附件管理界面，在此可以对本文的附件进行删除等操作。</p>
 
 <p>
-    <a href="{images}attach_article.jpg" target="_blank"><img src="{images}attach_article.jpg" class="img-responsive thumbnail"></a>
+    <a href="{$images}attach_article.jpg" target="_blank"><img src="{$images}attach_article.jpg" class="img-fluid img-thumbnail"></a>
 </p>

@@ -6,39 +6,37 @@
 
 include($cfg['pathInclude'] . 'html_head.php'); ?>
 
-    <table class="table">
-        <tbody>
-            <?php foreach ($this->tplData['gatherRows'] as $key=>$value) { ?>
-                <tr id="gather_<?php echo $key; ?>_tr" class="text-info">
-                    <td>
-                        <h5>
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+                <?php foreach ($this->tplData['gatherRows'] as $key=>$value) { ?>
+                    <tr id="gather_<?php echo $key; ?>_tr" class="text-info">
+                        <td>
                             <?php echo $value['content']; ?>
-                        </h5>
-                        <div>
+                        </td>
+                        <td>
                             <?php echo $value['url']; ?>
-                        </div>
-                    </td>
-                    <td class="text-right text-nowrap">
-                        <h5>
-                            <span id="gather_<?php echo $key; ?>_icon" class="glyphicon glyphicon-refresh bg-spin"></span>
+                        </td>
+                        <td class="text-right text-nowrap">
+                            <span id="gather_<?php echo $key; ?>_icon" class="oi oi-loop-circular bg-spin"></span>
                             <span id="gather_<?php echo $key; ?>_text"><?php echo $this->lang['mod']['page']['gathering']; ?></span>
-                        </h5>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function(){
         <?php foreach ($this->tplData['gatherRows'] as $key=>$value) { ?>
             $.ajax({
-                url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=gather", //url
+                url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=gather&c=request", //url
                 //async: false, //设置为同步
                 type: "post",
                 dataType: "json",
                 data: {
-                    act: "submit",
+                    a: "submit",
                     gsite_id: "<?php echo $this->tplData['gsiteRow']['gsite_id']; ?>",
                     key: "<?php echo $key; ?>",
                     <?php echo $this->common['tokenRow']['name_session']; ?>: "<?php echo $this->common['tokenRow']['token']; ?>"
@@ -49,12 +47,12 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
                     switch (_rcode_status) {
                         case "x":
                             _class  = "text-danger";
-                            _icon   = "glyphicon glyphicon-remove-sign";
+                            _icon   = "oi oi-circle-x";
                         break;
 
                         case "y":
                             _class  = "text-success";
-                            _icon   = "glyphicon glyphicon-ok-sign";
+                            _icon   = "oi oi-circle-check";
                         break;
                     }
 
@@ -73,4 +71,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

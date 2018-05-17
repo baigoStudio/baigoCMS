@@ -6,13 +6,13 @@
 <p>在纯静态模式下，将会显示“逐个生成”按钮，“<mark>逐个生成</mark>按钮会逐个生成调用”。</p>
 
 <p>
-    <a href="{images}call_list.jpg" target="_blank"><img src="{images}call_list.jpg" class="img-responsive thumbnail"></a>
+    <a href="{$images}call_list.jpg" target="_blank"><img src="{$images}call_list.jpg" class="img-fluid img-thumbnail"></a>
 </p>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -22,38 +22,38 @@
 <a name="form"></a>
 <h3>创建（编辑）调用</h3>
 <p>
-    点左侧子菜单的“创建调用“或者点击调用列表的“编辑“菜单，进入如下界面，在此，您可以对调用进行各项操作。
+    点左侧子菜单的“创建调用“或者点调用列表的“编辑“菜单，进入如下界面，在此，您可以对调用进行各项操作。
 </p>
 
 <p>
     <div id="carousel_call" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators bg-indicator-black">
+        <ol class="carousel-indicators">
             <li data-target="#carousel_call" data-slide-to="0" class="active"></li>
             <li data-target="#carousel_call" data-slide-to="1"></li>
             <li data-target="#carousel_call" data-slide-to="2"></li>
         </ol>
 
         <div class="carousel-inner" role="listbox">
-            <div class="item active">
-                <a href="{images}call_form_article.jpg" target="_blank"><img src="{images}call_form_article.jpg"></a>
-                <div class="carousel-caption bg-indicator-black">文章列表、排行</div>
+            <div class="carousel-item active">
+                <a href="{$images}call_form_article.jpg" target="_blank"><img src="{$images}call_form_article.jpg" class="img-fluid"></a>
+                <div class="carousel-caption text-dark">文章列表、排行</div>
             </div>
-            <div class="item">
-                <a href="{images}call_form_cate.jpg" target="_blank"><img src="{images}call_form_cate.jpg"></a>
-                <div class="carousel-caption bg-indicator-black">栏目列表</div>
+            <div class="carousel-item">
+                <a href="{$images}call_form_cate.jpg" target="_blank"><img src="{$images}call_form_cate.jpg" class="img-fluid"></a>
+                <div class="carousel-caption text-dark">栏目列表</div>
             </div>
-            <div class="item">
-                <a href="{images}call_form_tag.jpg" target="_blank"><img src="{images}call_form_tag.jpg"></a>
-                <div class="carousel-caption bg-indicator-black">TAG 列表</div>
+            <div class="carousel-item">
+                <a href="{$images}call_form_tag.jpg" target="_blank"><img src="{$images}call_form_tag.jpg" class="img-fluid"></a>
+                <div class="carousel-caption text-dark">TAG 列表</div>
             </div>
         </div>
 
-        <a class="left carousel-control" href="#carousel_call" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left"></span>
+        <a class="carousel-control-prev text-dark" href="#carousel_call" role="button" data-slide="prev">
+            <h3 class="oi oi-chevron-left"></h3>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control" href="#carousel_call" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right"></span>
+        <a class="carousel-control-next text-dark" href="#carousel_call" role="button" data-slide="next">
+            <h3 class="oi oi-chevron-right"></h3>
             <span class="sr-only">Next</span>
         </a>
     </div>
@@ -61,9 +61,9 @@
 
 <div>&nbsp;</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">填写说明</div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
         <h4 class="text-info">调用名称</h4>
         <p>调用的名称，建议按照最终调用的位置和类型相结合进行命名，如：首页-顶部-栏目列表。</p>
 
@@ -76,7 +76,7 @@
         <p>可选全部、仅显示带图片文章、仅显示无图片文章。仅在调用类型为文章列表时显示。</p>
 
         <h4 class="text-info">标记</h4>
-        <p>按 文章管理 - 标记 的设定，显示隶属于这些标记的文章。仅在调用类型为文章列表时显示。<a href="{BG_URL_HELP}index.php?mod=console&act=tag#mark">标记</a> 详情。</p>
+        <p>按 文章管理 - 标记 的设定，显示隶属于这些标记的文章。仅在调用类型为文章列表时显示。<a href="{$BG_URL_HELP}index.php?m=console&a=tag#mark">标记</a> 详情。</p>
 
         <div class="alert alert-success">其他</div>
 
@@ -87,7 +87,7 @@
         <p>纯静态模式下会显示该选项，可选 HTML 和 JS，分别针对不同的调用方式。</p>
 
         <h4 class="text-info">模板</h4>
-        <p>纯静态模式下会显示该选项，选择调用生成的模板。详情请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=call" target="_blank">模板文档</a>。</p>
+        <p>纯静态模式下会显示该选项，选择调用生成的模板。详情请查看 <a href="{$BG_URL_HELP}index.php?m=tpl&a=call" target="_blank">模板文档</a>。</p>
 
         <h4 class="text-info">状态</h4>
         <p>可选启用或禁用。</p>
@@ -103,7 +103,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -117,5 +117,5 @@
 </p>
 
 <p>
-    <a href="{images}call_show.jpg" target="_blank"><img src="{images}call_show.jpg" class="img-responsive thumbnail"></a>
+    <a href="{$images}call_show.jpg" target="_blank"><img src="{$images}call_show.jpg" class="img-fluid img-thumbnail"></a>
 </p>

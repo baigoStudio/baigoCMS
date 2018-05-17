@@ -2,8 +2,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <?php echo $this->lang['mod']['label']['selectorOften']; ?>
+                        <div class="modal-title"><?php echo $this->lang['mod']['label']['selectorOften']; ?></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <table class="table table-hover">
                         <thead>
@@ -34,8 +36,8 @@
                             } ?>
                         </tbody>
                     </table>
-                    <div class="modal-footer clearfix">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>
@@ -47,21 +49,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <?php echo $this->lang['mod']['label']['keepTag']; ?>
+                        <div class="modal-title"><?php echo $this->lang['mod']['label']['keepTag']; ?></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <ul class="list-inline">
                             <?php foreach ($this->tplData['keepTag'] as $_key=>$_value) { ?>
-                                <li class="lead">
-                                    <span class="label label-info"><?php echo $_value; ?></span>
+                                <li class="list-inline-item lead">
+                                    <span class="badge badge-info"><?php echo $_value; ?></span>
                                 </li>
                             <?php } ?>
                         </ul>
                         <div><?php echo $this->lang['mod']['label']['keepTagNote']; ?></div>
                     </div>
-                    <div class="modal-footer clearfix">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>
@@ -73,13 +77,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <?php echo $this->lang['mod']['label']['attrGather']; ?>
+                        <div class="modal-title"><?php echo $this->lang['mod']['label']['attrGather']; ?></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div><?php echo $this->lang['mod']['label']['attrOftenNote']; ?></div>
 
-                        <dl class="bg-dl">
+                        <dl>
                             <?php foreach ($this->tplData['attrQList'] as $_key=>$_value) { ?>
                                 <dt>
                                     <?php if (isset($this->lang['mod']['attrQList'][$_key]['label'])) {
@@ -96,8 +102,8 @@
                             <?php } ?>
                         </dl>
                     </div>
-                    <div class="modal-footer clearfix">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>
@@ -109,8 +115,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <div><?php echo $this->lang['mod']['label']['attrExceptNoteSys']; ?></div>
+                        <div class="modal-title"><?php echo $this->lang['mod']['label']['attrExceptNoteSys']; ?></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <table class="table table-hover">
@@ -127,7 +135,7 @@
                                     <td class="text-danger">
                                         <ul class="list-inline">
                                             <?php foreach ($value as $key_attr=>$value_attr) { ?>
-                                                <li>
+                                                <li class="list-inline-item">
                                                     <code><?php echo $value_attr; ?></code>
                                                 </li>
                                             <?php } ?>
@@ -138,8 +146,8 @@
                         </tbody>
                     </table>
 
-                    <div class="modal-footer clearfix">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>
@@ -151,13 +159,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <?php echo $this->lang['mod']['label']['filter']; ?>
+                        <div class="modal-title"><?php echo $this->lang['mod']['label']['filter']; ?></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div><?php echo $this->lang['mod']['label']['filterNote']; ?></div>
 
-                        <dl class="bg-dl">
+                        <dl>
                             <?php foreach ($this->tplData['filter'] as $_key=>$_value) { ?>
                                 <dt>
                                     <?php if (isset($this->lang['mod']['filter'][$_key]['label'])) {
@@ -174,8 +184,8 @@
                             <?php } ?>
                         </dl>
                     </div>
-                    <div class="modal-footer clearfix">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>

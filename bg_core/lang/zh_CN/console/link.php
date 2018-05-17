@@ -40,10 +40,11 @@ return array(
 
         'belongCate'    => '隶属于栏目', //隶属栏目
 
-        'order' => '排序',
+        'order'         => '排序',
         'orderFirst'    => '移到最前',
         'orderLast'     => '移到最后',
         'orderAfter'    => '该 ID 之后',
+        'noname'        => '未命名',
     ),
 
     'status' => array(

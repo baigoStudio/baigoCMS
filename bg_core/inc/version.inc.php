@@ -16,7 +16,7 @@ if (!defined('IN_BAIGO')) {
 define('PRD_CMS_POWERED', 'Powered by');
 define('PRD_CMS_NAME', 'baigo CMS');
 define('PRD_CMS_URL', 'http://www.baigo.net/cms/');
-define('PRD_CMS_VER', '2.1');
-define('PRD_CMS_PUB', 20171215);
+define('PRD_CMS_VER', '2.0.1');
+define('PRD_CMS_PUB', 20180517);
 define('PRD_VER_CHECK', 'http://www.baigo.net/ver_check/check.php');
 

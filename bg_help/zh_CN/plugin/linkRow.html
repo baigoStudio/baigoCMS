@@ -1,0 +1,80 @@
+<h3>链接数组</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">名称</th>
+                    <th class="text-nowrap">类型</th>
+                    <th class="text-nowrap">说明</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">link_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td>链接 ID</td>
+                    <td>添加链接时，ID 为 0。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_name</td>
+                    <td class="text-nowrap">string</td>
+                    <td>链接名称</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_type</td>
+                    <td class="text-nowrap">string</td>
+                    <td>链接类型</td>
+                    <td>console 为后台，friend 为友情链接，auto 为自动链接。详情请查看后台管理 <a href="{$BG_URL_HELP}index.php?m=console&a=link">链接</a></td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_url</td>
+                    <td class="text-nowrap">string</td>
+                    <td>链接地址</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_status</td>
+                    <td class="text-nowrap">string</td>
+                    <td>链接状态</td>
+                    <td>enable 为启用，disable 为禁用</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_cate_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td>隶属栏目 ID</td>
+                    <td>仅在类型为 auto 时有效。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_order</td>
+                    <td class="text-nowrap">int</td>
+                    <td>排序</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">link_blank</td>
+                    <td class="text-nowrap">bool</td>
+                    <td>是否打开新窗口</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div>&nbsp;</div>
+
+<h5>数据示例</h5>
+<p>
+<pre class="border rounded"><code class="language-php">Array (
+    [link_id] =&gt; 0
+    [link_name] =&gt; baigo Studio
+    [link_type] =&gt; friend
+    [link_url] =&gt; http://www.baigo.net
+    [link_status] =&gt; enable
+    [link_cate_id] =&gt; 3
+    [link_order] =&gt; 0
+    [link_blank] =&gt; 0
+)</code></pre>
+</p>

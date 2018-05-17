@@ -8,43 +8,45 @@
 
 include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=thumb&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=attach#thumb" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=thumb&a=list" class="nav-link">
+                <span class="oi oi-chevron-left"></span>
+                <?php echo $this->lang['common']['href']['back']; ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_HELP; ?>index.php?m=console&a=attach#thumb" class="nav-link" target="_blank">
+                <span class="badge badge-pill badge-primary">
+                    <span class="oi oi-question-mark"></span>
+                </span>
+                <?php echo $this->lang['mod']['href']['help']; ?>
+            </a>
+        </li>
+    </ul>
 
     <form name="thumb_gen" id="thumb_gen">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
         <input type="hidden" name="thumb_id" value="<?php echo $this->tplData['thumbRow']['thumb_id']; ?>">
-        <input type="hidden" name="act" id="act_gen" value="gen">
+        <input type="hidden" name="a" id="act_gen" value="gen">
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['rangeId']; ?></label>
+                            <label><?php echo $this->lang['mod']['label']['rangeId']; ?></label>
                             <div class="input-group">
                                 <input type="text" name="attach_range[min_id]" id="attach_range_min_id" value="0" class="form-control">
-                                <span class="input-group-addon bg-input-range"><?php echo $this->lang['mod']['label']['to']; ?></span>
+                                <div class="input-group-append">
+                                    <span class="input-group-text border-right-0"><?php echo $this->lang['mod']['label']['to']; ?></span>
+                                </div>
                                 <input type="text" name="attach_range[max_id]" id="attach_range_max_id" value="0" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">
                             <button type="button" class="btn btn-warning" id="go_gen">
-                                <span class="glyphicon glyphicon-refresh"></span>
+                                <span class="oi oi-loop-circular"></span>
                                 <?php echo $this->lang['mod']['btn']['thumbGen']; ?>
                             </button>
                         </div>
@@ -64,33 +66,35 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
             </div>
 
             <div class="col-md-3">
-                <div class="well">
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                        <div class="form-control-static"><?php echo $this->tplData['thumbRow']['thumb_id']; ?></div>
-                    </div>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                            <div class="form-text"><?php echo $this->tplData['thumbRow']['thumb_id']; ?></div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['thumbWidth']; ?></label>
-                        <div class="form-control-static"><?php echo $this->tplData['thumbRow']['thumb_width']; ?></div>
-                    </div>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['thumbWidth']; ?></label>
+                            <div class="form-text"><?php echo $this->tplData['thumbRow']['thumb_width']; ?></div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['thumbHeight']; ?></label>
-                        <div class="form-control-static"><?php echo $this->tplData['thumbRow']['thumb_height']; ?></div>
-                    </div>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['thumbHeight']; ?></label>
+                            <div class="form-text"><?php echo $this->tplData['thumbRow']['thumb_height']; ?></div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['thumbCall']; ?></label>
-                        <div class="form-control-static">thumb_<?php echo $this->tplData['thumbRow']['thumb_width']; ?>_<?php echo $this->tplData['thumbRow']['thumb_height']; ?>_<?php echo $this->tplData['thumbRow']['thumb_type']; ?></div>
-                    </div>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['thumbCall']; ?></label>
+                            <div class="form-text">thumb_<?php echo $this->tplData['thumbRow']['thumb_width']; ?>_<?php echo $this->tplData['thumbRow']['thumb_height']; ?>_<?php echo $this->tplData['thumbRow']['thumb_type']; ?></div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['thumbType']; ?></label>
-                        <div class="form-control-static">
-                            <?php if (isset($this->lang['mod']['type'][$this->tplData['thumbRow']['thumb_type']])) {
-                                echo $this->lang['mod']['type'][$this->tplData['thumbRow']['thumb_type']];
-                            } ?>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['thumbType']; ?></label>
+                            <div class="form-text">
+                                <?php if (isset($this->lang['mod']['type'][$this->tplData['thumbRow']['thumb_type']])) {
+                                    echo $this->lang['mod']['type'][$this->tplData['thumbRow']['thumb_type']];
+                                } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,7 +106,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
 
     <script type="text/javascript">
     var opts_gen = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=attach",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=attach&c=request",
         confirm: {
             selector: "#act_gen",
             val: "gen",
@@ -122,4 +126,4 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

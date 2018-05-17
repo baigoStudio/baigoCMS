@@ -29,6 +29,7 @@ return array(
         'forgot'    => '忘记密码',
         'jumping'   => '正在跳转',
         'forward'   => '跳转',
+        'help'      => '帮助',
     ),
 
     'btn' => array(

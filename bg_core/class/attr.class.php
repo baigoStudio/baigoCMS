@@ -6,7 +6,7 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_BAIGO')) {
-exit('Access Denied');
+    exit('Access Denied');
 }
 
 /** HTML Attribute Filter

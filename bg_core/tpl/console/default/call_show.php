@@ -8,34 +8,34 @@
 include($cfg['pathInclude'] . 'function.php');
 include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=call&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=call#form" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=call&a=list" class="nav-link">
+                <span class="oi oi-chevron-left"></span>
+                <?php echo $this->lang['common']['href']['back']; ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_HELP; ?>index.php?m=console&a=call#form" class="nav-link" target="_blank">
+                <span class="badge badge-pill badge-primary">
+                    <span class="oi oi-question-mark"></span>
+                </span>
+                <?php echo $this->lang['mod']['href']['help']; ?>
+            </a>
+        </li>
+    </ul>
 
     <div class="row">
         <div class="col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card">
+                <div class="card-body">
                     <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callFunc']; ?></label>
-                        <div class="form-control-static">
+                        <label><?php echo $this->lang['mod']['label']['callFunc']; ?></label>
+                        <div class="form-text">
                             <code>
                                 <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == 'static') {
                                     switch ($this->tplData['callRow']['call_file']) {
-                                        case "js": ?>
+                                        case 'js': ?>
                                             &lt;script src=&quot;<?php echo $this->tplData['callRow']['urlRow']['call_url']; ?>&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
                                         <?php break;
 
@@ -51,24 +51,24 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callName']; ?></label>
-                        <div class="form-control-static"><?php echo $this->tplData['callRow']['call_name']; ?></div>
+                        <label><?php echo $this->lang['mod']['label']['callName']; ?></label>
+                        <div class="form-text"><?php echo $this->tplData['callRow']['call_name']; ?></div>
                     </div>
 
                     <?php if ($this->tplData['callRow']['call_type'] == 'cate') { ?>
                         <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callFilter']; ?></div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['callCate']; ?></label>
-                            <div class="form-control-static">
+                            <label><?php echo $this->lang['mod']['label']['callCate']; ?></label>
+                            <div class="form-text">
                                 <div <?php if ($this->tplData['callRow']['call_cate_id'] < 1) { ?>class="text-primary"<?php } ?>>
                                     <?php if ($this->tplData['callRow']['call_cate_id'] < 1) { ?>
-                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                        <span class="oi oi-circle-check"></span>
                                     <?php } else { ?>
-                                        <span class="glyphicon glyphicon-remove-sign"></span>
-                                    <?php } ?>
+                                        <span class="oi oi-circle-x"></span>
+                                    <?php }
 
-                                    <?php echo $this->lang['mod']['label']['allCate']; ?>
+                                    echo $this->lang['mod']['label']['allCate']; ?>
                                 </div>
                                 <table class="bg-table-empty">
                                     <tbody>
@@ -81,22 +81,22 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                         <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callFilter']; ?></div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['callCate']; ?></label>
-                            <div class="form-control-static">
+                            <label><?php echo $this->lang['mod']['label']['callCate']; ?></label>
+                            <div class="form-text">
                                 <table class="bg-table-empty">
                                     <tbody>
-                                        <?php cate_list_checkbox($this->tplData['cateRows'], $this->tplData['callRow']['call_cate_ids'], "", false); ?>
+                                        <?php cate_list_checkbox($this->tplData['cateRows'], $this->tplData['callRow']['call_cate_ids'], '', false); ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['common']['label']['spec']; ?></label>
-                            <div class="form-control-static">
+                            <label><?php echo $this->lang['common']['label']['spec']; ?></label>
+                            <div class="form-text">
                                 <?php foreach ($this->tplData['specRows'] as $key=>$value) { ?>
                                     <div class="text-primary">
-                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                        <span class="oi oi-circle-check"></span>
                                         <?php echo $value['spec_name']; ?>
                                     </div>
                                 <?php } ?>
@@ -104,29 +104,29 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['callAttach']; ?></label>
-                            <div class="form-control-static"><?php echo $this->lang['mod']['attach'][$this->tplData['callRow']['call_attach']]; ?></div>
+                            <label><?php echo $this->lang['mod']['label']['callAttach']; ?></label>
+                            <div class="form-text"><?php echo $this->lang['mod']['attach'][$this->tplData['callRow']['call_attach']]; ?></div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['callMark']; ?></label>
-                            <div class="form-control-static">
+                            <label><?php echo $this->lang['mod']['label']['callMark']; ?></label>
+                            <div class="form-text">
                                 <?php foreach ($this->tplData['markRows'] as $key=>$value) { ?>
                                     <div <?php if (in_array($value['mark_id'], $this->tplData['callRow']['call_mark_ids'])) { ?>class="text-primary"<?php } ?>>
                                         <?php if (in_array($value['mark_id'], $this->tplData['callRow']['call_mark_ids'])) { ?>
-                                            <span class="glyphicon glyphicon-ok-sign"></span>
-                                        <?php } ?>
+                                            <span class="oi oi-circle-check"></span>
+                                        <?php }
 
-                                        <?php echo $value['mark_name']; ?>
+                                        echo $value['mark_name']; ?>
                                     </div>
                                 <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
                 </div>
-                <div class="panel-footer">
-                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=call&act=form&call_id=<?php echo $this->tplData['callRow']['call_id']; ?>">
-                        <span class="glyphicon glyphicon-edit"></span>
+                <div class="card-footer">
+                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=call&a=form&call_id=<?php echo $this->tplData['callRow']['call_id']; ?>">
+                        <span class="oi oi-pencil"></span>
                         <?php echo $this->lang['mod']['href']['edit']; ?>
                     </a>
                 </div>
@@ -134,54 +134,56 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
         </div>
 
         <div class="col-md-3">
-            <div class="well">
-                <div class="form-group">
-                    <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                    <div class="form-control-static"><?php echo $this->tplData['callRow']['call_id']; ?></div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label"><?php echo $this->lang['mod']['label']['type']; ?></label>
-                    <div class="form-control-static">
-                        <?php if (isset($this->lang['mod']['type'][$this->tplData['callRow']['call_type']])) {
-                            echo $this->lang['mod']['type'][$this->tplData['callRow']['call_type']];
-                        } ?>
-                    </div>
-                </div>
-
-                <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == 'static') { ?>
+            <div class="card bg-light">
+                <div class="card-body">
                     <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callFile']; ?></label>
-                        <div class="form-control-static"><?php echo $this->lang['mod']['file'][$this->tplData['callRow']['call_file']]; ?></div>
+                        <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                        <div class="form-text"><?php echo $this->tplData['callRow']['call_id']; ?></div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callTpl']; ?></label>
-                        <div class="form-control-static"><?php echo $this->tplData['callRow']['call_tpl']; ?></div>
+                        <label><?php echo $this->lang['mod']['label']['type']; ?></label>
+                        <div class="form-text">
+                            <?php if (isset($this->lang['mod']['type'][$this->tplData['callRow']['call_type']])) {
+                                echo $this->lang['mod']['type'][$this->tplData['callRow']['call_type']];
+                            } ?>
+                        </div>
                     </div>
-                <?php } ?>
 
-                <div class="form-group">
-                    <label class="control-label"><?php echo $this->lang['mod']['label']['status']; ?></label>
-                    <div class="form-control-static">
-                        <?php call_status_process($this->tplData['callRow']['call_status'], $this->lang['mod']['status']); ?>
+                    <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == 'static') { ?>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['callFile']; ?></label>
+                            <div class="form-text"><?php echo $this->lang['mod']['file'][$this->tplData['callRow']['call_file']]; ?></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['callTpl']; ?></label>
+                            <div class="form-text"><?php echo $this->tplData['callRow']['call_tpl']; ?></div>
+                        </div>
+                    <?php } ?>
+
+                    <div class="form-group">
+                        <label><?php echo $this->lang['mod']['label']['status']; ?></label>
+                        <div class="form-text">
+                            <?php call_status_process($this->tplData['callRow']['call_status'], $this->lang['mod']['status']); ?>
+                        </div>
                     </div>
-                </div>
 
-                <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callAmount']; ?></div>
+                    <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callAmount']; ?></div>
 
-                <div class="form-group">
-                    <label class="control-label"><?php echo $this->lang['mod']['label']['callAmoutTop']; ?></label>
-                    <div class="form-control-static"><?php echo $this->tplData['callRow']['call_amount']['top']; ?></div>
-                </div>
+                    <div class="form-group">
+                        <label><?php echo $this->lang['mod']['label']['callAmoutTop']; ?></label>
+                        <div class="form-text"><?php echo $this->tplData['callRow']['call_amount']['top']; ?></div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label"><?php echo $this->lang['mod']['label']['callAmoutExcept']; ?></label>
-                    <div class="form-control-static"><?php echo $this->tplData['callRow']['call_amount']['except']; ?></div>
+                    <div class="form-group">
+                        <label><?php echo $this->lang['mod']['label']['callAmoutExcept']; ?></label>
+                        <div class="form-text"><?php echo $this->tplData['callRow']['call_amount']['except']; ?></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 <?php include($cfg['pathInclude'] . 'console_foot.php');
-include($cfg['pathInclude'] . 'html_foot.php'); ?>
+include($cfg['pathInclude'] . 'html_foot.php');

@@ -5,115 +5,91 @@
     'baigoValidator' => 'true',
     'baigoSubmit'    => 'true',
     'pathInclude'    => BG_PATH_TPLSYS . 'console' . DS . 'default' . DS . 'include' . DS,
-    'str_url'        => BG_URL_CONSOLE . "index.php?mod=gsite",
+    'str_url'        => BG_URL_CONSOLE . "index.php?m=gsite",
 );
 
 include($cfg['pathInclude'] . 'function.php');
-include($cfg['pathInclude'] . 'console_head.php'); ?>
-
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=gsite&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=gsite#form" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) {
-        include($cfg['pathInclude'] . "gsite_menu.php");
-    } ?>
+include($cfg['pathInclude'] . 'console_head.php');
+include($cfg['pathInclude'] . 'gsite_head.php'); ?>
 
     <form name="gsite_form" id="gsite_form">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
-        <input type="hidden" name="act" value="submit">
+        <input type="hidden" name="a" value="submit">
         <input type="hidden" name="gsite_id" id="gsite_id" value="<?php echo $this->tplData['gsiteRow']['gsite_id']; ?>">
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card">
+                    <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) {
+                        include($cfg['pathInclude'] . 'gsite_menu.php');
+                    } ?>
+                    <div class="card-body">
                         <div class="form-group">
-                            <div id="group_gsite_name">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['gsiteName']; ?><span id="msg_gsite_name">*</span></label>
-                                <input type="text" name="gsite_name" id="gsite_name" value="<?php echo $this->tplData['gsiteRow']['gsite_name']; ?>" data-validate class="form-control">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['gsiteName']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="gsite_name" id="gsite_name" value="<?php echo $this->tplData['gsiteRow']['gsite_name']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_gsite_name"></small>
                         </div>
 
                         <div class="form-group">
-                            <div id="group_gsite_url">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['gsiteUrl']; ?><span id="msg_gsite_url">*</span></label>
-                                <input type="text" name="gsite_url" id="gsite_url" value="<?php echo $this->tplData['gsiteRow']['gsite_url']; ?>" data-validate class="form-control" placeholder="http://">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['gsiteUrl']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="gsite_url" id="gsite_url" value="<?php echo $this->tplData['gsiteRow']['gsite_url']; ?>" data-validate class="form-control" placeholder="http://">
+                            <small class="form-text" id="msg_gsite_url"></small>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <div class="form-group">
-                                    <div id="group_gsite_charset">
-                                        <label class="control-label"><?php echo $this->lang['mod']['label']['gsiteCharset']; ?><span id="msg_gsite_charset">*</span></label>
-                                        <div class="input-group">
-                                            <input type="text" name="gsite_charset" id="gsite_charset" value="<?php echo $this->tplData['gsiteRow']['gsite_charset']; ?>" data-validate class="form-control" placeholder="UTF-8">
-                                            <span class="input-group-btn">
-                                                <a href="#charset_list_modal" class="btn btn-warning" data-toggle="modal">
-                                                    <span class="glyphicon glyphicon-question-sign"></span>
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </div>
+                        <div class="form-row">
+                            <div class="form-group col-sm-8">
+                                <label><?php echo $this->lang['mod']['label']['gsiteCharset']; ?> <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" name="gsite_charset" id="gsite_charset" value="<?php echo $this->tplData['gsiteRow']['gsite_charset']; ?>" data-validate class="form-control" placeholder="UTF-8">
+                                    <span class="input-group-append">
+                                        <a href="#charset_list_modal" class="btn btn-warning" data-toggle="modal">
+                                            <span class="oi oi-question-mark"></span>
+                                        </a>
+                                    </span>
                                 </div>
+                                <small class="form-text" id="msg_gsite_charset"></small>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label"><?php echo $this->lang['mod']['label']['charsetOften']; ?></label>
-                                    <select id="charset_opt" class="form-control">
-                                        <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
-                                        <?php foreach ($this->tplData['charsetRows'] as $key=>$value) { ?>
-                                            <optgroup label="<?php echo $value['title']; ?>">
-                                                <?php foreach ($value['list'] as $key_sub=>$value_sub) { ?>
-                                                    <option <?php if ($this->tplData['gsiteRow']['gsite_charset'] == $key_sub) { ?>selected<?php } ?> value="<?php echo $key_sub; ?>">
-                                                        <?php echo $value_sub['title'], ' ', $key_sub; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </optgroup>
-                                        <?php } ?>
-                                    </select>
-                                </div>
+                            <div class="form-group col-sm-4">
+                                <label><?php echo $this->lang['mod']['label']['charsetOften']; ?></label>
+                                <select id="charset_opt" class="form-control">
+                                    <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
+                                    <?php foreach ($this->tplData['charsetRows'] as $key=>$value) { ?>
+                                        <optgroup label="<?php echo $value['title']; ?>">
+                                            <?php foreach ($value['list'] as $key_sub=>$value_sub) { ?>
+                                                <option <?php if ($this->tplData['gsiteRow']['gsite_charset'] == $key_sub) { ?>selected<?php } ?> value="<?php echo $key_sub; ?>">
+                                                    <?php echo $value_sub['title'], ' ', $key_sub; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </optgroup>
+                                    <?php } ?>
+                                </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div id="group_gsite_note">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['note']; ?><span id="msg_gsite_note"></span></label>
-                                <input type="text" name="gsite_note" id="gsite_note" value="<?php echo $this->tplData['gsiteRow']['gsite_note']; ?>" data-validate class="form-control">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['note']; ?></label>
+                            <input type="text" name="gsite_note" id="gsite_note" value="<?php echo $this->tplData['gsiteRow']['gsite_note']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_gsite_note"></small>
                         </div>
 
                         <div class="bg-submit-box"></div>
+                        <div class="bg-validator-box mt-3"></div>
                     </div>
-                    <div class="panel-footer">
+                    <div class="card-footer">
                         <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang['mod']['btn']['save']; ?></button>
                         <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) { ?>
-                            <button type="button" class="btn btn-default bg-duplicate"><?php echo $this->lang['mod']['btn']['duplicate']; ?></button>
+                            <button type="button" class="btn btn-outline-secondary bg-duplicate"><?php echo $this->lang['mod']['btn']['duplicate']; ?></button>
                         <?php } ?>
                     </div>
                 </div>
 
                 <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) { ?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><?php echo $this->lang['mod']['label']['gsiteSource']; ?></div>
-                        <div class="panel-body" id="gsite_source">
+                    <div class="card mt-3">
+                        <div class="card-header"><?php echo $this->lang['mod']['label']['gsiteSource']; ?></div>
+                        <div class="card-body" id="gsite_source">
                             <div class="loading">
                                 <h1>
-                                    <span class="glyphicon glyphicon-refresh bg-spin"></span>
+                                    <span class="oi oi-loop-circular bg-spin"></span>
                                     Loading...
                                 </h1>
                             </div>
@@ -123,31 +99,30 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
             </div>
 
             <div class="col-md-3">
-                <div class="well">
-                    <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) { ?>
-                        <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                            <div class="form-control-static"><?php echo $this->tplData['gsiteRow']['gsite_id']; ?></div>
-                        </div>
-                    <?php } ?>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <?php if ($this->tplData['gsiteRow']['gsite_id'] > 0) { ?>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                                <div class="form-text"><?php echo $this->tplData['gsiteRow']['gsite_id']; ?></div>
+                            </div>
+                        <?php } ?>
 
-                    <div class="form-group">
-                        <div id="group_gsite_cate_id">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['belongCate']; ?><span id="msg_gsite_cate_id">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['belongCate']; ?> <span class="text-danger">*</span></label>
                             <select name="gsite_cate_id" id="gsite_cate_id" data-validate class="form-control">
                                 <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                 <?php cate_list_opt($this->tplData['cateRows'], $this->tplData['gsiteRow']['gsite_cate_id'], true); ?>
                             </select>
+                            <small class="form-text" id="msg_gsite_cate_id"></small>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div id="group_gsite_status">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['status']; ?><span id="msg_gsite_status">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['status']; ?> <span class="text-danger">*</span></label>
                             <?php foreach ($this->tplData['status'] as $key=>$value) { ?>
-                                <div class="bg-radio">
-                                    <label for="gsite_status_<?php echo $value; ?>">
-                                        <input type="radio" name="gsite_status" id="gsite_status_<?php echo $value; ?>" <?php if ($this->tplData['gsiteRow']['gsite_status'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="gsite_status">
+                                <div class="form-check">
+                                    <label for="gsite_status_<?php echo $value; ?>" class="form-check-label">
+                                        <input type="radio" name="gsite_status" id="gsite_status_<?php echo $value; ?>" <?php if ($this->tplData['gsiteRow']['gsite_status'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="gsite_status" class="form-check-input">
                                         <?php if (isset($this->lang['mod']['status'][$value])) {
                                             echo $this->lang['mod']['status'][$value];
                                         } else {
@@ -156,6 +131,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                     </label>
                                 </div>
                             <?php } ?>
+                            <small class="form-text" id="msg_gsite_status"></small>
                         </div>
                     </div>
                 </div>
@@ -165,7 +141,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
 
     <form name="gsite_duplicate" id="gsite_duplicate">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
-        <input type="hidden" name="act" value="duplicate">
+        <input type="hidden" name="a" value="duplicate">
         <input type="hidden" name="gsite_id" id="gsite_id" value="<?php echo $this->tplData['gsiteRow']['gsite_id']; ?>">
     </form>
 
@@ -173,8 +149,10 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"><?php echo $this->lang['mod']['label']['charset']; ?></h4>
+                    <div class="modal-title"><?php echo $this->lang['mod']['label']['charset']; ?></div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -202,7 +180,9 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang['common']['btn']['close']; ?></button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                        <?php echo $this->lang['common']['btn']['close']; ?>
+                    </button>
                 </div>
             </div>
         </div>
@@ -215,45 +195,51 @@ include($cfg['pathInclude'] . 'console_foot.php'); ?>
     var opts_validator_form = {
         gsite_name: {
             len: { min: 1, max: 300 },
-            validate: { type: "str", format: "text", group: "#group_gsite_name" },
-            msg: { selector: "#msg_gsite_name", too_short: "<?php echo $this->lang['rcode']['x270201']; ?>", too_long: "<?php echo $this->lang['rcode']['x270202']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_short: "<?php echo $this->lang['rcode']['x270201']; ?>", too_long: "<?php echo $this->lang['rcode']['x270202']; ?>" }
         },
         gsite_url: {
             len: { min: 1, max: 900 },
-            validate: { type: "str", format: "url", group: "#group_gsite_url" },
-            msg: { selector: "#msg_gsite_url", too_short: "<?php echo $this->lang['rcode']['x270203']; ?>", too_long: "<?php echo $this->lang['rcode']['x270204']; ?>", format_err: "<?php echo $this->lang['rcode']['x270210']; ?>" }
+            validate: { type: "str", format: "url" },
+            msg: { too_short: "<?php echo $this->lang['rcode']['x270203']; ?>", too_long: "<?php echo $this->lang['rcode']['x270204']; ?>", format_err: "<?php echo $this->lang['rcode']['x270210']; ?>" }
         },
         gsite_charset: {
             len: { min: 1, max: 100 },
-            validate: { type: "str", format: "text", group: "#group_gsite_charset" },
-            msg: { selector: "#msg_gsite_charset", too_short: "<?php echo $this->lang['rcode']['x270211']; ?>", too_long: "<?php echo $this->lang['rcode']['x270212']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_short: "<?php echo $this->lang['rcode']['x270211']; ?>", too_long: "<?php echo $this->lang['rcode']['x270212']; ?>" }
         },
         gsite_cate_id: {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_gsite_cate_id" },
-            msg: { selector: "#msg_gsite_cate_id", too_few: "<?php echo $this->lang['rcode']['x270206']; ?>" }
+            validate: { type: "select" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x270206']; ?>" }
         },
         gsite_status: {
             len: { min: 1, max: 0 },
-            validate: { selector: "input[name='gsite_status']", type: "radio", group: "#group_gsite_status" },
-            msg: { selector: "#msg_gsite_status", too_few: "<?php echo $this->lang['rcode']['x270208']; ?>" }
+            validate: { selector: "input[name='gsite_status']", type: "radio" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x270208']; ?>" }
         },
         gsite_note: {
             len: { min: 0, max: 30 },
-            validate: { type: "str", format: "text", group: "#group_gsite_note" },
-            msg: { selector: "#msg_gsite_note", too_long: "<?php echo $this->lang['rcode']['x270209']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_long: "<?php echo $this->lang['rcode']['x270209']; ?>" }
+        }
+    };
+
+    var options_validator_form = {
+        msg_global:{
+            msg: "<?php echo $this->lang['common']['label']['errInput']; ?>"
         }
     };
 
     var opts_submit_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=gsite",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=gsite&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
     };
 
     var opts_duplicate_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=gsite",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=gsite&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
@@ -264,7 +250,7 @@ include($cfg['pathInclude'] . 'console_foot.php'); ?>
             var _charset_val = $(this).val();
             $("#gsite_charset").val(_charset_val);
         });
-        var obj_validate_form = $("#gsite_form").baigoValidator(opts_validator_form);
+        var obj_validate_form = $("#gsite_form").baigoValidator(opts_validator_form, options_validator_form);
         var obj_submit_form   = $("#gsite_form").baigoSubmit(opts_submit_form);
         $(".bg-submit").click(function(){
             if (obj_validate_form.verify()) {
@@ -275,8 +261,8 @@ include($cfg['pathInclude'] . 'console_foot.php'); ?>
         $(".bg-duplicate").click(function(){
             obj_duplicate_form.formSubmit();
         });
-        $("#gsite_source").html("<div class='embed-responsive embed-responsive-16by9'><iframe class='embed-responsive-item' scrolling='auto' src='<?php echo BG_URL_CONSOLE; ?>index.php?mod=gsite_source&act=form&gsite_id=<?php echo $this->tplData['gsiteRow']['gsite_id']; ?>'></iframe></div>");
+        $("#gsite_source").html("<div class='embed-responsive embed-responsive-16by9'><iframe class='embed-responsive-item' scrolling='auto' src='<?php echo BG_URL_CONSOLE; ?>index.php?m=gsite_source&a=form&gsite_id=<?php echo $this->tplData['gsiteRow']['gsite_id']; ?>'></iframe></div>");
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

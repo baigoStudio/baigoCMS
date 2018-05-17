@@ -1,7 +1,7 @@
 <?php function cate_list_opt($arr_cateRows, $cate_Id = 0, $is_disable = false) {
     if (!fn_isEmpty($arr_cateRows)) {
         foreach ($arr_cateRows as $_key=>$_value) { ?>
-            <option value="<?php echo $_value['cate_id']; ?>"<?php if ($cate_Id == $_value['cate_id']) { ?> selected<?php } ?><?php if ($is_disable && $_value['cate_type'] != 'normal') { ?> disabled<?php } ?>>
+            <option <?php if ($cate_Id == $_value['cate_id']) { ?>selected<?php } ?> value="<?php echo $_value['cate_id']; ?>" <?php if ($is_disable && $_value['cate_type'] != 'normal') { ?>disabled<?php } ?>>
                 <?php if ($_value['cate_level'] > 1) {
                     for ($_i = 1; $_i < $_value['cate_level']; $_i++) { ?>
                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -17,13 +17,13 @@
     }
 }
 
-function allow_list($arr_consoleMod, $lang_consoleMod = array(), $arr_opt, $lang_opt = array(), $lang_mod = array(), $lang_common = array(), $group_allow = array(), $is_edit = true) { ?>
-    <dl class="bg-dl">
+function allow_list($arr_consoleMod, $lang_consoleMod = array(), $arr_opt = array(), $lang_opt = array(), $lang_mod = array(), $lang_common = array(), $group_allow = array(), $is_edit = true) { ?>
+    <dl>
         <?php if ($is_edit) { ?>
             <dd>
-                <div class="bg-checkbox">
-                    <label for="chk_all">
-                        <input type="checkbox" id="chk_all" data-parent="first">
+                <div class="form-check">
+                    <label for="chk_all"  class="form-check-label">
+                        <input type="checkbox" id="chk_all" data-parent="first" class="form-check-input">
                         <?php echo $lang_mod['label']['all']; ?>
                     </label>
                 </div>
@@ -40,25 +40,29 @@ function allow_list($arr_consoleMod, $lang_consoleMod = array(), $arr_opt, $lang
             </dt>
             <dd>
                 <?php if ($is_edit) { ?>
-                    <label for="allow_<?php echo $_key_m; ?>" class="checkbox-inline">
-                        <input type="checkbox" id="allow_<?php echo $_key_m; ?>" data-parent="chk_all">
-                        <?php echo $lang_mod['label']['all']; ?>
-                    </label>
+                    <div class="form-check form-check-inline">
+                        <label for="allow_<?php echo $_key_m; ?>" class="form-check-label">
+                            <input type="checkbox" id="allow_<?php echo $_key_m; ?>" data-parent="chk_all" class="form-check-input">
+                            <?php echo $lang_mod['label']['all']; ?>
+                        </label>
+                    </div>
                 <?php }
 
                 foreach ($_value_m['allow'] as $_key_s=>$_value_s) {
                     if ($is_edit) { ?>
-                        <label for="allow_<?php echo $_key_m; ?>_<?php echo $_key_s; ?>" class="checkbox-inline">
-                            <input type="checkbox" name="group_allow[<?php echo $_key_m; ?>][<?php echo $_key_s; ?>]" value="1" id="allow_<?php echo $_key_m; ?>_<?php echo $_key_s; ?>" <?php if (isset($group_allow[$_key_m][$_key_s])) { ?>checked<?php } ?> data-parent="allow_<?php echo $_key_m; ?>">
-                            <?php if (isset($lang_consoleMod[$_key_m]['allow'][$_key_s])) {
-                                echo $lang_consoleMod[$_key_m]['allow'][$_key_s];
-                            } else {
-                                echo $_value_s;
-                            } ?>
-                        </label>
+                        <div class="form-check form-check-inline">
+                            <label for="allow_<?php echo $_key_m; ?>_<?php echo $_key_s; ?>" class="form-check-label">
+                                <input type="checkbox" name="group_allow[<?php echo $_key_m; ?>][<?php echo $_key_s; ?>]" value="1" id="allow_<?php echo $_key_m; ?>_<?php echo $_key_s; ?>" <?php if (isset($group_allow[$_key_m][$_key_s])) { ?>checked<?php } ?> data-parent="allow_<?php echo $_key_m; ?>" class="form-check-input">
+                                <?php if (isset($lang_consoleMod[$_key_m]['allow'][$_key_s])) {
+                                    echo $lang_consoleMod[$_key_m]['allow'][$_key_s];
+                                } else {
+                                    echo $_value_s;
+                                } ?>
+                            </label>
+                        </div>
                     <?php } else { ?>
                         <span>
-                            <span class="glyphicon glyphicon-<?php if (isset($group_allow[$_key_m][$_key_s])) { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                            <span class="oi oi-<?php if (isset($group_allow[$_key_m][$_key_s])) { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                             <?php if (isset($lang_consoleMod[$_key_m]['allow'][$_key_s])) {
                                 echo $lang_consoleMod[$_key_m]['allow'][$_key_s];
                             } else {
@@ -73,25 +77,29 @@ function allow_list($arr_consoleMod, $lang_consoleMod = array(), $arr_opt, $lang
         <dt><?php echo $lang_common['page']['opt']; ?></dt>
         <dd>
             <?php if ($is_edit) { ?>
-                <label for="allow_opt" class="checkbox-inline">
-                    <input type="checkbox" id="allow_opt" data-parent="chk_all">
-                    <?php echo $lang_mod['label']['all']; ?>
-                </label>
+                <div class="form-check form-check-inline">
+                    <label for="allow_opt" class="form-check-label">
+                        <input type="checkbox" id="allow_opt" data-parent="chk_all" class="form-check-input">
+                        <?php echo $lang_mod['label']['all']; ?>
+                    </label>
+                </div>
             <?php }
 
             foreach ($arr_opt as $_key_s=>$_value_s) {
                 if ($is_edit) { ?>
-                    <label for="allow_opt_<?php echo $_key_s; ?>" class="checkbox-inline">
-                        <input type="checkbox" name="group_allow[opt][<?php echo $_key_s; ?>]" value="1" id="allow_opt_<?php echo $_key_s; ?>" data-parent="allow_opt" <?php if (isset($group_allow['opt'][$_key_s])) { ?>checked<?php } ?>>
-                        <?php if (isset($lang_opt[$_key_s]['title'])) {
-                            echo $lang_opt[$_key_s]['title'];
-                        } else {
-                            echo $_value_s['title'];
-                        } ?>
-                    </label>
+                    <div class="form-check form-check-inline">
+                        <label for="allow_opt_<?php echo $_key_s; ?>" class="form-check-label">
+                            <input type="checkbox" name="group_allow[opt][<?php echo $_key_s; ?>]" value="1" id="allow_opt_<?php echo $_key_s; ?>" data-parent="allow_opt" <?php if (isset($group_allow['opt'][$_key_s])) { ?>checked<?php } ?> class="form-check-input">
+                            <?php if (isset($lang_opt[$_key_s]['title'])) {
+                                echo $lang_opt[$_key_s]['title'];
+                            } else {
+                                echo $_value_s['title'];
+                            } ?>
+                        </label>
+                    </div>
                 <?php } else { ?>
                     <span>
-                        <span class="glyphicon glyphicon-<?php if (isset($group_allow['opt'][$_key_s])) { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                        <span class="oi oi-<?php if (isset($group_allow['opt'][$_key_s])) { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                         <?php if (isset($lang_opt[$_key_s]['title'])) {
                             echo $lang_opt[$_key_s]['title'];
                         } else {
@@ -102,29 +110,35 @@ function allow_list($arr_consoleMod, $lang_consoleMod = array(), $arr_opt, $lang
             }
 
             if ($is_edit) { ?>
-                <label for="allow_opt_app" class="checkbox-inline">
-                    <input type="checkbox" name="group_allow[opt][app]" value="1" id="allow_opt_app" data-parent="allow_opt" <?php if (isset($group_allow['opt']['app'])) { ?>checked<?php } ?>>
-                    <?php echo $lang_common['page']['optApp']; ?>
-                </label>
-                <label for="allow_opt_dbconfig" class="checkbox-inline">
-                    <input type="checkbox" name="group_allow[opt][dbconfig]" value="1" id="allow_opt_dbconfig" data-parent="allow_opt" <?php if (isset($group_allow['opt']['dbconfig'])) { ?>checked<?php } ?>>
-                    <?php echo $lang_common['page']['dbconfig']; ?>
-                </label>
-                <label for="allow_opt_chkver" class="checkbox-inline">
-                    <input type="checkbox" name="group_allow[opt][chkver]" value="1" id="allow_opt_chkver" data-parent="allow_opt" <?php if (isset($group_allow['opt']['chkver'])) { ?>checked<?php } ?>>
-                    <?php echo $lang_common['page']['chkver']; ?>
-                </label>
+                <div class="form-check form-check-inline">
+                    <label for="allow_opt_app" class="form-check-label">
+                        <input type="checkbox" name="group_allow[opt][app]" value="1" id="allow_opt_app" data-parent="allow_opt" <?php if (isset($group_allow['opt']['app'])) { ?>checked<?php } ?> class="form-check-input">
+                        <?php echo $lang_common['page']['optApp']; ?>
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label for="allow_opt_dbconfig" class="form-check-label">
+                        <input type="checkbox" name="group_allow[opt][dbconfig]" value="1" id="allow_opt_dbconfig" data-parent="allow_opt" <?php if (isset($group_allow['opt']['dbconfig'])) { ?>checked<?php } ?> class="form-check-input">
+                        <?php echo $lang_common['page']['dbconfig']; ?>
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label for="allow_opt_chkver" class="form-check-label">
+                        <input type="checkbox" name="group_allow[opt][chkver]" value="1" id="allow_opt_chkver" data-parent="allow_opt" <?php if (isset($group_allow['opt']['chkver'])) { ?>checked<?php } ?> class="form-check-input">
+                        <?php echo $lang_common['page']['chkver']; ?>
+                    </label>
+                </div>
             <?php } else { ?>
                 <span>
-                    <span class="glyphicon glyphicon-<?php if (isset($group_allow['opt']['app'])) { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                    <span class="oi oi-<?php if (isset($group_allow['opt']['app'])) { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                     <?php echo $lang_common['page']['optApp']; ?>
                 </span>
                 <span>
-                    <span class="glyphicon glyphicon-<?php if (isset($group_allow['opt']['dbconfig'])) { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                    <span class="oi oi-<?php if (isset($group_allow['opt']['dbconfig'])) { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                     <?php echo $lang_common['page']['dbconfig']; ?>
                 </span>
                 <span>
-                    <span class="glyphicon glyphicon-<?php if (isset($group_allow['opt']['chkver'])) { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                    <span class="oi oi-<?php if (isset($group_allow['opt']['chkver'])) { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                     <?php echo $lang_common['page']['chkver']; ?>
                 </span>
             <?php } ?>
@@ -140,25 +154,29 @@ function cate_list_allow($arr_cateRows, $cate_allow, $lang_mod = array(), $admin
                     <div><strong><?php echo $_value['cate_name']; ?></strong></div>
                     <div>
                         <?php if ($is_edit) { ?>
-                            <label for="cate_<?php echo $_value['cate_id']; ?>" class="checkbox-inline">
-                                <input type="checkbox" id="cate_<?php echo $_value['cate_id']; ?>" data-parent="chk_all">
-                                <?php echo $lang_mod['label']['all']; ?>
-                            </label>
+                            <div class="form-check form-check-inline">
+                                <label for="cate_<?php echo $_value['cate_id']; ?>" class="form-check-label">
+                                    <input type="checkbox" id="cate_<?php echo $_value['cate_id']; ?>" data-parent="chk_all" class="form-check-input">
+                                    <?php echo $lang_mod['label']['all']; ?>
+                                </label>
+                            </div>
                         <?php }
 
                         foreach ($cate_allow as $_key_s=>$_value_s) {
                             if ($is_edit) { ?>
-                                <label for="cate_<?php echo $_value['cate_id']; ?>_<?php echo $_key_s; ?>" class="checkbox-inline">
-                                    <input type="checkbox" name="admin_allow_cate[<?php echo $_value['cate_id']; ?>][<?php echo $_key_s; ?>]" value="1" id="cate_<?php echo $_value['cate_id']; ?>_<?php echo $_key_s; ?>" data-parent="cate_<?php echo $_value['cate_id']; ?>"<?php if (isset($admin_allow_cate[$_value['cate_id']][$_key_s]) || isset($group_allow_article[$_key_s]) || $admin_type == 'super') { ?> checked<?php } ?>>
-                                    <?php if(isset($lang_mod['allow'][$_key_s])) {
-                                        echo $lang_mod['allow'][$_key_s];
-                                    } else {
-                                        echo $_value_s;
-                                    } ?>
-                                </label>
+                                <div class="form-check form-check-inline">
+                                    <label for="cate_<?php echo $_value['cate_id']; ?>_<?php echo $_key_s; ?>" class="form-check-label">
+                                        <input type="checkbox" name="admin_allow_cate[<?php echo $_value['cate_id']; ?>][<?php echo $_key_s; ?>]" value="1" id="cate_<?php echo $_value['cate_id']; ?>_<?php echo $_key_s; ?>" data-parent="cate_<?php echo $_value['cate_id']; ?>"<?php if (isset($admin_allow_cate[$_value['cate_id']][$_key_s]) || isset($group_allow_article[$_key_s]) || $admin_type == 'super') { ?> checked<?php } ?> class="form-check-input">
+                                        <?php if(isset($lang_mod['allow'][$_key_s])) {
+                                            echo $lang_mod['allow'][$_key_s];
+                                        } else {
+                                            echo $_value_s;
+                                        } ?>
+                                    </label>
+                                </div>
                             <?php } else { ?>
                                 <span>
-                                    <span class="glyphicon glyphicon-<?php if (isset($admin_allow_cate[$_value['cate_id']][$_key_s]) || isset($group_allow_article[$_key_s]) || $admin_type == 'super') { ?>ok-sign text-success<?php } else { ?>remove-sign text-danger<?php } ?>"></span>
+                                    <span class="oi oi-<?php if (isset($admin_allow_cate[$_value['cate_id']][$_key_s]) || isset($group_allow_article[$_key_s]) || $admin_type == 'super') { ?>circle-check text-success<?php } else { ?>circle-x text-danger<?php } ?>"></span>
                                     <?php if(isset($lang_mod['allow'][$_key_s])) {
                                         echo $lang_mod['allow'][$_key_s];
                                     } else {
@@ -184,17 +202,17 @@ function cate_list_checkbox($arr_cateRows, $cate_ids = array(), $form_name = '',
             <tr>
                 <td class="bg-child-<?php echo $_value['cate_level']; ?>">
                     <?php if ($is_edit) { ?>
-                        <div class="bg-checkbox">
-                            <label for="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>">
+                        <div class="form-check">
+                            <label for="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>"  class="form-check-label">
                                 <input type="checkbox"
-                                 value="<?php echo $_value['cate_id']; ?>" name="<?php echo $form_name; ?>_cate_ids[]" id="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>" data-parent="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_parent_id']; ?>"<?php if (in_array($_value['cate_id'], $cate_ids)) { ?> checked<?php } ?><?php if ($_value['cate_type'] != 'normal') { ?> disabled<?php }  ?>>
+                                 value="<?php echo $_value['cate_id']; ?>" name="<?php echo $form_name; ?>_cate_ids[]" id="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>" <?php if (in_array($_value['cate_id'], $cate_ids)) { ?> checked<?php } ?> data-parent="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_parent_id']; ?>" <?php if ($_value['cate_type'] != 'normal') { ?>disabled<?php }  ?> class="form-check-input">
 
                                 <?php echo $_value['cate_name']; ?>
                             </label>
                         </div>
                     <?php } else { ?>
                         <span class="text-<?php if (in_array($_value['cate_id'], $cate_ids)) { ?>primary<?php } else { ?>muted<?php } ?>">
-                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <span class="oi oi-<?php if (in_array($_value['cate_id'], $cate_ids)) { ?>circle-check<?php } else { ?>circle-x<?php } ?>"></span>
                             <?php echo $_value['cate_name']; ?>
                         </span>
                     <?php } ?>
@@ -215,16 +233,16 @@ function cate_list_radio($arr_cateRows, $lang_mod = array(), $cate_id = 0, $cate
              <tr>
                  <td class="bg-child-<?php echo $_value['cate_level']; ?>">
                      <?php if ($is_edit) { ?>
-                        <div class="bg-radio">
-                            <label for="call_cate_id_<?php echo $_value['cate_id']; ?>">
-                                <input type="radio" value="<?php echo $_value['cate_id']; ?>" name="call_cate_id" id="call_cate_id_<?php echo $_value['cate_id']; ?>"<?php if ($cate_id == $_value['cate_id']) { ?> checked<?php } ?><?php if ($_value['cate_type'] != 'normal') { ?> disabled <?php } ?>>
+                        <div class="form-check">
+                            <label for="call_cate_id_<?php echo $_value['cate_id']; ?>" class="form-check-label">
+                                <input type="radio" value="<?php echo $_value['cate_id']; ?>" name="call_cate_id" <?php if ($cate_id == $_value['cate_id']) { ?> checked<?php } ?> id="call_cate_id_<?php echo $_value['cate_id']; ?>" <?php if ($_value['cate_type'] != 'normal') { ?>disabled<?php } ?> class="form-check-input">
 
                                 <?php echo $_value['cate_name']; ?>
                             </label>
                         </div>
                     <?php } else { ?>
                         <span class="text-<?php if ($cate_id == $_value['cate_id']) { ?>primary<?php } else { ?>muted<?php } ?>">
-                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <span class="oi oi-circle-check"></span>
                             <?php echo $_value['cate_name']; ?>
                         </span>
                     <?php } ?>
@@ -232,15 +250,15 @@ function cate_list_radio($arr_cateRows, $lang_mod = array(), $cate_id = 0, $cate
 
                 <td class="bg-child-2">
                     <?php if ($is_edit) { ?>
-                        <div class="bg-checkbox">
-                            <label for="call_cate_excepts_<?php echo $_value['cate_id']; ?>">
-                                <input value="<?php echo $_value['cate_id']; ?>" type="checkbox"<?php if (in_array($_value['cate_id'], $cate_excepts)) { ?> checked<?php } ?> name="call_cate_excepts[]" id="call_cate_excepts_<?php echo $_value['cate_id']; ?>">
+                        <div class="form-check">
+                            <label for="call_cate_excepts_<?php echo $_value['cate_id']; ?>"  class="form-check-label">
+                                <input value="<?php echo $_value['cate_id']; ?>" type="checkbox"<?php if (in_array($_value['cate_id'], $cate_excepts)) { ?> checked<?php } ?> name="call_cate_excepts[]" id="call_cate_excepts_<?php echo $_value['cate_id']; ?>" class="form-check-input">
                                 <?php echo $lang_mod['label']['except']; ?>
                             </label>
                         </div>
                     <?php } else {
                         if (in_array($_value['cate_id'], $cate_excepts)) { ?>
-                            <span class="glyphicon glyphicon-remove-sign text-danger"></span>
+                            <span class="oi oi-circle-x text-danger"></span>
                             <?php echo $lang_mod['label']['except'];
                         }
                     } ?>
@@ -265,7 +283,7 @@ function article_status_process($articleRow, $status_article, $lang_mod = array(
             $_str_title     = $lang_mod['label']['timePub'] . ' ' . date(BG_SITE_DATE . ' ' . BG_SITE_TIMESHORT, $articleRow['article_time_pub']);
         } else {
             if ($articleRow['article_is_time_hide'] > 0 && $articleRow['article_time_pub'] < time()) {
-                $_str_css       = 'default';
+                $_str_css       = 'secondary';
                 $_str_status    = $lang_mod['label']['timeHide'];
                 $_str_title     = $lang_mod['label']['timeHide'] . ' ' . date(BG_SITE_DATE . ' ' . BG_SITE_TIMESHORT, $articleRow['article_time_hide']);
             } else {
@@ -284,7 +302,7 @@ function article_status_process($articleRow, $status_article, $lang_mod = array(
                         break;
 
                         default:
-                            $_str_css = 'default';
+                            $_str_css = 'secondary';
                         break;
                     }
 
@@ -296,13 +314,13 @@ function article_status_process($articleRow, $status_article, $lang_mod = array(
             }
         }
     } else {
-        $_str_css       = 'default';
+        $_str_css       = 'secondary';
         if (isset($lang_mod['box'][$articleRow['article_box']])) {
             $_str_status = $lang_mod['box'][$articleRow['article_box']];
         }
         $_str_title     = '';
     } ?>
-    <span class="label label-<?php echo $_str_css; ?> bg-label" <?php if (!fn_isEmpty($_str_title)) { ?>data-toggle="tooltip" data-placement="bottom" title="<?php echo $_str_title; ?>"<?php } ?>><?php echo $_str_status; ?></span>
+    <span class="badge badge-<?php echo $_str_css; ?>" <?php if (!fn_isEmpty($_str_title)) { ?>data-toggle="tooltip" data-placement="bottom" title="<?php echo $_str_title; ?>"<?php } ?>><?php echo $_str_status; ?></span>
 <?php }
 
 function attach_size_process($attach_size) {
@@ -339,67 +357,66 @@ function opt_form_process($arr_formList, $lang_opt, $tplRows = array(), $timezon
             $_this_value = $_value['default'];
         } ?>
         <div class="form-group">
-            <div id="group_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>">
-                <label class="control-label">
-                    <?php if (isset($lang_opt[$_key]['label'])) {
-                        $_label = $lang_opt[$_key]['label'];
-                    } else {
-                        $_label = $_key;
-                    }
-
-                    echo $_label; ?>
-                    <span id="msg_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>">
-                        <?php if ($_value['min'] > 0) { ?>*<?php } ?>
-                    </span>
-                </label>
-
-                <?php switch ($_value['type']) {
-                    case 'select': ?>
-                        <select name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control">
-                            <?php foreach ($_value['option'] as $_key_opt=>$_value_opt) { ?>
-                                <option<?php if ($_this_value == $_key_opt) { ?> selected<?php } ?> value="<?php echo $_key_opt; ?>">
-                                    <?php if (isset($lang_opt[$_key]['option'][$_key_opt])) {
-                                        echo $lang_opt[$_key]['option'][$_key_opt];
-                                    } else {
-                                        echo $_value_opt;
-                                    } ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    <?php break;
-
-                    case 'radio':
-                        foreach ($_value['option'] as $_key_opt=>$_value_opt) { ?>
-                            <div class="bg-radio">
-                                <label for="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>_<?php echo $_key_opt; ?>">
-                                    <input type="radio"<?php if ($_this_value == $_key_opt) { ?> checked<?php } ?> value="<?php echo $_key_opt; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>_<?php echo $_key_opt; ?>">
-                                    <?php if (isset($lang_opt[$_key]['option'][$_key_opt]['value'])) {
-                                        echo $lang_opt[$_key]['option'][$_key_opt]['value'];
-                                    } else {
-                                        echo $_value_opt['value'];
-                                    } ?>
-                                </label>
-                            </div>
-                            <?php
-                                if (isset($lang_opt[$_key]['option'][$_key_opt]['note']) && !fn_isEmpty($lang_opt[$_key]['option'][$_key_opt]['note'])) { ?>
-                                <span class="help-block"><?php echo $lang_opt[$_key]['option'][$_key_opt]['note']; ?></span>
-                            <?php }
-                        }
-                    break;
-
-                    case 'textarea':  ?>
-                        <textarea name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control bg-textarea-md"><?php echo $_this_value; ?></textarea>
-                    <?php break;
-
-                    default:  ?>
-                        <input type="text" value="<?php echo $_this_value; ?>" name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control">
-                    <?php break;
+            <label>
+                <?php if (isset($lang_opt[$_key]['label'])) {
+                    $_label = $lang_opt[$_key]['label'];
+                } else {
+                    $_label = $_key;
                 }
 
-                if (isset($lang_opt[$_key]['note']) && !fn_isEmpty($lang_opt[$_key]['note'])) { ?>
-                    <span class="help-block"><?php echo $lang_opt[$_key]['note']; ?></span>
-                <?php } ?>
-            </div>
+                echo $_label;
+
+                if ($_value['min'] > 0) { ?> <span class="text-danger">*</span><?php } ?>
+            </label>
+
+            <?php switch ($_value['type']) {
+                case 'select': ?>
+                    <select name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control">
+                        <?php foreach ($_value['option'] as $_key_opt=>$_value_opt) { ?>
+                            <option<?php if ($_this_value == $_key_opt) { ?> selected<?php } ?> value="<?php echo $_key_opt; ?>">
+                                <?php if (isset($lang_opt[$_key]['option'][$_key_opt])) {
+                                    echo $lang_opt[$_key]['option'][$_key_opt];
+                                } else {
+                                    echo $_value_opt;
+                                } ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php break;
+
+                case 'radio':
+                    foreach ($_value['option'] as $_key_opt=>$_value_opt) { ?>
+                        <div class="form-check">
+                            <label for="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>_<?php echo $_key_opt; ?>" class="form-check-label">
+                                <input type="radio"<?php if ($_this_value == $_key_opt) { ?> checked<?php } ?> value="<?php echo $_key_opt; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>_<?php echo $_key_opt; ?>" class="form-check-input">
+                                <?php if (isset($lang_opt[$_key]['option'][$_key_opt]['value'])) {
+                                    echo $lang_opt[$_key]['option'][$_key_opt]['value'];
+                                } else {
+                                    echo $_value_opt['value'];
+                                } ?>
+                            </label>
+                        </div>
+                        <?php
+                            if (isset($lang_opt[$_key]['option'][$_key_opt]['note']) && !fn_isEmpty($lang_opt[$_key]['option'][$_key_opt]['note'])) { ?>
+                            <small class="form-text"><?php echo $lang_opt[$_key]['option'][$_key_opt]['note']; ?></small>
+                        <?php }
+                    }
+                break;
+
+                case 'textarea': ?>
+                    <textarea name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control bg-textarea-md"><?php echo $_this_value; ?></textarea>
+                <?php break;
+
+                default: ?>
+                    <input type="text" value="<?php echo $_this_value; ?>" name="opt[<?php echo $GLOBALS['route']['bg_act']; ?>][<?php echo $_key; ?>]" id="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" data-validate="opt_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>" class="form-control">
+                <?php break;
+            } ?>
+
+            <small class="form-text" id="msg_<?php echo $GLOBALS['route']['bg_act']; ?>_<?php echo $_key; ?>"></small>
+
+            <?php if (isset($lang_opt[$_key]['note']) && !fn_isEmpty($lang_opt[$_key]['note'])) { ?>
+                <small class="form-text"><?php echo $lang_opt[$_key]['note']; ?></small>
+            <?php } ?>
         </div>
 
         <?php //json
@@ -416,7 +433,7 @@ function opt_form_process($arr_formList, $lang_opt, $tplRows = array(), $timezon
             if (isset($_value['format'])) {
                 $_str_json .= ' format: "' . $_value['format'] . '",';
             }
-            $_str_json .= ' group: "#group_' . $GLOBALS['route']['bg_act'] . '_' . $_key . '" },
+            $_str_json .= ' },
             msg: { selector: "#msg_' . $GLOBALS['route']['bg_act'] . '_' . $_key . '", ' . $str_msg_min . ': "' . $rcode['x060201'] . $_label . '", ' . $str_msg_max . ': "' . $_label . $rcode['x060202'] . '", format_err: "' . $_label . $rcode['x060203'] . '" }
         }';
         if ($_count < count($arr_formList)) {
@@ -430,62 +447,60 @@ function opt_form_process($arr_formList, $lang_opt, $tplRows = array(), $timezon
 
     if ($GLOBALS['route']['bg_act'] == 'base') { ?>
         <div class="form-group">
-            <div id="group_base_BG_SITE_TPL">
-                <label class="control-label"><?php echo $lang_mod['label']['tpl']; ?><span id="msg_base_BG_SITE_TPL">*</span></label>
-                <select name="opt[base][BG_SITE_TPL]" id="opt_base_BG_SITE_TPL" data-validate class="form-control">
-                    <?php foreach ($tplRows as $_key=>$_value) {
-                        if ($_value['type'] == 'dir') { ?>
-                            <option<?php if (BG_SITE_TPL == $_value['name']) { ?> selected<?php } ?> value="<?php echo $_value['name']; ?>"><?php echo $_value['name']; ?></option>
-                        <?php }
-                   } ?>
-                </select>
-            </div>
+            <label><?php echo $lang_mod['label']['tpl']; ?> <span class="text-danger">*</span></label>
+            <select name="opt[base][BG_SITE_TPL]" id="opt_base_BG_SITE_TPL" data-validate class="form-control">
+                <?php foreach ($tplRows as $_key=>$_value) {
+                    if ($_value['type'] == 'dir') { ?>
+                        <option<?php if (BG_SITE_TPL == $_value['name']) { ?> selected<?php } ?> value="<?php echo $_value['name']; ?>"><?php echo $_value['name']; ?></option>
+                    <?php }
+               } ?>
+            </select>
+            <small class="form-text" id="msg_base_BG_SITE_TPL"></small>
         </div>
 
         <div class="form-group">
-            <div id="group_base_BG_SITE_TIMEZONE">
-                <label class="control-label"><?php echo $lang_mod['label']['timezone']; ?><span id="msg_base_BG_SITE_TIMEZONE">*</span></label>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <select name="timezone_type" id="timezone_type" class="form-control">
-                            <?php foreach ($timezoneRows as $_key=>$_value) { ?>
-                                <option<?php if ($timezoneType == $_key) { ?> selected<?php } ?> value="<?php echo $_key; ?>">
-                                    <?php if (isset($timezoneLang[$_key]['title'])) {
-                                        echo $timezoneLang[$_key]['title'];
-                                    } else {
-                                        echo $_value['title'];
-                                    } ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
+            <label><?php echo $lang_mod['label']['timezone']; ?> <span class="text-danger">*</span></label>
+            <div class="form-row">
+                <div class="col">
+                    <select name="timezone_type" id="timezone_type" class="form-control">
+                        <?php foreach ($timezoneRows as $_key=>$_value) { ?>
+                            <option<?php if ($timezoneType == $_key) { ?> selected<?php } ?> value="<?php echo $_key; ?>">
+                                <?php if (isset($timezoneLang[$_key]['title'])) {
+                                    echo $timezoneLang[$_key]['title'];
+                                } else {
+                                    echo $_value['title'];
+                                } ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
 
-                    <div class="col-xs-6">
-                        <select name="opt[base][BG_SITE_TIMEZONE]" id="opt_base_BG_SITE_TIMEZONE" data-validate class="form-control">
-                            <?php foreach ($timezoneRows[$timezoneType]['sub'] as $_key=>$_value) { ?>
-                                <option<?php if (BG_SITE_TIMEZONE == $_key) { ?> selected<?php } ?> value="<?php echo $_key; ?>">
-                                    <?php if (isset($timezoneLang[$timezoneType]['sub'][$_key])) {
-                                        echo $timezoneLang[$timezoneType]['sub'][$_key];
-                                    } else {
-                                        echo $_value;
-                                    } ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
+                <div class="col">
+                    <select name="opt[base][BG_SITE_TIMEZONE]" id="opt_base_BG_SITE_TIMEZONE" data-validate class="form-control">
+                        <?php foreach ($timezoneRows[$timezoneType]['sub'] as $_key=>$_value) { ?>
+                            <option<?php if (BG_SITE_TIMEZONE == $_key) { ?> selected<?php } ?> value="<?php echo $_key; ?>">
+                                <?php if (isset($timezoneLang[$timezoneType]['sub'][$_key])) {
+                                    echo $timezoneLang[$timezoneType]['sub'][$_key];
+                                } else {
+                                    echo $_value;
+                                } ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </div>
             </div>
+            <small class="form-text" id="msg_base_BG_SITE_TIMEZONE"></small>
         </div>
 
         <?php $_str_json .= 'opts_validator_form.opt_base_BG_SITE_TPL = {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_base_BG_SITE_TPL" },
-            msg: { selector: "#msg_base_BG_SITE_TPL", too_few: "' . $rcode['x060201'] . $lang_mod['label']['tpl'] . '" }
+            validate: { type: "select" },
+            msg: { too_few: "' . $rcode['x060201'] . $lang_mod['label']['tpl'] . '" }
         };
         opts_validator_form.opt_base_BG_SITE_TIMEZONE = {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_base_BG_SITE_TIMEZONE" },
-            msg: { selector: "#msg_base_BG_SITE_TIMEZONE", too_few: "' . $rcode['x060201'] . $lang_mod['label']['timezone'] . '" }
+            validate: { type: "select" },
+            msg: { too_few: "' . $rcode['x060201'] . $lang_mod['label']['timezone'] . '" }
         };';
     }
 
@@ -504,12 +519,12 @@ function admin_status_process($str_status, $status_admin) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_admin[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_admin[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_admin[$str_status]; ?></span><?php
     }
 }
 
@@ -523,12 +538,12 @@ function app_status_process($str_status, $status_app) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_app[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_app[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_app[$str_status]; ?></span><?php
     }
 }
 
@@ -542,12 +557,12 @@ function call_status_process($str_status, $status_call) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_call[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_call[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_call[$str_status]; ?></span><?php
     }
 }
 
@@ -561,12 +576,12 @@ function cate_status_process($str_status, $status_cate) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_cate[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_cate[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_cate[$str_status]; ?></span><?php
     }
 }
 
@@ -580,12 +595,12 @@ function custom_status_process($str_status, $status_custom) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_custom[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_custom[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_custom[$str_status]; ?></span><?php
     }
 }
 
@@ -599,15 +614,36 @@ function group_status_process($str_status, $status_group) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_group[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_group[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_group[$str_status]; ?></span><?php
     }
 }
 
+function plugin_status_process($str_status, $status_plugin) {
+    $_str_css = '';
+
+    switch ($str_status) {
+        case 'not':
+            $_str_css = 'warning';
+        break;
+
+        case 'enable':
+            $_str_css = 'success';
+        break;
+
+        default:
+            $_str_css = 'secondary';
+        break;
+    }
+
+    if (isset($status_plugin[$str_status])) {
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_plugin[$str_status]; ?></span><?php
+    }
+}
 
 function link_status_process($str_status, $status_link) {
     $_str_css = '';
@@ -618,12 +654,12 @@ function link_status_process($str_status, $status_link) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_link[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_link[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_link[$str_status]; ?></span><?php
     }
 }
 
@@ -637,12 +673,12 @@ function spec_status_process($str_status, $status_spec) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_spec[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_spec[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_spec[$str_status]; ?></span><?php
     }
 }
 
@@ -656,12 +692,12 @@ function tag_status_process($str_status, $status_tag) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_tag[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_tag[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_tag[$str_status]; ?></span><?php
     }
 }
 
@@ -675,12 +711,12 @@ function gsite_status_process($str_status, $status_gsite) {
         break;
 
         default:
-            $_str_css = 'default';
+            $_str_css = 'secondary';
         break;
     }
 
     if (isset($status_gsite[$str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_gsite[$str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_gsite[$str_status]; ?></span><?php
     }
 }
 
@@ -689,7 +725,7 @@ function gather_status_process($num_articleId, $status_gather) {
     $_str_css = '';
 
     if ($num_articleId > 0) {
-        $_str_css       = 'default';
+        $_str_css       = 'secondary';
         $_str_status    = 'store';
     } else {
         $_str_css       = 'warning';
@@ -697,7 +733,7 @@ function gather_status_process($num_articleId, $status_gather) {
     }
 
     if (isset($status_gather[$_str_status])) {
-        ?><span class="label label-<?php echo $_str_css; ?> bg-label"><?php echo $status_gather[$_str_status]; ?></span><?php
+        ?><span class="badge badge-<?php echo $_str_css; ?>"><?php echo $status_gather[$_str_status]; ?></span><?php
     }
 }
 
@@ -736,7 +772,7 @@ function pm_status_process($arr_pmRow, $status_pm, $lang_mod, $search_type) {
 
             case 'revoke':
                 $_str_text      = $lang_mod['label']['revoke'];
-                $_css_label     = 'default';
+                $_css_label     = 'secondary';
             break;
 
             default:

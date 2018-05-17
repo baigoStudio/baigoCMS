@@ -13,7 +13,7 @@ if (!defined('IN_BAIGO')) {
 class CLASS_UPLOAD {
 
     private $obj_ftp;
-    private $obj_dir;
+    private $obj_file;
     private $ftp_status_conn;
     private $ftp_status_login;
     private $uploadSize; //允许上传大小
@@ -21,13 +21,13 @@ class CLASS_UPLOAD {
     private $attachPath; //路径
     private $attachName; //文件名
     private $fileTmp;
-    public $ext_image = array();
+    public $ext_image  = array();
     public $thumbRows  = array();
     public $mimeRows   = array();
 
     function __construct() { //构造函数
-        $this->obj_dir          = new CLASS_DIR();
-        $this->obj_dir->perms   = 0755;
+        $this->obj_file          = new CLASS_FILE();
+        $this->obj_file->perms   = 0755;
 
         $this->obj_thumb        = new CLASS_THUMB();
 
@@ -219,7 +219,7 @@ class CLASS_UPLOAD {
         $_str_urlPre    = $_str_attachPre . date('Y', $tm_time) . '/' . date('m', $tm_time) . '/';
         $_str_ftpPre    = '/' . date('Y', $tm_time) . '/' . date('m', $tm_time) . '/';
 
-        if (!$this->obj_dir->mk_dir($_str_pathPre)) { //建目录失败
+        if (!$this->obj_file->dir_mk($_str_pathPre)) { //建目录失败
             return array(
                 'rcode' => 'x100101',
             );
@@ -241,7 +241,7 @@ class CLASS_UPLOAD {
         }
 
         if (file_exists($this->attachFiles['tmp_name'])) {
-            unlink($this->attachFiles['tmp_name']);
+            $this->obj_file->file_del($this->attachFiles['tmp_name']);
         }
 
         if (BG_MODULE_FTP > 0 && defined('BG_UPLOAD_FTPHOST') && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //如果定义了FTP服务器，则上传到FTP
@@ -255,7 +255,7 @@ class CLASS_UPLOAD {
                     'rcode' => 'x030302',
                 );
             }
-            $_ftp_status = $this->obj_ftp->up_file($_str_pathPre . $this->attachName . '.' . $this->attachFiles['ext'], BG_UPLOAD_FTPPATH . $_str_ftpPre . $this->attachName . '.' . $this->attachFiles['ext']);
+            $_ftp_status = $this->obj_ftp->file_upload($_str_pathPre . $this->attachName . '.' . $this->attachFiles['ext'], BG_UPLOAD_FTPPATH . $_str_ftpPre . $this->attachName . '.' . $this->attachFiles['ext']);
             if (!$_ftp_status) {
                 return array(
                     'rcode' => 'x030303',
@@ -278,7 +278,7 @@ class CLASS_UPLOAD {
                             'rcode' => 'x030302',
                         );
                     }
-                    $_ftp_status = $this->obj_ftp->up_file($_arr_thumbRow['thumb_path'], BG_UPLOAD_FTPPATH . $_str_ftpPre . $_arr_thumbRow['thumb_name']);
+                    $_ftp_status = $this->obj_ftp->file_upload($_arr_thumbRow['thumb_path'], BG_UPLOAD_FTPPATH . $_str_ftpPre . $_arr_thumbRow['thumb_name']);
                     if (!$_ftp_status) {
                         return array(
                             'rcode' => 'x030303',
@@ -315,7 +315,7 @@ class CLASS_UPLOAD {
             //print_r($_str_filePath);
             //exit;
 
-            $this->obj_dir->del_file(BG_PATH_ATTACH . $_str_filePath);
+            $this->obj_file->file_del(BG_PATH_ATTACH . $_str_filePath);
 
             if (BG_MODULE_FTP > 0 && defined('BG_UPLOAD_FTPHOST') && !fn_isEmpty(BG_UPLOAD_FTPHOST)) { //是否定义FTP服务器
                 if (!$this->ftp_status_conn) {
@@ -328,14 +328,14 @@ class CLASS_UPLOAD {
                         'rcode' => 'x030302',
                     );
                 }
-                $this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . DS . $_str_filePath);
+                $this->obj_ftp->file_del(BG_UPLOAD_FTPPATH . DS . $_str_filePath);
             }
 
             //if (in_array($this->attachFiles['ext'], $this->ext_image)) { //如果是图片，则生成缩略图
                 foreach ($this->thumbRows as $_key_thumb=>$_value_thumb) { //删除缩略图
                     $_str_thumbPath = date('Y', $_value['attach_time']) . DS . date('m', $_value['attach_time']) . DS . $_value['attach_id'] . '_' . $_value_thumb['thumb_width'] . '_' . $_value_thumb['thumb_height'] . '_' . $_value_thumb['thumb_type'] . '.' . $_value['attach_ext'];
 
-                    $this->obj_dir->del_file(BG_PATH_ATTACH . $_str_thumbPath);
+                    $this->obj_file->file_del(BG_PATH_ATTACH . $_str_thumbPath);
 
                     if (BG_MODULE_FTP > 0 && defined('BG_UPLOAD_FTPHOST') && !fn_isEmpty(BG_UPLOAD_FTPHOST)) {
                         if (!$this->ftp_status_conn) {
@@ -348,7 +348,7 @@ class CLASS_UPLOAD {
                                 'rcode' => 'x030302',
                             );
                                     }
-                        $this->obj_ftp->del_file(BG_UPLOAD_FTPPATH . DS . $_str_thumbPath);
+                        $this->obj_ftp->file_del(BG_UPLOAD_FTPPATH . DS . $_str_thumbPath);
                     }
                 }
             //}

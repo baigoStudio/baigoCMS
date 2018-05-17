@@ -5,48 +5,41 @@
 );
 
 include($cfg['pathInclude'] . 'html_head.php'); ?>
-    <style type="text/css">
-    body {
-        padding: 0 15px;
-    }
-    </style>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th><?php echo $this->lang['common']['label']['article']; ?> / <?php echo $this->lang['mod']['label']['id']; ?></th>
-                <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="article_<?php echo $this->tplData['articleRow']['article_id']; ?>_tr" class="text-info">
-                <td>
-                    <h5>
-                        <?php echo $this->tplData['articleRow']['article_title']; ?>
-                    </h5>
-                    <div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><?php echo $this->lang['mod']['label']['id']; ?></th>
+                    <th><?php echo $this->lang['common']['label']['article']; ?></th>
+                    <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="article_<?php echo $this->tplData['articleRow']['article_id']; ?>_tr" class="text-info">
+                    <td>
                         <?php echo $this->tplData['articleRow']['article_id']; ?>
-                    </div>
-                </td>
-                <td class="text-right text-nowrap">
-                    <h5>
-                        <span id="article_<?php echo $this->tplData['articleRow']['article_id']; ?>_icon" class="glyphicon glyphicon-refresh bg-spin"></span>
+                    </td>
+                    <td>
+                        <?php echo $this->tplData['articleRow']['article_title']; ?>
+                    </td>
+                    <td class="text-right text-nowrap">
+                        <span id="article_<?php echo $this->tplData['articleRow']['article_id']; ?>_icon" class="oi oi-loop-circular bg-spin"></span>
                         <span id="article_<?php echo $this->tplData['articleRow']['article_id']; ?>_text"><?php echo $this->lang['rcode']['y120402']; ?></span>
-                    </h5>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function(){
         $.ajax({
-            url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=article_gen", //url
+            url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=article_gen&c=request", //url
             //async: false, //设置为同步
             type: "post",
             dataType: "json",
             data: {
-                act: "single",
+                a: "single",
                 article_id: "<?php echo $this->tplData['articleRow']['article_id']; ?>",
                 enforce: "true",
                 <?php echo $this->common['tokenRow']['name_session']; ?>: "<?php echo $this->common['tokenRow']['token']; ?>"
@@ -57,12 +50,12 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
                 switch (_rcode_status) {
                     case "x":
                         _class  = "text-danger";
-                        _icon   = "glyphicon glyphicon-remove-sign";
+                        _icon   = "oi oi-circle-x";
                     break;
 
                     case "y":
                         _class  = "text-success";
-                        _icon   = "glyphicon glyphicon-ok-sign";
+                        _icon   = "oi oi-circle-check";
                     break;
                 }
 
@@ -78,4 +71,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

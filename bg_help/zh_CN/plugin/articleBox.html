@@ -1,0 +1,35 @@
+<h3>修改文章保存位置</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">名称</th>
+                    <th class="text-nowrap">类型</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">article_ids</td>
+                    <td class="text-nowrap">array</td>
+                    <td>文章 ID 数组。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_box</td>
+                    <td class="text-nowrap">string</td>
+                    <td>文章状态，可选：normal（正常）、draft（草稿箱）、recycle（回收站）。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div>&nbsp;</div>
+
+<h5>数据示例</h5>
+<p>
+<pre class="border rounded"><code class="language-php">Array (
+    [article_ids] =&gt; Array(1, 2, 3)
+    [article_box] =&gt; pub
+)</code></pre>
+</p>

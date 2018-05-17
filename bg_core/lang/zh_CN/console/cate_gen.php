@@ -16,10 +16,6 @@ return array(
         'id'        => 'ID',
         'status'    => '状态',
         'pageNo'    => '页数',
-        'pageCount' => '第', //首页
-        'pagePage'  => '页', //首页
-        'pageNo'          => '页数',
-        'pageCount'       => '第', //首页
-        'pagePage'        => '页', //首页
+        'pageTotal' => '总页数',
     ),
 );

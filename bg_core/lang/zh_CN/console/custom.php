@@ -33,6 +33,8 @@ return array(
         'custom'        => '字段名称',
         'customParent'  => '隶属于字段',
         'belongCate'    => '隶属于栏目', //隶属栏目
+        'size'          => '字段长度',
+        'sizeNote'      => '单位为字符，一个中文字符占用 3 个字符',
         'noname'        => '未命名', //未命名
         'require'       => '必填项',
         'order'         => '排序',

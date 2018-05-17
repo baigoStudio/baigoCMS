@@ -96,6 +96,15 @@ class CLASS_CALL_DISPLAY {
 
         $_arr_cateRows = $this->mdl_cate->mdl_listPub($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchCate);
 
+        $_arr_pluginReturn = $GLOBALS['obj_plugin']->trigger('filter_pub_call_cate', $_arr_cateRows); //编辑文章时触发
+        if (isset($_arr_pluginReturn['filter_pub_call_cate'])) {
+            $_arr_pluginReturnDo    = $_arr_pluginReturn['filter_pub_call_cate'];
+
+            if (isset($_arr_pluginReturnDo['return']) && !fn_isEmpty($_arr_pluginReturnDo['return'])) { //如果有插件返回
+                $_arr_cateRows = $_arr_pluginReturnDo['return'];
+            }
+        }
+
         return $_arr_cateRows;
     }
 
@@ -113,6 +122,15 @@ class CLASS_CALL_DISPLAY {
 
         $_arr_specRows = $this->mdl_spec->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchSpec);
 
+        $_arr_pluginReturn = $GLOBALS['obj_plugin']->trigger('filter_pub_call_spec', $_arr_specRows); //编辑文章时触发
+        if (isset($_arr_pluginReturn['filter_pub_call_spec'])) {
+            $_arr_pluginReturnDo    = $_arr_pluginReturn['filter_pub_call_spec'];
+
+            if (isset($_arr_pluginReturnDo['return']) && !fn_isEmpty($_arr_pluginReturnDo['return'])) { //如果有插件返回
+                $_arr_specRows = $_arr_pluginReturnDo['return'];
+            }
+        }
+
         return $_arr_specRows;
     }
 
@@ -128,7 +146,17 @@ class CLASS_CALL_DISPLAY {
             'status'    => 'show',
             'type'      => $this->callRow['call_type'],
         );
+
         $_arr_tagRows = $this->mdl_tag->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchTag);
+
+        $_arr_pluginReturn = $GLOBALS['obj_plugin']->trigger('filter_pub_call_tag', $_arr_tagRows); //编辑文章时触发
+        if (isset($_arr_pluginReturn['filter_pub_call_tag'])) {
+            $_arr_pluginReturnDo    = $_arr_pluginReturn['filter_pub_call_tag'];
+
+            if (isset($_arr_pluginReturnDo['return']) && !fn_isEmpty($_arr_pluginReturnDo['return'])) { //如果有插件返回
+                $_arr_tagRows = $_arr_pluginReturnDo['return'];
+            }
+        }
 
         return $_arr_tagRows;
     }
@@ -139,7 +167,17 @@ class CLASS_CALL_DISPLAY {
             'status'    => 'enable',
             'type'      => 'friend',
         );
+
         $_arr_linkRows = $this->mdl_link->mdl_list($this->callRow['call_amount']['top'], $this->callRow['call_amount']['except'], $_arr_searchLink);
+
+        $_arr_pluginReturn = $GLOBALS['obj_plugin']->trigger('filter_pub_call_link', $_arr_linkRows); //编辑文章时触发
+        if (isset($_arr_pluginReturn['filter_pub_call_link'])) {
+            $_arr_pluginReturnDo    = $_arr_pluginReturn['filter_pub_call_link'];
+
+            if (isset($_arr_pluginReturnDo['return']) && !fn_isEmpty($_arr_pluginReturnDo['return'])) { //如果有插件返回
+                $_arr_linkRows = $_arr_pluginReturnDo['return'];
+            }
+        }
 
         return $_arr_linkRows;
     }
@@ -187,6 +225,15 @@ class CLASS_CALL_DISPLAY {
 
             $_arr_articleRows[$_key]['cateRow']  = $_arr_articleCateRow;
             $_arr_articleRows[$_key]['urlRow']  = $this->mdl_cate->article_url_process($_value, $_arr_articleCateRow);
+        }
+
+        $_arr_pluginReturn = $GLOBALS['obj_plugin']->trigger('filter_pub_call_article', $_arr_articleRows); //编辑文章时触发
+        if (isset($_arr_pluginReturn['filter_pub_call_article'])) {
+            $_arr_pluginReturnDo    = $_arr_pluginReturn['filter_pub_call_article'];
+
+            if (isset($_arr_pluginReturnDo['return']) && !fn_isEmpty($_arr_pluginReturnDo['return'])) { //如果有插件返回
+                $_arr_articleRows = $_arr_pluginReturnDo['return'];
+            }
         }
 
         return $_arr_articleRows;

@@ -14,7 +14,7 @@ return array(
     'article' => array(
         'main' => array(
             'title' => '文章管理',
-            'icon'  => 'duplicate',
+            'icon'  => 'document',
         ),
         'sub' => array(
             'list'      => '所有文章',
@@ -39,7 +39,7 @@ return array(
     'spec' => array(
         'main' => array(
             'title' => '专题管理',
-            'icon'  => 'cd',
+            'icon'  => 'clipboard',
         ),
         'sub' => array(
             'list'  => '所有专题',
@@ -54,7 +54,7 @@ return array(
     ),
     'gather' => array(
         'main' => array(
-            'title' => '采集管理',
+            'title' => '内容采集',
             'icon'  => 'cloud-download',
         ),
         'sub' => array(
@@ -90,7 +90,7 @@ return array(
     'cate' => array(
         'main' => array(
             'title'  => '栏目管理',
-            'icon'   => 'th-large',
+            'icon'   => 'layers',
         ),
         'sub' => array(
             'list' => '所有栏目',
@@ -106,7 +106,7 @@ return array(
     'call' => array(
         'main' => array(
             'title'  => '调用管理',
-            'icon'   => 'list',
+            'icon'   => 'list-rich',
         ),
         'sub' => array(
             'list' => '所有调用',
@@ -122,7 +122,7 @@ return array(
     'admin' => array(
         'main' => array(
             'title'  => '管理员',
-            'icon'   => 'user',
+            'icon'   => 'person',
         ),
         'sub' => array(
             'list' => '所有管理员',
@@ -140,7 +140,7 @@ return array(
     'group' => array(
         'main' => array(
             'title'  => '群组管理',
-            'icon'   => 'bookmark',
+            'icon'   => 'people',
         ),
         'sub' => array(
             'list' => '所有群组',
@@ -156,7 +156,7 @@ return array(
     'link' => array(
         'main' => array(
             'title'  => '链接',
-            'icon'   => 'link',
+            'icon'   => 'link-intact',
         ),
         'sub' => array(
             'list' => '链接管理',
@@ -166,6 +166,21 @@ return array(
             'add'    => '创建',
             'edit'   => '编辑',
             'del'    => '删除',
+        ),
+    ),
+    'plugin' => array(
+        'main' => array(
+            'title'  => '插件',
+            'icon'   => 'puzzle-piece',
+        ),
+        'sub' => array(
+            'list' => '插件管理',
+        ),
+        'allow' => array(
+            'browse'    => '浏览',
+            'edit'      => '编辑',
+            'install'   => '安装',
+            'uninstall' => '卸载',
         ),
     ),
 );

@@ -12,64 +12,63 @@ if (!defined('IN_BAIGO')) {
 
 class CLASS_CRYPT {
 
-    public $obj_dir;
-    public $key_pub;
+    /** 加密
+     * encrypt function.
+     *
+     * @access public
+     * @param mixed $string
+     * @param mixed $key_appKey
+     * @param mixed $key_appSecret
+     * @return void
+     */
+    function encrypt($string, $key_appKey, $key_appSecret) {
+        if (strlen($key_appSecret) != 16) {
+            return array(
+                'rcode' => 'x030308',
+            );
+        }
 
-    function __construct() { //构造函数
-        $this->key_pub = $GLOBALS['obj_base']->key_pub;
+        $_str_encrypt   = openssl_encrypt($string, 'AES-128-CBC', $key_appKey, 1, $key_appSecret);
+
+        $_str_encrypt   = base64_encode($_str_encrypt);
+
+        $_str_encrypt   = str_ireplace('=', '|', $_str_encrypt);
+        $_str_encrypt   = str_ireplace('/', '@', $_str_encrypt);
+        $_str_encrypt   = str_ireplace('+', '_', $_str_encrypt);
+
+        return array(
+            'rcode'     => 'ok',
+            'encrypt'   => $_str_encrypt,
+        );
     }
 
 
-    //加密
-    function encrypt($string, $key_priv) {
-        srand((double)microtime() * 1000000);
-        $_str_encrypt   = md5(rand(0, 32000));
-        $_ctr           = 0;
-        $_str_tmp       = '';
-
-        for ($_iii = 0; $_iii < strlen($string); $_iii++) {
-            $_ctr       = $_ctr == strlen($_str_encrypt) ? 0 : $_ctr;
-            $_str_tmp  .= $_str_encrypt[$_ctr] . ($string[$_iii] ^ $_str_encrypt[$_ctr++]);
+    /** 解密
+     * decrypt function.
+     *
+     * @access public
+     * @param mixed $string
+     * @param mixed $key_appKey
+     * @param mixed $key_appSecret
+     * @return void
+     */
+    function decrypt($string, $key_appKey, $key_appSecret) {
+        if (strlen($key_appSecret) != 16) {
+            return array(
+                'rcode' => 'x030308',
+            );
         }
 
-        $_str_return = $this->get_key($_str_tmp, $key_priv);
-        $_str_return = base64_encode($_str_return);
+        $string         = str_ireplace('|', '=', $string);
+        $string         = str_ireplace('@', '/', $string);
+        $string         = str_ireplace('_', '+', $string);
+        $string         = base64_decode($string);
 
-        $_str_return = str_ireplace('=', '|', $_str_return);
-        $_str_return = str_ireplace('/', '@', $_str_return);
-        $_str_return = str_ireplace('+', '_', $_str_return);
+        $_str_decrypt   = openssl_decrypt($string, 'AES-128-CBC', $key_appKey, 1, $key_appSecret);
 
-        return $_str_return;
-    }
-
-    //解密
-    function decrypt($string, $key_priv) {
-        $string = str_ireplace('|', '=', $string);
-        $string = str_ireplace('@', '/', $string);
-        $string = str_ireplace('_', '+', $string);
-
-        $string        = base64_decode($string);
-        $string        = $this->get_key($string, $key_priv);
-        $_str_return   = '';
-
-        for ($_iii = 0; $_iii < strlen($string); $_iii++) {
-            $_str_md5       = $string[$_iii];
-            $_str_return   .= $string[++$_iii] ^ $_str_md5;
-        }
-
-        return $_str_return;
-    }
-
-    private function get_key($string, $key_priv) {
-        $_str_key       = md5($this->key_pub . $key_priv);
-        $_ctr           = 0;
-        $_str_return    = '';
-
-        for ($_iii = 0; $_iii < strlen($string); $_iii++) {
-            $_ctr           = $_ctr == strlen($_str_key) ? 0 : $_ctr;
-            $_str_return   .= $string[$_iii] ^ $_str_key[$_ctr++];
-        }
-
-        return $_str_return;
+        return array(
+            'rcode'     => 'ok',
+            'decrypt'   => $_str_decrypt,
+        );
     }
 }

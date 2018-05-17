@@ -1,14 +1,14 @@
 <h3>栏目树</h3>
 <p>
-    在任何模板内，均可以用遍历 <code>$this->tplData['cateRows']</code> 的方式来显示网站所有栏目的树形结构，详细字段请查看 <a href="{BG_URL_HELP}index.php?mod=php&act=cate#cateRow">栏目</a>。
+    在任何模板内，均可以用遍历 <code>$this-&gt;tplData['cateRows']</code> 的方式来显示网站所有栏目的树形结构，详细字段请查看 <a href="{$BG_URL_HELP}index.php?m=tpl&a=cate#cateRow">栏目</a>。
 </p>
 
 <div>&nbsp;</div>
 
-<h4>栏目树数据示例</h4>
-<code>print_r($this->tplData['cateRows'])</code>
+<h5>数据示例</h5>
+<code>print_r($this-&gt;tplData['cateRows'])</code>
 <p>
-<pre><code class="language-php">Array (
+<pre class="border rounded"><code class="language-php">Array (
     [7] =&gt; Array (
         [cate_id] =&gt; 7 //栏目 ID
         [cate_name] =&gt; baigo CMS //名称
@@ -41,7 +41,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -57,7 +57,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -67,13 +67,13 @@
 <a name="ubb"></a>
 <h3>部分 UBB 代码支持</h3>
 <p>
-    在任何模板内，均可以用 ubb 函数 <code>fn_ubb($string)</code> 的方式来实现部分 UBB 代码，被支持的 UBB 代码请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=common#ubb">管理后台</a>。
+    在任何模板内，均可以用 ubb 函数 <code>fn_ubb($string)</code> 的方式来实现部分 UBB 代码，被支持的 UBB 代码请查看 <a href="{$BG_URL_HELP}index.php?m=console&a=common#ubb">管理后台</a>。
 </p>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -85,13 +85,12 @@
 <p>
     在任何模板内，均可以用 <code>echo 常量名</code> 的方式来输出系统内置常量，如果您想得到所有的常量名，请查看 <mark>./bg_config</mark> 目录下的文件。
 </p>
-<div class="panel panel-default">
-    <div class="panel-heading">常用常量</div>
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="text-nowrap">常量名</th>
+                    <th class="text-nowrap">常用常量</th>
                     <th>说明</th>
                 </tr>
             </thead>
@@ -175,12 +174,11 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -190,10 +188,9 @@
 <a name="custom"></a>
 <h3>自定义字段</h3>
 <p>
-    在任何模板内，均可以用遍历 <code>$this->tplData['customRows']</code> 的方式来显示所有有效自定义字段的列表。
+    在任何模板内，均可以用遍历 <code>$this-&gt;tplData['customRows']</code> 的方式来显示所有有效自定义字段的列表。
 </p>
-<div class="panel panel-default">
-    <div class="panel-heading">自定义字段</div>
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -222,14 +219,13 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<h4>自定义字段数据示例</h4>
-<code>print_r($this->tplData['customRows'])</code>
+<h5>数据示例</h5>
+<code>print_r($this-&gt;tplData['customRows'])</code>
 <p>
-<pre><code class="language-php">Array (
+<pre class="border rounded"><code class="language-php">Array (
     [0] =&gt; Array (
         [custom_id] =&gt; 4 //字段 ID
         [custom_name] =&gt; 尺寸 //名称
@@ -250,7 +246,7 @@
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -262,8 +258,7 @@
 <p>
     友情链接可以通过调用来显示，调用后返回的数组结构如下。
 </p>
-<div class="panel panel-default">
-    <div class="panel-heading">友情链接</div>
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -297,13 +292,12 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<h4>友情链接数据示例</h4>
+<h5>数据示例</h5>
 <p>
-<pre><code class="language-php">Array (
+<pre class="border rounded"><code class="language-php">Array (
     [0] =&gt; Array (
         [link_id] =&gt; 4 //字段 ID
         [link_name] =&gt; baigo //链接名称

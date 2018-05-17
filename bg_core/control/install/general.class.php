@@ -26,7 +26,7 @@ class GENERAL_INSTALL {
         //语言文件
         $this->obj_tpl->lang = array(
             'common'    => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'common.php'), //通用
-            'phplib'       => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'phplib.php'), //菜单
+            'phplib'    => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'phplib.php'), //菜单
             'opt'       => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'opt.php'), //系统设置
             'rcode'     => fn_include(BG_PATH_LANG . $this->config['lang'] . DS . 'rcode.php'), //返回代码
         );

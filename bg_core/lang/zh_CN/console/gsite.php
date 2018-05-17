@@ -42,7 +42,7 @@ return array(
         'select'                => '选取',
 
         'selector'              => '选择器',
-        'selectorExample'       => '实例',
+        'selectorExample'       => '示例',
         'selectorOften'         => '常用选择器',
         'selectorList'          => '列表选择器',
         'selectorPageList'      => '分页链接选择器',
@@ -79,7 +79,7 @@ return array(
         'attrGather'            => '采集属性',
         'attrOften'             => '常用属性',
         'attrNote'              => '默认为 html',
-        'attrOftenNote'         => '可选以下 3 种',
+        'attrOftenNote'         => '可选以下 3 类',
         'attrFilter'            => '属性过滤',
         'attrFilterNote'        => '以下参数只针对文章内容，默认将剔除所有属性。',
         'attrAllow'             => '允许的属性',
@@ -103,7 +103,7 @@ return array(
         ),
         'attr'  => array(
             'label' => 'HTML 属性',
-            'note'  => '<div>采集 HTML 属性（如 src、href、name、data-src 等）</div><div>示例：&lt;a <code>href=&quot;http://www.domail.com&quot;</code>&gt;链接&lt;/a&gt;，红色部分为属性（名称=&quot;值&quot;）。</div>',
+            'note'  => '采集 HTML 属性（如 src、href、name、data-src 等）<br>示例：&lt;a <code>href=&quot;http://www.domail.com&quot;</code>&gt;链接&lt;/a&gt;，红色部分为属性（名称=&quot;值&quot;）。',
         ),
     ),
 
@@ -124,7 +124,7 @@ return array(
         ),
         'none'  => array(
             'label' => '无符号',
-            'note'  => '当 [采集属性] 值为 html 时表示要过滤掉的 HTML 标签，为 text 时表示要保留的 HTML 标签（此时可以为 HTML 标签，如：<code>div|strong</code>）。',
+            'note'  => '当 [采集属性] 值为 html 时，表示要过滤掉的 HTML 标签。<br>当 [采集属性] 值为 text 时，表示要保留的 HTML 标签（此时可以为 HTML 标签，如：<code>div|strong</code>）。',
         ),
     ),
 
@@ -164,5 +164,9 @@ return array(
         'allStatus'     => '所有状态', //所有
         'batch'         => '批量操作', //批量操作
         'del'           => '永久删除', //删除
+    ),
+
+    'confirm' => array(
+        'del'         => '确认永久删除吗？此操作不可恢复！', //确认清空回收站
     ),
 );

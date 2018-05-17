@@ -1,19 +1,19 @@
 <h3>专题分发设置</h3>
 
 <p>
-    <a href="{images}spec.jpg" target="_blank"><img src="{images}spec.jpg" class="img-responsive"></a>
+    <a href="{$images}spec.jpg" target="_blank"><img src="{$images}spec.jpg" class="img-fluid"></a>
 </p>
 
 <div>&nbsp;</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">填写说明</div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
         <h4 class="text-info">URL 前缀</h4>
         <p>此项用于专题的分发，如您的专题保存在同一台服务器上，可忽略此项目，并采用默认值，末尾请勿加 <kbd>/</kbd>。</p>
 
         <h4 class="text-info">分发 FTP 地址</h4>
-        <p><mark>以下选项根据不同系统，有可能无相应选项</mark>。此项用于专题的分发，需开启分发模块（开启方法请查看 <a href="{BG_URL_HELP}index.php?mod=intro&act=faq#module">常见问题</a>），如您想将专题分发到其他服务器，需填写本项。</p>
+        <p><mark>以下选项根据不同系统，有可能无相应选项</mark>。此项用于专题的分发，需开启分发模块（开启方法请查看 <a href="{$BG_URL_HELP}index.php?m=intro&a=faq#module">常见问题</a>），如您想将专题分发到其他服务器，需填写本项。</p>
 
         <h4 class="text-info">FTP 端口</h4>
         <p>请按照服务器提供商所提供的资料填写。</p>
@@ -32,12 +32,14 @@
     </div>
 </div>
 
-<p>填写完毕，点击“保存“，保存成功后点击“下一步“。</p>
+<div>&nbsp;</div>
+
+<p>填写完毕，点“保存“，保存成功后点“下一步“。</p>
 
 <div>&nbsp;</div>
 
 <a name="spec_example"></a>
-<h4>专题分发设置实例</h4>
+<h5>专题分发设置示例</h5>
 假设：
 <ol>
     <li>
@@ -51,9 +53,9 @@
     </li>
 </ol>
 
-<div class="panel panel-default">
-    <div class="panel-heading">详细设置如下</div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-header">详细设置如下</div>
+    <div class="card-body">
         <h4 class="text-info">URL 前缀</h4>
         <p>http://spec.domain.com</p>
 

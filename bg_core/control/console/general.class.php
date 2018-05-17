@@ -19,12 +19,12 @@ class GENERAL_CONSOLE {
     function __construct() { //构造函数
         $this->config   = $GLOBALS['obj_base']->config;
 
-        $this->obj_dir  = new CLASS_DIR();
+        $this->obj_file  = new CLASS_FILE();
         $this->obj_tpl  = new CLASS_TPL(BG_PATH_TPLSYS . 'console' . DS . BG_DEFAULT_UI); //初始化视图对象
 
         $this->obj_tpl->opt         = $GLOBALS['obj_config']->arr_opt; //系统设置配置文件
         $this->obj_tpl->consoleMod  = fn_include(BG_PATH_INC . 'consoleMod.inc.php'); //菜单配置文件
-        $this->obj_tpl->profile     = fn_include(BG_PATH_INC . 'profile.inc.php'); //菜单配置文件
+        $this->obj_tpl->profile     = fn_include(BG_PATH_INC . 'profile.inc.php'); //个人设置配置文件
 
         //语言文件
         $this->obj_tpl->lang = array(
@@ -51,7 +51,9 @@ class GENERAL_CONSOLE {
         $this->obj_tpl->setModule();
 
         $this->mdl_admin  = new MODEL_ADMIN(); //设置管理员对象
-        $this->mdl_group  = new MODEL_GROUP(); //设置管理员对象
+        $this->mdl_group  = new MODEL_GROUP(); //设置组对象
+
+        $GLOBALS['obj_plugin']->trigger('action_console_init'); //管理后台初始化时触发
     }
 
 
@@ -211,7 +213,7 @@ class GENERAL_CONSOLE {
         if (file_exists(BG_PATH_CONFIG . 'installed.php')) { //如果新文件存在
             fn_include(BG_PATH_CONFIG . 'installed.php', 'require_once'); //载入
         } else if (file_exists(BG_PATH_CONFIG . 'is_install.php')) { //如果旧文件存在
-            $this->obj_dir->copy_file(BG_PATH_CONFIG . 'is_install.php', BG_PATH_CONFIG . 'installed.php'); //拷贝
+            $this->obj_file->file_copy(BG_PATH_CONFIG . 'is_install.php', BG_PATH_CONFIG . 'installed.php'); //拷贝
             fn_include(BG_PATH_CONFIG . 'installed.php', 'require_once'); //载入
         } else { //如已安装文件不存在
             $_str_rcode = 'x030415';
@@ -220,7 +222,7 @@ class GENERAL_CONSOLE {
 
         if (defined('BG_INSTALL_PUB') && PRD_CMS_PUB > BG_INSTALL_PUB) { //如果小于当前版本
             $_str_rcode = 'x030416';
-            $_str_jump  = BG_URL_INSTALL . 'index.php?mod=upgrade';
+            $_str_jump  = BG_URL_INSTALL . 'index.php?m=upgrade';
         }
 
         if (!fn_isEmpty($_str_rcode)) {
@@ -251,7 +253,7 @@ class GENERAL_CONSOLE {
 
             if ($GLOBALS['view'] != 'iframe' && $GLOBALS['view'] != 'modal') {
                 $_str_forwart   = fn_forward(fn_server('REQUEST_URI'));
-                $_str_jump      = BG_URL_CONSOLE . 'index.php?mod=login&forward=' . $_str_forwart;
+                $_str_jump      = BG_URL_CONSOLE . 'index.php?m=login&forward=' . $_str_forwart;
             }
         }
 
@@ -281,7 +283,7 @@ class GENERAL_CONSOLE {
 
 
     private function hash_process($arr_adminRow) {
-        return fn_baigoCrypt($arr_adminRow['admin_id'] . $arr_adminRow['admin_name'] . $arr_adminRow['admin_time_login'], fn_server('HTTP_USER_AGENT') . $arr_adminRow['admin_ip']);
+        return fn_baigoCrypt($arr_adminRow['admin_id'] . $arr_adminRow['admin_name'] . $arr_adminRow['admin_time_login'], $arr_adminRow['admin_ip']);
     }
 
 

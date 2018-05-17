@@ -1,0 +1,178 @@
+<h3>文章数组</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">名称</th>
+                    <th class="text-nowrap">类型</th>
+                    <th class="text-nowrap">说明</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">article_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章 ID</td>
+                    <td>添加文章时，ID 为 0。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_title</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章标题</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_content</td>
+                    <td class="text-nowrap">text</td>
+                    <td class="text-nowrap">文章内容</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_cate_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">隶属栏目 ID</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_cate_ids</td>
+                    <td class="text-nowrap">array</td>
+                    <td class="text-nowrap">附加至栏目 ID</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_mark_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">隶属标记 ID</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_excerpt</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章摘要</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_link</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">跳转至</td>
+                    <td>如填写了跳转地址，该文章将直接跳转至相应的地址，不会显示文章内容。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_time</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章创建时间</td>
+                    <td>指文章创建到数据库的时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_time_show</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章显示时间</td>
+                    <td>指显示在文章中的时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_is_time_pub</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">是否定时上线</td>
+                    <td>是否定时上线，值为 1 时文章定时上线。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_time_pub</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章上线时间</td>
+                    <td>指文章上线时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_is_time_hide</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">是否定时下线</td>
+                    <td>是否定时上线，值为 1 时文章定时下线。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_time_hide</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">文章下线时间</td>
+                    <td>指文章下线时间。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_tags</td>
+                    <td class="text-nowrap">array</td>
+                    <td class="text-nowrap">当前文章关联的 TAG</td>
+                    <td>所有与此文章关联的 TAG</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_attach_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td class="text-nowrap">当前文章附件的 ID</td>
+                    <td>该文章主图的附件 ID</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_status</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章状态</td>
+                    <td>pub 为发布，wait 为待审，hide 为隐藏。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_customs</td>
+                    <td class="text-nowrap">array</td>
+                    <td class="text-nowrap">自定义字段</td>
+                    <td>自定义字段的内容。结构为 <code>Array ([自定义字段 ID] => 值)</code>。详情请查看 <a href="{$BG_URL_HELP}index.php?m=console&a=custom" target="_blank">自定义字段</a>。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_source</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章来源</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_source_url</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章来源 URL</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">article_author</td>
+                    <td class="text-nowrap">string</td>
+                    <td class="text-nowrap">文章作者</td>
+                    <td>常用于转载文章时，表明文章的出处，以示对原作者的尊重。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div>&nbsp;</div>
+
+<h5>数据示例</h5>
+<p>
+<pre class="border rounded"><code class="language-php">Array (
+    [article_id] =&gt; 82
+    [article_title] =&gt; 文章标题
+    [article_excerpt] =&gt; 文章摘要
+    [article_content] =&gt; 文章内容
+    [article_link] =&gt;
+    [article_status] =&gt; pub
+    [article_box] =&gt; normal
+    [article_time_show] =&gt; 1476957900
+    [article_is_time_pub] =&gt; 0
+    [article_time_pub] =&gt; 1520498134
+    [article_is_time_hide] =&gt; 0
+    [article_time_hide] =&gt; 0
+    [article_cate_id] =&gt; 15
+    [article_cate_ids] =&gt; Array (15, 21)
+    [article_attach_id] =&gt; 3046
+    [article_source] =&gt;
+    [article_source_url] =&gt;
+    [article_author] =&gt;
+    [article_mark_id] =&gt; 0
+    [article_spec_ids] =&gt; Array (3, 35)
+    [article_tags] =&gt; Array (abc, test)
+    [article_customs] =&gt; Array (
+        [14] =&gt;
+        [6] =&gt; 1
+        [9] =&gt;
+        [13] =&gt;
+        [12] =&gt;
+    )
+)</code></pre>
+</p>

@@ -8,23 +8,26 @@ $_str_status = substr($this->tplData['rcode'], 0, 1);
 switch ($GLOBALS['view']) {
     case "modal": ?>
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <?php echo $this->lang['common']['page']['rcode']; ?>
+            <div class="modal-title"><?php echo $this->lang['common']['page']['rcode']; ?></div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <div class="modal-body">
 <?php break;
 
     case "iframe":
-        include($cfg['pathInclude'] . 'html_head.php');
-    break;
+        include($cfg['pathInclude'] . 'html_head.php'); ?>
+        <div class="m-3">
+    <?php break;
 
     default:
         include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-        <div class="form-group">
+        <div class="mb-3">
             <a href="javascript:history.go(-1);">
-                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="oi oi-chevron-left"></span>
                 <?php echo $this->lang['common']['href']['back']; ?>
             </a>
         </div>
@@ -33,7 +36,7 @@ switch ($GLOBALS['view']) {
 
         <div class="alert alert-<?php if ($_str_status == 'y') { ?>success<?php } else { ?>danger<?php } ?>">
             <h3>
-                <span class="glyphicon glyphicon-<?php if ($_str_status == 'y') { ?>ok-sign<?php } else { ?>remove-sign<?php } ?>"></span>
+                <span class="oi oi-<?php if ($_str_status == 'y') { ?>circle-check<?php } else { ?>circle-x<?php } ?>"></span>
                 <?php if (isset($this->tplData['rcode']) && !fn_isEmpty($this->tplData['rcode']) && isset($this->lang['rcode'][$this->tplData['rcode']])) {
                     echo $this->lang['rcode'][$this->tplData['rcode']];
                 } ?>
@@ -53,18 +56,21 @@ switch ($GLOBALS['view']) {
 <?php switch ($GLOBALS['view']) {
     case "modal": ?>
         </div>
-        <div class="modal-footer clearfix">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang['common']['btn']['close']; ?></button>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                <?php echo $this->lang['common']['btn']['close']; ?>
+            </button>
         </div>
 <?php break;
 
     case "iframe":
-        include($cfg['pathInclude'] . 'html_foot.php');
-    break;
+        include($cfg['pathInclude'] . 'html_foot.php'); ?>
+        </div>
+    <?php break;
 
     default:
         include($cfg['pathInclude'] . 'console_foot.php');
         include($cfg['pathInclude'] . 'html_foot.php');
     break;
-} ?>
+}
 

@@ -1,19 +1,21 @@
-<div class="modal-header clearfix">
-    <div class="pull-left">
-        <div class="form-group"><?php echo $this->lang['common']['label']['spec']; ?></div>
-    </div>
-    <div class="pull-right form-inline">
-        <div class="form-group">
-            <div class="input-group input-group-sm">
-                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="<?php echo $this->lang['mod']['label']['key']; ?>" value="<?php echo $this->tplData['search']['key']; ?>">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-sm" type="button" id="search_btn">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
-            </div>
+<div class="modal-header">
+    <div class="modal-title"><?php echo $this->lang['common']['label']['spec']; ?></div>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form name="spec_search" id="spec_search" class="mb-3">
+        <div class="input-group input-group-sm">
+            <input type="text" name="search_key" id="search_key" class="form-control" placeholder="<?php echo $this->lang['mod']['label']['key']; ?>" value="<?php echo $this->tplData['search']['key']; ?>">
+            <span class="input-group-append">
+                <button class="btn btn-secondary" type="button" id="search_btn">
+                    <span class="oi oi-magnifying-glass"></span>
+                </button>
+            </span>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="table-responsive">
@@ -31,15 +33,14 @@
     </table>
 </div>
 
-<div class="modal-footer clearfix">
-    <div class="pull-left">
-        <div id="spec_page"></div>
+<div class="modal-body">
+    <div class="clearfix mt-3">
+        <div id="spec_page" class="float-right"></div>
     </div>
-    <div class="pull-right">
-        <div class="form-group">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang['common']['btn']['close']; ?></button>
-        </div>
-    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><?php echo $this->lang['common']['btn']['close']; ?></button>
 </div>
 
 <script type="text/javascript">
@@ -50,59 +51,59 @@ var _specIds = <?php echo $this->tplData['specIds']; ?>;
 function get_page(result, _page, _key) {
     var _str_page = "";
 
-    _str_page = "<ul class=\"pagination pagination-sm bg-pagination\">";
+    _str_page = "<ul class=\"pagination pagination-sm\">";
         if (result.pageRow.page > 1) {
-            _str_page += "<li><a href=\"javascript:reload_spec(1,'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageFirst']; ?>\"><?php echo $this->lang['common']['href']['pageFirst']; ?></a></li>";
+            _str_page += "<li class=\"page-item\"><a href=\"javascript:reload_spec(1,'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageFirst']; ?>\" class=\"page-link\"><?php echo $this->lang['common']['href']['pageFirst']; ?></a></li>";
         }
 
         if (result.pageRow.p * 10 > 0) {
-            _str_page += "<li><a href=\"javascript:reload_spec(" + (result.pageRow.p * 10) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pagePrevList']; ?>\">...</a></li>";
+            _str_page += "<li class=\"page-item\"><a href=\"javascript:reload_spec(" + (result.pageRow.p * 10) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pagePrevList']; ?>\" class=\"page-link\">...</a></li>";
         }
 
-        _str_page += "<li";
+        _str_page += "<li class=\"page-item";
         if (result.pageRow.page <= 1) {
-            _str_page += " class=\"disabled\"";
+            _str_page += " disabled";
         }
-        _str_page += ">";
+        _str_page += "\">";
             if (result.pageRow.page <= 1) {
-                _str_page += "<span title=\"<?php echo $this->lang['common']['href']['pagePrev']; ?>\"><span class=\"glyphicon glyphicon-menu-left\"></span></span>";
+                _str_page += "<span title=\"<?php echo $this->lang['common']['href']['pagePrev']; ?>\" class=\"page-link\"><span class=\"oi oi-chevron-left\"></span></span>";
             } else {
-                _str_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page - 1) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pagePrev']; ?>\"><span class=\"glyphicon glyphicon-menu-left\"></span></a>";
+                _str_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page - 1) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pagePrev']; ?>\" class=\"page-link\"><span class=\"oi oi-chevron-left\"></span></a>";
             }
         _str_page += "</li>";
 
         for (_iii = result.pageRow.begin; _iii <= result.pageRow.end; _iii++) {
-            _str_page += "<li";
+            _str_page += "<li class=\"page-item";
                 if (_iii == result.pageRow.page) {
-                    _str_page += " class=\"active\"";
+                    _str_page += " active";
                 }
-            _str_page += ">";
+            _str_page += "\">";
             if (_iii == result.pageRow.page) {
-                _str_page += "<span>" + _iii + "</span>";
+                _str_page += "<span class=\"page-link\">" + _iii + "</span>";
             } else {
-                _str_page += "<a href=\"javascript:reload_spec(" + _iii + ",'" + _key + "');\" title=\"" + _iii + "\">" + _iii + "</a>";
+                _str_page += "<a href=\"javascript:reload_spec(" + _iii + ",'" + _key + "');\" title=\"" + _iii + "\" class=\"page-link\">" + _iii + "</a>";
             }
             _str_page += "</li>";
         }
 
-        _str_page += "<li";
+        _str_page += "<li class=\"page-item";
         if (result.pageRow.page >= result.pageRow.total) {
-            _str_page += " class=\"disabled\"";
+            _str_page += " disabled";
         }
-        _str_page += ">";
+        _str_page += "\">";
             if (result.pageRow.page >= result.pageRow.total) {
-                _str_page += "<span title=\"<?php echo $this->lang['common']['href']['pageNext']; ?>\"><span class=\"glyphicon glyphicon-menu-right\"></span></span>";
+                _str_page += "<span title=\"<?php echo $this->lang['common']['href']['pageNext']; ?>\" class=\"page-link\"><span class=\"oi oi-chevron-right\"></span></span>";
             } else {
-                _str_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page + 1) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageNext']; ?>\"><span class=\"glyphicon glyphicon-menu-right\"></span></a>";
+                _str_page += "<a href=\"javascript:reload_spec(" + (result.pageRow.page + 1) + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageNext']; ?>\" class=\"page-link\"><span class=\"oi oi-chevron-right\"></span></a>";
             }
         _str_page += "</li>";
 
         if (_iii < result.pageRow.total) {
-            _str_page += "<li><a href=\"javascript:reload_spec(" + _iii + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageNextList']; ?>\">...</a></li>";
+            _str_page += "<li class=\"page-item\"><a href=\"javascript:reload_spec(" + _iii + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageNextList']; ?>\" class=\"page-link\">...</a></li>";
         }
 
         if (result.pageRow.page < result.pageRow.total) {
-            _str_page += "<li><a href=\"javascript:reload_spec(" + result.pageRow.total + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageLast']; ?>\"><?php echo $this->lang['common']['href']['pageLast']; ?></a></li>";
+            _str_page += "<li class=\"page-item\"><a href=\"javascript:reload_spec(" + result.pageRow.total + ",'" + _key + "');\" title=\"<?php echo $this->lang['common']['href']['pageLast']; ?>\" class=\"page-link\"><?php echo $this->lang['common']['href']['pageLast']; ?></a></li>";
         }
     _str_page += "</ul>";
 
@@ -132,7 +133,7 @@ function get_list(_value) {
         "<td class=\"text-nowrap bg-td-xs\">" + _value.spec_id + "</td>" +
         "<td>" + _value.spec_name + "</td>" +
         "<td class=\"text-nowrap bg-td-sm\">" +
-            "<span class=\"label label-" + _css_status + " bg-label\">" +
+            "<span class=\"badge badge-" + _css_status + "\">" +
                 _spec_status[_value.spec_status] +
             "</span>" +
         "</td>" +
@@ -145,7 +146,7 @@ function reload_spec(_page, _key) {
     var _str_appent_spec = "";
     var _str_appent_page = "";
 
-    $.getJSON("<?php echo BG_URL_CONSOLE; ?>request.php?mod=spec&act=list&page=" + _page + "&key=" + _key, function(result){
+    $.getJSON("<?php echo BG_URL_CONSOLE; ?>index.php?m=spec&c=request&a=list&page=" + _page + "&key=" + _key, function(result){
         //alert(result.pageRow.page);
         _str_appent_page = get_page(result, _page, _key);
 
@@ -168,9 +169,9 @@ function reload_spec(_page, _key) {
 
 function insertSpec(spec_name, spec_id, is_checked) {
     if (is_checked) {
-        var _spec_list_html = "<div class=\"checkbox\" id=\"spec_checkbox_" + spec_id + "\">" +
-            "<label for=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids_" + spec_id + "\">" +
-                "<input type=\"checkbox\" id=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids_" + spec_id + "\" checked name=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids[]\" value=\"" + spec_id + "\">" +
+        var _spec_list_html = "<div class=\"form-check\" id=\"spec_checkbox_" + spec_id + "\">" +
+            "<label for=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids_" + spec_id + "\" class=\"form-check-label\">" +
+                "<input type=\"checkbox\" id=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids_" + spec_id + "\" checked name=\"<?php echo $this->tplData['search']['target']; ?>_spec_ids[]\" value=\"" + spec_id + "\" class=\"form-check-input\">" +
                 spec_name +
             "</label>" +
         "</div>";

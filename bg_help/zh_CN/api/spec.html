@@ -3,7 +3,7 @@
 <p>用于显示网站内所有的专题。</p>
 
 <p class="text-info">URL</p>
-<p><span class="text-primary">http://www.domain.com/bg_api/api.php?mod=spec</span></p>
+<p><span class="text-primary">http://www.domain.com/bg_api/api.php?m=spec&c=api</span></p>
 
 <p class="text-info">HTTP 请求方式</p>
 <p>GET</p>
@@ -11,21 +11,20 @@
 <p class="text-info">返回格式</p>
 <p>JSON</p>
 
-<div class="panel panel-default">
-    <div class="panel-heading">请求参数</div>
+    <h4>请求参数</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th class="text-nowrap">名称</th>
                     <th class="text-nowrap">类型</th>
-                    <th class="text-nowrap">必须</th>
-                    <th>具体描述</th>
+                    <th class="text-nowrap">必需</th>
+                    <th>描述</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-nowrap">act</td>
+                    <td class="text-nowrap">a</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
                     <td>接口调用动作，值只能为 list。</td>
@@ -34,13 +33,13 @@
                     <td class="text-nowrap">app_id</td>
                     <td class="text-nowrap">int</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">app_key</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">key</td>
@@ -63,12 +62,10 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">返回结果</div>
+    <h4>返回结果</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -90,51 +87,50 @@
                     <td class="text-nowrap">pageRow</td>
                     <td class="text-nowrap">array</td>
                     <td class="text-nowrap">分页参数</td>
-                    <td>详情请查看 <a href="{BG_URL_HELP}index.php?mod=api&act=page">分页参数</a></td>
+                    <td>详情请查看 <a href="{$BG_URL_HELP}index.php?m=api&a=page">分页参数</a></td>
                 </tr>
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
 <hr>
 <div>&nbsp;</div>
 
-<a name="show"></a>
+<a name="read"></a>
 <h3>专题显示</h3>
 <p class="text-info">接口说明</p>
 <p>用于显示当前专题的详细信息。</p>
 
 <p class="text-info">URL</p>
-<p><span class="text-primary">http://www.domain.com/bg_api/api.php?mod=spec</span></p>
+<p><span class="text-primary">http://www.domain.com/bg_api/api.php?m=spec&c=api</span></p>
 
 <p class="text-info">HTTP 请求方式</p>
 <p>GET</p>
 
 <p class="text-info">返回格式</p>
 <p>JSON</p>
-<div class="panel panel-default">
-    <div class="panel-heading">请求参数</div>
+
+    <h4>请求参数</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th class="text-nowrap">名称</th>
                     <th class="text-nowrap">类型</th>
-                    <th class="text-nowrap">必须</th>
-                    <th>具体描述</th>
+                    <th class="text-nowrap">必需</th>
+                    <th>描述</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-nowrap">act</td>
+                    <td class="text-nowrap">a</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
                     <td>接口调用动作，值只能为 read。</td>
@@ -143,13 +139,13 @@
                     <td class="text-nowrap">app_id</td>
                     <td class="text-nowrap">int</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">app_key</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">spec_id</td>
@@ -166,14 +162,12 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
 <a name="result"></a>
 
-<div class="panel panel-default">
-    <div class="panel-heading">返回结果</div>
+    <h4>返回结果</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -189,19 +183,19 @@
                     <td class="text-nowrap">spec_id</td>
                     <td class="text-nowrap">int</td>
                     <td class="text-nowrap">专题 ID</td>
-                    <td> </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">spec_name</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">专题名称</td>
-                    <td> </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">spec_content</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">专题内容</td>
-                    <td> </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">spec_status</td>
@@ -213,18 +207,17 @@
                     <td class="text-nowrap">rcode</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">返回代码</td>
-                    <td>显示当前专题的状态，详情请查看 <a href="{BG_URL_HELP}index.php?mod=api&act=rcode" target="_blank">返回代码</a>。</td>
+                    <td>显示当前专题的状态，详情请查看 <a href="{$BG_URL_HELP}index.php?m=api&a=rcode" target="_blank">返回代码</a>。</td>
                 </tr>
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<h4>返回结果示例</h4>
+<h5>返回结果示例</h5>
 <p>
-<pre><code class="language-javascript">{
+<pre class="border rounded"><code class="language-javascript">{
     &quot;spec_id&quot;: &quot;11&quot;, //专题 ID
     &quot;spec_name&quot;: &quot;专题名称&quot;, //专题名称
     &quot;spec_status&quot;: &quot;show&quot;, //状态

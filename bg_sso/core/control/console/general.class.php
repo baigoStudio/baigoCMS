@@ -9,7 +9,6 @@ if (!defined('IN_BAIGO')) {
     exit('Access Denied');
 }
 
-
 /*-------------控制中心通用类-------------*/
 class GENERAL_CONSOLE {
 
@@ -50,7 +49,7 @@ class GENERAL_CONSOLE {
         admin_open_label OPEN ID
         admin_open_site OPEN 站点
         admin_note 备注
-        group_allow 权限
+        admin_allow 权限
         str_rcode 提示信息
     */
     function ssin_begin() {
@@ -91,7 +90,7 @@ class GENERAL_CONSOLE {
             );
         }
 
-        if ($this->hash_process($_arr_userRow) != fn_session('admin_hash') || $this->hash_process($_arr_userRow) != fn_cookie('admin_hash')){
+        if ($this->hash_process($_arr_adminRow) != fn_session('admin_hash') || $this->hash_process($_arr_adminRow) != fn_cookie('admin_hash')){
             $this->ssin_end();
             return array(
                 'rcode'     => 'x020403',
@@ -110,10 +109,10 @@ class GENERAL_CONSOLE {
 
 
     function ssin_login($arr_loginRow) {
-        fn_session('admin_id', 'mk', $arr_loginRow['user_id']);
+        fn_session('admin_id', 'mk', $arr_loginRow['admin_id']);
         fn_session('admin_ssin_time', 'mk', time());
         fn_session('admin_hash', 'mk', $this->hash_process($arr_loginRow));
-        fn_cookie('admin_id', 'mk', $arr_loginRow['user_id'], 3600 * 24 * 30, BG_URL_CONSOLE);
+        fn_cookie('admin_id', 'mk', $arr_loginRow['admin_id'], 3600 * 24 * 30, BG_URL_CONSOLE);
         fn_cookie('admin_ssin_time', 'mk', time(), 3600 * 24 * 30, BG_URL_CONSOLE);
         fn_cookie('admin_hash', 'mk', $this->hash_process($arr_loginRow), 3600 * 24 * 30, BG_URL_CONSOLE);
 
@@ -155,7 +154,7 @@ class GENERAL_CONSOLE {
 
         if (defined('BG_INSTALL_PUB') && PRD_SSO_PUB > BG_INSTALL_PUB) { //如果小于当前版本
             $_str_rcode = 'x030411';
-            $_str_jump  = BG_URL_INSTALL . 'index.php?mod=upgrade';
+            $_str_jump  = BG_URL_INSTALL . 'index.php?m=upgrade';
         }
 
         if (!fn_isEmpty($_str_rcode)) {
@@ -186,7 +185,7 @@ class GENERAL_CONSOLE {
 
             if ($GLOBALS['view'] != 'iframe') {
                 $_str_forwart   = fn_forward(fn_server('REQUEST_URI'));
-                $_str_jump      = BG_URL_CONSOLE . 'index.php?mod=login&forward=' . $_str_forwart;
+                $_str_jump      = BG_URL_CONSOLE . 'index.php?m=login&forward=' . $_str_forwart;
             }
         }
 
@@ -214,7 +213,7 @@ class GENERAL_CONSOLE {
         }
     }
 
-    private function hash_process($arr_userRow) {
-        return fn_baigoCrypt($arr_userRow['user_id'] . $arr_userRow['user_name'] . $arr_userRow['user_time_login'], fn_server('HTTP_USER_AGENT') . $arr_userRow['user_ip']);
+    private function hash_process($arr_adminRow) {
+        return fn_baigoCrypt($arr_adminRow['admin_id'] . $arr_adminRow['admin_name'] . $arr_adminRow['admin_time_login'], $arr_adminRow['admin_ip']);
     }
 }

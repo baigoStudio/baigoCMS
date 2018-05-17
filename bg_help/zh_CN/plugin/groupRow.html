@@ -1,0 +1,78 @@
+<h3>群组数组</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">名称</th>
+                    <th class="text-nowrap">类型</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">group_id</td>
+                    <td class="text-nowrap">int</td>
+                    <td>添加群组时，ID 为 0。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">group_name</td>
+                    <td class="text-nowrap">string</td>
+                    <td>群组名</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">group_note</td>
+                    <td class="text-nowrap">string</td>
+                    <td>备注</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">group_type</td>
+                    <td class="text-nowrap">string</td>
+                    <td>群组类型，可能的值为 admin（管理员组）、user（用户组）。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">group_status</td>
+                    <td class="text-nowrap">string</td>
+                    <td>群组状态，可能的值为 enable（启用）、disable（禁用）。</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">group_allow</td>
+                    <td class="text-nowrap">array</td>
+                    <td>管理权限</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div>&nbsp;</div>
+
+<h5>数据示例</h5>
+<p>
+<pre class="border rounded"><code class="language-php">Array (
+    [group_id] => 1
+    [group_name] => 超级管理组
+    [group_note] => 拥有所有权限
+    [group_allow] => Array (
+        [article] => Array (
+            [browse] => 1
+            [add] => 1
+            [edit] => 1
+            [del] => 1
+            [approve] => 1
+            [tag] => 1
+            [mark] => 1
+            [custom] => 1
+            [source] => 1
+        )
+        [spec] => Array (
+            [browse] => 1
+            [add] => 1
+            [edit] => 1
+            [del] => 1
+        )
+    )
+    [group_type] => admin
+    [group_status] => enable
+    [rcode] => y040102
+)</code></pre>
+</p>

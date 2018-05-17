@@ -2,14 +2,14 @@
         </div>
     </div>
 
-    <footer class="container-fluid bg-footer bg-info clearfix">
-        <div class="pull-left">
-            <img class="img-responsive" src="<?php echo BG_URL_STATIC; ?>console/<?php echo BG_DEFAULT_UI; ?>/image/logo.png">
+    <footer class="container-fluid bg-secondary text-light p-3 clearfix mt-3">
+        <div class="float-left">
+            <img class="img-fluid" src="<?php echo BG_URL_STATIC; ?>console/<?php echo BG_DEFAULT_UI; ?>/image/logo.png">
         </div>
-        <div class="pull-right">
+        <div class="float-right">
             <?php echo PRD_CMS_POWERED, ' ';
             if (BG_DEFAULT_UI == 'default') { ?>
-                <a href="<?php echo PRD_CMS_URL; ?>" target="_blank"><?php echo PRD_CMS_NAME; ?></a>
+                <a href="<?php echo PRD_CMS_URL; ?>" class="text-light" target="_blank"><?php echo PRD_CMS_NAME; ?></a>
             <?php } else {
                 echo BG_DEFAULT_UI, ' CMS ';
             }
@@ -22,21 +22,21 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <div id="gen_msg_box">
-                            <span id="gen_msg_icon" class="glyphicon glyphicon-refresh bg-spin"></span>
+                        <div class="modal-title" id="gen_msg_box">
+                            <span id="gen_msg_icon" class="oi oi-loop-circular bg-spin"></span>
                             <span id="gen_msg_text">
                                 <?php echo $this->lang['common']['page']['gening']; ?>
                             </span>
                         </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="embed-responsive embed-responsive-4by3">
+                        <div class="embed-responsive embed-responsive-1by1">
                             <iframe class="embed-responsive-item"></iframe>
                         </div>
-                    </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                             <?php echo $this->lang['common']['btn']['close']; ?>
                         </button>
                     </div>
@@ -51,9 +51,9 @@
         		var _url          = _obj_button.data("url");
         		$("#gen_modal iframe").attr("src", _url);
         	}).on("hidden.bs.modal", function(){
-            	$("#gen_modal iframe").attr("src", '');
-            	$("#gen_msg_box").attr("class", '');
-            	$("#gen_msg_icon").attr("class", "glyphicon glyphicon-refresh bg-spin");
+            	$("#gen_modal iframe").attr("src", "");
+            	$("#gen_msg_box").attr("class", "");
+            	$("#gen_msg_icon").attr("class", "oi oi-loop-circular bg-spin");
             	$("#gen_msg_text").text("<?php echo $this->lang['common']['page']['gening']; ?>");
         	});
     	});

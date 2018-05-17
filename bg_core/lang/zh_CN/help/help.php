@@ -19,9 +19,11 @@ return array(
         'manual'    => '手动安装 / 升级',
         'deploy'    => '高级部署',
         'console'   => '管理后台',
+        'gather'    => '内容采集',
         'doc'       => '开发文档',
         'tpl'       => '模板文档',
         'api'       => 'API 接口文档',
+        'plugin'    => '插件文档',
     ),
 
     'label' => array(
@@ -88,9 +90,19 @@ return array(
         'admin'       => '管理员',
         'group'       => '群组管理',
         'link'        => '链接',
+        'plugin'      => '插件管理',
         'opt'         => '系统设置',
         'custom'      => '自定义字段',
         'app'         => 'API 授权设置',
+    ),
+
+    'gather'     => array(
+        'outline'       => '内容采集概述',
+        'gather_gather' => '内容采集',
+        'gather_list'   => '采集审核入库',
+        'gsite_list'    => '采集点管理',
+        'step_list'     => '列表解析',
+        'step_content'  => '内容解析',
     ),
 
     'tpl'     => array(
@@ -119,5 +131,18 @@ return array(
         'call'    => '调用',
         'attach'  => '附件 / 缩略图',
         'rcode'   => '返回代码',
+    ),
+
+    'plugin' => array(
+        'outline'       => '插件概述',
+        'create'        => '创建插件',
+        'programming'   => '编写插件',
+        'obj_plugin'    => '插件对象',
+        'data'          => '保存插件数据',
+        'class_file'    => '文件系统类',
+        'obj_db'        => '数据库对象',
+        'hook'          => '插件钩子',
+        'action'        => '动作 Action',
+        'filter'        => '过滤器 Filter',
     ),
 );

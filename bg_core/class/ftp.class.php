@@ -50,85 +50,7 @@ class CLASS_FTP {
     }
 
 
-    /** 上传文件
-     * up_file function.
-     *
-     * @access public
-     * @param mixed $path_local 本地路径
-     * @param mixed $path_remote 远程路径
-     * @return void
-     */
-    function up_file($path_local, $path_remote) {
-        $_arr_dirRow      = $this->mk_dir($path_remote); //建立目录
-        $this->ftp_status = @ftp_put($this->ftp_conn, $path_remote, $path_local, FTP_BINARY); //上传
-        return $this->ftp_status;
-    }
-
-
-    /** 删除文件
-     * del_file function.
-     *
-     * @access public
-     * @param mixed $path_remote 远程路径
-     * @return void
-     */
-    function del_file($path_remote) {
-        $this->ftp_status = @ftp_delete($this->ftp_conn, $path_remote);
-        return $this->ftp_status;
-    }
-
-
-    function del_dir($path_remote) {
-        if (stristr($path_remote, '.')) {
-            $path_remote = dirname($path_remote);
-        }
-        $_arr_dir = $this->list_dir($path_remote); //逐级列出
-
-        //print_r($_arr_dir);
-
-        foreach ($_arr_dir as $_key=>$_value) {
-            if ($_value['type'] == 'file') {
-                $this->del_file($_value['name']);  //删除
-            } else {
-                $this->del_dir($_value['name']); //递归
-            }
-        }
-
-        @ftp_rmdir($this->ftp_conn, $path_remote);
-    }
-
-
-    /** 创建目录
-     * mk_dir function.
-     *
-     * @access public
-     * @param mixed $path_remote 远程路径
-     * @return void
-     */
-    function mk_dir($path_remote) {
-        if (stristr($path_remote, '.')) {
-            $path_remote = dirname($path_remote);
-        }
-        if (@ftp_chdir($this->ftp_conn, $path_remote) || stristr($path_remote, '.')) { //已存在
-            $this->ftp_status = true;
-        } else {
-            //创建目录
-            if ($this->mk_dir(dirname($path_remote))) {
-                if (@ftp_mkdir($this->ftp_conn, $path_remote)) {
-                    $this->ftp_status = true;
-                } else {
-                    $this->ftp_status = false; //失败
-                }
-            } else {
-                $this->ftp_status = false;
-            }
-        }
-
-        return $this->ftp_status;
-    }
-
-
-    function list_dir($path_remote) {
+    function dir_list($path_remote) {
         if (stristr($path_remote, '.')) {
             $path_remote = dirname($path_remote);
         }
@@ -152,6 +74,80 @@ class CLASS_FTP {
         return $_arr_return;
     }
 
+    /** 创建目录
+     * dir_mk function.
+     *
+     * @access public
+     * @param mixed $path_remote 远程路径
+     * @return void
+     */
+    function dir_mk($path_remote) {
+        if (stristr($path_remote, '.')) {
+            $path_remote = dirname($path_remote);
+        }
+        if (@ftp_chdir($this->ftp_conn, $path_remote) || stristr($path_remote, '.')) { //已存在
+            $this->ftp_status = true;
+        } else {
+            //创建目录
+            if ($this->dir_mk(dirname($path_remote))) {
+                if (@ftp_mkdir($this->ftp_conn, $path_remote)) {
+                    $this->ftp_status = true;
+                } else {
+                    $this->ftp_status = false; //失败
+                }
+            } else {
+                $this->ftp_status = false;
+            }
+        }
+
+        return $this->ftp_status;
+    }
+
+    function dir_del($path_remote) {
+        if (stristr($path_remote, '.')) {
+            $path_remote = dirname($path_remote);
+        }
+        $_arr_dir = $this->dir_list($path_remote); //逐级列出
+
+        //print_r($_arr_dir);
+
+        foreach ($_arr_dir as $_key=>$_value) {
+            if ($_value['type'] == 'file') {
+                $this->file_del($_value['name']);  //删除
+            } else {
+                $this->dir_del($_value['name']); //递归
+            }
+        }
+
+        @ftp_rmdir($this->ftp_conn, $path_remote);
+    }
+
+
+    /** 上传文件
+     * file_upload function.
+     *
+     * @access public
+     * @param mixed $path_local 本地路径
+     * @param mixed $path_remote 远程路径
+     * @return void
+     */
+    function file_upload($path_local, $path_remote) {
+        $_arr_dirRow      = $this->dir_mk($path_remote); //建立目录
+        $this->ftp_status = @ftp_put($this->ftp_conn, $path_remote, $path_local, FTP_BINARY); //上传
+        return $this->ftp_status;
+    }
+
+    /** 删除文件
+     * file_del function.
+     *
+     * @access public
+     * @param mixed $path_remote 远程路径
+     * @return void
+     */
+    function file_del($path_remote) {
+        $this->ftp_status = @ftp_delete($this->ftp_conn, $path_remote);
+        return $this->ftp_status;
+    }
 
     /** 关闭连接
      * close function.

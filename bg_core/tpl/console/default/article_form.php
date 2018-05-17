@@ -1,64 +1,59 @@
-<?php function custom_list_form($arr_customRows, $article_customs = array(), $lang) {
+<?php function custom_list_form($arr_customRows, $article_customs = array(), $lang = array()) {
     if (!fn_isEmpty($arr_customRows)) {
         foreach ($arr_customRows as $key=>$value) {
             if (isset($value['custom_childs']) && !fn_isEmpty($value['custom_childs'])) { ?>
                 <div class="custom_group custom_group_<?php echo $value['custom_cate_id'] ; ?> col-md-12">
-                    <h4>
-                        <span class="label label-default"><?php echo $value['custom_name'] ; ?></span>
-                    </h4>
+                    <h5>
+                        <span class="badge badge-secondary"><?php echo $value['custom_name'] ; ?></span>
+                    </h5>
                 </div>
                 <?php custom_list_form($value['custom_childs'], $article_customs, $lang);
 
             } else { ?>
-                <div class="custom_group custom_group_<?php echo $value['custom_cate_id'] ; ?> col-md-6">
-                    <div class="form-group">
-                        <div id="group_article_customs_<?php echo $value['custom_id'] ; ?>">
-                            <label class="control-label">
-                                <?php echo $value['custom_name'] ; ?>
-                                <span id="msg_article_custom_<?php echo $value['custom_id'] ; ?>"></span>
-                            </label>
+                <div class="custom_group custom_group_<?php echo $value['custom_cate_id'] ; ?> form-group col-md-6">
+                    <label><?php echo $value['custom_name'] ; ?></label>
 
-                            <?php switch ($value['custom_type']) {
-                                case "radio":
-                                    foreach ($value['custom_opt'] as $key_option=>$value_option) { ?>
-                                        <div class="bg-radio">
-                                            <label for="article_customs_<?php echo $value['custom_id'] ; ?>_<?php echo $key_option ; ?>">
-                                                <input type="radio" id="article_customs_<?php echo $value['custom_id'] ; ?>_<?php echo $key_option ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" value="<?php echo $value_option ; ?>" data-validate="article_customs_<?php echo $value['custom_id'] ; ?>" <?php if (isset($article_customs['custom_' . $value['custom_id']]) && $article_customs['custom_' . $value['custom_id']] == $value_option) { ?> checked<?php } ?>>
-                                                <?php echo $value_option ; ?>
-                                            </label>
-                                        </div>
-                                    <?php }
-                                break;
+                    <?php switch ($value['custom_type']) {
+                        case 'radio':
+                            foreach ($value['custom_opt'] as $key_option=>$value_option) { ?>
+                                <div class="form-check">
+                                    <label for="article_customs_<?php echo $value['custom_id'] ; ?>_<?php echo $key_option ; ?>" class="form-check-label">
+                                        <input type="radio" id="article_customs_<?php echo $value['custom_id'] ; ?>_<?php echo $key_option ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" value="<?php echo $value_option ; ?>" data-validate="article_customs_<?php echo $value['custom_id'] ; ?>" <?php if (isset($article_customs['custom_' . $value['custom_id']]) && $article_customs['custom_' . $value['custom_id']] == $value_option) { ?> checked<?php } ?> class="form-check-input">
+                                        <?php echo $value_option ; ?>
+                                    </label>
+                                </div>
+                            <?php }
+                        break;
 
-                                case "select": ?>
-                                    <select id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" data-validate class="form-control">
-                                        <option value=""><?php echo $lang['option']['pleaseSelect']; ?></option>
-                                        <?php foreach ($value['custom_opt'] as $key_option=>$value_option) { ?>
-                                            <option
-                                            <?php if (isset($article_customs['custom_' . $value['custom_id']]) && $article_customs['custom_' . $value['custom_id']] == $value_option) { ?>
-                                                 selected
-                                            <?php } ?>
-                                             value="<?php echo $value_option ; ?>">
-                                                <?php echo $value_option ; ?>
-                                            </option>
-                                        <?php } ?>
-                                    </select>
-                                <?php break;
+                        case 'select': ?>
+                            <select id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" data-validate class="form-control">
+                                <option value=""><?php echo $lang['option']['pleaseSelect']; ?></option>
+                                <?php foreach ($value['custom_opt'] as $key_option=>$value_option) { ?>
+                                    <option
+                                    <?php if (isset($article_customs['custom_' . $value['custom_id']]) && $article_customs['custom_' . $value['custom_id']] == $value_option) { ?>
+                                         selected
+                                    <?php } ?>
+                                     value="<?php echo $value_option ; ?>">
+                                        <?php echo $value_option ; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        <?php break;
 
-                                case "textarea": ?>
-                                    <textarea id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" data-validate class="form-control bg-textarea-md">
-                                        <?php if (isset($article_customs['custom_' . $value['custom_id']])) {
-                                            echo $article_customs['custom_' . $value['custom_id']];
-                                        } ?>
-                                    </textarea>
-                                <?php break;
+                        case 'textarea': ?>
+                            <textarea id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" data-validate class="form-control bg-textarea-md">
+                                <?php if (isset($article_customs['custom_' . $value['custom_id']])) {
+                                    echo $article_customs['custom_' . $value['custom_id']];
+                                } ?>
+                            </textarea>
+                        <?php break;
 
-                                default: ?>
-                                    <input type="text" id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" value="<?php if (isset($article_customs['custom_' . $value['custom_id']])) { echo $article_customs['custom_' . $value['custom_id']];} ?>" data-validate class="form-control">
-                                <?php break;
-                            } ?>
-                        </div>
-                    </div>
+                        default: ?>
+                            <input type="text" id="article_customs_<?php echo $value['custom_id'] ; ?>" name="article_customs[<?php echo $value['custom_id'] ; ?>]" value="<?php if (isset($article_customs['custom_' . $value['custom_id']])) { echo $article_customs['custom_' . $value['custom_id']];} ?>" data-validate class="form-control">
+                        <?php break;
+                    } ?>
+
+                    <small class="form-text" id="msg_article_custom_<?php echo $value['custom_id'] ; ?>"></small>
                 </div>
             <?php }
         }
@@ -79,9 +74,8 @@ function custom_validataJson($arr_customRows, $rcode = array()) {
                 validate: {
                     type: "<?php echo $value['custom_type']; ?>",
                     <?php if ($value['custom_type'] != "radio" && $value['custom_type'] != "select") { ?>
-                        format: "<?php echo $value['custom_format']; ?>",
+                        format: "<?php echo $value['custom_format']; ?>"
                     <?php } ?>
-                    group: "#group_article_customs_<?php echo $value['custom_id'] ; ?>"
                 },
                 msg: {
                     selector: "#msg_article_custom_<?php echo $value['custom_id']; ?>",
@@ -124,54 +118,53 @@ $cfg = array(
     'tagmanager'     => 'true',
     'upload'         => 'true',
     'pathInclude'    => BG_PATH_TPLSYS . 'console' . DS . 'default' . DS . 'include' . DS,
-    'str_url'        => BG_URL_CONSOLE . 'index.php?mod=article',
+    'str_url'        => BG_URL_CONSOLE . 'index.php?m=article',
 );
 
 include($cfg['pathInclude'] . 'function.php');
 include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=article&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=article#form" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=article&a=list" class="nav-link">
+                <span class="oi oi-chevron-left"></span>
+                <?php echo $this->lang['common']['href']['back']; ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo BG_URL_HELP; ?>index.php?m=console&a=article#form" class="nav-link" target="_blank">
+                <span class="badge badge-pill badge-primary">
+                    <span class="oi oi-question-mark"></span>
+                </span>
+                <?php echo $this->lang['mod']['href']['help']; ?>
+            </a>
+        </li>
+    </ul>
 
     <form name="article_form" id="article_form">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
-        <input type="hidden" name="act" value="submit">
+        <input type="hidden" name="a" value="submit">
         <input type="hidden" name="article_id" value="<?php echo $this->tplData['articleRow']['article_id']; ?>">
         <input type="hidden" name="gather_id" value="<?php echo $this->tplData['gather_id']; ?>">
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
-                            <div id="group_article_title">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['title']; ?><span id="msg_article_title">*</span></label>
-                                <input type="text" name="article_title" id="article_title" value="<?php echo $this->tplData['articleRow']['article_title']; ?>" data-validate class="form-control">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['title']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="article_title" id="article_title" value="<?php echo $this->tplData['articleRow']['article_title']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_article_title"></small>
                         </div>
 
-                        <div class="form-group" data-spy="affix" data-offset-top="260">
+                        <div class="form-group">
                             <div class="btn-group">
                                 <a href="#article_modal" class="btn btn-success" data-toggle="modal" data-act="attach" data-id="<?php echo $this->tplData['articleRow']['article_id']; ?>">
-                                    <span class="glyphicon glyphicon-picture"></span>
+                                    <span class="oi oi-image"></span>
                                     <?php echo $this->lang['mod']['href']['uploadList']; ?>
                                 </a>
                                 <?php if ($this->tplData['articleRow']['article_id'] > 0) { ?>
-                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=attach&act=article&article_id=<?php echo $this->tplData['articleRow']['article_id']; ?>" class="btn btn-default">
+                                    <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=attach&a=article&article_id=<?php echo $this->tplData['articleRow']['article_id']; ?>" class="btn btn-outline-secondary">
                                         <?php echo $this->lang['mod']['href']['attachArticle']; ?>
                                     </a>
                                 <?php } ?>
@@ -179,70 +172,66 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['content']; ?></label>
+                            <label><?php echo $this->lang['mod']['label']['content']; ?></label>
                             <textarea name="article_content" id="article_content" class="tinymce bg-textarea-lg"><?php echo $this->tplData['articleRow']['article_content']; ?></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['excerptType']; ?></label>
+                            <label><?php echo $this->lang['mod']['label']['excerptType']; ?></label>
                             <div>
                                 <?php foreach ($this->opt['base']['list']['BG_SITE_EXCERPT_TYPE']['option'] as $key=>$value) { ?>
-                                    <label for="article_excerpt_type_<?php echo $key; ?>" class="radio-inline">
-                                        <input type="radio" name="article_excerpt_type" id="article_excerpt_type_<?php echo $key; ?>" <?php if ($this->tplData['articleRow']['article_excerpt_type'] == $key) { ?>checked<?php } ?> value="<?php echo $key; ?>" class="article_excerpt_type">
-                                        <?php if (isset($this->lang['opt']['base']['list']['BG_SITE_EXCERPT_TYPE']['option'][$key])) {
-                                            echo $this->lang['opt']['base']['list']['BG_SITE_EXCERPT_TYPE']['option'][$key];
-                                        } else {
-                                            echo $value;
-                                        } ?>
-                                    </label>
+                                    <div class="form-check form-check-inline">
+                                        <label for="article_excerpt_type_<?php echo $key; ?>" class="form-check-label">
+                                            <input type="radio" name="article_excerpt_type" id="article_excerpt_type_<?php echo $key; ?>" <?php if ($this->tplData['articleRow']['article_excerpt_type'] == $key) { ?>checked<?php } ?> value="<?php echo $key; ?>" class="article_excerpt_type" class="form-check-input">
+                                            <?php if (isset($this->lang['opt']['base']['list']['BG_SITE_EXCERPT_TYPE']['option'][$key])) {
+                                                echo $this->lang['opt']['base']['list']['BG_SITE_EXCERPT_TYPE']['option'][$key];
+                                            } else {
+                                                echo $value;
+                                            } ?>
+                                        </label>
+                                    </div>
                                 <?php } ?>
                             </div>
                         </div>
 
                         <div id="group_article_excerpt">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['excerpt']; ?></label>
+                            <label><?php echo $this->lang['mod']['label']['excerpt']; ?></label>
                             <div class="form-group">
                                 <textarea name="article_excerpt" id="article_excerpt" class="tinymce bg-textarea-md"><?php echo $this->tplData['articleRow']['article_excerpt']; ?></textarea>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['tag']; ?><span id="msg_article_tag"></span></label>
+                            <label><?php echo $this->lang['mod']['label']['tag']; ?></label>
                             <div class="tm-input-group form-inline">
                                 <input type="text" name="article_tag" id="article_tag" data-validate class="form-control tm-input tm-input-success">
-                                <button type="button" class="btn btn-info btn-sm tm-btn" id="tag_add"><span class="glyphicon glyphicon-plus"></span></button>
+                                <button type="button" class="btn btn-info tm-btn" id="tag_add"><span class="oi oi-plus"></span></button>
                             </div>
+                            <small class="form-text" id="msg_article_tag"></small>
                         </div>
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div id="group_article_source">
-                                                <label class="control-label"><?php echo $this->lang['mod']['label']['source']; ?><span id="msg_article_source"></span></label>
-                                                <input type="text" name="article_source" id="article_source" data-validate value="<?php echo $this->tplData['articleRow']['article_source']; ?>" class="form-control">
-                                            </div>
-                                        </div>
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label><?php echo $this->lang['mod']['label']['source']; ?></label>
+                                        <input type="text" name="article_source" id="article_source" data-validate value="<?php echo $this->tplData['articleRow']['article_source']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_article_source"></small>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div id="group_article_author">
-                                                <label class="control-label"><?php echo $this->lang['mod']['label']['author']; ?><span id="msg_article_author"></span></label>
-                                                <input type="text" name="article_author" id="article_author" data-validate value="<?php echo $this->tplData['articleRow']['article_author']; ?>" class="form-control">
-                                            </div>
-                                        </div>
+                                    <div class="form-group col">
+                                        <label><?php echo $this->lang['mod']['label']['author']; ?></label>
+                                        <input type="text" name="article_author" id="article_author" data-validate value="<?php echo $this->tplData['articleRow']['article_author']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_article_author"></small>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div id="group_article_source_url">
-                                        <label class="control-label"><?php echo $this->lang['mod']['label']['sourceUrl']; ?><span id="msg_article_source"></span></label>
-                                        <input type="text" name="article_source_url" id="article_source_url" data-validate value="<?php echo $this->tplData['articleRow']['article_source_url']; ?>" class="form-control">
-                                    </div>
+                                    <label><?php echo $this->lang['mod']['label']['sourceUrl']; ?></label>
+                                    <input type="text" name="article_source_url" id="article_source_url" data-validate value="<?php echo $this->tplData['articleRow']['article_source_url']; ?>" class="form-control">
+                                    <small class="form-text" id="msg_article_source"></small>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['sourceOften']; ?></label>
+                            <div class="form-group col-md-4">
+                                <label><?php echo $this->lang['mod']['label']['sourceOften']; ?></label>
                                 <select id="article_source_often" class="form-control">
                                     <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                     <?php foreach ($this->tplData['sourceRows'] as $key=>$value) { ?>
@@ -253,72 +242,71 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                         </div>
 
                         <div class="form-group">
-                            <div id="group_article_link" <?php if (!fn_isEmpty($this->tplData['articleRow']['article_link'])) { ?>class="has-warning"<?php } ?>>
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['link']; ?><span id="msg_article_link"></span></label>
+                            <div <?php if (!fn_isEmpty($this->tplData['articleRow']['article_link'])) { ?>class="text-warning"<?php } ?>>
+                                <label><?php echo $this->lang['mod']['label']['link']; ?></label>
                                 <input type="text" name="article_link" id="article_link" value="<?php echo $this->tplData['articleRow']['article_link']; ?>" data-validate class="form-control">
-                                <span class="help-block"><?php echo $this->lang['mod']['label']['linkNote']; ?></span>
+                                <small class="form-text" id="msg_article_link"></small>
+                                <small class="form-text"><?php echo $this->lang['mod']['label']['linkNote']; ?></small>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="row">
-                                <?php if (isset($this->tplData['articleRow']['article_customs'])) {
-                                    custom_list_form($this->tplData['customRows'], $this->tplData['articleRow']['article_customs'], $this->lang['mod']);
-                                } ?>
-                            </div>
+                        <div class="form-row">
+                            <?php if (isset($this->tplData['articleRow']['article_customs'])) {
+                                custom_list_form($this->tplData['customRows'], $this->tplData['articleRow']['article_customs'], $this->lang['mod']);
+                            } ?>
                         </div>
 
                         <div class="bg-submit-box"></div>
+                        <div class="bg-validator-box mt-3"></div>
                     </div>
-                    <div class="panel-footer">
+                    <div class="card-footer">
                         <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang['mod']['btn']['save']; ?></button>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3">
-                <div class="well">
-                    <?php if ($this->tplData['articleRow']['article_id'] > 0) { ?>
-                        <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                            <div class="form-control-static"><?php echo $this->tplData['articleRow']['article_id']; ?></div>
-                        </div>
-                    <?php } ?>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <?php if ($this->tplData['articleRow']['article_id'] > 0) { ?>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                                <div class="form-text"><?php echo $this->tplData['articleRow']['article_id']; ?></div>
+                            </div>
+                        <?php } ?>
 
-                    <div class="form-group">
-                        <div id="group_article_cate_id">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['belongCate']; ?><span id="msg_article_cate_id">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['belongCate']; ?> <span class="text-danger">*</span></label>
                             <select name="article_cate_id" id="article_cate_id" data-validate class="form-control">
                                 <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                 <?php cate_list_opt($this->tplData['cateRows'], $this->tplData['articleRow']['article_cate_id'], true); ?>
                             </select>
+                            <small class="form-text" id="msg_article_cate_id"></small>
                         </div>
-                    </div>
 
-                    <div class="checkbox">
-                        <label for="cate_ids_checkbox">
-                            <input type="checkbox" <?php if (!fn_isEmpty($this->tplData['articleRow']['cate_ids'])) { ?>checked<?php } ?> id="cate_ids_checkbox" name="cate_ids_checkbox" value="1">
-                            <?php echo $this->lang['mod']['label']['attachCate']; ?>
-                        </label>
-                    </div>
-
-                    <div class="form-group bg-overflow-scroll">
-                        <div id="cate_ids_input">
-                            <table class="bg-table-empty">
-                                <tbody>
-                                    <?php cate_list_checkbox($this->tplData['cateRows'], $this->tplData['articleRow']['cate_ids'], "article"); ?>
-                                </tbody>
-                            </table>
+                        <div class="form-check">
+                            <label for="cate_ids_checkbox" class="form-check-label">
+                                <input type="checkbox" <?php if (!fn_isEmpty($this->tplData['articleRow']['cate_ids'])) { ?>checked<?php } ?> id="cate_ids_checkbox" name="cate_ids_checkbox" value="1" class="form-check-input">
+                                <?php echo $this->lang['mod']['label']['attachCate']; ?>
+                            </label>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div id="group_article_status">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['status']; ?><span id="msg_article_status">*</span></label>
+                        <div class="form-group bg-overflow-scroll">
+                            <div id="cate_ids_input">
+                                <table class="bg-table-empty">
+                                    <tbody>
+                                        <?php cate_list_checkbox($this->tplData['cateRows'], $this->tplData['articleRow']['cate_ids'], "article"); ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['status']; ?> <span class="text-danger">*</span></label>
                             <?php foreach ($this->tplData['status'] as $key=>$value) { ?>
-                                <div class="bg-radio">
-                                    <label for="article_status_<?php echo $value; ?>">
-                                        <input type="radio" name="article_status" id="article_status_<?php echo $value; ?>" <?php if ($this->tplData['articleRow']['article_status'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="article_status">
+                                <div class="form-check">
+                                    <label for="article_status_<?php echo $value; ?>" class="form-check-label">
+                                        <input type="radio" name="article_status" id="article_status_<?php echo $value; ?>" <?php if ($this->tplData['articleRow']['article_status'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="article_status" class="form-check-input">
                                         <?php if (isset($this->lang['mod']['status'][$value])) {
                                             echo $this->lang['mod']['status'][$value];
                                         } else {
@@ -327,91 +315,92 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                     </label>
                                 </div>
                             <?php } ?>
+                            <small class="form-text" id="msg_article_status"></small>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div id="group_article_box">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['box']; ?><span id="msg_article_box">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['box']; ?> <span class="text-danger">*</span></label>
                             <?php foreach ($this->tplData['boxs'] as $key=>$value) { ?>
-                                <div class="bg-radio">
-                                    <label for="article_box_<?php echo $value; ?>">
-                                        <input type="radio" name="article_box" id="article_box_<?php echo $value; ?>" <?php if ($this->tplData['articleRow']['article_box'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="article_box">
+                                <div class="form-check">
+                                    <label for="article_box_<?php echo $value; ?>" class="form-check-label">
+                                        <input type="radio" name="article_box" id="article_box_<?php echo $value; ?>" <?php if ($this->tplData['articleRow']['article_box'] == $value) { ?>checked<?php } ?> value="<?php echo $value; ?>" data-validate="article_box" class="form-check-input">
                                         <?php echo $this->lang['mod']['box'][$value]; ?>
                                     </label>
                                 </div>
                             <?php } ?>
+                            <small class="form-text" id="msg_article_box"></small>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['mark']; ?></label>
-                        <select name="article_mark_id" class="form-control">
-                            <option value=""><?php echo $this->lang['mod']['option']['noMark']; ?></option>
-                            <?php foreach ($this->tplData['markRows'] as $key=>$value) { ?>
-                                <option <?php if ($value['mark_id'] == $this->tplData['articleRow']['article_mark_id']) { ?>selected<?php } ?> value="<?php echo $value['mark_id']; ?>"><?php echo $value['mark_name']; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['timeShow']; ?></label>
-                        <input type="text" name="article_time_show" id="article_time_show" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_show']); ?>" data-validate class="form-control input_date">
-                        <span class="help-block"><?php echo $this->lang['mod']['label']['timeNote']; ?></span>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="article_is_time_pub">
-                                <input type="checkbox" <?php if ($this->tplData['articleRow']['article_is_time_pub'] > 0) { ?>checked<?php } ?> name="article_is_time_pub" id="article_is_time_pub" value="1">
-                                <?php echo $this->lang['mod']['label']['timePub']; ?>
-                                <span id="msg_article_time_pub"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div id="time_pub_input">
                         <div class="form-group">
-                            <input type="text" name="article_time_pub" id="article_time_pub" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_pub']); ?>" data-validate class="form-control input_date">
-                            <span class="help-block"><?php echo $this->lang['mod']['label']['timeNote']; ?></span>
+                            <label><?php echo $this->lang['mod']['label']['mark']; ?></label>
+                            <select name="article_mark_id" class="form-control">
+                                <option value=""><?php echo $this->lang['mod']['option']['noMark']; ?></option>
+                                <?php foreach ($this->tplData['markRows'] as $key=>$value) { ?>
+                                    <option <?php if ($value['mark_id'] == $this->tplData['articleRow']['article_mark_id']) { ?>selected<?php } ?> value="<?php echo $value['mark_id']; ?>"><?php echo $value['mark_name']; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="article_is_time_hide">
-                                <input type="checkbox" <?php if ($this->tplData['articleRow']['article_is_time_hide'] > 0) { ?>checked<?php } ?> id="article_is_time_hide" name="article_is_time_hide" value="1">
-                                <?php echo $this->lang['mod']['label']['timeHide']; ?>
-                                <span id="msg_article_time_hide"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="time_hide_input">
                         <div class="form-group">
-                            <input type="text" name="article_time_hide" id="article_time_hide" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_hide']); ?>" data-validate class="form-control input_date">
-                            <span class="help-block"><?php echo $this->lang['mod']['label']['timeNote']; ?></span>
+                            <label><?php echo $this->lang['mod']['label']['timeShow']; ?></label>
+                            <input type="text" name="article_time_show" id="article_time_show" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_show']); ?>" data-validate class="form-control input_date">
+                            <small class="form-text"><?php echo $this->lang['mod']['label']['timeNote']; ?></small>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['common']['label']['spec']; ?></label>
-                        <div class="input-group">
-                            <input type="text" id="spec_key" name="spec_key" placeholder="<?php echo $this->lang['mod']['label']['key']; ?>" class="form-control">
-                            <span class="input-group-btn">
-                                <button type="button" data-target="#article_modal" class="btn btn-info" data-toggle="modal" data-act="spec">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                            </span>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label for="article_is_time_pub" class="form-check-label">
+                                    <input type="checkbox" <?php if ($this->tplData['articleRow']['article_is_time_pub'] > 0) { ?>checked<?php } ?> name="article_is_time_pub" id="article_is_time_pub" value="1" class="form-check-input">
+                                    <?php echo $this->lang['mod']['label']['timePub']; ?>
+                                </label>
+                            </div>
                         </div>
-                        <div id="spec_check_list">
-                            <?php foreach ($this->tplData['specRows'] as $key=>$value) { ?>
-                                <div class="checkbox" id="spec_checkbox_<?php echo $value['spec_id']; ?>">
-                                    <label for="article_spec_ids_<?php echo $value['spec_id']; ?>">
-                                        <input type="checkbox" id="article_spec_ids_<?php echo $value['spec_id']; ?>" checked name="article_spec_ids[]" value="<?php echo $value['spec_id']; ?>">
-                                        <?php echo $value['spec_name']; ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
+
+                        <div id="time_pub_input">
+                            <div class="form-group">
+                                <input type="text" name="article_time_pub" id="article_time_pub" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_pub']); ?>" data-validate class="form-control input_date">
+                                <small class="form-text" id="msg_article_time_pub"></small>
+                                <small class="form-text"><?php echo $this->lang['mod']['label']['timeNote']; ?></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label for="article_is_time_hide" class="form-check-label">
+                                    <input type="checkbox" <?php if ($this->tplData['articleRow']['article_is_time_hide'] > 0) { ?>checked<?php } ?> id="article_is_time_hide" name="article_is_time_hide" value="1" class="form-check-input">
+                                    <?php echo $this->lang['mod']['label']['timeHide']; ?>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="time_hide_input">
+                            <div class="form-group">
+                                <input type="text" name="article_time_hide" id="article_time_hide" value="<?php echo date("Y-m-d H:i", $this->tplData['articleRow']['article_time_hide']); ?>" data-validate class="form-control input_date">
+                                <small class="form-text" id="msg_article_time_hide"></small>
+                                <small class="form-text"><?php echo $this->lang['mod']['label']['timeNote']; ?></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $this->lang['common']['label']['spec']; ?></label>
+                            <div class="input-group">
+                                <input type="text" id="spec_key" name="spec_key" placeholder="<?php echo $this->lang['mod']['label']['key']; ?>" class="form-control">
+                                <span class="input-group-append">
+                                    <button type="button" data-target="#article_modal" class="btn btn-info" data-toggle="modal" data-act="spec">
+                                        <span class="oi oi-magnifying-glass"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <div id="spec_check_list">
+                                <?php foreach ($this->tplData['specRows'] as $key=>$value) { ?>
+                                    <div class="form-check" id="spec_checkbox_<?php echo $value['spec_id']; ?>">
+                                        <label for="article_spec_ids_<?php echo $value['spec_id']; ?>" class="form-check-label">
+                                            <input type="checkbox" id="article_spec_ids_<?php echo $value['spec_id']; ?>" checked name="article_spec_ids[]" value="<?php echo $value['spec_id']; ?>" class="form-check-input">
+                                            <?php echo $value['spec_name']; ?>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -434,73 +423,79 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
         <?php custom_validataJson($this->tplData['customRows'], $this->lang['rcode']); ?>
         article_title: {
             len: { min: 1, max: 300 },
-            validate: { type: "str", format: "text", group: "#group_article_title" },
-            msg: { selector: "#msg_article_title", too_short: "<?php echo $this->lang['rcode']['x120201']; ?>", too_long: "<?php echo $this->lang['rcode']['x120202']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_short: "<?php echo $this->lang['rcode']['x120201']; ?>", too_long: "<?php echo $this->lang['rcode']['x120202']; ?>" }
         },
         article_link: {
             len: { min: 0, max: 900 },
-            validate: { type: "str", format: "url", group: "#group_article_link" },
-            msg: { selector: "#msg_article_link", too_long: "<?php echo $this->lang['rcode']['x120204']; ?>", format_err: "<?php echo $this->lang['rcode']['x120205']; ?>" }
+            validate: { type: "str", format: "url" },
+            msg: { too_long: "<?php echo $this->lang['rcode']['x120204']; ?>", format_err: "<?php echo $this->lang['rcode']['x120205']; ?>" }
         },
         article_excerpt: {
             len: { min: 0, max: 900 },
             validate: { type: "str", format: "text" },
-            msg: { selector: "#msg_article_excerpt", too_long: "<?php echo $this->lang['rcode']['x120206']; ?>" }
+            msg: { too_long: "<?php echo $this->lang['rcode']['x120206']; ?>" }
         },
         article_tag: {
             len: { min: 0, max: 0 },
             validate: { type: "str", format: "strDigit" },
-            msg: { selector: "#msg_article_tag", format_err: "<?php echo $this->lang['rcode']['x120215']; ?>" }
+            msg: { format_err: "<?php echo $this->lang['rcode']['x120215']; ?>" }
         },
         article_cate_id: {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_article_cate_id" },
-            msg: { selector: "#msg_article_cate_id", too_few: "<?php echo $this->lang['rcode']['x120207']; ?>" }
+            validate: { type: "select" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x120207']; ?>" }
         },
         article_status: {
             len: { min: 1, max: 0 },
-            validate: { selector: "input[name='article_status']", type: "radio", group: "#group_article_status" },
-            msg: { selector: "#msg_article_status", too_few: "<?php echo $this->lang['rcode']['x120208']; ?>" }
+            validate: { selector: "input[name='article_status']", type: "radio" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x120208']; ?>" }
         },
         article_box: {
             len: { min: 1, max: 0 },
-            validate: { selector: "input[name='article_box']", type: "radio", group: "#group_article_box" },
-            msg: { selector: "#msg_article_box", too_few: "<?php echo $this->lang['rcode']['x120209']; ?>" }
+            validate: { selector: "input[name='article_box']", type: "radio" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x120209']; ?>" }
         },
         article_time_show: {
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "datetime" },
-            msg: { selector: "#msg_article_time_show", too_short: "<?php echo $this->lang['rcode']['x120221']; ?>", format_err: "<?php echo $this->lang['rcode']['x120222']; ?>" }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x120221']; ?>", format_err: "<?php echo $this->lang['rcode']['x120222']; ?>" }
         },
         article_time_pub: {
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "datetime" },
-            msg: { selector: "#msg_article_time_pub", too_short: "<?php echo $this->lang['rcode']['x120210']; ?>", format_err: "<?php echo $this->lang['rcode']['x120211']; ?>" }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x120210']; ?>", format_err: "<?php echo $this->lang['rcode']['x120211']; ?>" }
         },
         article_time_hide: {
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "datetime" },
-            msg: { selector: "#msg_article_time_hide", too_short: "<?php echo $this->lang['rcode']['x120219']; ?>", format_err: "<?php echo $this->lang['rcode']['x120220']; ?>" }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x120219']; ?>", format_err: "<?php echo $this->lang['rcode']['x120220']; ?>" }
         },
         article_source: {
             len: { min: 0, max: 300 },
-            validate: { type: "str", format: "text", group: "#group_article_source" },
-            msg: { selector: "#msg_article_source", too_long: "<?php echo $this->lang['rcode']['x260202']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_long: "<?php echo $this->lang['rcode']['x260202']; ?>" }
         },
         article_author: {
             len: { min: 0, max: 300 },
-            validate: { type: "str", format: "text", group: "#group_article_author" },
-            msg: { selector: "#msg_article_author", too_long: "<?php echo $this->lang['rcode']['x260203']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_long: "<?php echo $this->lang['rcode']['x260203']; ?>" }
         },
         article_source_url: {
             len: { min: 0, max: 900 },
-            validate: { type: "str", format: "text", group: "#group_article_source_url" },
-            msg: { selector: "#msg_article_source_url", too_long: "<?php echo $this->lang['rcode']['x260204']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_long: "<?php echo $this->lang['rcode']['x260204']; ?>" }
+        }
+    };
+
+    var options_validator_form = {
+        msg_global:{
+            msg: "<?php echo $this->lang['common']['label']['errInput']; ?>"
         }
     };
 
     var opts_submit_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=article",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=article&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
@@ -557,12 +552,12 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     		switch (_act) {
         		case 'spec':
                     var _spec_key = $("#spec_key").val();
-                    var _url = "<?php echo BG_URL_CONSOLE; ?>index.php?mod=spec&act=insert&target=article&article_id=<?php echo $this->tplData['articleRow']['article_id']; ?>&view=modal&key=" + _spec_key;
+                    var _url = "<?php echo BG_URL_CONSOLE; ?>index.php?m=spec&a=insert&target=article&article_id=<?php echo $this->tplData['articleRow']['article_id']; ?>&view=modal&key=" + _spec_key;
         		break;
 
         		default:
             		var _id = _obj_button.data("id");
-                    var _url = "<?php echo BG_URL_CONSOLE; ?>index.php?mod=attach&act=form&view=modal&article_id=" + _id;
+                    var _url = "<?php echo BG_URL_CONSOLE; ?>index.php?m=attach&a=form&view=modal&article_id=" + _id;
         		break;
     		}
 
@@ -588,7 +583,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
             $("#article_author").val(_sourceJson[_source_id].source_author);
         });
 
-        var obj_validate_form = $("#article_form").baigoValidator(opts_validator_form);
+        var obj_validate_form = $("#article_form").baigoValidator(opts_validator_form, options_validator_form);
         var obj_submit_form   = $("#article_form").baigoSubmit(opts_submit_form);
         $(".bg-submit").click(function(){
             tinyMCE.triggerSave();
@@ -623,7 +618,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
 
         $("#article_tag").typeahead({
             limit: 1000,
-            prefetch: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=tag&act=list"
+            prefetch: "<?php echo BG_URL_CONSOLE; ?>index.php?m=tag&c=request&a=list"
         }).on("typeahead:selected", function(e, d) {
             obj_tagMan.tagsManager("pushTag", d.value);
         });
@@ -635,4 +630,4 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

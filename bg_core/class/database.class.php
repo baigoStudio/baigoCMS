@@ -20,7 +20,7 @@ class CLASS_DATABASE {
     public $db_charset  = 'utf8';
     public $db_debug    = false;
     public $obj_mysqli;
-    public $db_rs;
+    public $obj_result;
 
     function __construct($cfg_host) {
         if (isset($cfg_host['host'])) {
@@ -60,7 +60,7 @@ class CLASS_DATABASE {
         if ($this->obj_mysqli->connect_errno > 0) {
             if ($this->db_debug) {
                 $_str_msg   = $this->obj_mysqli->connect_error;
-                $_str_msg  += ', Error No: ' . $this->obj_mysqli->connect_errno;
+                $_str_msg  .= ', Error No: ' . $this->obj_mysqli->connect_errno;
             } else {
                 $_str_msg   = 'Can not connect to database';
             }
@@ -74,7 +74,7 @@ class CLASS_DATABASE {
         if (!$this->obj_mysqli->select_db($this->db_name)) {
             if ($this->db_debug) {
                 $_str_msg   = $this->obj_mysqli->error;
-                $_str_msg  += ', Error No: ' . $this->obj_mysqli->errno;
+                $_str_msg  .= ', Error No: ' . $this->obj_mysqli->errno;
             } else {
                 $_str_msg   = 'Can not select database';
             }
@@ -83,9 +83,10 @@ class CLASS_DATABASE {
     }
 
     function query($sql) {
-        $query = $this->obj_mysqli->query($sql);
+        //$sql    = $this->obj_mysqli->escape_string($sql);
+        $query  = $this->obj_mysqli->query($sql);
         if ($query) {
-            $this->db_rs = $query;
+            $this->obj_result = $query;
             return $query;
         } else {
             return false;
@@ -93,12 +94,12 @@ class CLASS_DATABASE {
     }
 
     function fetch_row($rs = '') {
-        $rs = $rs ? $rs : $this->db_rs;
+        $rs = $rs ? $rs : $this->obj_result;
         return $rs->fetch_row();
     }
 
     function fetch_assoc($rs = '') {
-        $rs = $rs ? $rs : $this->db_rs;
+        $rs = $rs ? $rs : $this->obj_result;
         return $rs->fetch_assoc();
     }
 
@@ -108,8 +109,8 @@ class CLASS_DATABASE {
 
     function insert_id() {
         $_obj_temp    = $this->query('SELECT LAST_INSERT_ID()');
-        $this->db_rs  = $this->fetch_row($_obj_temp);
-        return $this->db_rs[0];
+        $this->obj_result  = $this->fetch_row($_obj_temp);
+        return $this->obj_result[0];
     }
 
     function close() {
@@ -124,12 +125,12 @@ class CLASS_DATABASE {
         }
         $sql         .= implode(',', $values);
         $sql         .= ', PRIMARY KEY (`' . $primary . '`)) ENGINE=' . $engine . '  DEFAULT CHARSET=' . $this->db_charset . ' COMMENT=\'' . $comment . '\' AUTO_INCREMENT=1';
-        $this->db_rs  = $this->query($sql);
-        return $this->db_rs;
+        $this->obj_result  = $this->query($sql);
+        return $this->obj_result;
     }
 
-    function create_index($index, $table, $data, $type = 'BTREE', $is_exists = false) {
-        if ($is_exists) {
+    function create_index($index, $table, $data, $type = 'BTREE', $drop_overlap = false) {
+        if ($drop_overlap) {
             $sql = 'DROP INDEX `' . $index . '` ON `' . $table . '`';
             $this->query($sql);
         }
@@ -142,8 +143,8 @@ class CLASS_DATABASE {
         $sql         .= implode(',', $values);
         $sql         .= ') USING ' . $type;
         //print_r($sql);
-        $this->db_rs  = $this->query($sql);
-        return $this->db_rs;
+        $this->obj_result  = $this->query($sql);
+        return $this->obj_result;
     }
 
     function create_view($view, $data, $table, $join) {
@@ -161,8 +162,8 @@ class CLASS_DATABASE {
         $sql         .= implode(',', $values);
         $sql         .= ' FROM `' . $table . '` ' . $join;
         //print_r($sql);
-        $this->db_rs  = $this->query($sql);
-        return $this->db_rs;
+        $this->obj_result  = $this->query($sql);
+        return $this->obj_result;
     }
 
     function copy_table($table, $table_src, $data, $primary, $comment = '', $engine = 'InnoDB') {
@@ -196,8 +197,8 @@ class CLASS_DATABASE {
 
         $sql .= ' FROM `' . $table_src . '` WHERE 1';
 
-        $this->db_rs  = $this->query($sql);
-        return $this->db_rs;
+        $this->obj_result  = $this->query($sql);
+        return $this->obj_result;
     }
 
     function alter_table($table, $data = false, $rename = false) {
@@ -228,25 +229,8 @@ class CLASS_DATABASE {
             }
             $sql .= implode(',', $values);
         }
-        $this->db_rs = $this->query($sql);
-        return $this->db_rs;
-    }
-
-    function duplicate($table_dst, $data_dst, $table_src, $data_src, $where = '') {
-        $sql    = 'INSERT INTO `' . $table_dst . '` ';
-        $sql   .= '(`' . implode('`,`', $data_dst) . '`) SELECT ';
-        $sql   .= '`' . implode('`,`', $data_src) . '` FROM `' . $table_src . '`';
-        if (!fn_isEmpty($where)) {
-            $sql .= ' WHERE ' . $where;
-        }
-
-        //print_r($sql);
-
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
-            return false;
-        }
-        return $this->insert_id();
+        $this->obj_result = $this->query($sql);
+        return $this->obj_result;
     }
 
     function insert($table, $data, $field = false) {
@@ -260,8 +244,8 @@ class CLASS_DATABASE {
             }
         }
         $sql         .= implode(',', $values);
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         return $this->insert_id();
@@ -281,8 +265,8 @@ class CLASS_DATABASE {
         if (!fn_isEmpty($where)) {
             $sql .= ' WHERE ' . $where;
         }
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         return $this->affected_rows();
@@ -290,8 +274,8 @@ class CLASS_DATABASE {
 
     function delete($table, $where) {
         $sql          = 'DELETE FROM `' . $table . '` WHERE ' . $where;
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         return $this->affected_rows();
@@ -309,11 +293,11 @@ class CLASS_DATABASE {
             $sql .= ' WHERE ' . $where;
         }
         //print_r($sql);
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
-        $obj_temp     = $this->fetch_row($this->db_rs);
+        $obj_temp     = $this->fetch_row($this->obj_result);
         return $obj_temp[0];
     }
 
@@ -352,28 +336,45 @@ class CLASS_DATABASE {
         print_r($sql . '\n');
         }*/
 
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         $obj = array();
 
-        while ($obj_temp = $this->fetch_assoc($this->db_rs)) {
+        while ($obj_temp = $this->fetch_assoc($this->obj_result)) {
             $obj[] = $obj_temp;
             unset($obj_temp);
         }
         return $obj;
+    }
+
+    function duplicate($table_dst, $data_dst, $table_src, $data_src, $where = '') {
+        $sql    = 'INSERT INTO `' . $table_dst . '` ';
+        $sql   .= '(`' . implode('`,`', $data_dst) . '`) SELECT ';
+        $sql   .= '`' . implode('`,`', $data_src) . '` FROM `' . $table_src . '`';
+        if (!fn_isEmpty($where)) {
+            $sql .= ' WHERE ' . $where;
+        }
+
+        //print_r($sql);
+
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
+            return false;
+        }
+        return $this->insert_id();
     }
 
     function show_columns($table) {
         $sql = 'SHOW COLUMNS FROM `' . $table . '`';
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         $obj = array();
 
-        while ($obj_temp = $this->fetch_assoc($this->db_rs)) {
+        while ($obj_temp = $this->fetch_assoc($this->obj_result)) {
             $obj[] = $obj_temp;
             unset($obj_temp);
         }
@@ -381,15 +382,15 @@ class CLASS_DATABASE {
     }
 
 
-    function show_index($table) {
+    function show_indexs($table) {
         $sql = 'SHOW INDEX FROM `' . $table . '`';
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         $obj          = array();
 
-        while ($obj_temp = $this->fetch_assoc($this->db_rs)) {
+        while ($obj_temp = $this->fetch_assoc($this->obj_result)) {
             $obj[] = $obj_temp;
             unset($obj_temp);
         }
@@ -399,13 +400,13 @@ class CLASS_DATABASE {
 
     function show_tables() {
         $sql = 'SHOW TABLES FROM `' . $this->db_name . '`';
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         $obj          = array();
 
-        while ($obj_temp = $this->fetch_assoc($this->db_rs)) {
+        while ($obj_temp = $this->fetch_assoc($this->obj_result)) {
             $obj[] = $obj_temp;
             unset($obj_temp);
         }
@@ -413,21 +414,20 @@ class CLASS_DATABASE {
     }
 
 
-    function show_databases() {
+    /*function show_databases() {
         $sql = 'SHOW DATABASES';
-        $this->db_rs  = $this->query($sql);
-        if (!$this->db_rs) {
+        $this->obj_result  = $this->query($sql);
+        if (!$this->obj_result) {
             return false;
         }
         $obj          = array();
 
-        while ($obj_temp = $this->fetch_assoc($this->db_rs)) {
+        while ($obj_temp = $this->fetch_assoc($this->obj_result)) {
             $obj[] = $obj_temp;
             unset($obj_temp);
         }
         return $obj;
-    }
-
+    }*/
 
     function __destruct() {
         if ($this->obj_mysqli) {

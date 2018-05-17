@@ -70,8 +70,8 @@ return array(
     'text' => array(
         'phplibOk'      => '服务器环境检查通过，可以继续安装。',
         'phplibErr'     => '服务器环境检查未通过，请检查上述扩展库是否已经正确安装。',
-        'sso'           => 'baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href="http://www.baigo.net/sso/" target="_blank">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点击 <mark>SSO 升级</mark>。',
-        'admin'         => '本操作将向 baigo SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 baigo SSO 用户作为管理员，请点击 <mark>授权为管理员</mark>。',
-        'auth'          => '本操作将用您输入的 baigo SSO 用户作为管理员，拥有所有的管理权限。如果您要创建新的管理员请点击 <mark>创建管理员</mark>。',
+        'sso'           => 'baigo CMS 的用户以及后台登录需要 baigo SSO 支持，baigo SSO 的部署方式，请查看 <a href="http://www.baigo.net/sso/" target="_blank">baigo SSO 官方网站</a>。baigo SSO 的升级与 baigo CMS 的升级并无直接关联，如果您要检查 baigo SSO 是否可升级，请点 <mark>SSO 升级</mark>。',
+        'admin'         => '本操作将向 baigo SSO 注册新用户，并自动将新注册的用户授权为超级管理员，拥有所有的管理权限。如果您之前已经部署有 baigo SSO，并且不想注册新用户，只希望使用原有的 baigo SSO 用户作为管理员，请点 <mark>授权为管理员</mark>。',
+        'auth'          => '本操作将用您输入的 baigo SSO 用户作为管理员，拥有所有的管理权限。如果您要创建新的管理员请点 <mark>创建管理员</mark>。',
     ),
 );

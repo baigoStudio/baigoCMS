@@ -22,7 +22,7 @@ return array(
         'insert'    => '插入',
         'upload'    => '上传',
         'uploadArticle'     => '本文附件',
-        'insert'            => '插入附件',
+        'insertAttach'      => '插入附件',
         'insertOriginal'    => '插入原图',
         'browseOriginal'    => '查看原图',
         'attachList'        => '管理附件',

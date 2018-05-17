@@ -21,7 +21,7 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
 
     <div class="loading">
         <h1>
-            <span class="glyphicon glyphicon-refresh bg-spin"></span>
+            <span class="oi oi-loop-circular bg-spin"></span>
             Loading...
         </h1>
     </div>
@@ -34,22 +34,19 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
         <ul class="bg-nav-line">
             <?php if (isset($this->tplData['contentRow']['time'])) { ?>
                 <li>
-                    <?php echo $this->lang['mod']['label']['time']; ?>
-                    <?php echo $this->tplData['contentRow']['time']; ?>
+                    <?php echo $this->lang['mod']['label']['time'], ' ', $this->tplData['contentRow']['time']; ?>
                 </li>
             <?php }
 
             if (isset($this->tplData['contentRow']['source'])) { ?>
                 <li>
-                    <?php echo $this->lang['mod']['label']['source']; ?>
-                    <?php echo $this->tplData['contentRow']['source']; ?>
+                    <?php echo $this->lang['mod']['label']['source'], ' ', $this->tplData['contentRow']['source']; ?>
                 </li>
             <?php }
 
             if (isset($this->tplData['contentRow']['author'])) { ?>
                 <li>
-                    <?php echo $this->lang['mod']['label']['author']; ?>
-                    <?php echo $this->tplData['contentRow']['author']; ?>
+                    <?php echo $this->lang['mod']['label']['author'], ' ', $this->tplData['contentRow']['author']; ?>
                 </li>
             <?php } ?>
         </ul>
@@ -63,4 +60,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include($cfg['pathInclude'] . 'html_foot.php');

@@ -5,51 +5,48 @@
 );
 
 include($cfg['pathInclude'] . 'html_head.php'); ?>
-    <style type="text/css">
-    body {
-        padding: 0 15px;
-    }
-    </style>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th><?php echo $this->lang['common']['label']['spec']; ?> / <?php echo $this->lang['mod']['label']['pageNo']; ?></th>
-                <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php for ($_iii = 1; $_iii <= $this->tplData['pageRow']['total']; $_iii++) { ?>
-                <tr id="spec_<?php echo $_iii; ?>_tr" class="text-info">
-                    <td>
-                        <h5>
-                            <?php echo $this->tplData['specRow']['spec_name']; ?>
-                        </h5>
-                        <div>
-                            <?php echo $this->lang['mod']['label']['pageCount']; ?> <?php echo $_iii; ?> <?php echo $this->lang['mod']['label']['pagePage']; ?>
-                        </div>
-                    </td>
-                    <td class="text-right text-nowrap">
-                        <h5>
-                            <span id="spec_<?php echo $_iii; ?>_icon" class="glyphicon glyphicon-refresh bg-spin"></span>
-                            <span id="spec_<?php echo $_iii; ?>_text"><?php echo $this->lang['rcode']['y180402']; ?></span>
-                        </h5>
-                    </td>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><?php echo $this->lang['mod']['label']['id']; ?></th>
+                    <th><?php echo $this->lang['common']['label']['spec']; ?></th>
+                    <th><?php echo $this->lang['mod']['label']['pageNo']; ?></th>
+                    <th class="text-right"><?php echo $this->lang['mod']['label']['status']; ?></th>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php for ($_iii = 1; $_iii <= $this->tplData['pageRow']['total']; $_iii++) { ?>
+                    <tr id="spec_<?php echo $_iii; ?>_tr" class="text-info">
+                        <td>
+                            <?php echo $this->tplData['specRow']['spec_id']; ?>
+                        </td>
+                        <td>
+                            <?php echo $this->tplData['specRow']['spec_name']; ?>
+                        </td>
+                        <td>
+                            <?php echo $_iii; ?> / <?php echo $this->tplData['pageRow']['total']; ?>
+                        </td>
+                        <td class="text-right text-nowrap">
+                            <span id="spec_<?php echo $_iii; ?>_icon" class="oi oi-loop-circular bg-spin"></span>
+                            <span id="spec_<?php echo $_iii; ?>_text"><?php echo $this->lang['rcode']['y180402']; ?></span>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function(){
         <?php for ($_iii = 1; $_iii <= $this->tplData['pageRow']['total']; $_iii++) { ?>
             $.ajax({
-                url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=spec_gen", //url
+                url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=spec_gen&c=request", //url
                 //async: false, //设置为同步
                 type: "post",
                 dataType: "json",
                 data: {
-                    act: "single",
+                    a: "single",
                     spec_id: "<?php echo $this->tplData['specRow']['spec_id']; ?>",
                     page: "<?php echo $_iii; ?>",
                     <?php echo $this->common['tokenRow']['name_session']; ?>: "<?php echo $this->common['tokenRow']['token']; ?>"
@@ -60,12 +57,12 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
                     switch (_rcode_status) {
                         case "x":
                             _class  = "text-danger";
-                            _icon   = "glyphicon glyphicon-remove-sign";
+                            _icon   = "oi oi-circle-x";
                         break;
 
                         case "y":
                             _class  = "text-success";
-                            _icon   = "glyphicon glyphicon-ok-sign";
+                            _icon   = "oi oi-circle-check";
                         break;
                     }
 
@@ -82,4 +79,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

@@ -109,7 +109,7 @@ return array(
                 'option' => array(
                     'default' => array(
                         'value' => '默认',
-                        'note'  => '例：' . BG_SITE_URL . '/index.php?mod=article&act=show&article_id=123',
+                        'note'  => '例：' . BG_SITE_URL . '/index.php?m=article&a=show&article_id=123',
                     ),
                     'pstatic' => array(
                         'value' => '伪静态',
@@ -178,6 +178,9 @@ return array(
             ),
             'BG_SSO_APPKEY' => array(
                 'label' => 'APP KEY 通信密钥',
+            ),
+            'BG_SSO_APPSECRET' => array(
+                'label' => 'APP SECRET 密文密钥',
             ),
             'BG_SSO_SYNC' => array(
                 'label' => '同步登录',

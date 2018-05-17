@@ -34,13 +34,13 @@ class GENERAL_API {
         }
 
         $this->appRow = $this->mdl_app->mdl_read($this->appInput['app_id']);
-        if ($this->appRow['rcode'] != 'y190102') {
+        if ($this->appRow['rcode'] != 'y050102') {
             return $this->appRow;
         }
 
         if ($this->appRow['app_status'] != 'enable') {
             return array(
-                'rcode' => 'x190402',
+                'rcode' => 'x050402',
             );
         }
 
@@ -50,21 +50,21 @@ class GENERAL_API {
             $_str_ipAllow = str_ireplace(PHP_EOL, '|', $this->appRow['app_ip_allow']);
             if (!fn_regChk($_str_ip, $_str_ipAllow, true)) {
                 return array(
-                    'rcode' => 'x190212',
+                    'rcode' => 'x050212',
                 );
             }
         } else if (!fn_isEmpty($this->appRow['app_ip_bad'])) {
             $_str_ipBad = str_ireplace(PHP_EOL, '|', $this->appRow['app_ip_bad']);
             if (fn_regChk($_str_ip, $_str_ipBad)) {
                 return array(
-                    'rcode' => 'x190213',
+                    'rcode' => 'x050213',
                 );
             }
         }
 
         if ($this->appInput['app_key'] != fn_baigoCrypt($this->appRow['app_key'], $this->appRow['app_name'])) {
             return array(
-                'rcode' => 'x190217',
+                'rcode' => 'x050217',
             );
         }
 
@@ -198,7 +198,7 @@ class GENERAL_API {
         //print_r($is_base64);
 
         if ($is_base64) {
-            $_str_return = fn_jsonEncode($_arr_tplData, 'encode');
+            $_str_return = fn_jsonEncode($_arr_tplData, true);
         } else {
             $_str_return = json_encode($_arr_tplData);
         }
@@ -223,21 +223,20 @@ class GENERAL_API {
      * @return void
      */
     function notify_input($str_method = 'get', $chk_token = false) {
-
         switch ($str_method) {
             case 'post':
                 $_str_time                  = fn_post('time');
-                $_str_signature             = fn_post('signature');
+                $_str_sign                  = fn_post('sign');
                 $_str_code                  = fn_post('code');
-                $this->jsonp_callback       = fn_getSafe(fn_post('c'), 'txt', 'f');
+                $this->jsonp_callback       = fn_getSafe(fn_post('callback'), 'txt', 'f');
                 $_arr_notifyInput['act']    = fn_getSafe($GLOBALS['route']['bg_act'], 'txt', '');
             break;
 
             default:
                 $_str_time                  = fn_get('time');
-                $_str_signature             = fn_get('signature');
+                $_str_sign                  = fn_get('sign');
                 $_str_code                  = fn_get('code');
-                $this->jsonp_callback       = fn_getSafe(fn_get('c'), 'txt', 'f');
+                $this->jsonp_callback       = fn_getSafe(fn_get('callback'), 'txt', 'f');
                 $_arr_notifyInput['act']    = fn_getSafe($GLOBALS['route']['bg_act'], 'txt', '');
             break;
         }
@@ -255,8 +254,8 @@ class GENERAL_API {
             break;
         }
 
-        $_arr_signature = fn_validate($_str_signature, 1, 0);
-        switch ($_arr_signature['status']) {
+        $_arr_sign = fn_validate($_str_sign, 1, 0);
+        switch ($_arr_sign['status']) {
             case 'too_short':
                 return array(
                     'rcode' => 'x220203',
@@ -264,7 +263,7 @@ class GENERAL_API {
             break;
 
             case 'ok':
-                $_arr_notifyInput['signature'] = $_arr_signature['str'];
+                $_arr_notifyInput['sign'] = $_arr_sign['str'];
             break;
         }
 

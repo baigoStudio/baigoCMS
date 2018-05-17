@@ -6,43 +6,44 @@
     'baigoValidator' => 'true',
     'baigoSubmit'    => 'true',
     'pathInclude'    => BG_PATH_TPLSYS . 'console' . DS . 'default' . DS . 'include' . DS,
-    'str_url'        => BG_URL_CONSOLE . "index.php?mod=mime&act=list"
+    'str_url'        => BG_URL_CONSOLE . "index.php?m=mime&a=list"
 );
 
 include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=mime&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=attach#mime" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=mime&a=list" class="nav-link">
+                <span class="oi oi-chevron-left"></span>
+                <?php echo $this->lang['common']['href']['back']; ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_HELP; ?>index.php?m=console&a=attach#mime" class="nav-link" target="_blank">
+                <span class="badge badge-pill badge-primary">
+                    <span class="oi oi-question-mark"></span>
+                </span>
+                <?php echo $this->lang['mod']['href']['help']; ?>
+            </a>
+        </li>
+    </ul>
 
     <form name="mime_form" id="mime_form">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
         <input type="hidden" name="mime_id" id="mime_id" value="<?php echo $this->tplData['mimeRow']['mime_id']; ?>">
-        <input type="hidden" name="act" value="submit">
+        <input type="hidden" name="a" value="submit">
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['ext']; ?><span id="msg_mime_ext">*</span></label>
+                            <label><?php echo $this->lang['mod']['label']['ext']; ?> <span class="text-danger">*</span></label>
                             <input type="text" name="mime_ext" id="mime_ext" value="<?php echo $this->tplData['mimeRow']['mime_ext']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_mime_ext"></small>
                         </div>
 
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['mimeContent']; ?><span id="msg_mime_content">*</span></label>
+                        <label><?php echo $this->lang['mod']['label']['mimeContent']; ?> <span class="text-danger">*</span></label>
 
                         <div id="mime_list">
                             <?php $key = 0;
@@ -51,9 +52,9 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <input type="text" name="mime_content[]" id="mime_content_<?php echo $key; ?>" value="<?php echo $value; ?>" class="form-control">
-                                            <span class="input-group-btn">
+                                            <span class="input-group-append">
                                                 <a href="javascript:mime_del(<?php echo $key; ?>);" class="btn btn-info">
-                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                    <span class="oi oi-trash"></span>
                                                 </a>
                                             </span>
                                         </div>
@@ -64,49 +65,51 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
 
                         <div class="form-group">
                             <button type="button" id="mime_add" class="btn btn-info">
-                                <span class="glyphicon glyphicon-plus"></span>
+                                <span class="oi oi-plus"></span>
                                 <?php echo $this->lang['mod']['btn']['mimeAdd']; ?>
                             </button>
                         </div>
 
                         <div class="form-group">
-                            <div id="group_mime_note">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['note']; ?><span id="msg_mime_note"></span></label>
-                                <input type="text" name="mime_note" id="mime_note" value="<?php echo $this->tplData['mimeRow']['mime_note']; ?>" data-validate class="form-control">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['note']; ?></label>
+                            <input type="text" name="mime_note" id="mime_note" value="<?php echo $this->tplData['mimeRow']['mime_note']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_mime_note"></small>
                         </div>
 
-                        <div class="bg-submit-box bg-submit-box-modal"></div>
+                        <div class="bg-submit-box"></div>
+                        <div class="bg-validator-box mt-3"></div>
                     </div>
 
-                    <div class="panel-footer">
-                        <button type="button" class="btn btn-primary bg-submit-modal"><?php echo $this->lang['mod']['btn']['save']; ?></button>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang['mod']['btn']['save']; ?></button>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3">
-                <div class="well">
-                    <?php if ($this->tplData['mimeRow']['mime_id'] > 0) { ?>
-                        <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                            <div class="form-control-static"><?php echo $this->tplData['mimeRow']['mime_id']; ?></div>
-                        </div>
-                    <?php } ?>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <?php if ($this->tplData['mimeRow']['mime_id'] > 0) { ?>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                                <div class="form-text"><?php echo $this->tplData['mimeRow']['mime_id']; ?></div>
+                            </div>
+                        <?php } ?>
 
-                    <div class="form-group">
-                        <label form="mime_often" class="control-label"><?php echo $this->lang['mod']['label']['mimeOften']; ?></label>
-                        <select id="mime_often" class="form-control">
-                            <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
-                            <?php foreach ($this->tplData['mimeOften'] as $key_often=>$value_often) { ?>
-                                <option value="<?php echo $key_often; ?>">
-                                    <?php if (isset($this->lang['mime'][$key_often]['note'])) {
-                                        echo $this->lang['mime'][$key_often]['note'], ' - ';
-                                    }
-                                    echo $key_often; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
+                        <div class="form-group">
+                            <label form="mime_often"><?php echo $this->lang['mod']['label']['mimeOften']; ?></label>
+                            <select id="mime_often" class="form-control">
+                                <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
+                                <?php foreach ($this->tplData['mimeOften'] as $key_often=>$value_often) { ?>
+                                    <option value="<?php echo $key_often; ?>">
+                                        <?php if (isset($this->lang['mime'][$key_often]['note'])) {
+                                            echo $this->lang['mime'][$key_often]['note'], ' - ';
+                                        }
+                                        echo $key_often; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,26 +126,26 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
         mime_ext: {
             len: { min: 1, max: 30 },
             validate: { type: "ajax", format: "text" },
-            msg: { selector: "#msg_mime_ext", too_short: "<?php echo $this->lang['rcode']['x080203']; ?>", too_long: "<?php echo $this->lang['rcode']['x080204']; ?>", ajaxIng: "<?php echo $this->lang['rcode']['x030401']; ?>", ajax_err: "<?php echo $this->lang['rcode']['x030402']; ?>" },
-            ajax: { url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=mime&act=chkext", key: "mime_ext", type: "str", attach_selectors: ["#mime_id"], attach_keys: ["mime_id"] }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x080203']; ?>", too_long: "<?php echo $this->lang['rcode']['x080204']; ?>", ajaxIng: "<?php echo $this->lang['rcode']['x030401']; ?>", ajax_err: "<?php echo $this->lang['rcode']['x030402']; ?>" },
+            ajax: { url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=mime&c=request&a=chkext", key: "mime_ext", type: "str", attach_selectors: ["#mime_id"], attach_keys: ["mime_id"] }
         },
         mime_note: {
             len: { min: 0, max: 300 },
             validate: { type: "str", format: "text" },
-            msg: { selector: "#msg_mime_note", too_long: "<?php echo $this->lang['rcode']['x080205']; ?>" }
+            msg: { too_long: "<?php echo $this->lang['rcode']['x080205']; ?>" }
+        }
+    };
+
+    var options_validator_form = {
+        msg_global:{
+            msg: "<?php echo $this->lang['common']['label']['errInput']; ?>"
         }
     };
 
     var opts_submit_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=mime",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=mime&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
-        },
-        box: {
-            selector: ".bg-submit-box-modal"
-        },
-        selector: {
-            submit_btn: ".bg-submit-modal"
         }
     };
 
@@ -155,9 +158,9 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
             "<div class=\"form-group\">" +
                 "<div class=\"input-group\">" +
                     "<input type=\"text\" name=\"mime_content[]\" id=\"mime_content_" + count_mime + "\" class=\"form-control\" value=\"" + value_mime + "\">" +
-                    "<span class=\"input-group-btn\">" +
+                    "<span class=\"input-group-append\">" +
                         "<a href=\"javascript:mime_del(" + count_mime + ");\" class=\"btn btn-info\">" +
-                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                            "<span class=\"oi oi-trash\"></span>" +
                         "</a>" +
                     "</span>" +
                 "</div>" +
@@ -170,9 +173,9 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     $(document).ready(function(){
         var _count_mime = <?php echo $key++; ?>;
 
-        var obj_validate_form   = $("#mime_form").baigoValidator(opts_validator_form);
+        var obj_validate_form   = $("#mime_form").baigoValidator(opts_validator_form, options_validator_form);
         var obj_submit_form     = $("#mime_form").baigoSubmit(opts_submit_form);
-        $(".bg-submit-modal").click(function(){
+        $(".bg-submit").click(function(){
             if (obj_validate_form.verify()) {
                 obj_submit_form.formSubmit();
             }
@@ -204,4 +207,4 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

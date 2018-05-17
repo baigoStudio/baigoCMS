@@ -93,7 +93,7 @@ class CLASS_VALIDATE {
                 $_reg = '/^((http|ftp|https):\/\/)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(\/[a-zA-Z0-9\&%_\.\/-~-]*)?$/'; //URL地址
             break;
             case 'alphabetDigit':
-                $_reg = '/^[a-zA-Z\d]*$/'; //数字英文字母
+                $_reg = '/^[a-zA-Z\d-_]*$/'; //数字英文字母下划线
             break;
             case 'strDigit':
                 $_reg = '/^[\x{4e00}-\x{9fa5}a-zA-Z\d-_]*$/u'; // '/^[\\\u4e00-\\\u9fa5|\\\uf900-\\\ufa2d|\w]*$/' 中文字母数字下划线连字符

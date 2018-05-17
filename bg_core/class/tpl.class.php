@@ -18,6 +18,7 @@ class CLASS_TPL {
     public $ext         = array();
     public $help        = array();
     public $linkRows    = array();
+    public $menuRows    = array();
 
     function __construct($str_pathTpl) { //构造函数
         $this->config               = $GLOBALS['obj_base']->config;
@@ -63,9 +64,9 @@ class CLASS_TPL {
                 exit;
             } else {
                 if (defined('BG_DEBUG_SYS') && BG_DEBUG_SYS > 0) {
-                    $_str_msg = 'Template &quot;' . $this->pathTpl . DS . $str_tpl . '.php&quot; not exists';
+                    $_str_msg = 'Template &quot;' . $this->pathTpl . DS . $str_tpl . '.php&quot; does not exist';
                 } else {
-                    $_str_msg = 'Template not exists';
+                    $_str_msg = 'Template does not exist';
                 }
 
                 exit('{"rcode":"x","msg":"Fatal Error: ' . $_str_msg . '!"}');
@@ -78,9 +79,9 @@ class CLASS_TPL {
                 ob_end_clean();
             } else {
                 if (defined('BG_DEBUG_SYS') && BG_DEBUG_SYS > 0) {
-                    $_str_msg = 'Template &quot;' . $this->pathTpl . DS . $str_tpl . '.php&quot; not exists';
+                    $_str_msg = 'Template &quot;' . $this->pathTpl . DS . $str_tpl . '.php&quot; does not exist';
                 } else {
-                    $_str_msg = 'Template not exists';
+                    $_str_msg = 'Template does not exist';
                 }
 
                 exit('{"rcode":"x","msg":"Fatal Error: ' . $_str_msg . '!"}');

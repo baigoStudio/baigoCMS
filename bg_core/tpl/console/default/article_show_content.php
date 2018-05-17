@@ -12,4 +12,4 @@ include($cfg['pathInclude'] . 'html_head.php'); ?>
         <?php echo $this->tplData['articleRow']['article_content']; ?>
     </p>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');

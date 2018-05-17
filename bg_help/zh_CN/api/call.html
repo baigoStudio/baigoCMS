@@ -3,7 +3,7 @@
 <p>用于显示单个调用详细信息。</p>
 
 <p class="text-info">URL</p>
-<p><span class="text-primary">http://www.domain.com/bg_api/api.php?mod=call</span></p>
+<p><span class="text-primary">http://www.domain.com/bg_api/api.php?m=call&c=api</span></p>
 
 <p class="text-info">HTTP 请求方式</p>
 <p>GET</p>
@@ -11,21 +11,21 @@
 <p class="text-info">返回格式</p>
 <p>JSON</p>
 
-<div class="panel panel-default">
-    <div class="panel-heading">请求参数</div>
+    <div>&nbsp;</div>
+    <h4>请求参数</h4>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th class="text-nowrap">名称</th>
                     <th class="text-nowrap">类型</th>
-                    <th class="text-nowrap">必须</th>
-                    <th>具体描述</th>
+                    <th class="text-nowrap">必需</th>
+                    <th>描述</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-nowrap">act</td>
+                    <td class="text-nowrap">a</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
                     <td>接口调用动作，值只能为 read。</td>
@@ -34,13 +34,13 @@
                     <td class="text-nowrap">app_id</td>
                     <td class="text-nowrap">int</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP ID，后台创建应用时生成的 ID。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">app_key</td>
                     <td class="text-nowrap">string</td>
                     <td class="text-nowrap">true</td>
-                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{BG_URL_HELP}index.php?mod=console&act=app#show">查看应用</a>。</td>
+                    <td>应用的 APP KEY，后台创建应用时生成的 KEY。详情查看 <a href="{$BG_URL_HELP}index.php?m=console&a=app#show">查看应用</a>。</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">call_id</td>
@@ -57,19 +57,18 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
 <a name="result"></a>
 <h4>返回结果</h4>
 
-<p>返回结果会根据不同的调用类型有所不同，详情请查看 <a href="{BG_URL_HELP}index.php?mod=api&act=article#result">文章</a>、<a href="{BG_URL_HELP}index.php?mod=api&act=cate#result">栏目</a>、<a href="{BG_URL_HELP}index.php?mod=api&act=tag#result">TAG</a>、<a href="{BG_URL_HELP}index.php?mod=api&act=spec#result">专题</a>、<a href="#link">友情链接</a> 等有关信息。关于调用以及调用 ID 请查看 <a href="{BG_URL_HELP}index.php?mod=console&act=call">调用管理</a>。</p>
+<p>返回结果会根据不同的调用类型有所不同，详情请查看 <a href="{$BG_URL_HELP}index.php?m=api&a=article#result">文章</a>、<a href="{$BG_URL_HELP}index.php?m=api&a=cate#result">栏目</a>、<a href="{$BG_URL_HELP}index.php?m=api&a=tag#result">TAG</a>、<a href="{$BG_URL_HELP}index.php?m=api&a=spec#result">专题</a>、<a href="#link">友情链接</a> 等有关信息。关于调用以及调用 ID 请查看 <a href="{$BG_URL_HELP}index.php?m=console&a=call">调用管理</a>。</p>
 
 <div>&nbsp;</div>
 <div class="text-right">
     <a href="#top">
-        <span class="glyphicon glyphicon-chevron-up"></span>
+        <span class="oi oi-chevron-top"></span>
         top
     </a>
 </div>
@@ -81,8 +80,7 @@
 <p>
     友情链接可以通过调用来显示，调用后返回的数组结构如下。
 </p>
-<div class="panel panel-default">
-    <div class="panel-heading">友情链接</div>
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -116,13 +114,12 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<h4>友情链接数据示例</h4>
+<h5>数据示例</h5>
 <p>
-<pre><code class="language-javascript">[
+<pre class="border rounded"><code class="language-javascript">[
     {
         &quot;link_id&quot;: &quot;4&quot;,
         &quot;link_name&quot;: &quot;baigo&quot;,

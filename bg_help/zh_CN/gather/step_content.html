@@ -1,0 +1,112 @@
+<h3>内容解析</h3>
+<p>
+    在编辑采集点节目，点内容解析标签，可以对内容解析作出修改。本系统采用 jQuery 选择器来解析 HTML 元素，关于选择器，你可以点上方的选择器帮助来查看常用的选择器。
+</p>
+<p>
+    <a href="{$images}gsite_step_content_base.jpg" target="_blank"><img src="{$images}gsite_step_content_base.jpg" class="img-fluid img-thumbnail"></a>
+</p>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="oi oi-chevron-top"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<a name="base"></a>
+<h4>主要内容解析、附加内容解析</h4>
+<p>
+    内容解析的填写方法基本一样。
+</p>
+
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
+        <h4 class="text-info">标题解析、内容解析、时间解析、文章内容解析、作者解析</h4>
+        <dl>
+            <dt>选择器</dt>
+            <dd>指包含标题的 HTML 元素的选择器。</dd>
+            <dt>采集属性</dt>
+            <dd>
+                可选以下 3 类，也可以在右侧选择常用属性。
+                <ol>
+                    <li>html：采集 HTML 代码</li>
+                    <li>text：采集纯文本</li>
+                    <li>HTML 属性：采集 HTML 属性（如 src、href、name、data-src 等）<br>
+                        示例：&lt;a <code>href=&quot;http://www.domail.com&quot;</code>&gt;链接&lt;/a&gt;，红色部分为属性（名称="值"）。</li>
+                </ol>
+            </dd>
+            <dt>过滤器</dt>
+            <dd>
+                过滤器可以过滤掉不需要的元素，多个值请用 <kbd>|</kbd> 分隔。
+                <ol>
+                    <li>带 <code>-</code> 符号：移除该标签以及标签内容（此时可以为任意的 jQuery 选择器，如：<code>-p|-.title</code>）。
+                    <li>无符号：
+                        <ul>
+                            <li>当 [采集属性] 值为 html 时，表示要过滤掉的 HTML 标签。</li>
+                            <li>当 [采集属性] 值为 text 时，表示要保留的 HTML 标签（此时可以为 HTML 标签，如：<code>div|strong</code>）。</li>
+                        </ul>
+                </ol>
+            </dd>
+            <dt>替换</dt>
+            <dd>替换器可以将“查找”字符更换为“替换”字符（为空则删除“查找”字符），用法与 Word、WPS 的查找替换类似，点 <mark>+</mark> 按钮，可以创建多个替换器。</dd>
+        </dl>
+    </div>
+</div>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="oi oi-chevron-top"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<a name="other"></a>
+<h4>其他</h4>
+<p>
+    <a href="{$images}gsite_step_content_other.jpg" target="_blank"><img src="{$images}gsite_step_content_other.jpg" class="img-fluid img-thumbnail"></a>
+</p>
+
+<div class="card">
+    <div class="card-header">填写说明</div>
+    <div class="card-body">
+        <h4 class="text-info">保留标签</h4>
+        <p>系统将会剔除文章内容中除系统保留标签以外的所有标签，系统保留标签可以点 <mark>?</mark> 按钮查询，请在此输入其他需要保留的标签，多个标签请用 <kbd>|</kbd> 分隔。</p>
+
+        <h4 class="text-info">图片过滤关键词</h4>
+        <p>系统在采集数据时，会自动将图片抓取到本地服务器，而有些图片，比如装饰、按钮、广告等是不需要的，管理员可以在此输入关键词，一旦图片的路径中包含有这些内容，将自动忽略这些图片。</p>
+
+        <h4 class="text-info">属性过滤</h4>
+        <p>以下参数只针对文章内容，默认将剔除所有属性。此处的属性是指系统保留的标签以及管理员指定保留标签的属性。</p>
+        <dl>
+            <dt>允许的属性</dt>
+            <dd>这些属性将被全部保留，多个属性请用 <kbd>|</kbd> 分隔。</dd>
+            <dt>忽略标签</dt>
+            <dd>这些标签的属性全部保留，多个标签请用 <kbd>|</kbd> 分隔。</dd>
+            <dt>例外</dt>
+            <dd>这些标签的特定属性将被保留，同一标签下的多个属性请用 <kbd>|</kbd> 分隔。点 <mark>?</mark> 按钮可以查询系统默认保留的属性。</dd>
+        </dl>
+    </div>
+</div>
+
+<div>&nbsp;</div>
+<div class="text-right">
+    <a href="#top">
+        <span class="oi oi-chevron-top"></span>
+        top
+    </a>
+</div>
+<hr>
+<div>&nbsp;</div>
+
+<a name="page_list"></a>
+<h3>其他</h3>
+<p>
+    解析分页列表与列表解析相似，请参考 <a href="{$BG_URL_HELP}index.php?m=gather&a=step_list">列表解析</a>，关于分页列表的解释，请查看 <a href="{$BG_URL_HELP}index.php?m=gather&a=gsite_list#tab">采集点管理</a>。
+</p>

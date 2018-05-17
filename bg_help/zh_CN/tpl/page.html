@@ -1,8 +1,8 @@
 <h3>分页参数</h3>
 <p>
-    在所有需要用到分页的地方，都有该参数，如：栏目、TAG、专题、搜索等。参数的数组名一般为 <code>$this->tplData['pageRow']</code>。在模板中需要根据参数来进行分页，详情请查看系统默认模板 <mark>./bg_tpl/pub/default/include/page.php</mark>。
+    在所有需要用到分页的地方，都有该参数，如：栏目、TAG、专题、搜索等。参数的数组名一般为 <code>$this-&gt;tplData['pageRow']</code>。在模板中需要根据参数来进行分页，详情请查看系统默认模板 <mark>./bg_content/tpl/pub/default/include/page.php</mark>。
 </p>
-<div class="panel panel-default">
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -16,7 +16,7 @@
                 <tr>
                     <td class="text-nowrap">page</td>
                     <td>当前页码</td>
-                    <td> </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap">p</td>
@@ -36,24 +36,23 @@
                 <tr>
                     <td class="text-nowrap">total</td>
                     <td>总页数</td>
-                    <td> </td>
+                    <td>&nbsp;</td>
                 </tr>
             </tbody>
         </table>
     </div>
-</div>
 
 <div>&nbsp;</div>
 
-<h4>栏目分页数据示例</h4>
-<code>print_r($this->tplData['pageRow'])</code>
+<h5>数据示例</h5>
+<code>print_r($this-&gt;tplData['pageRow'])</code>
 <p>
-<pre><code class="language-php">Array (
-    [page] => 1 //当前页号
-    [p] => 0 //分组数
-    [begin] => 1 //分组起始页码
-    [end] => 1 //分组结束页码
-    [total] => 1 //总页数
+<pre class="border rounded"><code class="language-php">Array (
+    [page] =&gt; 1 //当前页号
+    [p] =&gt; 0 //分组数
+    [begin] =&gt; 1 //分组起始页码
+    [end] =&gt; 1 //分组结束页码
+    [total] =&gt; 1 //总页数
 )</code></pre>
 </p>
 
@@ -61,7 +60,7 @@
 
 <h4>分页处理 PHP 示例代码</h4>
 <p>
-<pre><code class="language-php">$str_url = $this->tplData['cateRow']['urlRow']['cate_url'] . $this->tplData['cateRow']['urlRow']['page_attach'];
+<pre class="border rounded"><code class="language-php">$str_url = $this-&gt;tplData['cateRow']['urlRow']['cate_url'] . $this-&gt;tplData['cateRow']['urlRow']['page_attach'];
 
 echo &quot;&lt;ul&gt;&quot;;
     if ($pageRow[&quot;page&quot;] &gt; 1) { //如果当前页码大于 1，则显示首页链接

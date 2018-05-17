@@ -274,11 +274,17 @@ function fn_page($num_count, $num_per = BG_DEFAULT_PERPAGE) {
  * @param string $method (default: '')
  * @return void
  */
-function fn_jsonEncode($arr_json = '', $method = '') {
+function fn_jsonEncode($arr_json = '', $encode = false) {
+    if ($encode) {
+        $_str_encode = 'encode';
+    } else {
+        $_str_encode = '';
+    }
+
     if (fn_isEmpty($arr_json)) {
         $str_json = '';
     } else {
-        $arr_json = fn_eachArray($arr_json, $method);
+        $arr_json = fn_eachArray($arr_json, $_str_encode);
         //print_r($method);
         $str_json = json_encode($arr_json); //json编码
     }
@@ -295,12 +301,18 @@ function fn_jsonEncode($arr_json = '', $method = '') {
  * @param string $method (default: '')
  * @return void
  */
-function fn_jsonDecode($str_json = '', $method = '') {
+function fn_jsonDecode($str_json = '', $decode = false) {
+    if ($decode) {
+        $_str_decode = 'decode';
+    } else {
+        $_str_decode = '';
+    }
+
     if (fn_isEmpty($str_json)) {
         $arr_json = array();
     } else {
         $arr_json = json_decode($str_json, true); //json解码
-        $arr_json = fn_eachArray($arr_json, $method);
+        $arr_json = fn_eachArray($arr_json, $_str_decode);
     }
 
     return $arr_json;
@@ -445,12 +457,25 @@ function fn_regChk($str_chk, $str_reg, $str_wild = false) {
  * @param mixed $key
  * @return void
  */
-function fn_get($key) {
-    if (isset($_GET[$key])) {
-        return $_GET[$key];
+function fn_get($key = false, $arr_param = array()) {
+    $_return    = null;
+    $_arr_param = array_filter(array_unique($arr_param));
+
+    if ($key) {
+        if (isset($_GET[$key])) {
+            $_return = $_GET[$key];
+        }
     } else {
-        return null;
+        if (isset($_GET) && !fn_isEmpty($_GET)) {
+            if (fn_isEmpty($_arr_param)) {
+                $_return = $_GET;
+            } else {
+                $_return = fn_paramChk($_GET, $_arr_param);
+            }
+        }
     }
+
+    return $_return;
 }
 
 
@@ -461,12 +486,70 @@ function fn_get($key) {
  * @param mixed $key
  * @return void
  */
-function fn_post($key) {
-    if (isset($_POST[$key])) {
-        return $_POST[$key];
+function fn_post($key = false, $arr_param = array()) {
+    $_return    = null;
+    $_arr_param = array_filter(array_unique($arr_param));
+
+    if ($key) {
+        if (isset($_POST[$key])) {
+            $_return = $_POST[$key];
+        }
     } else {
-        return null;
+        if (isset($_POST) && !fn_isEmpty($_POST)) {
+            if (fn_isEmpty($_arr_param)) {
+                $_return = $_POST;
+            } else {
+                $_return = fn_paramChk($_POST, $_arr_param);
+            }
+        }
     }
+
+    return $_return;
+}
+
+
+/** 封装 $_REQUEST
+ * fn_request function.
+ *
+ * @access public
+ * @param mixed $key
+ * @return void
+ */
+function fn_request($key = false, $arr_param = array()) {
+    $_return    = null;
+    $_arr_param = array_filter(array_unique($arr_param));
+
+    if ($key) {
+        if (isset($_REQUEST[$key])) {
+            $_return = $_REQUEST[$key];
+        }
+    } else {
+        if (isset($_REQUEST) && !fn_isEmpty($_REQUEST)) {
+            if (fn_isEmpty($_arr_param)) {
+                $_return = $_REQUEST;
+            } else {
+                $_return = fn_paramChk($_REQUEST, $_arr_param);
+            }
+        }
+    }
+
+    return $_return;
+}
+
+
+function fn_paramChk($arr_data, $arr_param) {
+    $_arr_return    = array();
+    $_arr_param     = array_filter(array_unique($arr_param));
+
+    foreach ($_arr_param as $_key=>$_value) {
+        if (isset($arr_data[$_value])) {
+            $_arr_return[$_value] = $arr_data[$_value];
+        } else {
+            $_arr_return[$_value] = '';
+        }
+    }
+
+    return $_arr_return;
 }
 
 
@@ -515,22 +598,6 @@ function fn_session($key, $method = 'get', $value = '') {
                 return null;
             }
         break;
-    }
-}
-
-
-/** 封装 $_REQUEST
- * fn_request function.
- *
- * @access public
- * @param mixed $key
- * @return void
- */
-function fn_request($key) {
-    if (isset($_REQUEST[$key])) {
-        return $_REQUEST[$key];
-    } else {
-        return null;
     }
 }
 

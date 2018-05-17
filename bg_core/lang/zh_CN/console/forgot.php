@@ -21,6 +21,7 @@ return array(
     'href' => array(
         'forgot'    => '忘记密码',
         'login'     => '直接登录',
+        'help'      => '帮助',
     ),
 
     'label' => array(

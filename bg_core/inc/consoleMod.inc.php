@@ -264,4 +264,23 @@ return array(
             'del'    => 'Delete',
         ),
     ),
+    'plugin' => array(
+        'main' => array(
+            'title'  => 'Plug-in',
+            'mod'    => 'plug-in',
+        ),
+        'sub' => array(
+            'list' => array(
+                'title' => 'Plug-in Management',
+                'mod'   => 'plugin',
+                'act'   => 'list',
+            ),
+        ),
+        'allow' => array(
+            'browse'    => 'Browse',
+            'edit'      => 'Edit',
+            'install'   => 'Install',
+            'uninstall' => 'Uninstall',
+        ),
+    ),
 );

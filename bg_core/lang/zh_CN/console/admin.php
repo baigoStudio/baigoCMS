@@ -73,8 +73,10 @@ return array(
     'option' => array(
         'allStatus' => '所有状态', //所有
         'allType'   => '所有类型', //所有
-        'batch'             => '批量操作', //批量操作
-        'del'               => '永久删除', //删除
+        'batch'     => '批量操作', //批量操作
+        'del'       => '永久删除', //删除
+        'pleaseSelect'  => '请选择', //请选择
+        'noGroup'   => '不加入组',
     ),
 
     /*------按钮------*/

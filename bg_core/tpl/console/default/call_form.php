@@ -14,53 +14,52 @@ $cfg = array(
     'baigoValidator' => 'true',
     'baigoSubmit'    => 'true',
     'pathInclude'    => BG_PATH_TPLSYS . 'console' . DS . 'default' . DS . 'include' . DS,
-    'str_url'        => BG_URL_CONSOLE . "index.php?mod=call"
+    'str_url'        => BG_URL_CONSOLE . "index.php?m=call"
 );
 
 include($cfg['pathInclude'] . 'function.php');
 include($cfg['pathInclude'] . 'console_head.php'); ?>
 
-    <div class="form-group">
-        <ul class="nav nav-pills bg-nav-pills">
-            <li>
-                <a href="<?php echo BG_URL_CONSOLE; ?>index.php?mod=call&act=list">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <?php echo $this->lang['common']['href']['back']; ?>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo BG_URL_HELP; ?>index.php?mod=console&act=call#form" target="_blank">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    <?php echo $this->lang['mod']['href']['help']; ?>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_CONSOLE; ?>index.php?m=call&a=list" class="nav-link">
+                <span class="oi oi-chevron-left"></span>
+                <?php echo $this->lang['common']['href']['back']; ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo BG_URL_HELP; ?>index.php?m=console&a=call#form" class="nav-link" target="_blank">
+                <span class="badge badge-pill badge-primary">
+                    <span class="oi oi-question-mark"></span>
+                </span>
+                <?php echo $this->lang['mod']['href']['help']; ?>
+            </a>
+        </li>
+    </ul>
 
     <form name="call_form" id="call_form">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
-        <input type="hidden" name="act" value="submit">
+        <input type="hidden" name="a" value="submit">
         <input type="hidden" name="call_id" id="call_id" value="<?php echo $this->tplData['callRow']['call_id']; ?>">
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
-                            <div id="group_call_name">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callName']; ?><span id="msg_call_name">*</span></label>
-                                <input type="text" name="call_name" id="call_name" value="<?php echo $this->tplData['callRow']['call_name']; ?>" data-validate class="form-control">
-                            </div>
+                            <label><?php echo $this->lang['mod']['label']['callName']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="call_name" id="call_name" value="<?php echo $this->tplData['callRow']['call_name']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_call_name"></small>
                         </div>
 
                         <div id="call_article">
                             <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callFilter']; ?></div>
 
                             <div class="form-group">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callCate']; ?></label>
-                                <div class="bg-checkbox">
-                                    <label for="call_cate_ids_0">
-                                        <input type="checkbox" id="call_cate_ids_0" data-parent="first">
+                                <label><?php echo $this->lang['mod']['label']['callCate']; ?></label>
+                                <div class="form-check">
+                                    <label for="call_cate_ids_0"  class="form-check-label">
+                                        <input type="checkbox" id="call_cate_ids_0" data-parent="first" class="form-check-input">
                                         <?php echo $this->lang['mod']['label']['allCate']; ?>
                                     </label>
                                 </div>
@@ -72,20 +71,20 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label"><?php echo $this->lang['common']['label']['spec']; ?></label>
+                                <label><?php echo $this->lang['common']['label']['spec']; ?></label>
                                 <div class="input-group">
                                     <input type="text" id="spec_key" name="spec_key" placeholder="<?php echo $this->lang['mod']['label']['key']; ?>" class="form-control">
-                                    <span class="input-group-btn">
+                                    <span class="input-group-append">
                                         <button type="button" data-target="#call_modal" class="btn btn-info" data-toggle="modal">
-                                            <span class="glyphicon glyphicon-search"></span>
+                                            <span class="oi oi-magnifying-glass"></span>
                                         </button>
                                     </span>
                                 </div>
                                 <div id="spec_check_list">
                                     <?php foreach ($this->tplData['specRows'] as $key=>$value) { ?>
-                                        <div class="checkbox" id="spec_checkbox_<?php echo $value['spec_id']; ?>">
-                                            <label for="call_spec_ids_<?php echo $value['spec_id']; ?>">
-                                                <input type="checkbox" id="call_spec_ids_<?php echo $value['spec_id']; ?>" checked name="call_spec_ids[]" value="<?php echo $value['spec_id']; ?>">
+                                        <div class="form-check" id="spec_checkbox_<?php echo $value['spec_id']; ?>">
+                                            <label for="call_spec_ids_<?php echo $value['spec_id']; ?>" class="form-check-label">
+                                                <input type="checkbox" id="call_spec_ids_<?php echo $value['spec_id']; ?>" checked name="call_spec_ids[]" value="<?php echo $value['spec_id']; ?>" class="form-check-input">
                                                 <?php echo $value['spec_name']; ?>
                                             </label>
                                         </div>
@@ -94,7 +93,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callAttach']; ?></label>
+                                <label><?php echo $this->lang['mod']['label']['callAttach']; ?></label>
                                 <select id="call_attach" name="call_attach" class="form-control">
                                     <?php foreach ($this->tplData['attach'] as $key=>$value) { ?>
                                         <option <?php if ($this->tplData['callRow']['call_attach'] == $value) { ?>selected<?php } ?> value="<?php echo $value; ?>">
@@ -109,11 +108,11 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callMark']; ?><span id="msg_call_mark_ids"></span></label>
+                                <label><?php echo $this->lang['mod']['label']['callMark']; ?></label>
                                 <?php foreach ($this->tplData['markRows'] as $key=>$value) { ?>
-                                    <div class="bg-checkbox">
-                                        <label for="call_mark_ids_<?php echo $value['mark_id']; ?>">
-                                            <input type="checkbox" <?php if (in_array($value['mark_id'], $this->tplData['callRow']['call_mark_ids'])) { ?>checked<?php } ?> value="<?php echo $value['mark_id']; ?>" name="call_mark_ids[]" id="call_mark_ids_<?php echo $value['mark_id']; ?>">
+                                    <div class="form-check">
+                                        <label for="call_mark_ids_<?php echo $value['mark_id']; ?>"  class="form-check-label">
+                                            <input type="checkbox" <?php if (in_array($value['mark_id'], $this->tplData['callRow']['call_mark_ids'])) { ?>checked<?php } ?> value="<?php echo $value['mark_id']; ?>" name="call_mark_ids[]" id="call_mark_ids_<?php echo $value['mark_id']; ?>" class="form-check-input">
                                             <?php echo $value['mark_name']; ?>
                                         </label>
                                     </div>
@@ -125,10 +124,10 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                             <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callFilter']; ?></div>
 
                             <div class="form-group">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callCate']; ?></label>
-                                <div class="bg-radio">
-                                    <label for="call_cate_id_0">
-                                        <input type="radio" <?php if ($this->tplData['callRow']['call_cate_id'] == 0) { ?>checked<?php } ?> value="0" name="call_cate_id" id="call_cate_id_0">
+                                <label><?php echo $this->lang['mod']['label']['callCate']; ?></label>
+                                <div class="form-check">
+                                    <label for="call_cate_id_0" class="form-check-label">
+                                        <input type="radio" <?php if ($this->tplData['callRow']['call_cate_id'] == 0) { ?>checked<?php } ?> value="0" name="call_cate_id" id="call_cate_id_0" class="form-check-input">
                                         <?php echo $this->lang['mod']['label']['allCate']; ?>
                                     </label>
                                 </div>
@@ -141,28 +140,29 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                         </div>
 
                         <div class="bg-submit-box"></div>
+                        <div class="bg-validator-box mt-3"></div>
                     </div>
-                    <div class="panel-footer">
+                    <div class="card-footer">
                         <button type="button" class="btn btn-primary bg-submit"><?php echo $this->lang['mod']['btn']['save']; ?></button>
                         <?php if ($this->tplData['callRow']['call_id'] > 0) { ?>
-                            <button type="button" class="btn btn-default bg-duplicate"><?php echo $this->lang['mod']['btn']['duplicate']; ?></button>
+                            <button type="button" class="btn btn-outline-secondary bg-duplicate"><?php echo $this->lang['mod']['btn']['duplicate']; ?></button>
                         <?php } ?>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3">
-                <div class="well">
-                    <?php if ($this->tplData['callRow']['call_id'] > 0) { ?>
-                        <div class="form-group">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['id']; ?></label>
-                            <div class="form-control-static"><?php echo $this->tplData['callRow']['call_id']; ?></div>
-                        </div>
-                    <?php } ?>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <?php if ($this->tplData['callRow']['call_id'] > 0) { ?>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['id']; ?></label>
+                                <div class="form-text"><?php echo $this->tplData['callRow']['call_id']; ?></div>
+                            </div>
+                        <?php } ?>
 
-                    <div class="form-group">
-                        <div id="group_call_type">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['type']; ?><span id="msg_call_type">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['type']; ?> <span class="text-danger">*</span></label>
                             <select id="call_type" name="call_type" data-validate class="form-control">
                                 <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                 <?php foreach ($this->tplData['type'] as $key=>$value) { ?>
@@ -175,13 +175,12 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                     </option>
                                 <?php } ?>
                             </select>
+                            <small class="form-text" id="msg_call_type"></small>
                         </div>
-                    </div>
 
-                    <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == 'static') { ?>
-                        <div class="form-group">
-                            <div id="group_call_file">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callFile']; ?><span id="msg_call_file">*</span></label>
+                        <?php if (BG_MODULE_GEN > 0 && BG_VISIT_TYPE == 'static') { ?>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['callFile']; ?> <span class="text-danger">*</span></label>
                                 <select name="call_file" id="call_file" data-validate class="form-control">
                                     <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                     <?php foreach ($this->tplData['file'] as $key=>$value) { ?>
@@ -194,12 +193,11 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                         </option>
                                     <?php } ?>
                                 </select>
+                                <small class="form-text" id="msg_call_file"></small>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div id="group_call_tpl">
-                                <label class="control-label"><?php echo $this->lang['mod']['label']['callTpl']; ?><span id="msg_call_tpl">*</span></label>
+                            <div class="form-group">
+                                <label><?php echo $this->lang['mod']['label']['callTpl']; ?> <span class="text-danger">*</span></label>
                                 <select name="call_tpl" id="call_tpl" data-validate class="form-control">
                                     <option value=""><?php echo $this->lang['mod']['option']['pleaseSelect']; ?></option>
                                     <?php foreach ($this->tplData['tplRows'] as $key=>$value) {
@@ -210,17 +208,16 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                         <?php }
                                     } ?>
                                 </select>
+                                <small class="form-text" id="msg_call_tpl"></small>
                             </div>
-                        </div>
-                    <?php } ?>
+                        <?php } ?>
 
-                    <div class="form-group">
-                        <div id="group_call_status">
-                            <label class="control-label"><?php echo $this->lang['mod']['label']['status']; ?><span id="msg_call_status">*</span></label>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['status']; ?> <span class="text-danger">*</span></label>
                             <?php foreach ($this->tplData['status'] as $key=>$value) { ?>
-                                <div class="bg-radio">
-                                    <label for="call_status_<?php echo $value; ?>">
-                                        <input type="radio" name="call_status" id="call_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($this->tplData['callRow']['call_status'] == $value) { ?>checked<?php } ?> data-validate="call_status">
+                                <div class="form-check">
+                                    <label for="call_status_<?php echo $value; ?>" class="form-check-label">
+                                        <input type="radio" name="call_status" id="call_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($this->tplData['callRow']['call_status'] == $value) { ?>checked<?php } ?> data-validate="call_status" class="form-check-input">
                                         <?php if (isset($this->lang['mod']['status'][$value])) {
                                             echo $this->lang['mod']['status'][$value];
                                         } else {
@@ -229,19 +226,22 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
                                     </label>
                                 </div>
                             <?php } ?>
+                            <small class="form-text" id="msg_call_status"></small>
                         </div>
-                    </div>
 
-                    <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callAmount']; ?></div>
+                        <div class="alert alert-success"><?php echo $this->lang['mod']['label']['callAmount']; ?></div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callAmoutTop']; ?><span id="msg_call_amount_top">*</span></label>
-                        <input type="text" name="call_amount[top]" id="call_amount_top" value="<?php echo $this->tplData['callRow']['call_amount']['top']; ?>" data-validate class="form-control">
-                    </div>
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['callAmoutTop']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="call_amount[top]" id="call_amount_top" value="<?php echo $this->tplData['callRow']['call_amount']['top']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_call_amount_top"></small>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label"><?php echo $this->lang['mod']['label']['callAmoutExcept']; ?><span id="msg_call_amount_except">*</span></label>
-                        <input type="text" name="call_amount[except]" id="call_amount_except" value="<?php echo $this->tplData['callRow']['call_amount']['except']; ?>" data-validate class="form-control">
+                        <div class="form-group">
+                            <label><?php echo $this->lang['mod']['label']['callAmoutExcept']; ?> <span class="text-danger">*</span></label>
+                            <input type="text" name="call_amount[except]" id="call_amount_except" value="<?php echo $this->tplData['callRow']['call_amount']['except']; ?>" data-validate class="form-control">
+                            <small class="form-text" id="msg_call_amount_except"></small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,7 +250,7 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
 
     <form name="call_duplicate" id="call_duplicate">
         <input type="hidden" name="<?php echo $this->common['tokenRow']['name_session']; ?>" value="<?php echo $this->common['tokenRow']['token']; ?>">
-        <input type="hidden" name="act" value="duplicate">
+        <input type="hidden" name="a" value="duplicate">
         <input type="hidden" name="call_id" id="call_id" value="<?php echo $this->tplData['callRow']['call_id']; ?>">
     </form>
 
@@ -266,50 +266,56 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     var opts_validator_form = {
         call_name: {
             len: { min: 1, max: 300 },
-            validate: { type: "str", format: "text", group: "#group_call_name" },
-            msg: { selector: "#msg_call_name", too_short: "<?php echo $this->lang['rcode']['x170201']; ?>", too_long: "<?php echo $this->lang['rcode']['x170202']; ?>" }
+            validate: { type: "str", format: "text" },
+            msg: { too_short: "<?php echo $this->lang['rcode']['x170201']; ?>", too_long: "<?php echo $this->lang['rcode']['x170202']; ?>" }
         },
         call_type: {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_call_type" },
-            msg: { selector: "#msg_call_type", too_few: "<?php echo $this->lang['rcode']['x170204']; ?>" }
+            validate: { type: "select" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x170204']; ?>" }
         },
         call_file: {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_call_file" },
-            msg: { selector: "#msg_call_file", too_few: "<?php echo $this->lang['rcode']['x170205']; ?>" }
+            validate: { type: "select" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x170205']; ?>" }
         },
         call_tpl: {
             len: { min: 1, max: 0 },
-            validate: { type: "select", group: "#group_call_tpl" },
-            msg: { selector: "#msg_call_tpl", too_few: "<?php echo $this->lang['rcode']['x170217']; ?>" }
+            validate: { type: "select" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x170217']; ?>" }
         },
         call_status: {
             len: { min: 1, max: 0 },
-            validate: { selector: "input[name='call_status']", type: "radio", group: "#group_call_status" },
-            msg: { selector: "#msg_call_status", too_few: "<?php echo $this->lang['rcode']['x170206']; ?>" }
+            validate: { selector: "input[name='call_status']", type: "radio" },
+            msg: { too_few: "<?php echo $this->lang['rcode']['x170206']; ?>" }
         },
         call_amount_top: {
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "int" },
-            msg: { selector: "#msg_call_amount_top", too_short: "<?php echo $this->lang['rcode']['x170207']; ?>", format_err: "<?php echo $this->lang['rcode']['x170208']; ?>" }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x170207']; ?>", format_err: "<?php echo $this->lang['rcode']['x170208']; ?>" }
         },
         call_amount_except: {
             len: { min: 1, max: 0 },
             validate: { type: "str", format: "int" },
-            msg: { selector: "#msg_call_amount_except", too_short: "<?php echo $this->lang['rcode']['x170209']; ?>", format_err: "<?php echo $this->lang['rcode']['x170210']; ?>" }
+            msg: { too_short: "<?php echo $this->lang['rcode']['x170209']; ?>", format_err: "<?php echo $this->lang['rcode']['x170210']; ?>" }
+        }
+    };
+
+    var options_validator_form = {
+        msg_global:{
+            msg: "<?php echo $this->lang['common']['label']['errInput']; ?>"
         }
     };
 
     var opts_submit_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=call",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=call&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
     };
 
     var opts_duplicate_form = {
-        ajax_url: "<?php echo BG_URL_CONSOLE; ?>request.php?mod=call",
+        ajax_url: "<?php echo BG_URL_CONSOLE; ?>index.php?m=call&c=request",
         msg_text: {
             submitting: "<?php echo $this->lang['common']['label']['submitting']; ?>"
         }
@@ -342,12 +348,12 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
         $("#call_modal").on("shown.bs.modal",function(event){
     		var _spec_key = $("#spec_key").val();
     		var _obj_button   = $(event.relatedTarget);
-            $("#call_modal .modal-content").load("<?php echo BG_URL_CONSOLE; ?>index.php?mod=spec&act=insert&target=call&call_id=<?php echo $this->tplData['callRow']['call_id']; ?>&view=modal&key=" + _spec_key);
+            $("#call_modal .modal-content").load("<?php echo BG_URL_CONSOLE; ?>index.php?m=spec&a=insert&target=call&call_id=<?php echo $this->tplData['callRow']['call_id']; ?>&view=modal&key=" + _spec_key);
     	}).on("hidden.bs.modal", function(){
         	$("#call_modal .modal-content").empty();
     	});
 
-        var obj_validate_form = $("#call_form").baigoValidator(opts_validator_form);
+        var obj_validate_form = $("#call_form").baigoValidator(opts_validator_form, options_validator_form);
         var obj_submit_form   = $("#call_form").baigoSubmit(opts_submit_form);
         $(".bg-submit").click(function(){
             if (obj_validate_form.verify()) {
@@ -366,4 +372,4 @@ include($cfg['pathInclude'] . 'console_head.php'); ?>
     });
     </script>
 
-<?php include($cfg['pathInclude'] . 'html_foot.php'); ?>
+<?php include('include' . DS . 'html_foot.php');
