@@ -812,7 +812,7 @@ class MODEL_CATE {
                 $_arr_cateRow   = $this->cache_row_process($_value);
                 if ($_arr_cateRow['rcode'] == 'y250102') {
                     $_str_outPut    = json_encode($_arr_cateRow);
-                    $_num_size      = $this->obj_file->file_put(BG_PATH_CACHE . 'sys' . DS . 'cate_' . $_arr_cateRow['cate_id'] . '.json', $_str_outPut);
+                    $_num_sizeCate  = $this->obj_file->file_put(BG_PATH_CACHE . 'sys' . DS . 'cate_' . $_arr_cateRow['cate_id'] . '.json', $_str_outPut);
                 }
             }
         }

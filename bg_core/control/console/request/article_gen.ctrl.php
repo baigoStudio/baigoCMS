@@ -12,7 +12,8 @@ if (!defined('IN_BAIGO')) {
 /*-------------用户类-------------*/
 class CONTROL_CONSOLE_REQUEST_ARTICLE_GEN {
 
-    public $is_gen = true;
+    public $is_gen      = true;
+    public $is_enforce  = false;
 
     function __construct() { //构造函数
         $this->general_console  = new GENERAL_CONSOLE();
@@ -80,7 +81,7 @@ class CONTROL_CONSOLE_REQUEST_ARTICLE_GEN {
             }
         }
 
-        if ($_arr_articleRow['article_is_gen'] == 'yes' && $_str_enforce != 'true') {
+        if ($_arr_articleRow['article_is_gen'] == 'yes' && $_str_enforce != 'true' && !$this->is_enforce) {
             if ($this->is_gen) {
                 $_arr_tplData = array(
                     'rcode' => 'x120402',

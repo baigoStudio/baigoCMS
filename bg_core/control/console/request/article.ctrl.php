@@ -57,7 +57,7 @@ class CONTROL_CONSOLE_REQUEST_ARTICLE {
 
         if (defined('BG_MODULE_GEN') && BG_MODULE_GEN > 0 && defined('BG_VISIT_TYPE') && BG_VISIT_TYPE == 'static') {
             $this->obj_file          = new CLASS_FILE();
-            $this->ctrl_article_gen = new CONTROL_CONSOLE_REQUEST_ARTICLE_GEN();
+            $this->ctrl_article_gen  = new CONTROL_CONSOLE_REQUEST_ARTICLE_GEN();
         }
 
         if (BG_MODULE_FTP > 0) {
@@ -299,7 +299,8 @@ class CONTROL_CONSOLE_REQUEST_ARTICLE {
 
         if (defined('BG_MODULE_GEN') && BG_MODULE_GEN > 0 && defined('BG_VISIT_TYPE') && BG_VISIT_TYPE == 'static') {
             if ($_arr_articleRow['article_id'] > 0) {
-                $this->ctrl_article_gen->is_gent = false,
+                $this->ctrl_article_gen->is_gen     = false;
+                $this->ctrl_article_gen->is_enforce = true;
                 $this->ctrl_article_gen->ctrl_single($_arr_articleRow['article_id']); //生成单个静态页面
             }
         }
