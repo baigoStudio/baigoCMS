@@ -62,7 +62,7 @@ class CONTROL_API_SSO_SYNC {
             $this->general_api->show_result($_arr_appChk);
         }
 
-        $this->general_console->ssin_login($_arr_decode['user_id'], $_arr_decode['user_access_token'], $_arr_decode['user_access_expire'], $_arr_decode['user_refresh_token'], $_arr_decode['user_refresh_expire']);
+        $this->general_console->ssin_login($_arr_decode['user_id'], $_arr_decode['user_access_token'], $_arr_decode['user_access_expire'], $_arr_decode['user_refresh_token'], $_arr_decode['user_refresh_expire'], '', 'sync');
 
         $_arr_return = array(
             'rcode' => 'y020405',

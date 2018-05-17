@@ -45,16 +45,14 @@ include($cfg['pathInclude'] . 'login_head.php'); ?>
             <small class="form-text" id="msg_captcha"></small>
         </div>
 
-        <!--<div class="form-group">
+        <div class="form-group">
             <div class="form-check">
                 <label for="admin_remenber" data-toggle="tooltip" data-placement="right" title="<?php echo $this->lang['mod']['label']['remenberNote']; ?>" class="form-check-label">
                     <input type="checkbox" name="admin_remenber" id="admin_remenber" value="remenber" class="form-check-input">
                     <?php echo $this->lang['mod']['label']['remenber']; ?>
                 </label>
             </div>
-
-            <div class="alert alert-danger hidden" id="msg_admin_remenber"><?php echo $this->lang['mod']['label']['remenberNote']; ?></div>
-        </div>-->
+        </div>
 
         <div class="bg-submit-box"></div>
         <div class="bg-validator-box mt-3"></div>

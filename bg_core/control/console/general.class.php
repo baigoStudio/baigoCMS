@@ -71,12 +71,12 @@ class GENERAL_CONSOLE {
         $_num_cookieTimeDiff    = fn_cookie('admin_ssin_time') + BG_DEFAULT_SESSION; //session有效期
 
         if (fn_isEmpty(fn_session('admin_id')) || fn_isEmpty(fn_session('admin_ssin_time')) || fn_isEmpty(fn_session('admin_hash')) || $_num_ssinTimeDiff < time() || fn_isEmpty(fn_cookie('admin_id')) || fn_isEmpty(fn_cookie('admin_ssin_time')) || fn_isEmpty(fn_cookie('admin_hash')) || $_num_cookieTimeDiff < time()) {
-            //if (fn_isEmpty(fn_cookie('remenber_admin_id')) || fn_isEmpty(fn_cookie('remenber_admin_hash')) || fn_isEmpty(fn_cookie('remenber_hash_time'))) {
+            if (fn_isEmpty(fn_cookie('remenber_admin_id')) || fn_isEmpty(fn_cookie('remenber_admin_hash')) || fn_isEmpty(fn_cookie('remenber_hash_time'))) {
                 $this->ssin_end();
                 return array(
                     'rcode' => 'x020402',
                 );
-            /*} else {
+            } else {
                 $_num_cookieRemenberDiff = fn_cookie('remenber_hash_time') + BG_DEFAULT_REMENBER; //记住密码有效期
                 if ($_num_cookieRemenberDiff < time()) {
                     $this->ssin_end();
@@ -105,10 +105,8 @@ class GENERAL_CONSOLE {
                     );
                 }
 
-                fn_cookie('admin_login_type', 'mk', 'auto', BG_DEFAULT_SESSION, BG_URL_CONSOLE);
-
-                $this->session_process($_arr_adminRow);
-            }*/
+                $this->session_process($_arr_adminRow, 'auto');
+            }
         }
 
         $_arr_adminRow = $this->mdl_admin->mdl_read(fn_session('admin_id'));
@@ -153,7 +151,7 @@ class GENERAL_CONSOLE {
     }
 
 
-    function ssin_login($num_adminId, $str_accessToken, $tm_accessExpire, $str_refreshToken, $tm_refreshExpire, $str_remenber = '') {
+    function ssin_login($num_adminId, $str_accessToken, $tm_accessExpire, $str_refreshToken, $tm_refreshExpire, $str_remenber = '', $str_loginType = 'form') {
         $_arr_adminRow = $this->mdl_admin->mdl_read($num_adminId); //本地数据库处理
 
         if ($_arr_adminRow['rcode'] != 'y020102') {
@@ -178,9 +176,7 @@ class GENERAL_CONSOLE {
             fn_cookie('remenber_hash_time', 'mk', time(), BG_DEFAULT_REMENBER, BG_URL_CONSOLE);
         }
 
-        fn_cookie('admin_login_type', 'mk', 'form', BG_DEFAULT_SESSION, BG_URL_CONSOLE);
-
-        $this->session_process($_arr_loginRow);
+        $this->session_process($_arr_loginRow, $str_loginType);
 
         return array(
             'rcode' => 'ok',
@@ -287,12 +283,14 @@ class GENERAL_CONSOLE {
     }
 
 
-    private function session_process($arr_adminRow) {
+    private function session_process($arr_adminRow, $str_loginType = 'form') {
         fn_session('admin_id', 'mk', $arr_adminRow['admin_id']);
         fn_session('admin_ssin_time', 'mk', time());
         fn_session('admin_hash', 'mk', $this->hash_process($arr_adminRow));
+        fn_session('admin_login_type', 'mk', $str_loginType);
         fn_cookie('admin_id', 'mk', $arr_adminRow['admin_id'], BG_DEFAULT_SESSION, BG_URL_CONSOLE);
         fn_cookie('admin_ssin_time', 'mk', time(), BG_DEFAULT_SESSION, BG_URL_CONSOLE);
         fn_cookie('admin_hash', 'mk', $this->hash_process($arr_adminRow), BG_DEFAULT_SESSION, BG_URL_CONSOLE);
+        fn_cookie('admin_login_type', 'mk', $str_loginType, BG_DEFAULT_SESSION, BG_URL_CONSOLE);
     }
 }
