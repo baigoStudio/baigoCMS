@@ -1,0 +1,142 @@
+<?php
+/*-----------------------------------------------------------------
+！！！！警告！！！！
+以下为系统文件，请勿修改
+-----------------------------------------------------------------*/
+
+namespace app\ctrl\index;
+
+use app\classes\index\Ctrl;
+use ginkgo\Loader;
+use ginkgo\Func;
+
+//不能非法包含或直接执行
+defined('IN_GINKGO') or exit('Access denied');
+
+class Search extends Ctrl {
+
+    function index() {
+        $_mix_init = $this->indexInit();
+
+        if ($_mix_init !== true) {
+            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
+        }
+
+        $_arr_searchParam = array(
+            'key'       => array('str', ''),
+            'year'      => array('str', ''),
+            'month'     => array('str', ''),
+            'cate'      => array('int', 0),
+        );
+
+        foreach ($this->generalData['customRows'] as $_key=>$_value) {
+            $_arr_searchParam['custom_' . $_value['custom_id']] = array('str', '');
+        }
+
+        $_arr_search = $this->obj_request->param($_arr_searchParam);
+
+        foreach ($this->generalData['customRows'] as $_key=>$_value) {
+            if (!Func::isEmpty($_arr_search['custom_' . $_value['custom_id']]) && !isset($_arr_search['has_custom'])) {
+                $_arr_search['has_custom'] = true;
+                break;
+            }
+        }
+
+        $_arr_pageRow       = array();
+        $_arr_articleRows   = array();
+
+        if (!Func::isEmpty($_arr_search['key']) || isset($_arr_search['has_custom'])) {
+            $_arr_search['cate_ids'] = false;
+
+            if ($_arr_search['cate'] > 0) {
+                $_arr_cateRow            = $this->obj_index->cateRead($_arr_search['cate']);
+            } else if ($_arr_search['cate'] < 0) {
+                $_arr_search['cate_id']  = $_arr_search['cate'];
+            }
+
+            $_mdl_articleCustomView    = Loader::model('Article_Custom_View');
+
+            $_num_articleCount  = $_mdl_articleCustomView->count($_arr_search); //统计记录数
+            $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $this->configVisit['perpage_in_search']); //取得分页数据
+            $_arr_articleRows   = $_mdl_articleCustomView->lists($this->configVisit['perpage_in_search'], $_arr_pageRow['except'], $_arr_search); //列出
+        }
+
+        if (!Func::isEmpty($_arr_articleRows)) {
+            foreach ($_arr_articleRows as $_key=>$_value) {
+                $_arr_articleRows[$_key]['article_title'] = str_ireplace($_arr_search['key'], '<span class="highlight">' . $_arr_search['key'] . '</span>', $_value['article_title']);
+            }
+        }
+
+        $_arr_tplData = array(
+            'urlRow'        => $this->urlProcess($_arr_search),
+            'pageRow'       => $_arr_pageRow,
+            'search'        => $_arr_search,
+            'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
+        );
+
+        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
+
+        $this->assign($_arr_tpl);
+
+        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+
+        return $this->fetch();
+    }
+
+
+    function typeahead() {
+        $_mix_init = $this->indexInit();
+
+        if ($_mix_init !== true) {
+            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+        }
+
+        $_arr_searchParam = array(
+            'key'       => array('str', ''),
+        );
+
+        $_arr_search = $this->obj_request->param($_arr_searchParam);
+
+        $_arr_articleRows   = array();
+
+        if (!Func::isEmpty($_arr_search['key'])) {
+            $_mdl_articleCateView    = Loader::model('Article_Cate_View');
+            $_arr_articleRows        = $_mdl_articleCateView->lists($this->configVisit['perpage_in_ajax'], 0, $_arr_search); //列出
+        }
+
+        $_arr_articleRows = $this->obj_index->articleListsProcess($_arr_articleRows, false);
+
+        return $this->json($_arr_articleRows);
+    }
+
+
+    private function urlProcess($arr_search) {
+        $_str_urlPrefix     = $this->obj_request->baseUrl() . $this->configRoute['search'] . '/';
+
+        $_arr_urlRow = array(
+            'url'           => $_str_urlPrefix,
+            'url_more'      => '',
+            'param'         => 'page/',
+            'param_more'    => 'page/',
+            'suffix'        => '',
+        );
+
+        if (isset($arr_search['key']) && !Func::isEmpty($arr_search['key'])) {
+            $_arr_urlRow['url'] .= 'key/' . $arr_search['key'] . '/';
+        }
+
+        if (isset($arr_search['year']) && !Func::isEmpty($arr_search['year'])) {
+            $_arr_urlRow['url'] .= 'year/' . $arr_search['year'] . '/';
+        }
+
+        if (isset($arr_search['month']) && !Func::isEmpty($arr_search['month'])) {
+            $_arr_urlRow['url'] .= 'month/' . $arr_search['month'] . '/';
+        }
+
+        if (isset($arr_search['cate']) && $arr_search['cate'] > 0) {
+            $_arr_urlRow['url'] .= 'cate/' . $arr_search['cate'] . '/';
+        }
+
+        return $_arr_urlRow;
+    }
+}

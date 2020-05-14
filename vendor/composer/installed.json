@@ -1,0 +1,95 @@
+[
+    {
+        "name": "jaeger/phpquery-single",
+        "version": "0.9.9",
+        "version_normalized": "0.9.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jae-jae/phpQuery-single.git",
+            "reference": "6c12e3a1648dc619f16920f96082f397d74e0127"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jae-jae/phpQuery-single/zipball/6c12e3a1648dc619f16920f96082f397d74e0127",
+            "reference": "6c12e3a1648dc619f16920f96082f397d74e0127",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2017-12-07T02:13:37+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "phpQuery.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Tobiasz Cudnik",
+                "email": "tobiasz.cudnik@gmail.com",
+                "homepage": "https://github.com/TobiaszCudnik",
+                "role": "Developer"
+            },
+            {
+                "name": "Jaeger",
+                "role": "Packager"
+            }
+        ],
+        "description": "phpQuery单文件版本，是Querylist的依赖(http://querylist.cc/)，phpQuery项目主页:http://code.google.com/p/phpquery/",
+        "homepage": "http://code.google.com/p/phpquery/"
+    },
+    {
+        "name": "jaeger/querylist",
+        "version": "V3.2.1",
+        "version_normalized": "3.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jae-jae/QueryList.git",
+            "reference": "1a7864dcf8d979d6d57a2a3508f2dd62ce3233d6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jae-jae/QueryList/zipball/1a7864dcf8d979d6d57a2a3508f2dd62ce3233d6",
+            "reference": "1a7864dcf8d979d6d57a2a3508f2dd62ce3233d6",
+            "shasum": ""
+        },
+        "require": {
+            "jaeger/phpquery-single": "^0.9",
+            "php": ">=5.3.0"
+        },
+        "suggest": {
+            "monolog/monolog": "Log support"
+        },
+        "time": "2017-06-09T04:25:07+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "QL\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jaeger",
+                "email": "JaegerCode@gmail.com"
+            }
+        ],
+        "description": "QueryList是基于phpQuery的无比强大的PHP采集工具",
+        "homepage": "http://querylist.cc",
+        "keywords": [
+            "QueryList",
+            "phpQuery",
+            "spider"
+        ]
+    }
+]
