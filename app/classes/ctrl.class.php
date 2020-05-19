@@ -97,18 +97,6 @@ abstract class Ctrl extends Gk_Ctrl {
             $_arr_configUi['logo_install'] = '{:DIR_STATIC}cms/image/logo_blue.svg';
         }
 
-        $_arr_data = array(
-            'ui_ctrl'       => $_arr_configUi,
-            'ftp_open'      => $this->ftpOpen,
-            'gen_open'      => $this->genOpen,
-            'config'        => $_arr_config,
-            'route'         => $this->route,
-            'route_orig'    => $this->routeOrig,
-            'param'         => $this->param,
-        );
-
-        $this->generalData = array_replace_recursive($this->generalData, $_arr_data);
-
         $this->config       = $_arr_config;
         $_arr_configBase    = Config::get('base', 'var_extra');
 
@@ -169,6 +157,18 @@ abstract class Ctrl extends Gk_Ctrl {
         }
 
         $this->configVisit  = $_arr_configVisit;
+
+        $_arr_data = array(
+            'ui_ctrl'       => $_arr_configUi,
+            'ftp_open'      => $this->ftpOpen,
+            'gen_open'      => $this->genOpen,
+            'config'        => $_arr_config,
+            'route'         => $this->route,
+            'route_orig'    => $this->routeOrig,
+            'param'         => $this->param,
+        );
+
+        $this->generalData = array_replace_recursive($this->generalData, $_arr_data);
     }
 
 
