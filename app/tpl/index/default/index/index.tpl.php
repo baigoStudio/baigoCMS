@@ -35,9 +35,11 @@ include($cfg['pathInclude'] . 'index_head' . GK_EXT_TPL); ?>
 
     <?php $_arr_callRow = $call->get(5);
 
-    foreach ($_arr_callRow['articleRows'] as $key=>$value) { ?>
-        <div><?php echo $value['article_title']; ?></div>
-    <?php }
+    if (isset($_arr_callRow['articleRows']) && !empty($_arr_callRow['articleRows'])) {
+        foreach ($_arr_callRow['articleRows'] as $key=>$value) { ?>
+            <div><?php echo $value['article_title']; ?></div>
+        <?php }
+    }
 
 include($cfg['pathInclude'] . 'index_foot' . GK_EXT_TPL);
 include($cfg['pathInclude'] . 'html_foot' . GK_EXT_TPL);

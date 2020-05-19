@@ -241,8 +241,8 @@ class Install extends Sso {
     function over() {
         $_arr_crypt = array(
             'app_name'          => 'baigo ADS',
-            'app_url_notify'    => $this->obj_request->baseUrl(true) . '/sso/notify',
-            'app_url_sync'      => $this->obj_request->baseUrl(true) . '/sso/sync',
+            'app_url_notify'    => $this->obj_request->baseUrl(true) . 'sso/notify',
+            'app_url_sync'      => $this->obj_request->baseUrl(true) . 'sso/sync',
             'timestamp'         => GK_NOW,
         );
 
@@ -362,7 +362,7 @@ class Install extends Sso {
 
                 if (!isset($_arr_security['key']) || !isset($_arr_security['secret'])) {
                     return array(
-                        'rcode' => 'x030203',
+                        'rcode' => 'x030204',
                         'msg'   => 'Installation type is not set',
                     );
                 }

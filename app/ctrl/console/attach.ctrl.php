@@ -1045,20 +1045,24 @@ class Attach extends Ctrl {
         $_num_sizeUnit  = 1;
 
         switch ($_str_limitUnit) { //初始化单位
-            case 'b':
-                $_num_sizeUnit = 1;
-            break;
-
-            case 'kb':
-                $_num_sizeUnit = 1024;
-            break;
-
-            case 'mb':
-                $_num_sizeUnit = 1024 * 1024;
+            case 'tb':
+                $_num_sizeUnit = GK_TB;
             break;
 
             case 'gb':
-                $_num_sizeUnit = 1024 * 1024 * 1024;
+                $_num_sizeUnit = GK_GB;
+            break;
+
+            case 'mb':
+                $_num_sizeUnit = GK_MB;
+            break;
+
+            case 'kb':
+                $_num_sizeUnit = GK_KB;
+            break;
+
+            default:
+                $_num_sizeUnit = 1;
             break;
         }
 

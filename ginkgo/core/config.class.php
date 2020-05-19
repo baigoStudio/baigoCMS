@@ -298,6 +298,7 @@ class Config {
 
         if (Func::isFile($_str_pathBase)) {
             $_arr_config = Loader::load($_str_pathBase);
+            ++self::$count;
         }
 
         if (Func::isFile($_str_pathDbconfig)) {

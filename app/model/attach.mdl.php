@@ -35,7 +35,7 @@ class Attach extends Model {
         $this->urlPrefix    = $this->obj_request->root() . $_str_dirAttach;
 
         if (!Func::isEmpty($_arr_configUpload['ftp_host']) && !Func::isEmpty($_arr_configUpload['url_prefix'])) {
-            $this->urlPrefix = $_arr_configUpload['url_prefix'] . '/';
+            $this->urlPrefix = Func::fixDs($_arr_configUpload['url_prefix'], '/');
         }
 
         $this->configUpload = $_arr_configUpload;

@@ -20,6 +20,18 @@ abstract class Model extends Gk_Model {
 
         $_arr_configBase = Config::get('base', 'var_extra');
 
+        if (!isset($_arr_configBase['site_date'])) {
+            $_arr_configBase['site_date'] = 'Y-m-d';
+        }
+
+        if (!isset($_arr_configBase['site_date_short'])) {
+            $_arr_configBase['site_date_short'] = 'm-d';
+        }
+
+        if (!isset($_arr_configBase['site_time_short'])) {
+            $_arr_configBase['site_time_short'] = 'H:i';
+        }
+
         $_arr_return = array();
 
         $_arr_return['date_time']       = date($_arr_configBase['site_date'] . ' ' . $_arr_configBase['site_time_short'], $time);

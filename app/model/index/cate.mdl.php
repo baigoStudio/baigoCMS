@@ -67,6 +67,10 @@ class Cate extends Cate_Base {
         $_arr_configVisit   = Config::get('visit', 'var_extra');
         $_str_routeCate     = Config::get('cate', 'index.route');
 
+        if (!isset($_arr_configVisit['visit_type'])) {
+            $_arr_configVisit['visit_type'] = 'default';
+        }
+
         $_arr_urlRow = array(
             'url'           => '',
             'url_more'      => '',
@@ -79,7 +83,7 @@ class Cate extends Cate_Base {
             $_arr_urlRow['url'] = $arr_cateRow['cate_link'];
         } else {
             if (isset($arr_cateRow['cate_breadcrumb'][0]['cate_prefix']) && !Func::isEmpty($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'])) {
-                $_str_urlPrefix = $arr_cateRow['cate_breadcrumb'][0]['cate_prefix'];
+                $_str_urlPrefix = Func::fixDs($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'], '/');
             } else {
                 $_str_urlPrefix = $this->obj_request->baseUrl();
             }
@@ -94,14 +98,14 @@ class Cate extends Cate_Base {
 
             switch ($_arr_configVisit['visit_type']) {
                 case 'static':
-                    $_arr_urlRow['url']         = $_str_urlPrefix . '/' . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'];
-                    $_arr_urlRow['url_more']    = $_str_urlPrefix . '/' . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'] . 'id/' . $arr_cateRow['cate_id'] . '/';
+                    $_arr_urlRow['url']         = $_str_urlPrefix . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'];
+                    $_arr_urlRow['url_more']    = $_str_urlPrefix . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'] . 'id/' . $arr_cateRow['cate_id'] . '/';
                     $_arr_urlRow['param']       = 'page-';
                     $_arr_urlRow['suffix']      = '.' . $_arr_configVisit['visit_file'];
                 break;
 
                 default:
-                    $_arr_urlRow['url'] = $_str_urlPrefix . '/' . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'] . 'id/' . $arr_cateRow['cate_id'] . '/';
+                    $_arr_urlRow['url'] = $_str_urlPrefix . $_str_routeCate . '/' . $arr_cateRow['cate_url_name'] . 'id/' . $arr_cateRow['cate_id'] . '/';
                 break;
             }
         }

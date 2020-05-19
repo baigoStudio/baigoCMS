@@ -20,7 +20,13 @@ class Album extends Model {
     public $arr_status = array('enable', 'disabled');
 
     function m_init() { //构造函数
-        $this->configVisit  = Config::get('visit', 'var_extra');
+        $_arr_configVisit  = Config::get('visit', 'var_extra');
+
+        if (!isset($_arr_configVisit['visit_type'])) {
+            $_arr_configVisit['visit_type'] = 'default';
+        }
+
+        $this->configVisit  = $_arr_configVisit;
         $this->routeAlbum   = Config::get('album', 'index.route');
     }
 

@@ -32,7 +32,12 @@ return array(
             <li>重新运行 <a href="{:route_install}">{:route_install}</a></li>
         </ol>',
 
-    'x030203' => '<h5>请选择安装方式：</h5>
+    'x030203' => '<h5>安全码错误：</h5>
+        <p>
+            点击选择安装方式 <a href="{:route_install}index/type/">{:route_install}index/type/</a> 重新生成安全码
+        </p>',
+
+    'x030204' => '<h5>请选择安装方式：</h5>
         <p>
             点击选择安装方式 <a href="{:route_install}index/type/">{:route_install}index/type/</a>
         </p>',
@@ -41,4 +46,5 @@ return array(
         <p>
             点击查看详情 <a href="{:route_install}">{:route_install}</a>
         </p>',
+
 );

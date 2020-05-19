@@ -69,14 +69,18 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Allowed IPs'); ?></label>
-                            <textarea name="app_ip_allow" id="app_ip_allow" class="form-control bg-textarea-md" title="<?php echo $lang->get('One IP per line, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>" data-toggle="tooltip" data-placement="bottom"><?php echo $appRow['app_ip_allow']; ?></textarea>
-                            <small class="form-text" id="msg_app_ip_allow"><?php echo $lang->get('One IP per line, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?></small>
+                            <textarea name="app_ip_allow" id="app_ip_allow" class="form-control bg-textarea-md" title="<?php echo $lang->get('For multiple IP, please use <kbd>|</kbd> to separate, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>" data-toggle="tooltip" data-placement="bottom"><?php echo $appRow['app_ip_allow']; ?></textarea>
+                            <small class="form-text" id="msg_app_ip_allow">
+                                <?php echo $lang->get('For multiple IP, please use <kbd>|</kbd> to separate, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>
+                            </small>
                         </div>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Banned IPs'); ?></label>
-                            <textarea name="app_ip_bad" id="app_ip_bad" class="form-control bg-textarea-md" title="<?php echo $lang->get('One IP per line, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>" data-toggle="tooltip" data-placement="bottom"><?php echo $appRow['app_ip_bad']; ?></textarea>
-                            <small class="form-text" id="msg_app_ip_bad" title="<?php echo $lang->get('One IP per line, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>"><?php echo $lang->get('One IP per line, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?></small>
+                            <textarea name="app_ip_bad" id="app_ip_bad" class="form-control bg-textarea-md" title="<?php echo $lang->get('For multiple IP, please use <kbd>|</kbd> to separate, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>" data-toggle="tooltip" data-placement="bottom"><?php echo $appRow['app_ip_bad']; ?></textarea>
+                            <small class="form-text" id="msg_app_ip_bad">
+                                <?php echo $lang->get('For multiple IP, please use <kbd>|</kbd> to separate, allowing the use of the wildcard <kbd>*</kbd> (eg 192.168.1.*)'); ?>
+                            </small>
                         </div>
 
                         <div class="form-group">

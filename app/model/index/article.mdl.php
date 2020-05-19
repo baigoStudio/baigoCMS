@@ -109,7 +109,7 @@ class Article extends Article_Base {
             }
 
             if (isset($arr_cateRow['cate_breadcrumb'][0]['cate_prefix']) && !Func::isEmpty($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'])) {
-                $_str_urlPrefix = $arr_cateRow['cate_breadcrumb'][0]['cate_prefix'] . '/';
+                $_str_urlPrefix = Func::fixDs($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'], '/');
             } else {
                 $_str_urlPrefix = $this->obj_request->baseUrl();
             }

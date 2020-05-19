@@ -81,7 +81,11 @@ class Opt extends Ctrl {
         }
 
         foreach ($_arr_consoleAct as $_key=>$_value) {
-            $_arr_consoleAct[$_key]['this'] = $this->config['var_extra'][$this->routeOrig['act']][$_key];
+            if (isset($this->config['var_extra'][$this->routeOrig['act']][$_key])) {
+                $_arr_consoleAct[$_key]['this'] = $this->config['var_extra'][$this->routeOrig['act']][$_key];
+            } else {
+                $_arr_consoleAct[$_key]['this'] = '';
+            }
 
             if (isset($_value['option']) && is_array($_value['option'])) {
                 foreach ($_value['option'] as $_key_opt=>$_value_opt) {
@@ -92,7 +96,7 @@ class Opt extends Ctrl {
                     }
 
                     $_arr_consoleAct[$_key]['lang_replace'][$_key_opt] = $_str_replace;
-                    $_arr_consoleAct[$_key]['lang_replace']['value']  = $_str_replace;
+                    $_arr_consoleAct[$_key]['lang_replace']['value']   = $_str_replace;
                 }
             }
 
@@ -335,19 +339,37 @@ class Opt extends Ctrl {
             return $this->error('Check for updated module being disabled', 'x030301');
         }
 
-        $_arr_base      = Config::get('base', 'var_extra');
-        $_arr_installed = Config::get('installed'); //当前安装的
-        $_arr_latest    = $this->mdl_opt->chkver();
+        $_arr_configBase    = Config::get('base', 'var_extra');
+        $_arr_installed     = Config::get('installed'); //当前安装的
+        $_arr_latest        = $this->mdl_opt->chkver();
 
-        $_arr_installed['prd_installed_pub_datetime']   = date($_arr_base['site_date'], strtotime($_arr_installed['prd_installed_pub']));
-        $_arr_installed['prd_installed_datetime']       = date($_arr_base['site_date'] . ' ' . $_arr_base['site_time_short'], $_arr_installed['prd_installed_time']);
+        if (!isset($_arr_configBase['site_date'])) {
+            $_arr_configBase['site_date'] = 'Y-m-d';
+        }
 
-        //$_arr_version['prd_cms_pub_datetime']   = date($_arr_base['site_date'], strtotime(PRD_CMS_PUB));
-        $_arr_latest['prd_pub_datetime']        = date($_arr_base['site_date'], strtotime($_arr_latest['prd_pub']));
+        if (!isset($_arr_configBase['site_date_short'])) {
+            $_arr_configBase['site_date_short'] = 'm-d';
+        }
+
+        if (!isset($_arr_configBase['site_time_short'])) {
+            $_arr_configBase['site_time_short'] = 'H:i';
+        }
+
+        if (!isset($_arr_installed['prd_installed_pub'])) {
+            $_arr_installed['prd_installed_pub'] = PRD_CMS_PUB;
+        }
+
+        if (!isset($_arr_latest['prd_pub'])) {
+            $_arr_latest['prd_pub'] = PRD_CMS_PUB;
+        }
+
+        $_arr_installed['prd_installed_pub_datetime']   = date($_arr_configBase['site_date'], strtotime($_arr_installed['prd_installed_pub']));
+        $_arr_installed['prd_installed_datetime']       = date($_arr_configBase['site_date'] . ' ' . $_arr_configBase['site_time_short'], $_arr_installed['prd_installed_time']);
+
+        $_arr_latest['prd_pub_datetime']        = date($_arr_configBase['site_date'], strtotime($_arr_latest['prd_pub']));
 
         $_arr_tplData = array(
             'installed' => $_arr_installed,
-            //'version'   => $_arr_version,
             'latest'    => $_arr_latest,
             'token'     => $this->obj_request->token(),
         );

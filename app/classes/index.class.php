@@ -145,6 +145,10 @@ class Index {
     function assLists($arr_tagIds) {
         $_arr_configVisit  = Config::get('visit', 'var_extra');
 
+        if (!isset($_arr_configVisit['count_associate'])) {
+            $_arr_configVisit['count_associate'] = 10;
+        }
+
         $_mdl_articleTagView   = Loader::model('Article_Tag_View', '', 'index');
 
         $_arr_search = array(
@@ -307,6 +311,10 @@ class Index {
         );
 
         $_arr_configBase  = Config::get('base', 'var_extra');
+
+        if (!isset($_arr_configBase['site_tpl'])) {
+            $_arr_configBase['site_tpl'] = 'default';
+        }
 
         $_str_pathTpl = BG_TPL_INDEX . $_arr_configBase['site_tpl'] . DS;
 

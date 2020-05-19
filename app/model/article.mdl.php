@@ -196,6 +196,10 @@ class Article extends Model {
     function nameProcess($arr_articleRow, $ds = '/') {
         $_arr_configVisit  = Config::get('visit', 'var_extra');
 
+        if (!isset($_arr_configVisit['visit_type'])) {
+            $_arr_configVisit['visit_type'] = 'default';
+        }
+
         $_str_return = date('Y', $arr_articleRow['article_time']) . $ds . date('m', $arr_articleRow['article_time']) . $ds . $arr_articleRow['article_id'];
 
         if ($_arr_configVisit['visit_type'] == 'static') {

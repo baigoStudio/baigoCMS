@@ -32,33 +32,54 @@ abstract class Ctrl extends Gk_Ctrl {
         $this->configProcess();
         $this->pathProcess();
 
-        $this->config = Config::get();
+        $_arr_config = Config::get();
 
-        if (isset($this->config['ui_ctrl']['update_check']) && $this->config['ui_ctrl']['update_check'] != 'on') {
-            //print_r('dis');
-            Config::delete('chkver', 'console.opt');
-            if (isset($this->config['console']['opt']['chkver'])) {
-                unset($this->config['console']['opt']['chkver']);
-            }
+        if (!isset($_arr_config['var_extra']['base']['site_date'])) {
+            $_arr_config['var_extra']['base']['site_date'] = 'Y-m-d';
+        }
+
+        if (!isset($_arr_config['var_extra']['base']['site_date_short'])) {
+            $_arr_config['var_extra']['base']['site_date_short'] = 'm-d';
+        }
+
+        if (!isset($_arr_config['var_extra']['base']['site_time'])) {
+            $_arr_config['var_extra']['base']['site_time'] = 'H:i:s';
+        }
+
+        if (!isset($_arr_config['var_extra']['base']['site_time_short'])) {
+            $_arr_config['var_extra']['base']['site_time_short'] = 'H:i';
+        }
+
+        if (!isset($_arr_config['var_extra']['visit']['count_tag'])) {
+            $_arr_config['var_extra']['visit']['count_tag'] = 5;
+        }
+
+        if (!isset($_arr_config['var_extra']['base']['site_thumb_default'])) {
+            $_arr_config['var_extra']['base']['site_thumb_default'] = 0;
         }
 
         if ($this->obj_request->isAjax() && $this->obj_request->isPost()) {
             $this->isAjaxPost = true;
+            $this->isPost     = true;
         }
 
         if ($this->obj_request->isPost()) {
             $this->isPost = true;
         }
 
-        if (isset($this->config['module']['ftp']) && ($this->config['module']['ftp'] === true || $this->config['module']['ftp'] === 'true')) {
+        if (isset($_arr_config['module']['ftp']) && ($_arr_config['module']['ftp'] === true || $_arr_config['module']['ftp'] === 'true')) {
             $this->ftpOpen = true;
         }
 
-        if (isset($this->config['module']['gen']) && ($this->config['module']['gen'] === true || $this->config['module']['gen'] === 'true') && $this->config['var_extra']['visit']['visit_type'] == 'static') {
-            $this->genOpen = true;
-        }
-
         $_arr_configUi = Config::get('ui_ctrl');
+
+        if (isset($_arr_configUi['update_check']) && $_arr_configUi['update_check'] != 'on') {
+            //print_r('dis');
+            Config::delete('chkver', 'console.opt');
+            if (isset($_arr_config['console']['opt']['chkver'])) {
+                unset($_arr_config['console']['opt']['chkver']);
+            }
+        }
 
         if (!isset($_arr_configUi['logo_console_login']) || Func::isEmpty($_arr_configUi['logo_console_login'])) {
             $_arr_configUi['logo_console_login'] = '{:DIR_STATIC}cms/image/logo_blue.svg';
@@ -80,7 +101,7 @@ abstract class Ctrl extends Gk_Ctrl {
             'ui_ctrl'       => $_arr_configUi,
             'ftp_open'      => $this->ftpOpen,
             'gen_open'      => $this->genOpen,
-            'config'        => $this->config,
+            'config'        => $_arr_config,
             'route'         => $this->route,
             'route_orig'    => $this->routeOrig,
             'param'         => $this->param,
@@ -88,8 +109,66 @@ abstract class Ctrl extends Gk_Ctrl {
 
         $this->generalData = array_replace_recursive($this->generalData, $_arr_data);
 
-        $this->configBase   = Config::get('base', 'var_extra');
-        $this->configVisit  = Config::get('visit', 'var_extra');
+        $this->config       = $_arr_config;
+        $_arr_configBase    = Config::get('base', 'var_extra');
+
+        if (!isset($_arr_configBase['site_tpl'])) {
+            $_arr_configBase['site_tpl'] = 'default';
+        }
+
+        $this->configBase   = $_arr_configBase;
+
+        $_arr_configVisit  = Config::get('visit', 'var_extra');
+
+        if (!isset($_arr_configVisit['visit_type'])) {
+            $_arr_configVisit['visit_type'] = 'default';
+        }
+
+        if (!isset($_arr_configVisit['visit_pagecount'])) {
+            $_arr_configVisit['visit_pagecount'] = 10;
+        }
+
+        if (!isset($_arr_configVisit['perpage_spec'])) {
+            $_arr_configVisit['perpage_spec'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_album'])) {
+            $_arr_configVisit['perpage_album'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_spec'])) {
+            $_arr_configVisit['perpage_in_spec'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_tag'])) {
+            $_arr_configVisit['perpage_in_tag'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_search'])) {
+            $_arr_configVisit['perpage_in_search'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_ajax'])) {
+            $_arr_configVisit['perpage_in_ajax'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_api'])) {
+            $_arr_configVisit['perpage_in_api'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['perpage_in_album'])) {
+            $_arr_configVisit['perpage_in_album'] = 30;
+        }
+
+        if (!isset($_arr_configVisit['count_tag'])) {
+            $_arr_configVisit['count_tag'] = 5;
+        }
+
+        if (isset($_arr_config['module']['gen']) && ($_arr_config['module']['gen'] === true || $_arr_config['module']['gen'] === 'true') && $_arr_configVisit['visit_type'] == 'static') {
+            $this->genOpen = true;
+        }
+
+        $this->configVisit  = $_arr_configVisit;
     }
 
 

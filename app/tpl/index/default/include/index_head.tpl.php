@@ -3,7 +3,9 @@
     <header class="navbar navbar-expand-md navbar-light bg-light justify-content-between align-items-center mb-3">
         <div class="container">
             <a class="navbar-brand" href="<?php echo $dir_root; ?>">
-                <?php echo $config['var_extra']['base']['site_name']; ?>
+                <?php if (isset($config['var_extra']['base']['site_name'])) {
+                    echo $config['var_extra']['base']['site_name'];
+                } ?>
             </a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">

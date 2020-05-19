@@ -20,8 +20,19 @@ class Cate extends Model {
     public $arr_pasv   = array('off', 'on');
 
     function m_init() { //构造函数
-        $this->configBase   = Config::get('base', 'var_extra');
-        $this->configVisit  = Config::get('visit', 'var_extra');
+        $_arr_configBase   = Config::get('base', 'var_extra');
+        if (!isset($_arr_configBase['site_tpl'])) {
+            $_arr_configBase['site_tpl'] = 'default';
+        }
+
+        $_arr_configVisit  = Config::get('visit', 'var_extra');
+
+        if (!isset($_arr_configVisit['perpage_in_cate'])) {
+            $_arr_configVisit['perpage_in_cate'] = 30;
+        }
+
+        $this->configBase   = $_arr_configBase;
+        $this->configVisit  = $_arr_configVisit;
     }
 
 

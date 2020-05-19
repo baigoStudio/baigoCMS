@@ -20,6 +20,9 @@ class Tag extends Tag_Base {
 
         $_str_urlPrefix = $this->obj_request->baseUrl() . $_configRoute['tag'] . '/';
 
+        /*print_r($_str_urlPrefix);
+        print_r('<br>');*/
+
         $_arr_urlRow = array(
             'url'           => $_str_urlPrefix,
             'url_more'      => '',

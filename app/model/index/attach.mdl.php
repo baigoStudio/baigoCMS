@@ -18,7 +18,13 @@ class Attach extends Attach_Base {
     function m_init() { //构造函数
         parent::m_init();
 
-        $this->configBase  = Config::get('base', 'var_extra');
+        $_arr_configBase  = Config::get('base', 'var_extra');
+
+        if (!isset($_arr_configBase['site_thumb_default'])) {
+            $_arr_configBase['site_thumb_default'] = 0;
+        }
+
+        $this->configBase  = $_arr_configBase;
     }
 
 

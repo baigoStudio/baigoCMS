@@ -22,7 +22,7 @@ class Attach extends Attach_Index {
         $this->urlPrefix    = $this->obj_request->root(true) . $this->dirAttach;
 
         if (!Func::isEmpty($this->configUpload['ftp_host']) && !Func::isEmpty($this->configUpload['url_prefix'])) {
-            $this->urlPrefix = $this->configUpload['url_prefix'] . '/';
+            $this->urlPrefix = Func::fixDs($this->configUpload['url_prefix'], '/');
         }
     }
 

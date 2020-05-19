@@ -22,6 +22,12 @@ define('GK_WEEK', 604800);
 define('GK_MONTH', 2592000);
 define('GK_YEAR', 31536000);
 
+//用于容量计算
+define('GK_KB', 1024);
+define('GK_MB', 1048576);
+define('GK_GB', 1073741824);
+define('GK_TB', 1099511627776);
+
 //扩展名-------
 defined('GK_EXT') or define('GK_EXT', '.php'); //扩展名
 defined('GK_EXT_CLASS') or define('GK_EXT_CLASS', '.class' . GK_EXT); //类文件

@@ -585,7 +585,7 @@ class Index extends Ctrl {
         if (Func::isEmpty($_str_installType)) {
             return array(
                 'msg'   => 'Installation type is not set',
-                'rcode' => 'x030203',
+                'rcode' => 'x030204',
             );
         }
 
