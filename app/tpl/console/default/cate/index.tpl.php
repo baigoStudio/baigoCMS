@@ -95,7 +95,7 @@ $cfg = array(
     'title'             => $lang->get('Category', 'console.common'),
     'menu_active'       => 'cate',
     'sub_active'        => 'index',
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'baigoCheckall'     => 'true',
     'baigoQuery'        => 'true',
@@ -171,7 +171,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="card bg-light mb-3">
         <div class="card-body">
             <form name="cate_cache" id="cate_cache" action="<?php echo $route_console; ?>cate/cache/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <button type="submit" class="btn btn-primary">
                     <span class="fas fa-redo-alt"></span>
                     <?php echo $lang->get('Refresh cache'); ?>
@@ -181,7 +181,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="cate_list" id="cate_list" action="<?php echo $route_console; ?>cate/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">

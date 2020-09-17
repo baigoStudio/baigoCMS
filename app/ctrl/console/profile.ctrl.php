@@ -43,7 +43,7 @@ class Profile extends Ctrl {
         $_arr_search = array(
             'parent_id' => 0
         );
-        $_arr_cateRows = $_mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows = $_mdl_cate->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'cateRows'  => $_arr_cateRows,
@@ -81,15 +81,24 @@ class Profile extends Ctrl {
             return $this->fetchJson($_arr_inputInfo['msg'], $_arr_inputInfo['rcode']);
         }
 
-        $this->mdl_profile->inputInfo['admin_id'] = $this->adminLogged['admin_id'];
-
-        $_arr_infoResult = $this->mdl_profile->info();
+        $_arr_adminRow = $this->mdl_profile->check($this->adminLogged['admin_id']);
+        if ($_arr_adminRow['rcode'] != 'y020102') {
+            return $this->fetchJson($_arr_adminRow['msg'], $_arr_adminRow['rcode']);
+        }
 
         $_arr_userSubmit = array(
             'user_pass' => $_arr_inputInfo['admin_pass'],
             'user_nick' => $_arr_inputInfo['admin_nick'],
         );
-        $this->obj_profile->info($this->adminLogged['admin_id'], 'user_id', $_arr_userSubmit);
+        $_arr_infoResult = $this->obj_profile->info($this->adminLogged['admin_id'], 'user_id', $_arr_userSubmit);
+
+        if ($_arr_infoResult['rcode'] != 'y010103') {
+            return $this->fetchJson($_arr_infoResult['msg'], $_arr_infoResult['rcode']);
+        }
+
+        $this->mdl_profile->inputInfo['admin_id'] = $this->adminLogged['admin_id'];
+
+        $_arr_infoResult = $this->mdl_profile->info();
 
         return $this->fetchJson($_arr_infoResult['msg'], $_arr_infoResult['rcode']);
     }
@@ -110,12 +119,12 @@ class Profile extends Ctrl {
 
         $_arr_preferRows['excerpt']['lists']['type']['option'] = $this->config['console']['excerpt'];
 
-        foreach ($_arr_preferRows as $_key=>$_value) {
-            foreach ($_value['lists'] as $_key_s=>$_value_s) {
+        foreach ($_arr_preferRows as $_key=>&$_value) {
+            foreach ($_value['lists'] as $_key_s=>&$_value_s) {
                 if (isset($this->adminLogged['admin_prefer'][$_key][$_key_s])) {
-                    $_arr_preferRows[$_key]['lists'][$_key_s]['this'] = $this->adminLogged['admin_prefer'][$_key][$_key_s];
+                    $_value_s['this'] = $this->adminLogged['admin_prefer'][$_key][$_key_s];
                 } else {
-                    $_arr_preferRows[$_key]['lists'][$_key_s]['this'] = $this->config['console']['var_prefer'][$_key][$_key_s];
+                    $_value_s['this'] = $this->config['console']['var_prefer'][$_key][$_key_s];
                 }
             }
         }

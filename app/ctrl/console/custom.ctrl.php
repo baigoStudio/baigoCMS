@@ -49,9 +49,9 @@ class Custom extends Ctrl {
 
         if (Func::isEmpty($_arr_search['key']) && Func::isEmpty($_arr_search['status'])) {
             $_arr_search['parent_id'] = 0;
-            $_arr_customRows  = $this->mdl_custom->listsTree(1000, 0, $_arr_search); //列出
+            $_arr_customRows  = $this->mdl_custom->listsTree($_arr_search); //列出
         } else {
-            $_arr_customRows  = $this->mdl_custom->lists(1000, 0, $_arr_search); //列出
+            $_arr_customRows  = $this->mdl_custom->lists(array(1000, 'limit'), $_arr_search); //列出
         }
 
         $_arr_tplData = array(
@@ -170,8 +170,8 @@ class Custom extends Ctrl {
 
         $_arr_search['parent_id'] = 0;
 
-        $_arr_cateRows   = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
-        $_arr_customRows = $this->mdl_custom->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows   = $this->mdl_cate->listsTree($_arr_search);
+        $_arr_customRows = $this->mdl_custom->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'cateRows'      => $_arr_cateRows,
@@ -253,7 +253,7 @@ class Custom extends Ctrl {
             }
         }
 
-        $_arr_customRows  = $this->mdl_custom->lists(1000, 0, $_arr_search); //列出
+        $_arr_customRows  = $this->mdl_custom->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tplData = array(
             'search'        => $_arr_search,

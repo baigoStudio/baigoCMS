@@ -56,18 +56,16 @@ class Cate extends Ctrl {
             'cate_ids' => $_arr_cateRow['cate_ids'],
         );
 
-        $_num_articleCount  = $this->mdl_articleCateView->count($_arr_search); //统计记录数
-        $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $_arr_cateRow['cate_perpage']); //取得分页数据
-        $_arr_articleRows   = $this->mdl_articleCateView->lists($_arr_cateRow['cate_perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_articleCateView->lists($_arr_cateRow['cate_perpage'], $_arr_search); //列出
 
         $_arr_cateRow['cate_content'] = $this->obj_index->linkProcess($_arr_cateRow['cate_content'], $_arr_cateRow['cate_ids']);
         $_arr_cateRow['cate_content'] = $this->obj_index->albumProcess($_arr_cateRow['cate_content']);
 
         $_arr_tplData = array(
             'urlRow'        => $_arr_cateRow['cate_url'],
-            'pageRow'       => $_arr_pageRow,
             //'search'        => $_arr_search,
-            'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
+            'pageRow'       => $_arr_getData['pageRow'],
+            'articleRows'   => $this->obj_index->articleListsProcess($_arr_getData['dataRows']),
             'cateRow'       => $_arr_cateRow,
         );
 

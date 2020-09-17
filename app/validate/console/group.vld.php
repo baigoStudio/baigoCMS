@@ -25,9 +25,6 @@ class Group extends Validate {
         'group_status' => array(
             'require' => true,
         ),
-        'group_target' => array(
-            'require' => true,
-        ),
         'group_note' => array(
             'max' => 30,
         ),
@@ -51,7 +48,6 @@ class Group extends Validate {
             'group_id',
             'group_name',
             'group_status',
-            'group_target',
             'group_note',
             'group_allow',
             '__token__',
@@ -59,7 +55,6 @@ class Group extends Validate {
         'submit_db' => array(
             'group_name',
             'group_status',
-            'group_target',
             'group_note',
             'group_allow',
         ),
@@ -80,7 +75,6 @@ class Group extends Validate {
             'group_id'      => $this->obj_lang->get('ID'),
             'group_name'    => $this->obj_lang->get('Name'),
             'group_status'  => $this->obj_lang->get('Status'),
-            'group_target'  => $this->obj_lang->get('Target'),
             'group_note'    => $this->obj_lang->get('Note'),
             'group_allow'   => $this->obj_lang->get('Permission'),
             'group_ids'     => $this->obj_lang->get('Group'),

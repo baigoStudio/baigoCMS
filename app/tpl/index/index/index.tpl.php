@@ -11,7 +11,7 @@
 
     <!--jQuery 库-->
     <script src="{:DIR_STATIC}lib/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
-    <link href="{:DIR_STATIC}lib/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="{:DIR_STATIC}lib/bootstrap/4.5.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="{:DIR_STATIC}css/fw.css" type="text/css" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +26,7 @@
         </p>
     </div>
 
-    <script src="{:DIR_STATIC}lib/bootstrap/4.3.1/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+    <script src="{:DIR_STATIC}lib/bootstrap/4.5.2/js/bootstrap.bundle.min.js" type="text/javascript"></script>
 
 </body>
 </html>

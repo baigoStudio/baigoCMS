@@ -16,17 +16,15 @@ defined('IN_GINKGO') or exit('Access Denied');
 /*-------------栏目归属模型-------------*/
 class Cate_Belong extends Cate_Belong_Base {
 
-    function move($arr_articleIds, $num_cateId, $arr_cateIds) {
+    function move($num_articleId, $num_cateSrc, $num_cateTarget, $arr_cateIds) {
         $_arr_belongUpdate = array(
-            'belong_cate_id' => $num_cateId,
+            'belong_cate_id' => $num_cateTarget,
         );
 
-        $_arr_where = array();
-
-        if (!Func::isEmpty($arr_articleIds)) {
-            $arr_articleIds     = Func::arrayFilter($arr_articleIds);
-            $_arr_where[] = array('belong_article_id', 'IN', $arr_articleIds, 'article_ids');
-        }
+        $_arr_where = array(
+            array('belong_article_id', '=', $num_articleId),
+            array('belong_cate_id', '=', $num_cateTarget),
+        );
 
         if (!Func::isEmpty($arr_cateIds)) {
             $arr_cateIds        = Func::arrayFilter($arr_cateIds);
@@ -36,14 +34,13 @@ class Cate_Belong extends Cate_Belong_Base {
         $_num_count     = $this->where($_arr_where)->update($_arr_belongUpdate); //更新数
 
         if ($_num_count > 0) {
-            $_str_rcode = 'y150103';
+            $_str_rcode = 'y220103';
         } else {
-            $_str_rcode = 'x150103';
+            $_str_rcode = 'x220103';
         }
 
         return array(
             'rcode' => $_str_rcode,
-            'count' => $_num_count,
         );
     }
 
@@ -57,12 +54,12 @@ class Cate_Belong extends Cate_Belong_Base {
      * @return void
      */
     function submit($num_articleId, $num_cateId) {
-        $_str_rcode = 'x150101';
+        $_str_rcode = 'x220101';
 
         if ($num_articleId > 0 && $num_cateId > 0) { //插入
             $_arr_belongRow = $this->read($num_cateId, $num_articleId);
 
-            if ($_arr_belongRow['rcode'] == 'x150102') { //插入
+            if ($_arr_belongRow['rcode'] == 'x220102') { //插入
                 $_arr_belongData = array(
                     'belong_article_id'  => $num_articleId,
                     'belong_cate_id'     => $num_cateId,
@@ -70,21 +67,21 @@ class Cate_Belong extends Cate_Belong_Base {
 
                 $_arr_belongRowSub = $this->read(0, $num_articleId);
 
-                if ($_arr_belongRowSub['rcode'] == 'y150102') {
+                if ($_arr_belongRowSub['rcode'] == 'y220102') {
                     $_num_count     = $this->where('belong_id', '=', $_arr_belongRowSub['belong_id'])->update($_arr_belongData); //更新数
 
                     if ($_num_count > 0) {
-                        $_str_rcode = 'y150103';
+                        $_str_rcode = 'y220103';
                     } else {
-                        $_str_rcode = 'x150103';
+                        $_str_rcode = 'x220103';
                     }
                 } else {
                     $_num_belongId   = $this->insert($_arr_belongData);
 
                     if ($_num_belongId > 0) { //数据库插入是否成功
-                        $_str_rcode = 'y150101';
+                        $_str_rcode = 'y220101';
                     } else {
-                        $_str_rcode = 'x150101';
+                        $_str_rcode = 'x220101';
                     }
                 }
             }
@@ -96,35 +93,43 @@ class Cate_Belong extends Cate_Belong_Base {
     }
 
 
-    function clear($num_no, $num_except = 0, $arr_search = array()) {
+    function clear($pagination = 0, $arr_search = array()) {
         $_arr_belongSelect = array(
             'belong_id',
             'belong_cate_id',
             'belong_article_id',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_belongSelect);
 
-        $_arr_belongRows = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($num_except, $num_no)->select($_arr_belongSelect);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_clearData = $_arr_getData['dataRows'];
+        } else {
+            $_arr_clearData = $_arr_getData;
+        }
 
-        $_mdl_article = Loader::model('article');
-        $_mdl_cate    = Loader::model('cate');
+        if (!Func::isEmpty($_arr_clearData)) {
+            $_mdl_article = Loader::model('article');
+            $_mdl_cate    = Loader::model('cate');
 
-        foreach ($_arr_belongRows as $_key=>$_value) {
-            $_arr_articleRow = $_mdl_article->check($_value['belong_article_id']);
+            foreach ($_arr_clearData as $_key=>$_value) {
+                $_arr_articleRow = $_mdl_article->check($_value['belong_article_id']);
 
-            if ($_arr_articleRow['rcode'] != 'y120102') {
-                $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
-            }
+                if ($_arr_articleRow['rcode'] != 'y120102') {
+                    $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                }
 
-            $_arr_cateRow = $_mdl_cate->check($_value['belong_cate_id']);
+                $_arr_cateRow = $_mdl_cate->check($_value['belong_cate_id']);
 
-            if ($_arr_cateRow['rcode'] != 'y250102') {
-                $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                if ($_arr_cateRow['rcode'] != 'y250102') {
+                    $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                }
             }
         }
 
-        return $_arr_belongRows;
+        return $_arr_getData;
     }
 
 
@@ -199,12 +204,12 @@ class Cate_Belong extends Cate_Belong_Base {
 
         if ($_mix_vld !== true) {
             return array(
-                'rcode' => 'x150201',
+                'rcode' => 'x220201',
                 'msg'   => end($_mix_vld),
             );
         }
 
-        $_arr_inputClear['rcode'] = 'y150201';
+        $_arr_inputClear['rcode'] = 'y220201';
 
         $this->inputClear = $_arr_inputClear;
 

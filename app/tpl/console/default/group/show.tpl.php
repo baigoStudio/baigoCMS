@@ -56,11 +56,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <div class="form-group">
-                        <label><?php echo $lang->get('Target'); ?></label>
-                        <div class="form-text"><?php echo $lang->get($groupRow['group_target']); ?></div>
-                    </div>
-
-                    <div class="form-group">
                         <label><?php echo $lang->get('Status'); ?></label>
                         <div class="form-text"><?php $str_status = $groupRow['group_status'];
                         include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?></div>

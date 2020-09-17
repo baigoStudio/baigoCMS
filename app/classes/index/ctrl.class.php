@@ -32,5 +32,7 @@ abstract class Ctrl extends Ctrl_Base {
 
         $this->obj_call = Loader::classes('Call');
         $this->setObj('call', $this->obj_call);
+
+        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
     }
 }

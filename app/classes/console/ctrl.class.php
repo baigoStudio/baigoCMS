@@ -14,6 +14,7 @@ use ginkgo\Cookie;
 use ginkgo\Config;
 use ginkgo\Crypt;
 use ginkgo\Plugin;
+use ginkgo\Auth;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -35,14 +36,15 @@ abstract class Ctrl extends Ctrl_Base {
     protected function c_init($param = array()) { //构造函数
         parent::c_init();
 
+        Plugin::listen('action_console_init'); //管理后台初始化时触发
+
         $this->langReplace = array(
-            'ftp_host'  => $this->config['var_extra']['upload']['ftp_host'],
+            'host'      => $this->config['var_extra']['upload']['ftp_host'],
             'tag_count' => $this->config['var_extra']['visit']['count_tag'],
         );
 
+        $this->obj_auth     = Auth::instance(array(), 'admin');
         $this->mdl_login    = Loader::model('Login', '', 'console');
-
-        Plugin::listen('action_console_init'); //管理后台初始化时触发
 
         $_arr_adminLogged = $this->sessionRead();
 
@@ -107,85 +109,36 @@ abstract class Ctrl extends Ctrl_Base {
         str_rcode 提示信息
     */
     protected function sessionRead() {
-        $_sessionTime    = Session::get('admin_session_time');
+        $_num_adminId  = 0;
+        $_arr_authRow  = $this->obj_auth->read();
 
-        $_arr_session = array(
-            'admin_id'              => Session::get('admin_id'),
-            'admin_hash'            => Session::get('admin_hash'),
-            'admin_session_time'    => $_sessionTime,
-            'admin_time_diff'       => $_sessionTime + $this->config['console']['session']['expire'],
-        );
+        $_arr_session  = $_arr_authRow['session'];
+        $_arr_remember = $_arr_authRow['remember'];
 
-        $_cookieTime    = Cookie::get('admin_cookie_time');
+        if (isset($_arr_session['admin_id']) && $_arr_session['admin_id'] > 0) {
+            $_num_adminId = $_arr_session['admin_id'];
+        } else if (isset($_arr_remember['admin_id']) && $_arr_remember['admin_id'] > 0) {
+            $_num_adminId = $_arr_remember['admin_id'];
+        }
 
-        $_arr_cookie = array(
-            'admin_id'              => Cookie::get('admin_id'),
-            'admin_hash'            => Cookie::get('admin_hash'),
-            'admin_cookie_time'     => $_cookieTime,
-            'admin_time_diff'       => $_cookieTime + $this->config['console']['session']['expire'],
-            'remember_admin_id'     => Cookie::get('remember_admin_id'),
-            'remember_admin_hash'   => Cookie::get('remember_admin_hash'),
-            'remember_hash_time'    => Cookie::get('remember_hash_time'),
-        );
+        $_arr_adminRow = $this->mdl_login->read($_num_adminId);
+        //print_r($_arr_adminRow);
+        if ($_arr_adminRow['rcode'] != 'y020102') {
+            $this->obj_auth->end();
 
-        if ($this->haveSession($_arr_session, $_arr_cookie)) {
-            $_arr_adminRow = $this->mdl_login->read($_arr_session['admin_id']);
+            return $_arr_adminRow;
+        }
 
-            //print_r($_arr_adminRow);
-
-            if ($_arr_adminRow['rcode'] != 'y020102') {
-                $this->sessionEnd(0);
-                return $_arr_adminRow;
-            }
-
-            if ($_arr_adminRow['admin_status'] == 'disabled') {
-                $this->sessionEnd(1);
-                return array(
-                    'rcode' => 'x020402',
-                );
-            }
-
-            if ($this->hashProcess($_arr_adminRow) != $_arr_session['admin_hash'] || $this->hashProcess($_arr_adminRow) != $_arr_cookie['admin_hash']) {
-                $this->sessionEnd(2);
-                return array(
-                    'rcode' => 'x020403',
-                );
-            }
-
-            $this->sessionProcess($_arr_adminRow, 'form');
-        } else if ($this->haveRemenber($_arr_cookie)) {
-            $_num_cookieRemenberDiff = $_arr_cookie['remember_hash_time'] + $this->config['console']['session']['remember']; //记住密码有效期
-            if ($_num_cookieRemenberDiff < GK_NOW) {
-                $this->sessionEnd(3);
-                return array(
-                    'rcode' => 'x020403',
-                );
-            }
-
-            $_arr_adminRow = $this->mdl_login->read($_arr_cookie['remember_admin_id']);
-            if ($_arr_adminRow['rcode'] != 'y020102') {
-                $this->sessionEnd(4);
-                return $_arr_adminRow;
-            }
-
-            if ($_arr_adminRow['admin_status'] == 'disabled') {
-                $this->sessionEnd(5);
-                return array(
-                    'rcode' => 'x020402',
-                );
-            }
-
-            if ($this->hashProcess($_arr_adminRow) != $_arr_cookie['remember_admin_hash']) {
-                $this->sessionEnd(6);
-                return array(
-                    'rcode' => 'x020403',
-                );
-            }
-
-            $this->sessionProcess($_arr_adminRow, 'auto');
-        } else {
-            $this->sessionEnd(7);
+        if ($_arr_adminRow['admin_status'] == 'disabled') {
+            $this->obj_auth->end();
             return array(
+                'rcode' => 'x020402',
+            );
+        }
+
+        if (!$this->obj_auth->check($_arr_adminRow, array($this->url['route_console'], $this->url['route_gen']))) {
+            return array(
+                'msg'   => $this->obj_auth->getError(),
                 'rcode' => 'x020403',
             );
         }
@@ -193,10 +146,10 @@ abstract class Ctrl extends Ctrl_Base {
         if ($_arr_adminRow['admin_group_id'] > 0) {
             $_mdl_group    = Loader::model('Group', '', 'console');
 
-            $_arr_groupRow = $_mdl_group->read($_arr_adminRow['admin_group_id'], 'group_id', 'admin');
+            $_arr_groupRow = $_mdl_group->read($_arr_adminRow['admin_group_id']);
 
             if (isset($_arr_groupRow['group_status']) && $_arr_groupRow['group_status'] == 'disabled') {
-                $this->sessionEnd(8);
+                $this->obj_auth->end();
                 return array(
                     'rcode' => 'x040401',
                 );
@@ -209,53 +162,19 @@ abstract class Ctrl extends Ctrl_Base {
     }
 
 
-    protected function sessionLogin($arr_adminRow, $str_remember = '') {
-        session_regenerate_id(true);
+    protected function sessionLogin($arr_adminRow, $str_remember = '', $str_type = 'form') {
+        $this->mdl_login->inputSubmit   = array_replace_recursive($this->mdl_login->inputSubmit, $arr_adminRow);
 
-        $this->mdl_login->inputSubmit    = array_replace_recursive($this->mdl_login->inputSubmit, $arr_adminRow);
+        $_arr_loginResult               = $this->mdl_login->login();
 
-        $_arr_loginReturn               = $this->mdl_login->login();
+        $arr_adminRow = array_replace_recursive($arr_adminRow, $_arr_loginResult);
 
-        $arr_adminRow['admin_time_login']  = $_arr_loginReturn['admin_time_login'];
-        $arr_adminRow['admin_ip']          = $_arr_loginReturn['admin_ip'];
-
-        if ($str_remember == 'remember') {
-            $_arr_optCookie = array(
-                'expire'    => $this->config['console']['session']['remember'],
-                'path_arr'  => array($this->url['route_console'], $this->url['route_gen']),
-            );
-            Cookie::set('remember_admin_id', $num_adminId, $_arr_optCookie);
-            Cookie::set('remember_admin_hash', $this->hashProcess($arr_adminRow), $_arr_optCookie);
-            Cookie::set('remember_hash_time', GK_NOW, $_arr_optCookie);
-        }
-
-        $this->sessionProcess($arr_adminRow, 'form');
+        $this->obj_auth->write($arr_adminRow, true, $str_type, $str_remember, array($this->url['route_console'], $this->url['route_gen']));
 
         return array(
             'rcode' => 'y020401',
             'msg'   => $this->obj_lang->get('Login successful', $this->route['mod'] . '.common'),
         );
-    }
-
-    /** 结束登录 session
-     * $this->sessionEnd function.
-     *
-     * @access public
-     * @return void
-     */
-    protected function sessionEnd($id = 0) {
-        Session::delete('admin_id');
-        Session::delete('admin_session_time');
-        Session::delete('admin_hash');
-        Cookie::delete('admin_id');
-        Cookie::delete('admin_cookie_time');
-        Cookie::delete('admin_hash');
-        Cookie::delete('remember_admin_id');
-        Cookie::delete('remember_admin_hash');
-        Cookie::delete('remember_hash_time');
-
-        /*print_r($id);
-        print_r('<br>');*/
     }
 
 
@@ -267,7 +186,7 @@ abstract class Ctrl extends Ctrl_Base {
         //print_r($this->param);
 
         if ($this->adminLogged['rcode'] != 'y020102') {
-            $this->sessionEnd(9);
+            $this->obj_auth->end();
             $_str_rcode = $this->adminLogged['rcode'];
             $_str_msg   = $this->obj_lang->get('You have not logged in', $this->route['mod'] . '.common');
 
@@ -320,60 +239,6 @@ abstract class Ctrl extends Ctrl_Base {
         );
     }
 
-
-    private function haveSession($arr_session, $arr_cookie) {
-        /*print_r($arr_session);
-        print_r('<br>');
-        print_r($arr_cookie);
-        print_r('<br>');*/
-
-        $_str_status = true;
-
-        $_str_status = !Func::isEmpty($arr_session['admin_id']);
-        $_str_status = !Func::isEmpty($arr_session['admin_session_time']);
-        $_str_status = !Func::isEmpty($arr_session['admin_hash']);
-        $_str_status = !Func::isEmpty($arr_session['admin_time_diff']);
-        $_str_status = $arr_session['admin_time_diff'] > GK_NOW;
-
-        $_str_status = !Func::isEmpty($arr_cookie['admin_id']);
-        $_str_status = !Func::isEmpty($arr_cookie['admin_cookie_time']);
-        $_str_status = !Func::isEmpty($arr_cookie['admin_hash']);
-        $_str_status = !Func::isEmpty($arr_cookie['admin_time_diff']);
-        $_str_status = $arr_cookie['admin_time_diff'] > GK_NOW;
-
-        return $_str_status;
-    }
-
-    private function haveRemenber($arr_cookie) {
-        $_str_status = true;
-
-        $_str_status = !Func::isEmpty($arr_cookie['remember_admin_id']);
-        $_str_status = !Func::isEmpty($arr_cookie['remember_admin_hash']);
-        $_str_status = !Func::isEmpty($arr_cookie['remember_hash_time']);
-
-        return $_str_status;
-    }
-
-    private function hashProcess($arr_adminRow) {
-        return Crypt::crypt($arr_adminRow['admin_id'] . $arr_adminRow['admin_name'] . $arr_adminRow['admin_time_login'], $arr_adminRow['admin_ip']);
-    }
-
-    private function sessionProcess($arr_adminRow, $str_loginType = 'form') {
-        Session::set('admin_id', $arr_adminRow['admin_id']);
-        Session::set('admin_session_time', GK_NOW);
-        Session::set('admin_hash', $this->hashProcess($arr_adminRow));
-        Session::set('admin_login_type', $str_loginType);
-
-        $_arr_optCookie = array(
-            'expire'    => $this->config['console']['session']['expire'],
-            'path_arr'  => array($this->url['route_console'], $this->url['route_gen']),
-        );
-
-        Cookie::set('admin_id', $arr_adminRow['admin_id'], $_arr_optCookie);
-        Cookie::set('admin_cookie_time', GK_NOW, $_arr_optCookie);
-        Cookie::set('admin_hash', $this->hashProcess($arr_adminRow), $_arr_optCookie);
-        Cookie::set('admin_login_type', $str_loginType, $_arr_optCookie);
-    }
 
     protected function pathProcess() {
         parent::pathProcess();

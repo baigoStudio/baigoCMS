@@ -14,7 +14,7 @@ defined('IN_GINKGO') or exit('Access Denied');
 /*-------------附件模型-------------*/
 class Attach_Album_View extends Attach {
 
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array(), $arr_order = array(), $arr_select = array()) {
         $_arr_attachSelect = array(
             'attach_id',
             'attach_name',
@@ -23,18 +23,24 @@ class Attach_Album_View extends Attach {
             'attach_box',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('attach_id', 'DESC')->group('attach_id')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_attachSelect);
 
-        $_arr_attachRows     = $this->where($_arr_where)->order('attach_id', 'DESC')->group('attach_id')->limit($num_except, $num_no)->select($_arr_attachSelect);
-
-        foreach ($_arr_attachRows as $_key=>$_value) {
-            $_value                                 = $this->rowProcess($_value);
-
-            $_arr_attachRows[$_key]                 = $_value;
-            $_arr_attachRows[$_key]['thumbRows']    = $this->thumbProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_attachRows;
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value                 = $this->rowProcess($_value);
+                $_value['thumbRows']    = $this->thumbProcess($_value);
+            }
+        }
+
+        return $_arr_getData;
     }
 
 

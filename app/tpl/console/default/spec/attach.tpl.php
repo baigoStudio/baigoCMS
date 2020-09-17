@@ -21,7 +21,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="row">
         <div class="col-xl-9">
             <form name="attach_list" id="attach_list" action="<?php echo $route_console; ?>spec/cover/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <input type="hidden" name="spec_id" value="<?php echo $specRow['spec_id']; ?>">
 
                 <div class="table-responsive">

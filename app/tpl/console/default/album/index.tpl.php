@@ -72,7 +72,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="album_list" id="album_list" action="<?php echo $route_console; ?>album/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -257,7 +257,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             $('.album_id').prop('checked', false);
             $('#album_id_' + _album_id).prop('checked', true);
             $('#act').val('delete');
-            $('#album_list').submit()
+            $('#album_list').submit();
         });
 
         $('#album_list').baigoCheckall();

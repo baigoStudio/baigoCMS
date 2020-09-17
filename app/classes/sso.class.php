@@ -54,7 +54,7 @@ class Sso {
         $_str_decrypt = Crypt::decrypt($str_code, $this->config['app_key'], $this->config['app_secret']);
 
         if ($_str_decrypt === false) {
-            return Crypt::getErrno();
+            return Crypt::getError();
         }
 
         //验证签名

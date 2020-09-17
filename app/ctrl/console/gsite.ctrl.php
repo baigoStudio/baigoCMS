@@ -44,12 +44,9 @@ class Gsite extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_gsiteCount  = $this->mdl_gsite->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_gsiteCount); //取得分页数据
-        $_arr_gsiteRows   = $this->mdl_gsite->lists(1000, 0, $_arr_search); //列出
+        $_arr_gsiteRows   = $this->mdl_gsite->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'   => $_arr_pageRow,
             'search'    => $_arr_search,
             'gsiteRows' => $_arr_gsiteRows,
             'token'     => $this->obj_request->token(),
@@ -148,7 +145,7 @@ class Gsite extends Ctrl {
         $_arr_searchCate = array(
             'parent_id' => 0,
         );
-        $_arr_cateRows  = $this->mdl_cate->listsTree(1000, 0, $_arr_searchCate);
+        $_arr_cateRows  = $this->mdl_cate->listsTree($_arr_searchCate);
 
         $_arr_cateRow   = $this->mdl_cate->read($_arr_gsiteRow['gsite_cate_id']);
 

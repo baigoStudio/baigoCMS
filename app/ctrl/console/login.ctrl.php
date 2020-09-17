@@ -147,7 +147,7 @@ class Login extends Ctrl {
     }
 
     function logout() {
-        $this->sessionEnd();
+        $this->obj_auth->end(true);
 
         return $this->redirect($this->url['route_console']);
     }

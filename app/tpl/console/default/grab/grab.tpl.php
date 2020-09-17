@@ -53,7 +53,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL); ?>
                     data: {
                         gsite_id: '<?php echo $gsiteRow['gsite_id']; ?>',
                         url: '<?php echo $value['url']; ?>',
-                        __token__: '<?php echo $token; ?>'
+                        <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                     },
                     timeout: 30000,
                     error: function (result) {

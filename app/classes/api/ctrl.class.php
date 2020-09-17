@@ -8,7 +8,6 @@ namespace app\classes\api;
 
 use app\classes\Ctrl as Ctrl_Base;
 use ginkgo\Loader;
-use ginkgo\Config;
 use ginkgo\Func;
 use ginkgo\Crypt;
 use ginkgo\Sign;

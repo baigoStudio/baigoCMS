@@ -29,7 +29,7 @@ class Mark extends Ctrl {
             return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
         }
 
-        $_arr_markRows   = $this->mdl_mark->lists(1000);
+        $_arr_markRows   = $this->mdl_mark->lists(array(1000, 'limit'));
 
         $_arr_return = array(
             'markRows'   => $_arr_markRows,

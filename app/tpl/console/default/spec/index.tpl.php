@@ -73,7 +73,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="spec_list" id="spec_list" action="<?php echo $route_console; ?>spec/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -283,7 +283,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             $('.spec_id').prop('checked', false);
             $('#spec_id_' + _spec_id).prop('checked', true);
             $('#act').val('delete');
-            $('#spec_list').submit()
+            $('#spec_list').submit();
         });
 
         $('#spec_list').baigoCheckall();

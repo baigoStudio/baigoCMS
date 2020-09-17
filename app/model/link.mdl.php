@@ -24,9 +24,7 @@ class Link extends Model {
             'link_id',
         );
 
-        $_arr_linkRow = $this->read($mix_link, $str_by, $num_notId, $num_cateId, $str_type, $_arr_select);
-
-        return $_arr_linkRow;
+        return $this->read($mix_link, $str_by, $num_notId, $num_cateId, $str_type, $_arr_select);
     }
 
 
@@ -77,7 +75,7 @@ class Link extends Model {
      * @param string $str_type (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_linkSelect = array(
             'link_id',
             'link_name',
@@ -89,16 +87,16 @@ class Link extends Model {
             'link_order',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
-
         $_arr_order = array(
             array('link_order', 'ASC'),
             array('link_id', 'ASC'),
         );
 
-        $_arr_linkRows = $this->where($_arr_where)->order($_arr_order)->limit($num_except, $num_no)->select($_arr_linkSelect);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order($_arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_linkSelect);
 
-        return $_arr_linkRows;
+        return $_arr_getData;
     }
 
 

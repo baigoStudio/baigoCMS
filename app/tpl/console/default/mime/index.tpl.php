@@ -19,7 +19,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="mime_list" id="mime_list" action="<?php echo $route_console; ?>mime/delete/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="act" id="act" value="delete">
 
         <div class="table-responsive">
@@ -167,7 +167,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             var _mime_id = $(this).data('id');
             $('.mime_id').prop('checked', false);
             $('#mime_id_' + _mime_id).prop('checked', true);
-            $('#mime_list').submit()
+            $('#mime_list').submit();
         });
 
         $('#mime_list').baigoCheckall();

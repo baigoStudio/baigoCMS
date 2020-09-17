@@ -20,8 +20,8 @@ class Article extends Ctrl {
     protected function c_init($param = array()) {
         parent::c_init();
 
-        $this->mdl_attach           = Loader::model('Attach');
-        $this->mdl_article          = Loader::model('Article');
+        $this->mdl_attach   = Loader::model('Attach');
+        $this->mdl_article  = Loader::model('Article');
     }
 
 
@@ -94,12 +94,23 @@ class Article extends Ctrl {
 
         $this->assign($_arr_tpl);
 
-        if (Func::isEmpty($_arr_cateRow['cate_tpl_do'])) {
-            $_arr_cateRow['cate_tpl_do'] = $this->configBase['site_tpl'];
+        $_str_tpl = '';
+
+        if (Func::isEmpty($_arr_articleRow['article_tpl']) || $_arr_articleRow['article_tpl'] === '-1') {
+            $_str_tplDo = '';
+            if (Func::isEmpty($_arr_cateRow['cate_tpl_do'])) {
+                $_str_tplDo = $this->configBase['site_tpl'];
+            } else {
+                $_str_tplDo = $_arr_cateRow['cate_tpl_do'];
+            }
+
+            $_str_tpl = BG_TPL_INDEX . $_str_tplDo . DS . 'article' . DS . 'index';
+        } else {
+            $_str_tpl = BG_TPL_ARTICLE . $_arr_articleRow['article_tpl'];
         }
 
-        $this->obj_view->setPath(BG_TPL_INDEX . $_arr_cateRow['cate_tpl_do']);
+        $_str_tpl .= GK_EXT_TPL;
 
-        return $this->fetch();
+        return $this->fetch($_str_tpl);
     }
 }

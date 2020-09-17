@@ -58,13 +58,11 @@ class Album_Belong extends Ctrl {
 
         $_arr_search['not_in'] = Db::table('album_belong')->where('belong_album_id', '=', $_arr_albumRow['album_id'])->fetchSql()->select('belong_attach_id');
 
-        $_num_attachCount  = $this->mdl_attachAlbumView->count($_arr_search); //统计记录数
-        $_arr_pageRow      = $this->obj_request->pagination($_num_attachCount); //取得分页数据
-        $_arr_attachRows   = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_attachRows   = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
-        foreach ($_arr_attachRows as $_key=>$_value) {
+        foreach ($_arr_attachRows['dataRows'] as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
         }
 
@@ -74,13 +72,11 @@ class Album_Belong extends Ctrl {
 
         $_str_pageParamBelong     = 'page_belong';
 
-        $_num_attachCountBelong   = $this->mdl_attachAlbumView->count($_arr_searchBelong); //统计记录数
-        $_arr_pageRowBelong       = $this->obj_request->pagination($_num_attachCountBelong, 0, 'get', $_str_pageParamBelong); //取得分页数据
-        $_arr_attachRowsBelong    = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_pageRowBelong['except'], $_arr_searchBelong); //列出
+        $_arr_getData    = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
 
-        foreach ($_arr_attachRowsBelong as $_key=>$_value) {
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRowsBelong[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
         }
 
@@ -88,12 +84,12 @@ class Album_Belong extends Ctrl {
             'albumRow'          => $_arr_albumRow,
 
             'search'            => $_arr_search,
-            'pageRow'           => $_arr_pageRow,
-            'attachRows'        => $_arr_attachRows,
+            'pageRowAlbum'      => $_arr_attachRows['pageRow'],
+            'attachRows'        => $_arr_attachRows['dataRows'],
 
             'pageParamBelong'   => $_str_pageParamBelong,
-            'pageRowBelong'     => $_arr_pageRowBelong,
-            'attachRowsBelong'  => $_arr_attachRowsBelong,
+            'pageRowBelong'     => $_arr_getData['pageRow'],
+            'attachRowsBelong'  => $_arr_getData['dataRows'],
 
             'token'             => $this->obj_request->token(),
         );
@@ -217,16 +213,13 @@ class Album_Belong extends Ctrl {
             'max_id' => $_arr_inputClear['max_id'],
         );
 
-        $_num_perPage     = 10;
-        $_num_belongCount = $this->mdl_albumBelong->count();
-        $_arr_pageRow     = $this->obj_request->pagination($_num_belongCount, $_num_perPage, 'post');
-        $_arr_belongRows  = $this->mdl_albumBelong->clear($_num_perPage, 0, $_arr_search);
+        $_arr_getData  = $this->mdl_albumBelong->clear(array(10, 'post'), $_arr_search);
 
-        if (Func::isEmpty($_arr_belongRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             $_str_status    = 'complete';
             $_str_msg       = 'Complete';
         } else {
-            $_arr_belongRow = end($_arr_belongRows);
+            $_arr_belongRow = end($_arr_getData['dataRows']);
             $_str_status    = 'loading';
             $_str_msg       = 'Submitting';
             $_num_maxId     = $_arr_belongRow['belong_id'];
@@ -234,7 +227,7 @@ class Album_Belong extends Ctrl {
 
         $_arr_return = array(
             'msg'       => $this->obj_lang->get($_str_msg),
-            'count'     => $_arr_pageRow['total'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'max_id'    => $_num_maxId,
             'status'    => $_str_status,
         );

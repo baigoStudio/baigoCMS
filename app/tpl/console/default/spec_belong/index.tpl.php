@@ -75,7 +75,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="card-group">
         <div class="card">
             <form name="article_list_belong" id="article_list_belong" action="<?php echo $route_console; ?>spec_belong/remove/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <input type="hidden" name="spec_id" value="<?php echo $specRow['spec_id']; ?>">
 
                 <div class="table-responsive">
@@ -160,8 +160,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </div>
                         </div>
                         <div class="float-right">
-                            <?php $_arr_pageRow = $pageRowBelong;
-                            $_str_pageParam = $pageParamBelong;
+                            <?php $pageRow = $pageRowBelong;
+                            $pageParam = $pageParamBelong;
                             include($cfg['pathInclude'] . 'pagination' . GK_EXT_TPL); ?>
                         </div>
                     </div>
@@ -170,7 +170,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </div>
         <div class="card">
             <form name="article_list" id="article_list" action="<?php echo $route_console; ?>spec_belong/choose/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <input type="hidden" name="spec_id" value="<?php echo $specRow['spec_id']; ?>">
 
                 <div class="table-responsive">
@@ -255,8 +255,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </div>
                         </div>
                         <div class="float-right">
-                            <?php $_arr_pageRow = $pageRow;
-                            $_str_pageParam = 'page';
+                            <?php $pageRow = $pageRowSpec;
+                            $pageParam = 'page';
                             include($cfg['pathInclude'] . 'pagination' . GK_EXT_TPL); ?>
                         </div>
                     </div>

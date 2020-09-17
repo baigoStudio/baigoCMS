@@ -126,8 +126,8 @@ class Plugin extends Plugin_Base {
 
     function inputOpts() {
         $_arr_inputParam = array(
-            'plugin_dir'    => array('txt', ''),
-            '__token__'     => array('txt', ''),
+            'plugin_dir'    => array('str', ''),
+            '__token__'     => array('str', ''),
         );
 
         $_str_pluginDir = $this->obj_request->post('plugin_dir');
@@ -138,7 +138,7 @@ class Plugin extends Plugin_Base {
             $_arr_pluginOpts = Loader::load($_str_optsPath);
 
             foreach ($_arr_pluginOpts as $_key=>$_value) {
-                $_arr_inputParam[$_key] = array('txt', '');
+                $_arr_inputParam[$_key] = array('str', '');
             }
         }
 
@@ -169,9 +169,9 @@ class Plugin extends Plugin_Base {
      */
     function inputSubmit() {
         $_arr_inputParam = array(
-            'plugin_dir'     => array('txt', ''),
-            'plugin_note'    => array('txt', ''),
-            '__token__'      => array('txt', ''),
+            'plugin_dir'     => array('str', ''),
+            'plugin_note'    => array('str', ''),
+            '__token__'      => array('str', ''),
         );
 
         $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
@@ -203,7 +203,7 @@ class Plugin extends Plugin_Base {
     function inputUninstall() {
         $_arr_inputParam = array(
             'plugin_dirs'   => array('arr', array()),
-            '__token__'     => array('txt', ''),
+            '__token__'     => array('str', ''),
         );
 
         $_arr_inputUninstall = $this->obj_request->post($_arr_inputParam);

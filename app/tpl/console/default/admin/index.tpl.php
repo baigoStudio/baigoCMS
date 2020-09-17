@@ -60,7 +60,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </form>
     </div>
 
-    <?php if (!empty($search['key']) || !empty($search['status']) || !empty($search['type'])) { ?>
+    <?php if (!empty($search['key']) || !empty($search['status']) || !empty($search['type']) || isset($groupRow['group_name'])) { ?>
         <div class="mb-3 text-right">
             <?php if (!empty($search['key'])) { ?>
                 <span class="badge badge-info">
@@ -81,6 +81,13 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     <?php echo $lang->get('Type'); ?>:
                     <?php echo $lang->get($search['type']); ?>
                 </span>
+            <?php }
+
+            if (isset($groupRow['group_name'])) { ?>
+                <span class="badge badge-info">
+                    <?php echo $lang->get('Group'); ?>:
+                    <?php echo $groupRow['group_name']; ?>
+                </span>
             <?php } ?>
 
             <a href="<?php echo $route_console; ?>admin/index/" class="badge badge-danger badge-pill">
@@ -91,7 +98,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="admin_list" id="admin_list" action="<?php echo $route_console; ?>admin/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -110,6 +117,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         </th>
                         <th class="d-none d-lg-table-cell bg-td-md">
                             <small>
+                                <?php echo $lang->get('Group'); ?>
+                                /
                                 <?php echo $lang->get('Note'); ?>
                             </small>
                         </th>
@@ -164,6 +173,18 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                                 <dl class="row collapse mt-3 mb-0" id="td-collapse-<?php echo $value['admin_id']; ?>">
                                     <dt class="col-3">
+                                        <small><?php echo $lang->get('Group'); ?></small>
+                                    </dt>
+                                    <dd class="col-9">
+                                        <small>
+                                            <?php if (isset($value['groupRow']['group_name'])) { ?>
+                                                <a href="<?php echo $route_console; ?>admin/index/group/<?php echo $value['groupRow']['group_id']; ?>/">
+                                                    <?php echo $value['groupRow']['group_name']; ?>
+                                                </a>
+                                            <?php } ?>
+                                        </small>
+                                    </dd>
+                                    <dt class="col-3">
                                         <small><?php echo $lang->get('Note'); ?></small>
                                     </dt>
                                     <dd class="col-9">
@@ -185,7 +206,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </dl>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md">
-                                <small><?php echo $value['admin_note']; ?></small>
+                                <small>
+                                    <div class="mb-2">
+                                        <?php if (isset($value['groupRow']['group_name'])) { ?>
+                                            <a href="<?php echo $route_console; ?>admin/index/group/<?php echo $value['groupRow']['group_id']; ?>/">
+                                                <?php echo $value['groupRow']['group_name']; ?>
+                                            </a>
+                                        <?php } ?>
+                                    </div>
+                                    <div><?php echo $value['admin_note']; ?></div>
+                                </small>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md text-right">
                                 <div class="mb-2">

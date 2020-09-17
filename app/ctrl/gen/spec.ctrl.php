@@ -9,7 +9,6 @@ namespace app\ctrl\gen;
 use app\classes\gen\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\Html;
 use ginkgo\Plugin;
 
@@ -18,8 +17,6 @@ defined('IN_GINKGO') or exit('Access Denied');
 
 /*-------------用户类-------------*/
 class Spec extends Ctrl {
-
-    public $isEnforce  = false;
 
     protected function c_init($param = array()) { //构造函数
         parent::c_init();
@@ -44,8 +41,7 @@ class Spec extends Ctrl {
         $_arr_search = array(
             'status'    => 'show',
         );
-        $_num_specCount = $this->mdl_spec->count($_arr_search);
-        $_arr_pageRow   = $this->obj_request->pagination($_num_specCount, $this->configVisit['perpage_in_spec']); //取得分页数据
+        $_arr_pageRow   = $this->mdl_spec->pagination($_arr_search, $this->configVisit['perpage_in_spec']); //取得分页数据
 
         $_arr_tplData = array(
             'pageRow'   => $this->pageProcess($_arr_pageRow),
@@ -83,18 +79,16 @@ class Spec extends Ctrl {
         $_arr_search = array(
             'status'    => 'show',
         );
-        $_num_specCount   = $this->mdl_spec->count($_arr_search);
-        $_arr_pageRow     = $this->obj_request->pagination($_num_specCount, $this->configVisit['perpage_spec'], $_arr_inputLists['page']); //取得分页数据
-        $_arr_specRows    = $this->mdl_spec->lists($this->configVisit['perpage_spec'], $_arr_pageRow['except'], $_arr_search);
+        $_arr_getData    = $this->mdl_spec->lists($this->configVisit['perpage_spec'], $_arr_search);
 
-        foreach ($_arr_specRows as $_key=>$_value) {
-            $_arr_specRows[$_key]['spec_url'] = $this->mdl_spec->urlProcess($_value);
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
+            $_value['spec_url'] = $this->mdl_spec->urlProcess($_value);
         }
 
         $_arr_tplData = array(
             'urlRow'    => $this->mdl_spec->urlLists(),
-            'pageRow'   => $this->pageProcess($_arr_pageRow),
-            'specRows'  => $_arr_specRows,
+            'pageRow'   => $this->pageProcess($_arr_getData['pageRow']),
+            'specRows'  => $_arr_getData['dataRows'],
         );
 
         $_arr_pathRow   = $this->mdl_spec->pathLists($_arr_inputLists['page']);
@@ -138,8 +132,6 @@ class Spec extends Ctrl {
             $arr_tplData['pageRow']['final']    = false;
             $arr_tplData['page_more']           = true;
         }
-
-        $arr_tplData['path_tpl']   = $_str_pathTpl;
 
         $_arr_tpl = array_replace_recursive($this->generalData, $arr_tplData);
 

@@ -20,6 +20,7 @@ class Album_View extends Model {
             array('album.album_id'),
             array('album.album_name'),
             array('album.album_status'),
+            array('album.album_tpl'),
             array('album.album_time'),
             array('album.album_attach_id'),
             array('album_belong.belong_attach_id'),

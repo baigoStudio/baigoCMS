@@ -102,6 +102,7 @@
                 'title' => 'Update table',
                 'lists' => array(
                     'Admin',
+                    'Album',
                     'App',
                     'Article',
                     'Article_Content',

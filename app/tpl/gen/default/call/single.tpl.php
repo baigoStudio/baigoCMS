@@ -44,7 +44,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL); ?>
             data: {
                 call_id: '<?php echo $callRow['call_id']; ?>',
                 enforce: 'enforce',
-                __token__: '<?php echo $token; ?>'
+                <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
             },
             timeout: 30000,
             error: function (result) {

@@ -9,7 +9,6 @@ namespace app\ctrl\gen;
 use app\classes\gen\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\File;
 use ginkgo\Html;
 use ginkgo\Ftp;
@@ -20,8 +19,6 @@ defined('IN_GINKGO') or exit('Access Denied');
 
 /*-------------用户类-------------*/
 class Cate extends Ctrl {
-
-    public $isEnforce  = false;
 
     protected function c_init($param = array()) { //构造函数
         parent::c_init();
@@ -45,11 +42,8 @@ class Cate extends Ctrl {
         );
 
         $_arr_search    = $this->obj_request->param($_arr_searchParam);
-
         $_arr_pageRow   = $this->obj_request->pagination();
-
         $_arr_cateRow   = $this->mdl_cate->next($_arr_search['min']);
-
         $_str_jump      = $this->url['route_gen'];
 
         if ($_arr_cateRow['rcode'] != 'y250102') {
@@ -63,7 +57,7 @@ class Cate extends Ctrl {
 
             if ($_arr_cateRow['cate_status'] == 'show' && Func::isEmpty($_arr_cateRow['cate_link'])) {
                 $_arr_cateRow['cate_ids']   = $this->mdl_cate->ids($_arr_cateRow['cate_id']);
-                $_arr_pageRow               = $this->pageProcess($_arr_cateRow, 0);
+                $_arr_pageRow               = $this->pageProcess($_arr_cateRow);
             }
         }
 
@@ -117,7 +111,7 @@ class Cate extends Ctrl {
 
         $_arr_cateRow['cate_ids']   = $this->mdl_cate->ids($_arr_cateRow['cate_id']);
 
-        $_arr_pageRow               = $this->pageProcess($_arr_cateRow, 0);
+        $_arr_pageRow               = $this->pageProcess($_arr_cateRow);
 
         $_arr_tplData = array(
             'pageRow'   => $_arr_pageRow,
@@ -164,12 +158,12 @@ class Cate extends Ctrl {
             'cate_ids' => $_arr_cateRow['cate_ids'],
         );
 
-        $_mdl_articleCateView   = Loader::model('Article_Cate_View');
+        $_mdl_articleCateView           = Loader::model('Article_Cate_View');
 
-        $_arr_articleRows = $_mdl_articleCateView->lists($_arr_pageRow['perpage'], $_arr_pageRow['except'], $_arr_search);
+        $_arr_articleRows               = $_mdl_articleCateView->lists(array($_arr_pageRow['perpage'], $_arr_pageRow['offset'], 'limit'), $_arr_search);
 
-        $_arr_cateRow['cate_content'] = $this->obj_index->linkProcess($_arr_cateRow['cate_content'], $_arr_cateRow['cate_ids']);
-        $_arr_cateRow['cate_content'] = $this->obj_index->albumProcess($_arr_cateRow['cate_content']);
+        $_arr_cateRow['cate_content']   = $this->obj_index->linkProcess($_arr_cateRow['cate_content'], $_arr_cateRow['cate_ids']);
+        $_arr_cateRow['cate_content']   = $this->obj_index->albumProcess($_arr_cateRow['cate_content']);
 
         $_arr_tplData = array(
             'urlRow'        => $_arr_cateRow['cate_url'],
@@ -202,19 +196,14 @@ class Cate extends Ctrl {
 
 
     private function pageProcess($arr_cateRow, $page = 0) {
-        //print_r($arr_cateRow);
-
-        //exit;
-
         $_arr_search = array(
             'cate_ids' => $arr_cateRow['cate_ids'],
         );
 
-        $_mdl_articleCateView  = Loader::model('Article_Cate_View');
-
-        $_num_articleCount  = $_mdl_articleCateView->count($_arr_search); //统计
-        $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $arr_cateRow['cate_perpage'], $page); //取得分页数据
-        $_arr_pageRow['total_abs'] = $_arr_pageRow['total'];
+        $_mdl_articleCateView       = Loader::model('Article_Cate_View');
+        $_arr_pageRow               = $_mdl_articleCateView->pagination($_arr_search, $arr_cateRow['cate_perpage'], $page); //取得分页数据
+        $_arr_pageRow['total_abs']  = $_arr_pageRow['total'];
+        $_arr_pageRow['perpage']    = $arr_cateRow['cate_perpage'];
 
         if ($_arr_pageRow['total'] >= $this->configVisit['visit_pagecount']) {
             $_arr_pageRow['total'] = $this->configVisit['visit_pagecount'];
@@ -223,8 +212,6 @@ class Cate extends Ctrl {
         if ($_arr_pageRow['group_end'] >= $this->configVisit['visit_pagecount']) {
             $_arr_pageRow['group_end'] = $this->configVisit['visit_pagecount'];
         }
-
-        $_arr_pageRow['perpage'] = $arr_cateRow['cate_perpage'];
 
         return $_arr_pageRow;
     }
@@ -244,7 +231,7 @@ class Cate extends Ctrl {
             $arr_tplData['page_more']           = true;
         }
 
-        $arr_tplData['path_tpl']   = $_str_pathTpl;
+        //$arr_tplData['path_tpl']   = $_str_pathTpl;
 
         $_mix_result = Plugin::listen('filter_gen_cate', $arr_tplData); //编辑文章时触发
         $arr_tplData = Plugin::resultProcess($arr_tplData, $_mix_result);

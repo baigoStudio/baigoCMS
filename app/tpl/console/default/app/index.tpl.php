@@ -72,7 +72,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="app_list" id="app_list" action="<?php echo $route_console; ?>app/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">

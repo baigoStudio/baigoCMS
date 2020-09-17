@@ -17,7 +17,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="app_form" id="app_form" action="<?php echo $route_console; ?>app/reset/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="app_id" value="<?php echo $appRow['app_id']; ?>">
 
         <div class="row">

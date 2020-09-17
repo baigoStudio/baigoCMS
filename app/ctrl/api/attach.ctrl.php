@@ -31,18 +31,16 @@ class Attach extends Ctrl {
             'perpage'   => array('int', $this->configVisit['perpage_in_api']),
         );
 
-        $_arr_search = $this->obj_request->get($_arr_searchParam);
+        $_arr_search    = $this->obj_request->get($_arr_searchParam);
 
-        $_mdl_attach   = Loader::model('Attach_Album_View');
+        $_mdl_attach    = Loader::model('Attach_Album_View');
 
-        $_num_attachCount    = $_mdl_attach->count($_arr_search);
-        $_arr_pageRow        = $this->obj_request->pagination($_num_attachCount, $_arr_search['perpage']);
-        $_arr_attachRows     = $_mdl_attach->lists($_arr_search['perpage'], $_arr_pageRow['except'], $_arr_search);
+        $_arr_getData   = $_mdl_attach->lists($_arr_search['perpage'], $_arr_search);
 
         $_arr_return = array(
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'attachRows'    => $_arr_attachRows,
+            'pageRow'       => $_arr_getData['pageRow'],
+            'attachRows'    => $_arr_getData['dataRows'],
         );
 
         $_mix_result    = Plugin::listen('filter_api_attach_lists', $_arr_return); //编辑文章时触发

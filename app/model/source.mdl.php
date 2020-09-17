@@ -21,9 +21,7 @@ class Source extends Model {
             'source_id',
         );
 
-        $_arr_sourceRow = $this->read($mix_source, $str_by, $num_notId, $_arr_select);
-
-        return $_arr_sourceRow;
+        return $this->readProcess($mix_source, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -37,6 +35,17 @@ class Source extends Model {
      * @return void
      */
     function read($mix_source, $str_by = 'source_id', $num_notId = 0, $arr_select = array()) {
+        $_arr_sourceRow = $this->readProcess($mix_source, $str_by, $num_notId, $arr_select);
+
+        if ($_arr_sourceRow['rcode'] != 'y260102') {
+            return $_arr_sourceRow;
+        }
+
+        return $this->rowProcess($_arr_sourceRow);
+    }
+
+
+    function readProcess($mix_source, $str_by = 'source_id', $num_notId = 0, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'source_id',
@@ -61,7 +70,7 @@ class Source extends Model {
         $_arr_sourceRow['rcode'] = 'y260102';
         $_arr_sourceRow['ms']    = '';
 
-        return $this->rowProcess($_arr_sourceRow);
+        return $_arr_sourceRow;
     }
 
 
@@ -74,7 +83,7 @@ class Source extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_sourceSelect = array(
             'source_id',
             'source_name',
@@ -83,15 +92,21 @@ class Source extends Model {
             'source_note',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('source_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_sourceSelect);
 
-        $_arr_sourceRows = $this->where($_arr_where)->order('source_id', 'DESC')->limit($num_except, $num_no)->select($_arr_sourceSelect);
-
-        foreach ($_arr_sourceRows as $_key=>$_value) {
-            $_arr_sourceRows[$_key]  = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_sourceRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 

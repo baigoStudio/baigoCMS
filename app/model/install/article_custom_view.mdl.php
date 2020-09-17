@@ -23,7 +23,7 @@ class Article_Custom_View extends Model {
             'status' => 'enable',
         );
 
-        $_arr_customRows = $_mdl_custom->lists(1000, 0, $_arr_search);
+        $_arr_customRows = $_mdl_custom->lists(array(1000, 'limit'), $_arr_search);
 
         $_arr_viewCreate = array(
             array('article.article_id'),

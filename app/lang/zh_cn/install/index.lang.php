@@ -50,7 +50,6 @@ return array(
     'Database settings'                 => '数据库设置',
     'Host port'                         => '服务器端口',
     'Charset'                           => '字符编码',
-    'Database debug'                    => '数据库调试模式',
     'Database set successful'           => '数据库设置成功',
     'Database set failed'               => '数据库设置失败',
     'Set successfully'                  => '设置成功',

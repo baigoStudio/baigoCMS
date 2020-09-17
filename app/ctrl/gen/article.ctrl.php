@@ -18,9 +18,6 @@ defined('IN_GINKGO') or exit('Access Denied');
 /*-------------用户类-------------*/
 class Article extends Ctrl {
 
-    public $inGen      = true;
-    public $isEnforce  = false;
-
     protected function c_init($param = array()) {
         parent::c_init();
 
@@ -59,21 +56,19 @@ class Article extends Ctrl {
             $_arr_search['is_gen'] = 'not';
         }
 
-        $_arr_order = array(
-            array('article_id', 'DESC'),
-        );
-        $_arr_articleRows   = $this->mdl_article->lists($this->configConsole['count_gen'], 0, $_arr_search, $_arr_order);
+        $_arr_order = array('article_id', 'DESC');
 
+        $_arr_getData       = $this->mdl_article->lists($this->configConsole['count_gen'], $_arr_search, $_arr_order);
         $_str_jump          = $this->url['route_gen'];
 
-        if (Func::isEmpty($_arr_articleRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             if ($_arr_search['overall'] == 'overall') {
                 $_str_jump .= 'cate/one-by-one/';
             } else {
                 return $this->error('Complete generation', 'y120406');
             }
         } else {
-            $_arr_articleRow = end($_arr_articleRows);
+            $_arr_articleRow = end($_arr_getData['dataRows']);
             $_str_jump .= 'article/index/max/' . $_arr_articleRow['article_id'] . '/';
         }
 
@@ -94,7 +89,7 @@ class Article extends Ctrl {
         $_arr_tplData = array(
             'jump'          => $_str_jump,
             'search'        => $_arr_search,
-            'articleRows'   => $_arr_articleRows,
+            'articleRows'   => $_arr_getData['dataRows'],
             'token'         => $this->obj_request->token(),
         );
 
@@ -201,28 +196,16 @@ class Article extends Ctrl {
         $_arr_articleRow = $this->obj_index->articleRead($_arr_inputSubmit['article_id']);
 
         if ($_arr_articleRow['rcode'] != 'y120102') {
-            if ($this->inGen) {
-                return $this->fetchJson($_arr_articleRow['msg'], $_arr_articleRow['rcode']);
-            } else {
-                return;
-            }
+            return $this->fetchJson($_arr_articleRow['msg'], $_arr_articleRow['rcode']);
         }
 
         if (isset($_arr_articleRow['article_link']) && !Func::isEmpty($_arr_articleRow['article_link'])) {
             $this->mdl_article->isGen(array($_arr_articleRow['article_id']));
-            if ($this->inGen) {
-                return $this->fetchJson('Unable to generate', 'x120403');
-            } else {
-                return;
-            }
+            return $this->fetchJson('Unable to generate', 'x120403');
         }
 
-        if ($_arr_articleRow['article_is_gen'] == 'yes' && $_arr_inputSubmit['enforce'] != 'enforce' && !$this->isEnforce) {
-            if ($this->inGen) {
-                return $this->fetchJson('Unable to generate', 'x120401');
-            } else {
-                return;
-            }
+        if ($_arr_articleRow['article_is_gen'] == 'yes' && $_arr_inputSubmit['enforce'] != 'enforce') {
+            return $this->fetchJson('Unable to generate', 'x120401');
         }
 
         $_arr_articleRow = $this->mdl_article->pathProcess($_arr_articleRow);
@@ -230,19 +213,15 @@ class Article extends Ctrl {
         $_arr_cateRow    = $this->cateProcess($_arr_articleRow['article_cate_id']);
 
         if ($_arr_cateRow['rcode'] != 'y250102') {
-            if ($this->inGen) {
-                return $this->fetchJson($_arr_cateRow['msg'], $_arr_cateRow['rcode']);
-            } else {
-                return;
-            }
+            return $this->fetchJson($_arr_cateRow['msg'], $_arr_cateRow['rcode']);
         }
 
         $_arr_tagRows    = $this->obj_index->tagLists($_arr_inputSubmit['article_id']);
 
         $_arr_attachRow  = array();
 
-        $_arr_tagIds    = array();
-        $_arr_assRows   = array();
+        $_arr_tagIds     = array();
+        $_arr_assRows    = array();
 
         foreach ($_arr_tagRows as $_key=>$_value) {
             $_arr_tagIds[] = $_value['tag_id'];
@@ -285,18 +264,30 @@ class Article extends Ctrl {
     private function output($arr_tplData) {
         $_arr_cateRow = $this->cateRow;
 
+        $_str_tplDo = '';
+
         if (Func::isEmpty($_arr_cateRow['cate_tpl_do'])) {
-            $_arr_cateRow['cate_tpl_do'] = $this->configBase['site_tpl'];
+            $_str_tplDo = $this->configBase['site_tpl'];
+        } else {
+            $_str_tplDo = $_arr_cateRow['cate_tpl_do'];
         }
 
-        $_str_tplPath = BG_TPL_INDEX . $_arr_cateRow['cate_tpl_do'] . DS;
+        $_str_tplPath   = BG_TPL_INDEX . $_str_tplDo . DS;
 
-        $arr_tplData['path_tpl'] = $_str_tplPath;
+        if (Func::isEmpty($arr_tplData['articleRow']['article_tpl']) || $arr_tplData['articleRow']['article_tpl'] === '-1') {
+            $_str_tpl = $_str_tplPath . 'article' . DS . 'index';
+        } else {
+            $_str_tpl = BG_TPL_ARTICLE . $arr_tplData['articleRow']['article_tpl'];
+        }
+
+        $_str_tpl .= GK_EXT_TPL;
+
+        //print_r($_str_tpl);
 
         $_mix_result    = Plugin::listen('filter_gen_article', $arr_tplData); //编辑文章时触发
         $arr_tplData    = Plugin::resultProcess($arr_tplData, $_mix_result);
 
-        $_mix_outputResult = $this->outputProcess($arr_tplData, $arr_tplData['articleRow']['article_path'], $_str_tplPath, 'article' . DS . 'index');
+        $_mix_outputResult = $this->outputProcess($arr_tplData, $arr_tplData['articleRow']['article_path'], $_str_tplPath, $_str_tpl);
 
         if (is_array($_mix_outputResult) && isset($_mix_outputResult['rcode'])) {
             return $_mix_outputResult;

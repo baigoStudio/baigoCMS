@@ -446,7 +446,7 @@ abstract class Model extends Model_Base {
                 case 'char':
                 case 'varchar':
                     if (!isset($field['default']) || Func::isEmpty($field['default'])) {
-                        $field['default'] = 'NULL';
+                        $field['default'] = '';
                     } else {
                         $field['default'] = (string)$field['default'];
                     }
@@ -467,7 +467,7 @@ abstract class Model extends Model_Base {
                         if (isset($_arr_enum[0])) {
                             $field['default'] = $_arr_enum[0];
                         } else {
-                            $field['default'] = 'NULL';
+                            $field['default'] = '';
                         }
                     } else {
                         $field['default'] = (string)$field['default'];
@@ -475,7 +475,7 @@ abstract class Model extends Model_Base {
                 break;
 
                 default:
-                    $field['default'] = 'NULL';
+                    $field['default'] = '';
                 break;
             }
 

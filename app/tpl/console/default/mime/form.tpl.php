@@ -25,7 +25,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="mime_form" id="mime_form" autocomplete="off" action="<?php echo $route_console; ?>mime/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="mime_id" id="mime_id" value="<?php echo $mimeRow['mime_id']; ?>">
 
         <div class="row">

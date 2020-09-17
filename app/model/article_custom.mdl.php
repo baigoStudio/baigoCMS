@@ -8,7 +8,6 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\Loader;
 use ginkgo\Cache;
 
@@ -22,6 +21,8 @@ class Article_Custom extends Model {
     protected $mdl_custom;
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $_obj_cache  = Cache::instance();
         $this->mdl_custom = Loader::model('Custom', '', 'index');
 
@@ -44,9 +45,7 @@ class Article_Custom extends Model {
             'article_id',
         );
 
-        $_arr_articleRow = $this->read($num_articleId, $_arr_select);
-
-        return $_arr_articleRow;
+        return $this->read($num_articleId, $_arr_select);
     }
 
 

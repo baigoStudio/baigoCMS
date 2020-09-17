@@ -18,8 +18,6 @@ class Article_Cate_View extends Article {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_key (default: '')
      * @param string $str_year (default: '')
      * @param string $str_month (default: '')
@@ -29,7 +27,7 @@ class Article_Cate_View extends Article {
      * @param string $str_orderType (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array(), $arr_order = array(), $arr_group = array()) {
+    function lists($pagination = 0, $arr_search = array(), $arr_order = array(), $arr_group = array()) {
         $_arr_articleSelect = array(
             'article_id',
             'article_title',
@@ -51,8 +49,6 @@ class Article_Cate_View extends Article {
             'article_hits_all',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
-
         if (Func::isEmpty($arr_order)) {
             $arr_order = array(
                 array('article_top', 'DESC'),
@@ -65,16 +61,24 @@ class Article_Cate_View extends Article {
             $arr_group = array('article_top', 'article_time_pub', 'article_id');
         }
 
-        $_arr_articleRows = $this->where($_arr_where)->whereAnd($this->whereAnd_1)->whereAnd($this->whereAnd_2)->whereAnd($this->whereAnd_3)->order($arr_order)->group($arr_group)->limit($num_except, $num_no)->select($_arr_articleSelect);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->whereAnd($this->whereAnd_1)->whereAnd($this->whereAnd_2)->whereAnd($this->whereAnd_3)->order($arr_order)->group($arr_group)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_articleSelect);
 
-        if (!Func::isEmpty($_arr_articleRows)) {
-            foreach ($_arr_articleRows as $_key=>$_value) {
-                $_arr_articleRows[$_key] = $this->rowProcess($_value);
-                $_arr_articleRows[$_key]['article_customs']   = $this->mdl_articleCustom->read($_value['article_id']);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
+        }
+
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value                     = $this->rowProcess($_value);
+                $_value['article_customs']  = $this->mdl_articleCustom->read($_value['article_id']);
             }
         }
 
-        return $_arr_articleRows;
+        return $_arr_getData;
     }
 
 
@@ -98,11 +102,16 @@ class Article_Cate_View extends Article {
             $arr_group = array('article_top', 'article_time_pub', 'article_id');
         }
 
-        $_num_articleCount    = $this->where($_arr_where)->whereAnd($this->whereAnd_1)->whereAnd($this->whereAnd_2)->whereAnd($this->whereAnd_3)->group($arr_group)->count();
-
-        return $_num_articleCount;
+        return $this->where($_arr_where)->whereAnd($this->whereAnd_1)->whereAnd($this->whereAnd_2)->whereAnd($this->whereAnd_3)->group($arr_group)->count();
     }
 
+
+    function pagination($arr_search = array(), $perpage = 0, $current = 'get', $pageparam = 'page', $pergroup = 0) {
+
+        $_arr_where = $this->queryProcess($arr_search);
+
+        return $this->where($_arr_where)->pagination($perpage, $current, $pageparam, $pergroup);
+    }
 
     protected function queryProcess($arr_search = array()) {
         $_arr_where = array(

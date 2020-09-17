@@ -7,7 +7,6 @@
 namespace app\model\api;
 
 use app\model\App as App_Base;
-use ginkgo\Request;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');

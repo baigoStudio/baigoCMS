@@ -7,7 +7,6 @@
 namespace app\validate;
 
 use ginkgo\Validate;
-use ginkgo\Config;
 use ginkgo\Func;
 
 //不能非法包含或直接执行

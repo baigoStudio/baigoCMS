@@ -17,16 +17,13 @@ defined('IN_GINKGO') or exit('Access Denied');
 class Group extends Model {
 
     public $arr_status = array('enable', 'disabled');
-    public $arr_target   = array('admin'/*, 'user'*/);
 
-    function check($mix_group, $str_by = 'group_id', $str_target = '') {
+    function check($mix_group, $str_by = 'group_id') {
         $_arr_select = array(
             'group_id',
         );
 
-        $_arr_groupRow = $this->read($mix_group, $str_by, $str_target, $_arr_select);
-
-        return $_arr_groupRow;
+        return $this->readProcess($mix_group, $str_by, $_arr_select);
     }
 
 
@@ -36,22 +33,31 @@ class Group extends Model {
      * @access public
      * @param mixed $mix_group
      * @param string $str_by (default: 'group_id')
-     * @param int $str_target (default: 0)
      * @return void
      */
-    function read($mix_group, $str_by = 'group_id', $str_target = '', $arr_select = array()) {
+    function read($mix_group, $str_by = 'group_id', $arr_select = array()) {
+        $_arr_groupRow = $this->readProcess($mix_group, $str_by, $arr_select);
+
+        if ($_arr_groupRow['rcode'] != 'y040102') {
+            return $_arr_groupRow;
+        }
+
+        return $this->rowProcess($_arr_groupRow);
+    }
+
+
+    function readProcess($mix_group, $str_by = 'group_id', $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'group_id',
                 'group_name',
                 'group_note',
                 'group_allow',
-                'group_target',
                 'group_status',
             );
         }
 
-        $_arr_where = $this->readQueryProcess($mix_group, $str_by, $str_target);
+        $_arr_where = $this->readQueryProcess($mix_group, $str_by);
 
         $_arr_groupRow = $this->where($_arr_where)->find($arr_select);
 
@@ -67,7 +73,7 @@ class Group extends Model {
 
         //print_r($_arr_groupRow);
 
-        return $this->rowProcess($_arr_groupRow);
+        return $_arr_groupRow;
     }
 
 
@@ -75,27 +81,23 @@ class Group extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_key (default: '')
-     * @param string $str_target (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
 
         $_arr_groupSelect = array(
             'group_id',
             'group_name',
             'group_note',
-            'group_target',
             'group_status',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('group_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_groupSelect);
 
-        $_arr_groupRows = $this->where($_arr_where)->order('group_id', 'DESC')->limit($num_except, $num_no)->select($_arr_groupSelect);
-
-        return $_arr_groupRows;
+        return $_arr_getData;
 
     }
 
@@ -124,10 +126,6 @@ class Group extends Model {
             $_arr_where[] = array('group_name|group_note', 'LIKE', '%' . $arr_search['key'] . '%', 'key');
         }
 
-        if (isset($arr_search['target']) && !Func::isEmpty($arr_search['target'])) {
-            $_arr_where[] = array('group_target', '=', $arr_search['target']);
-        }
-
         if (isset($arr_search['status']) && !Func::isEmpty($arr_search['status'])) {
             $_arr_where[] = array('group_status', '=', $arr_search['status']);
         }
@@ -136,12 +134,8 @@ class Group extends Model {
     }
 
 
-    function readQueryProcess($mix_group, $str_by = 'group_id', $str_target = '') {
+    function readQueryProcess($mix_group, $str_by = 'group_id') {
         $_arr_where[] = array($str_by, '=', $mix_group);
-
-        if (!Func::isEmpty($str_target)) {
-            $_arr_where[] = array('group_target', '=', $str_target);
-        }
 
         return $_arr_where;
     }

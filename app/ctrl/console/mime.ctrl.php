@@ -35,10 +35,10 @@ class Mime extends Ctrl {
             return $this->error('You do not have permission', 'x080301');
         }
 
-        $_arr_mimeRows   = $this->mdl_mime->lists(1000); //列出
+        $_arr_mimeRows   = $this->mdl_mime->lists(array(1000, 'limit')); //列出
 
         $_arr_tplData = array(
-            'mimeRows'  => $_arr_mimeRows,
+            'mimeRows'   => $_arr_mimeRows,
             'token'      => $this->obj_request->token(),
         );
 
@@ -130,7 +130,8 @@ class Mime extends Ctrl {
             );
         }
 
-        $_arr_mimeRows   = $this->mdl_mime->lists(1000);
+        $_arr_mimeRows   = $this->mdl_mime->lists(array(1000, 'limit'));
+        $_arr_mimes      = array();
 
         foreach ($_arr_mimeRows as $_key=>$_value) {
             $_arr_mimes[] = $_value['mime_ext'];
@@ -251,7 +252,7 @@ class Mime extends Ctrl {
             if ($_arr_mimeRow['rcode'] == 'y080102') {
                 $_arr_return = array(
                     'rcode' => 'x080404',
-                    'error' => $this->obj_lang->get('MIME already exists'),
+                    'error_msg' => $this->obj_lang->get('MIME already exists'),
                 );
             }
         }

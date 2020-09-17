@@ -31,7 +31,7 @@ class Article_Custom extends Model {
             'status' => 'enable',
         );
 
-        $_arr_customRows = $_mdl_custom->lists(1000, 0, $_arr_search);
+        $_arr_customRows = $_mdl_custom->lists(array(1000, 'limit'), $_arr_search);
 
         foreach ($_arr_customRows as $_key=>$_value) {
             if ($_value['custom_size'] < 1) {

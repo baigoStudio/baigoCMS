@@ -20,19 +20,9 @@ class Cate extends Model {
     public $arr_pasv   = array('off', 'on');
 
     function m_init() { //构造函数
-        $_arr_configBase   = Config::get('base', 'var_extra');
-        if (!isset($_arr_configBase['site_tpl'])) {
-            $_arr_configBase['site_tpl'] = 'default';
-        }
+        parent::m_init();
 
-        $_arr_configVisit  = Config::get('visit', 'var_extra');
-
-        if (!isset($_arr_configVisit['perpage_in_cate'])) {
-            $_arr_configVisit['perpage_in_cate'] = 30;
-        }
-
-        $this->configBase   = $_arr_configBase;
-        $this->configVisit  = $_arr_configVisit;
+        $this->configVisit  = Config::get('visit', 'var_extra');
     }
 
 
@@ -46,17 +36,17 @@ class Cate extends Model {
 
             $_arr_where  = $this->queryProcess($mix_search);
 
-            $_arr_cateRows  = $this->where($_arr_where)->select($_arr_cateSelect);
+            $_arr_getData  = $this->where($_arr_where)->select($_arr_cateSelect);
 
-            foreach ($_arr_cateRows as $_key=>$_value) {
+            foreach ($_arr_getData as $_key=>$_value) {
                 $_arr_cateIds[]   = $_value['cate_id'];
             }
         } else if (is_numeric($mix_search)) {
             $_arr_search = array(
                 'parent_id' => $mix_search,
             );
-            $_arr_cateRows  = $this->listsTree(1000, 0, $_arr_search);
-            $_arr_cateIds   = $this->idsProcess($_arr_cateRows);
+            $_arr_getData   = $this->listsTree($_arr_search);
+            $_arr_cateIds   = $this->idsProcess($_arr_getData);
             $_arr_cateIds[] = $mix_search;
         }
 
@@ -69,34 +59,16 @@ class Cate extends Model {
             'cate_id',
         );
 
-        $_arr_cateRow = $this->readProcess($mix_cate, $str_by, $num_notId, $num_parentId, $_arr_select);
-
-        if (!$_arr_cateRow) {
-            return array(
-                'msg'   => 'Category not found',
-                'rcode' => 'x250102', //不存在记录
-            );
-        }
-
-        $_arr_cateRow['rcode']    = 'y250102';
-        $_arr_cateRow['msg']      = '';
-
-        return $_arr_cateRow;
+        return $this->readProcess($mix_cate, $str_by, $num_notId, $num_parentId, $_arr_select);
     }
 
 
     function read($mix_cate, $str_by = 'cate_id') {
         $_arr_cateRow = $this->readProcess($mix_cate, $str_by);
 
-        if (!$_arr_cateRow) {
-            return array(
-                'msg'   => 'Category not found',
-                'rcode' => 'x250102', //不存在记录
-            );
+        if ($_arr_cateRow['rcode'] != 'y250102') {
+            return $_arr_cateRow;
         }
-
-        $_arr_cateRow['rcode']    = 'y250102';
-        $_arr_cateRow['msg']      = '';
 
         return $this->rowProcess($_arr_cateRow);
     }
@@ -122,16 +94,21 @@ class Cate extends Model {
 
         $_arr_cateRow = $this->where($_arr_where)->find($arr_select);
 
-        if ($_arr_cateRow !== false) {
-            $_arr_cateRow['rcode'] = 'y250102';
-            $_arr_cateRow['msg']   = '';
+        if (!$_arr_cateRow) {
+            return array(
+                'msg'   => 'Category not found',
+                'rcode' => 'x250102', //不存在记录
+            );
         }
+
+        $_arr_cateRow['rcode'] = 'y250102';
+        $_arr_cateRow['msg']   = '';
 
         return $_arr_cateRow;
     }
 
 
-    function lists($num_no, $num_except = 0, $arr_search = array(), $arr_select = array()) {
+    function lists($pagination = 0, $arr_search = array(), $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'cate_id',
@@ -145,39 +122,41 @@ class Cate extends Model {
             );
         }
 
-        $_arr_where  = $this->queryProcess($arr_search);
-
         $_arr_order = array(
             array('cate_order', 'ASC'),
             array('cate_id', 'ASC'),
         );
 
-        //print_r($_arr_where);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order($_arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($arr_select);
 
-        $_arr_cateRows = $this->where($_arr_where)->order($_arr_order)->limit($num_except, $num_no)->select($arr_select);
-
-        foreach ($_arr_cateRows as $_key=>$_value) {
-            $_arr_cateRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_cateRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 
-    function listsTree($num_no, $num_except = 0, $arr_search = array(), $num_level = 1) {
-        $_arr_cateRows  = $this->lists($num_no, $num_except, $arr_search);
-
-        //print_r($_arr_cateRows);
-
+    function listsTree($arr_search = array(), $num_level = 1) {
         $_arr_cates = array();
 
-        foreach ($_arr_cateRows as $_key=>$_value) {
+        $_arr_getData  = $this->lists(array(1000, 'limit'), $arr_search);
+
+        foreach ($_arr_getData as $_key=>$_value) {
             $_arr_cates[$_value['cate_id']]                 = $_value;
 
             $_arr_cates[$_value['cate_id']]['cate_level']   = $num_level;
             unset($_arr_cates[$_value['cate_id']]['cate_breadcrumb']);
             $arr_search['parent_id']                        = $_value['cate_id'];
-            $_arr_cates[$_value['cate_id']]['cate_childs']  = $this->listsTree(1000, 0, $arr_search, $num_level + 1);
+            $_arr_cates[$_value['cate_id']]['cate_childs']  = $this->listsTree($arr_search, $num_level + 1);
         }
 
         return $_arr_cates;

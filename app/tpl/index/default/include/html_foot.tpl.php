@@ -42,7 +42,7 @@
     });
     </script>
 
-    <script src="{:DIR_STATIC}lib/bootstrap/4.3.1/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+    <script src="{:DIR_STATIC}lib/bootstrap/4.5.2/js/bootstrap.bundle.min.js" type="text/javascript"></script>
 
     <!-- Powered by <?php echo PRD_CMS_NAME, ' ', PRD_CMS_VER; ?> -->
 

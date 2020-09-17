@@ -16,7 +16,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="call_form" id="call_form" action="<?php echo $route_console; ?>call/duplicate/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="call_id" id="call_id" value="<?php echo $callRow['call_id']; ?>">
 
         <div class="row">
@@ -162,10 +162,17 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             <div class="col-xl-3">
                 <div class="card bg-light">
                     <div class="card-body">
-                            <div class="form-group">
-                                <label><?php echo $lang->get('ID'); ?></label>
-                                <div class="form-text"><?php echo $callRow['call_id']; ?></div>
+                        <div class="form-group">
+                            <label><?php echo $lang->get('ID'); ?></label>
+                            <div class="form-text"><?php echo $callRow['call_id']; ?></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Status'); ?></label>
+                            <div class="form-text">
+                                <?php echo $lang->get($callRow['call_status']); ?>
                             </div>
+                        </div>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Type'); ?></label>
@@ -182,13 +189,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                             </div>
                         <?php } ?>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?></label>
-                            <div class="form-text">
-                                <?php echo $lang->get($callRow['call_status']); ?>
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Amount of display'); ?></label>

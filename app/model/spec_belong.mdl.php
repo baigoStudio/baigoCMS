@@ -65,21 +65,6 @@ class Spec_Belong extends Model {
     }
 
 
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
-        $_arr_belongSelect = array(
-            'belong_id',
-            'belong_spec_id',
-            'belong_article_id',
-        );
-
-        $_arr_where = $this->queryProcess($arr_search);
-
-        $_arr_belongRows = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($num_except, $num_no)->select($_arr_belongSelect);
-
-        return $_arr_belongRows;
-    }
-
-
     function count($arr_search = array()) {
         $_arr_where = $this->queryProcess($arr_search);
 

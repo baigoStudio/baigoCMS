@@ -20,9 +20,7 @@ class Mark extends Model {
             'mark_id',
         );
 
-        $_arr_markRow = $this->read($mix_mark, $str_by, $num_notId, $_arr_select);
-
-        return $_arr_markRow;
+        return $this->read($mix_mark, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -70,17 +68,17 @@ class Mark extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_markSelect = array(
             'mark_id',
             'mark_name',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('mark_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_markSelect);
 
-        $_arr_markRows = $this->where($_arr_where)->order('mark_id', 'DESC')->limit($num_except, $num_no)->select($_arr_markSelect);
-
-        return $_arr_markRows;
+        return $_arr_getData;
     }
 
 

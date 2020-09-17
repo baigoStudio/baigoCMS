@@ -69,7 +69,7 @@ class Opt extends Ctrl {
             $_arr_tplData['timezoneType']       = strtolower($_arr_timezone[0]);
 
             $_mdl_thumb     = Loader::model('Thumb');
-            $_arr_thumbRows = $_mdl_thumb->lists(1000);
+            $_arr_thumbRows = $_mdl_thumb->lists(array(1000, 'limit'));
 
             $_arr_thumbs = array();
 
@@ -342,18 +342,6 @@ class Opt extends Ctrl {
         $_arr_configBase    = Config::get('base', 'var_extra');
         $_arr_installed     = Config::get('installed'); //当前安装的
         $_arr_latest        = $this->mdl_opt->chkver();
-
-        if (!isset($_arr_configBase['site_date'])) {
-            $_arr_configBase['site_date'] = 'Y-m-d';
-        }
-
-        if (!isset($_arr_configBase['site_date_short'])) {
-            $_arr_configBase['site_date_short'] = 'm-d';
-        }
-
-        if (!isset($_arr_configBase['site_time_short'])) {
-            $_arr_configBase['site_time_short'] = 'H:i';
-        }
 
         if (!isset($_arr_installed['prd_installed_pub'])) {
             $_arr_installed['prd_installed_pub'] = PRD_CMS_PUB;

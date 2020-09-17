@@ -52,7 +52,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL); ?>
                 data: {
                     cate_id: '<?php echo $cateRow['cate_id']; ?>',
                     page: '<?php echo $_iii; ?>',
-                    __token__: '<?php echo $token; ?>'
+                    <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                 },
                 timeout: 30000,
                 error: function (result) {

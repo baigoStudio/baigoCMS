@@ -8,7 +8,6 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\Html;
 
 //不能非法包含或直接执行
@@ -23,9 +22,7 @@ class Article_Content extends Model {
             'article_id',
         );
 
-        $_arr_contentRow = $this->read($num_articleId, $_arr_select);
-
-        return $_arr_contentRow;
+        return $this->read($num_articleId, $_arr_select);
     }
 
 

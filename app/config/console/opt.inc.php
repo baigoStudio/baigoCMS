@@ -11,7 +11,7 @@ return array(
             'site_date' => array(
                 'title'      => 'Date format',
                 'type'       => 'select_input',
-                'note'       => 'Select or fill in the format parameter of the <code>date</code> function',
+                'note'       => 'Select or type the format parameter of the <code>date</code> function',
                 'require'    => 'true',
                 'date_param' => 'true',
                 'option'     => array(
@@ -23,7 +23,7 @@ return array(
             'site_date_short' => array(
                 'title'      => 'Short date format',
                 'type'       => 'select_input',
-                'note'       => 'Select or fill in the format parameter of the <code>date</code> function',
+                'note'       => 'Select or type the format parameter of the <code>date</code> function',
                 'require'    => 'true',
                 'date_param' => 'true',
                 'option'     => array(
@@ -34,7 +34,7 @@ return array(
             'site_time' => array(
                 'title'      => 'Time format',
                 'type'       => 'select_input',
-                'note'       => 'Select or fill in the format parameter of the <code>date</code> function',
+                'note'       => 'Select or type the format parameter of the <code>date</code> function',
                 'require'    => 'true',
                 'date_param' => 'true',
                 'option'     => array(
@@ -45,7 +45,7 @@ return array(
             'site_time_short' => array(
                 'title'      => 'Short time format',
                 'type'       => 'select_input',
-                'note'       => 'Select or fill in the format parameter of the <code>date</code> function',
+                'note'       => 'Select or type the format parameter of the <code>date</code> function',
                 'require'    => 'true',
                 'date_param' => 'true',
                 'option'     => array(
@@ -89,7 +89,7 @@ return array(
             'visit_file' => array(
                 'title'     => 'Extension of web page',
                 'type'      => 'select_input',
-                'note'      => 'Select or fill in the extension name',
+                'note'      => 'Select or type the extension name',
                 'require'   => 'true',
                 'option' => array(
                     'html'  => 'html',

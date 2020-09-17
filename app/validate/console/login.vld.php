@@ -59,7 +59,7 @@ class Login extends Validate {
         );
 
         $_arr_formatMsg = array(
-            'alpha_number'  => $this->obj_lang->get('{:attr} must be numeric'),
+            'alpha_number'  => $this->obj_lang->get('{:attr} must be alpha-numeric'),
             'alpha_dash'    => $this->obj_lang->get('{:attr} must be alpha-numeric, dash, underscore'),
         );
 

@@ -73,7 +73,7 @@ class Call extends Call_Base {
             'status' => 'enable',
         );
 
-        $_arr_callRows = $this->lists(1000, 0, $_arr_search);
+        $_arr_callRows = $this->lists(array(1000, 'limit'), $_arr_search);
 
         return $this->obj_cache->write('call_lists', $_arr_callRows);
     }

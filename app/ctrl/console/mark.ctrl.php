@@ -32,7 +32,7 @@ class Mark extends Ctrl {
             return $this->error('You do not have permission', 'x140301');
         }
 
-        $_arr_markRows  = $this->mdl_mark->lists(1000); //列出
+        $_arr_markRows  = $this->mdl_mark->lists(array(1000, 'limit')); //列出
 
         $_arr_tplData = array(
             'markRows'  => $_arr_markRows,

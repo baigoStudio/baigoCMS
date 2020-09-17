@@ -84,15 +84,24 @@ $cfg = array(
 
 include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
-    <nav class="nav mb-3">
-        <a href="<?php echo $route_console; ?>article/" class="nav-link">
-            <span class="fas fa-chevron-left"></span>
-            <?php echo $lang->get('Back'); ?>
-        </a>
-    </nav>
+    <div class="d-flex justify-content-between align-items-start">
+        <nav class="nav mb-3">
+            <a href="<?php echo $route_console; ?>article/" class="nav-link">
+                <span class="fas fa-chevron-left"></span>
+                <?php echo $lang->get('Back'); ?>
+            </a>
+        </nav>
+
+        <?php if ($articleRow['article_id'] > 0 && $gen_open === true) { ?>
+            <a href="#gen_modal" data-url="<?php echo $route_gen; ?>article/single/id/<?php echo $articleRow['article_id']; ?>/view/iframe/" data-toggle="modal" class="btn btn-outline-primary">
+                <span class="fas fa-sync-alt"></span>
+                <?php echo $lang->get('Generate'); ?>
+            </a>
+        <?php } ?>
+    </div>
 
     <form name="article_form" id="article_form" action="<?php echo $route_console; ?>article/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="article_id" id="article_id" value="<?php echo $articleRow['article_id']; ?>">
 
         <div class="row">
@@ -194,6 +203,23 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         </div>
                                         <small class="form-text" id="msg_article_box"></small>
                                     </div>
+
+                                    <?php if ($gen_open === true) { ?>
+                                        <div class="form-group">
+                                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
+                                            <div>
+                                                <?php foreach ($status_gen as $key=>$value) { ?>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="article_is_gen" id="article_is_gen_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($articleRow['article_is_gen'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                                        <label for="article_is_gen_<?php echo $value; ?>" class="form-check-label">
+                                                            <?php echo $lang->get($value); ?>
+                                                        </label>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                            <small class="form-text" id="msg_article_is_gen"></small>
+                                        </div>
+                                    <?php } ?>
 
                                     <div class="form-group">
                                         <label><?php echo $lang->get('Mark'); ?></label>
@@ -355,6 +381,29 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         </table>
                                     </div>
                                 </div>
+
+                                <?php if ($gen_open === true) { ?>
+                                    <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-tpl">
+                                        <span>
+                                            <?php echo $lang->get('Template'); ?>
+                                        </span>
+                                        <small class="fas fa-chevron-down" id="bg-caret-tpl"></small>
+                                    </a>
+
+                                    <div id="bg-form-tpl" data-key="tpl" class="list-group-item collapse">
+                                        <select name="article_tpl" id="article_tpl" class="form-control">
+                                            <option <?php if (isset($articleRow['article_tpl']) && $articleRow['article_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
+                                            <?php foreach ($tplRows as $key=>$value) {
+                                                if ($value['type'] == 'file') { ?>
+                                                    <option <?php if ($articleRow['article_tpl'] == $value['name_s']) { ?>selected<?php } ?> value="<?php echo $value['name_s']; ?>">
+                                                        <?php echo $value['name_s']; ?>
+                                                    </option>
+                                                <?php }
+                                            } ?>
+                                        </select>
+                                        <small class="form-text" id="msg_article_tpl"></small>
+                                    </div>
+                                <?php } ?>
 
                                 <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-spec">
                                     <span>

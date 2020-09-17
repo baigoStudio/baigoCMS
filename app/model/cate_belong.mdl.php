@@ -55,27 +55,13 @@ class Cate_Belong extends Model {
 
         if (!$_arr_belongRow) {
             return array(
-                'rcode' => 'x150102', //不存在记录
+                'rcode' => 'x220102', //不存在记录
             );
         }
 
-        $_arr_belongRow['rcode'] = 'y150102';
+        $_arr_belongRow['rcode'] = 'y220102';
 
         return $_arr_belongRow;
-    }
-
-
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
-        $_arr_belongSelect = array(
-            'belong_cate_id',
-            'belong_article_id',
-        );
-
-        $_arr_where = $this->queryProcess($arr_search);
-
-        $_arr_belongRows = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($num_except, $num_no)->select($_arr_belongSelect);
-
-        return $_arr_belongRows;
     }
 
 

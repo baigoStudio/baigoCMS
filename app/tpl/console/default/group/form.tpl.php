@@ -26,7 +26,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="group_form" id="group_form" action="<?php echo $route_console; ?>group/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="group_id" id="group_id" value="<?php echo $groupRow['group_id']; ?>">
 
         <div class="row">
@@ -72,19 +72,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php } ?>
 
                         <div class="form-group">
-                            <label><?php echo $lang->get('Taget'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($target as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="group_target" id="group_target_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($groupRow['group_target'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="group_target_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                            <small class="form-text" id="msg_group_target"></small>
-                        </div>
-
-                        <div class="form-group">
                             <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
                             <?php foreach ($status as $key=>$value) { ?>
                                 <div class="form-check">
@@ -118,9 +105,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             group_note: {
                 max: 30
             },
-            group_target: {
-                require: true
-            },
             group_status: {
                 require: true
             }
@@ -128,7 +112,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         attr_names: {
             group_name: '<?php echo $lang->get('Name'); ?>',
             group_note: '<?php echo $lang->get('Note'); ?>',
-            group_target: '<?php echo $lang->get('Type'); ?>',
             group_status: '<?php echo $lang->get('Status'); ?>'
         },
         selector_types: {

@@ -46,20 +46,16 @@ class Link extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_linkCount   = $this->mdl_link->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_linkCount); //取得分页数据
-        $_arr_linkRows    = $this->mdl_link->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData    = $this->mdl_link->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'linkRows'   => $_arr_linkRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'linkRows'   => $_arr_getData['dataRows'],
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_linkRows);
 
         $this->assign($_arr_tpl);
 
@@ -102,8 +98,6 @@ class Link extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_linkRows);
 
         $this->assign($_arr_tpl);
 
@@ -153,7 +147,7 @@ class Link extends Ctrl {
 
         $_arr_search['parent_id'] = 0;
 
-        $_arr_cateRows   = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows   = $this->mdl_cate->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'cateRows'  => $_arr_cateRows,
@@ -162,8 +156,6 @@ class Link extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_linkRows);
 
         $this->assign($_arr_tpl);
 
@@ -217,17 +209,15 @@ class Link extends Ctrl {
             $_arr_search['type'] = $this->obj_request->input($this->param['type'], 'str', '');
         }
 
-        $_arr_linkRows  = $this->mdl_link->lists(1000, 0, $_arr_search); //列出
+        $_arr_getData  = $this->mdl_link->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tplData = array(
             'search'     => $_arr_search,
-            'linkRows'   => $_arr_linkRows,
+            'linkRows'   => $_arr_getData,
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_linkRows);
 
         $this->assign($_arr_tpl);
 

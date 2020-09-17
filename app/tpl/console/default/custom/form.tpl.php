@@ -57,7 +57,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="custom_form" id="custom_form" action="<?php echo $route_console; ?>custom/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="custom_id" id="custom_id" value="<?php echo $customRow['custom_id']; ?>">
 
         <div class="row">
@@ -158,19 +158,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <label><?php echo $lang->get('ID'); ?></label>
                                 <input type="text" value="<?php echo $customRow['custom_id']; ?>" class="form-control-plaintext" readonly>
                             </div>
-                        <?php }
-
-                        if ($customRow['custom_parent_id'] < 1) { ?>
-                            <div class="form-group">
-                                <label><?php echo $lang->get('Belong to category'); ?> <span class="text-danger">*</span></label>
-                                <select name="custom_cate_id" id="custom_cate_id" class="form-control">
-                                    <option value=""><?php echo $lang->get('Please select'); ?></option>
-                                    <option <?php if ($customRow['custom_cate_id'] == 0) { ?>selected<?php } ?> value="0"><?php echo $lang->get('All categories'); ?></option>
-                                    <?php $check_id = $customRow['custom_cate_id'];
-                                    include($cfg['pathInclude'] . 'cate_list_option' . GK_EXT_TPL); ?>
-                                </select>
-                                <small class="form-text" id="msg_custom_cate_id"></small>
-                            </div>
                         <?php } ?>
 
                         <div class="form-group">
@@ -185,6 +172,19 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             <?php } ?>
                             <small class="form-text" id="msg_custom_status"></small>
                         </div>
+
+                        <?php if ($customRow['custom_parent_id'] < 1) { ?>
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Belong to category'); ?> <span class="text-danger">*</span></label>
+                                <select name="custom_cate_id" id="custom_cate_id" class="form-control">
+                                    <option value=""><?php echo $lang->get('Please select'); ?></option>
+                                    <option <?php if ($customRow['custom_cate_id'] == 0) { ?>selected<?php } ?> value="0"><?php echo $lang->get('All categories'); ?></option>
+                                    <?php $check_id = $customRow['custom_cate_id'];
+                                    include($cfg['pathInclude'] . 'cate_list_option' . GK_EXT_TPL); ?>
+                                </select>
+                                <small class="form-text" id="msg_custom_cate_id"></small>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">

@@ -98,7 +98,7 @@ class Thumb extends Model {
         thumb_width 缩略图宽度
         thumb_height 缩略图高度
     */
-    function lists($num_no, $num_except = 0) {
+    function lists($pagination = 0) {
         $_arr_thumbSelect = array(
             'thumb_id',
             'thumb_width',
@@ -107,7 +107,8 @@ class Thumb extends Model {
             'thumb_quality',
         );
 
-        $_arr_thumbRows = $this->order('thumb_id', 'DESC')->limit($num_except, $num_no)->select($_arr_thumbSelect);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->order('thumb_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_thumbSelect);
 
         $_arr_thumbRow = array(
             'thumb_id'       => 0,
@@ -117,15 +118,17 @@ class Thumb extends Model {
             'thumb_quality'  => 90,
         );
 
-        array_unshift($_arr_thumbRows, $_arr_thumbRow);
+        if (isset($_arr_getData['dataRows'])) {
+            array_unshift($_arr_getData['dataRows'], $_arr_thumbRow);
+        } else {
+            array_unshift($_arr_getData, $_arr_thumbRow);
+        }
 
-        return $_arr_thumbRows;
+        return $_arr_getData;
     }
 
 
     function count() {
-        $_num_thumbCount = $this->count();
-
-        return $_num_thumbCount;
+        return $this->count();
     }
 }

@@ -47,24 +47,17 @@ class App extends Ctrl {
             'status'    => array('str', ''),
         );
 
-        $_arr_search = $this->obj_request->param($_arr_searchParam);
-
-        //print_r($_arr_search);
-
-        $_num_appCount  = $this->mdl_app->count($_arr_search); //统计记录数
-        $_arr_pageRow   = $this->obj_request->pagination($_num_appCount); //取得分页数据
-        $_arr_appRows   = $this->mdl_app->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_search    = $this->obj_request->param($_arr_searchParam);
+        $_arr_getData   = $this->mdl_app->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'   => $_arr_pageRow,
             'search'    => $_arr_search,
-            'appRows'   => $_arr_appRows,
+            'pageRow'   => $_arr_getData['pageRow'],
+            'appRows'   => $_arr_getData['dataRows'],
             'token'     => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_appRows);
 
         $this->assign($_arr_tpl);
 
@@ -110,8 +103,6 @@ class App extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_appRows);
 
         $this->assign($_arr_tpl);
 
@@ -169,8 +160,6 @@ class App extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_appRows);
 
         $this->assign($_arr_tpl);
 

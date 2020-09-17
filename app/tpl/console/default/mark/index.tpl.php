@@ -19,7 +19,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="mark_list" id="mark_list" action="<?php echo $route_console; ?>mark/delete/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -159,7 +159,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             var _mark_id = $(this).data('id');
             $('.mark_id').prop('checked', false);
             $('#mark_id_' + _mark_id).prop('checked', true);
-            $('#mark_list').submit()
+            $('#mark_list').submit();
         });
 
         $('#mark_list').baigoCheckall();

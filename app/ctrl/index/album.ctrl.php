@@ -38,34 +38,32 @@ class Album extends Ctrl {
 
         $_arr_search['status'] = 'enable';
 
-        $_num_albumCount = $this->mdl_album->count($_arr_search); //统计记录数
-        $_arr_pageRow    = $this->obj_request->pagination($_num_albumCount, $this->configVisit['perpage_album']); //取得分页数据
-        $_arr_albumRows  = $this->mdl_album->lists($this->configVisit['perpage_album'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData  = $this->mdl_album->lists($this->configVisit['perpage_album'], $_arr_search); //列出
 
-        $_mdl_attach  = Loader::model('Attach');
+        $_mdl_attach   = Loader::model('Attach');
 
-        foreach ($_arr_albumRows as $_key=>$_value) {
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             $_arr_attachRow = $_mdl_attach->read($_value['album_attach_id']);
 
             if ($_arr_attachRow['rcode'] == 'y070102') {
                 if (!isset($_arr_attachRow['thumb_default'])) {
-                    $_arr_albumRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
+                    $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
                 }
             } else {
-                $_arr_albumRows[$_key]['thumb_default'] = '';
+                $_value['thumb_default'] = '';
             }
 
-            $_arr_albumRows[$_key]['attachRow'] = $_arr_attachRow;
-            $_arr_albumRows[$_key]['album_url'] = $this->mdl_album->urlProcess($_value);
+            $_value['attachRow'] = $_arr_attachRow;
+            $_value['album_url'] = $this->mdl_album->urlProcess($_value);
         }
 
         //print_r($_arr_albumRows);
 
         $_arr_tplData = array(
             'urlRow'     => $this->mdl_album->urlLists(),
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'albumRows'  => $_arr_albumRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'albumRows'  => $_arr_getData['dataRows'],
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
@@ -107,21 +105,19 @@ class Album extends Ctrl {
 
         $_arr_search['album_id'] = $_num_albumId;
 
-        $_num_attachCount  = $this->mdl_attachAlbumView->count($_arr_search); //统计记录数
-        $_arr_pageRow      = $this->obj_request->pagination($_num_attachCount, $this->configVisit['perpage_in_album']); //取得分页数据
-        $_arr_attachRows   = $this->mdl_attachAlbumView->lists($this->configVisit['perpage_in_album'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_attachAlbumView->lists($this->configVisit['perpage_in_album'], $_arr_search); //列出
 
-        foreach ($_arr_attachRows as $_key=>$_value) {
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
         }
 
         $_arr_tplData = array(
             'urlRow'        => $this->mdl_album->urlProcess($_arr_albumRow),
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'attachRows'    => $_arr_attachRows,
+            'pageRow'       => $_arr_getData['pageRow'],
+            'attachRows'    => $_arr_getData['dataRows'],
             'albumRow'      => $_arr_albumRow,
         );
 
@@ -129,8 +125,12 @@ class Album extends Ctrl {
 
         $this->assign($_arr_tpl);
 
-        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+        $_str_tpl = '';
 
-        return $this->fetch();
+        if (!Func::isEmpty($_arr_albumRow['album_tpl']) && $_arr_albumRow['album_tpl'] !== '-1') {
+            $_str_tpl = BG_TPL_TAG . $_arr_albumRow['album_tpl'] . GK_EXT_TPL;
+        }
+
+        return $this->fetch($_str_tpl);
     }
 }

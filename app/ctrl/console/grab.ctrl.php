@@ -54,12 +54,9 @@ class Grab extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_gsiteCount  = $this->mdl_gsite->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_gsiteCount); //取得分页数据
-        $_arr_gsiteRows   = $this->mdl_gsite->lists(1000); //列出
+        $_arr_gsiteRows   = $this->mdl_gsite->lists(array(1000, 'limit')); //列出
 
         $_arr_tplData = array(
-            'pageRow'   => $_arr_pageRow,
             'search'    => $_arr_search,
             'gsiteRows' => $_arr_gsiteRows,
         );

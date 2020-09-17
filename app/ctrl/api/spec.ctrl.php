@@ -68,13 +68,11 @@ class Spec extends Ctrl {
         $_arr_search = $this->obj_request->get($_arr_searchParam);
         $_arr_search['status'] = 'show';
 
-        $_num_specCount   = $this->mdl_spec->count($_arr_search);
-        $_arr_pageRow     = $this->obj_request->pagination($_num_specCount, $_arr_search['perpage']);
-        $_arr_specRows    = $this->mdl_spec->lists($_arr_search['perpage'], $_arr_pageRow['except'], $_arr_search);
+        $_arr_getData    = $this->mdl_spec->lists($_arr_search['perpage'], $_arr_search);
 
         $_arr_return = array(
-            'pageRow'    => $_arr_pageRow,
-            'specRows'   => $this->obj_index->specListsProcess($_arr_specRows),
+            'pageRow'    => $_arr_getData['pageRow'],
+            'specRows'   => $this->obj_index->specListsProcess($_arr_getData['dataRows']),
         );
 
         $_mix_result    = Plugin::listen('filter_api_spec_lists', $_arr_return); //编辑文章时触发

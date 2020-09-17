@@ -160,7 +160,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 </div>
 
                 <form name="article_empty" id="article_empty" action="<?php echo $route_console; ?>article/empty-recycle/">
-                    <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                    <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                     <button type="submit" class="btn btn-danger">
                         <span class="fas fa-trash-alt"></span>
                         <?php echo $lang->get('Empty'); ?>
@@ -171,7 +171,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="article_list" id="article_list" action="<?php echo $route_console; ?>article/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -256,6 +256,10 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 <span class="fas fa-pen-square"></span>
                                                 <?php echo $lang->get('Quick edit'); ?>
                                             </a>
+                                            <a href="<?php echo $route_console; ?>article/attach/id/<?php echo $value['article_id']; ?>/" class="mr-2">
+                                                <span class="fas fa-images"></span>
+                                                <?php echo $lang->get('Cover management'); ?>
+                                            </a>
                                             <?php if ($gen_open === true) { ?>
                                                 <a href="#gen_modal" data-url="<?php echo $route_gen; ?>article/single/id/<?php echo $value['article_id']; ?>/view/iframe/" data-toggle="modal" class="mr-2">
                                                     <span class="fas fa-sync-alt"></span>
@@ -304,7 +308,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md text-right">
                                 <div class="mb-2">
-                                    <?php $articleRow = $value;
+                                    <?php if ($gen_open === true) {
+                                        $str_status = $value['article_is_gen'];
+                                        include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL);
+                                    }
+
+                                    $articleRow = $value;
                                     include($cfg['pathInclude'] . 'status_article' . GK_EXT_TPL); ?>
                                 </div>
                                 <div>

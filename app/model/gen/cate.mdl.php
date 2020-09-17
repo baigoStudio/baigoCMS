@@ -38,13 +38,9 @@ class Cate extends Cate_Index {
 
         $_arr_cateRow = $this->readProcess($mix_cate, $str_by, 0, -1, $_arr_select);
 
-        if (!$_arr_cateRow) {
-            return array(
-                'rcode' => 'x250102', //不存在记录
-            );
+        if ($_arr_cateRow['rcode'] != 'y250102') {
+            return $_arr_cateRow;
         }
-
-        $_arr_cateRow['rcode']    = 'y250102';
 
         return $this->rowProcess($_arr_cateRow);
     }

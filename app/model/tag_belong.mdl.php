@@ -15,14 +15,25 @@ defined('IN_GINKGO') or exit('Access Denied');
 /*-------------TAG 归属模型-------------*/
 class Tag_Belong extends Model {
 
-    /**
-     * read function.
-     *
-     * @access public
-     * @param mixed $str_belong
-     * @param int $num_parentId (default: 0)
-     * @return void
-     */
+    function ids($arr_search) {
+        $_arr_belongSelect = array(
+            'belong_tag_id',
+        );
+
+        $_arr_where = $this->queryProcess($arr_search);
+
+        $_arr_belongRows = $this->where($_arr_where)->select($_arr_belongSelect);
+
+        $_arr_tagIds = array();
+
+        foreach ($_arr_belongRows as $_key=>$_value) {
+            $_arr_tagIds[]   = $_value['belong_tag_id'];
+        }
+
+        return Func::arrayFilter($_arr_tagIds);
+    }
+
+
     function read($num_tagId = 0, $num_articleId = 0) {
         $_arr_belongSelect = array(
             'belong_id',

@@ -165,7 +165,7 @@ class Ctrl extends Ctrl_Base {
     protected function pathProcess() {
         parent::pathProcess();
 
-        $_str_tplPath         = Config::get('path', 'tpl');
+        $_str_tplPath        = Config::get('path', 'tpl');
 
         $_str_pathTplConsole = GK_APP_TPL . 'console' . DS;
 

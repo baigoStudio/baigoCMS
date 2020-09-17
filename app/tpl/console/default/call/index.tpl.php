@@ -74,7 +74,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="card bg-light mb-3">
         <div class="card-body">
             <form name="call_cache" id="call_cache" action="<?php echo $route_console; ?>call/cache/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <button type="submit" class="btn btn-primary">
                     <span class="fas fa-redo-alt"></span>
                     <?php echo $lang->get('Refresh cache'); ?>
@@ -84,7 +84,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="call_list" id="call_list" action="<?php echo $route_console; ?>call/delete/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">

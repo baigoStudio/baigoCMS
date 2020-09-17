@@ -33,12 +33,21 @@ $cfg = array(
 
 include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
-    <nav class="nav mb-3">
-        <a href="<?php echo $route_console; ?>article/" class="nav-link">
-            <span class="fas fa-chevron-left"></span>
-            <?php echo $lang->get('Back'); ?>
-        </a>
-    </nav>
+    <div class="d-flex justify-content-between align-items-start">
+        <nav class="nav mb-3">
+            <a href="<?php echo $route_console; ?>article/" class="nav-link">
+                <span class="fas fa-chevron-left"></span>
+                <?php echo $lang->get('Back'); ?>
+            </a>
+        </nav>
+
+        <?php if ($gen_open === true) { ?>
+            <a href="#gen_modal" data-url="<?php echo $route_gen; ?>article/single/id/<?php echo $articleRow['article_id']; ?>/view/iframe/" data-toggle="modal" class="btn btn-outline-primary">
+                <span class="fas fa-sync-alt"></span>
+                <?php echo $lang->get('Generate'); ?>
+            </a>
+        <?php } ?>
+    </div>
 
         <div class="row">
             <div class="col-xl-9">
@@ -50,7 +59,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     <div class="text-wrap text-break bg-content"><?php echo $articleRow['article_content']; ?></div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group text-right">
                     <a href="<?php echo $route_console; ?>article/form/id/<?php echo $articleRow['article_id']; ?>/">
                         <span class="fas fa-edit"></span>
                         <?php echo $lang->get('Edit'); ?>

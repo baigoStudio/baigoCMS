@@ -45,10 +45,10 @@ class Cate_Belong extends Model {
         $_num_count  = $this->create($this->create, 'belong_id', '栏目从属');
 
         if ($_num_count !== false) {
-            $_str_rcode = 'y150105'; //更新成功
+            $_str_rcode = 'y220105'; //更新成功
             $_str_msg   = 'Create table successfully';
         } else {
-            $_str_rcode = 'x150105'; //更新成功
+            $_str_rcode = 'x220105'; //更新成功
             $_str_msg   = 'Create table failed';
         }
 
@@ -60,13 +60,13 @@ class Cate_Belong extends Model {
 
 
     function createIndex() {
-        $_str_rcode     = 'y150109'; //更新成功
+        $_str_rcode     = 'y220109'; //更新成功
         $_str_msg       = 'Create index successfully';
 
         $_num_count  = $this->index('search')->create('belong_article_id');
 
         if ($_num_count === false) {
-            $_str_rcode = 'x150109'; //更新成功
+            $_str_rcode = 'x220109'; //更新成功
             $_str_msg   = 'Create index failed';
         }
 
@@ -80,17 +80,17 @@ class Cate_Belong extends Model {
     function alterTable() {
         $_arr_alter = $this->alterProcess($this->create);
 
-        $_str_rcode = 'y150111';
+        $_str_rcode = 'y220111';
         $_str_msg   = 'No need to update table';
 
         if (!Func::isEmpty($_arr_alter)) {
             $_num_count  = $this->alter($_arr_alter);
 
             if ($_num_count !== false) {
-                $_str_rcode = 'y150106';
+                $_str_rcode = 'y220106';
                 $_str_msg   = 'Update table successfully';
             } else {
-                $_str_rcode = 'x150106';
+                $_str_rcode = 'x220106';
                 $_str_msg   = 'Update table failed';
             }
         }

@@ -19,13 +19,9 @@ class Spec extends Model {
     public $arr_status = array('show', 'hide');
 
     function m_init() { //构造函数
-        $_arr_configVisit  = Config::get('visit', 'var_extra');
+        parent::m_init();
 
-        if (!isset($_arr_configVisit['visit_type'])) {
-            $_arr_configVisit['visit_type'] = 'default';
-        }
-
-        $this->configVisit  = $_arr_configVisit;
+        $this->configVisit  = Config::get('visit', 'var_extra');;
         $this->routeSpec    = Config::get('spec', 'index.route');
     }
 
@@ -54,9 +50,7 @@ class Spec extends Model {
             'spec_id',
         );
 
-        $_arr_specRow = $this->read($num_specId, $_arr_select);
-
-        return $_arr_specRow;
+        return $this->readProcess($num_specId, $_arr_select);
     }
 
 
@@ -69,12 +63,24 @@ class Spec extends Model {
      * @return void
      */
     function read($num_specId, $arr_select = array()) {
+        $_arr_specRow = $this->readProcess($num_specId, $arr_select);
+
+        if ($_arr_specRow['rcode'] != 'y180102') {
+            return $_arr_specRow;
+        }
+
+        return $this->rowProcess($_arr_specRow);
+    }
+
+
+    function readProcess($num_specId, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'spec_id',
                 'spec_name',
                 'spec_status',
                 'spec_content',
+                'spec_tpl',
                 'spec_attach_id',
                 'spec_time',
                 'spec_time_update',
@@ -95,7 +101,7 @@ class Spec extends Model {
         $_arr_specRow['rcode'] = 'y180102';
         $_arr_specRow['msg']   = '';
 
-        return $this->rowProcess($_arr_specRow);
+        return $_arr_specRow;
     }
 
 
@@ -108,7 +114,7 @@ class Spec extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_specSelect = array(
             'spec_id',
             'spec_name',
@@ -118,15 +124,21 @@ class Spec extends Model {
             'spec_time_update',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('spec_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_specSelect);
 
-        $_arr_specRows = $this->where($_arr_where)->order('spec_id', 'DESC')->limit($num_except, $num_no)->select($_arr_specSelect);
-
-        foreach ($_arr_specRows as $_key=>$_value) {
-            $_arr_specRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_specRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 
@@ -134,12 +146,15 @@ class Spec extends Model {
 
         $_arr_where = $this->queryProcess($arr_search);
 
-        $_num_specCount = $this->where($_arr_where)->count();
+        return $this->where($_arr_where)->count();
+    }
 
-        /*print_r($_arr_userRow);
-        exit;*/
 
-        return $_num_specCount;
+    function pagination($arr_search = array(), $perpage = 0, $current = 'get', $pageparam = 'page', $pergroup = 0) {
+
+        $_arr_where = $this->queryProcess($arr_search);
+
+        return $this->where($_arr_where)->pagination($perpage, $current, $pageparam, $pergroup);
     }
 
 

@@ -65,30 +65,6 @@ class Album_Belong extends Model {
     }
 
 
-    /** 列出
-     * mdl_list function.
-     *
-     * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
-     * @param array $arr_search (default: array())
-     * @return void
-     */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
-        $_arr_belongSelect = array(
-            'belong_id',
-            'belong_album_id',
-            'belong_attach_id',
-        );
-
-        $_arr_where = $this->queryProcess($arr_search);
-
-        $_arr_belongRows = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($num_except, $num_no)->select($_arr_belongSelect);
-
-        return $_arr_belongRows;
-    }
-
-
     /** 计数
      * mdl_count function.
      *

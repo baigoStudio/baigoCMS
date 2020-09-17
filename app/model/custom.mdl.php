@@ -26,19 +26,7 @@ class Custom extends Model {
             'custom_id',
         );
 
-        $_arr_customRow = $this->readProcess($mix_custom, $str_by, $num_notId, $_arr_select);
-
-        if (!$_arr_customRow) {
-            return array(
-                'msg'   => 'Field not found',
-                'rcode' => 'x200102', //不存在记录
-            );
-        }
-
-        $_arr_customRow['rcode']      = 'y200102';
-        $_arr_customRow['msg']        = '';
-
-        return $_arr_customRow;
+        return $this->readProcess($mix_custom, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -54,15 +42,9 @@ class Custom extends Model {
     function read($mix_custom, $str_by = 'custom_id', $num_notId = 0) {
         $_arr_customRow = $this->readProcess($mix_custom, $str_by, $num_notId);
 
-        if (!$_arr_customRow) {
-            return array(
-                'rcode' => 'x200102', //不存在记录
-            );
+        if ($_arr_customRow['rcode'] != 'y200102') {
+            return $_arr_customRow;
         }
-
-        $_arr_customRow['rcode']      = 'y200102';
-
-        //print_r($_arr_customRow);
 
         return $this->rowProcess($_arr_customRow);
     }
@@ -88,27 +70,37 @@ class Custom extends Model {
 
         $_arr_customRow = $this->where($_arr_where)->find($arr_select);
 
+        if (!$_arr_customRow) {
+            return array(
+                'rcode' => 'x200102', //不存在记录
+                'msg'   => 'Field not found', //不存在记录
+            );
+        }
+
+        $_arr_customRow['rcode']    = 'y200102';
+        $_arr_customRow['msg']      = '';
+
         return $_arr_customRow;
     }
 
 
-    function listsTree($num_no, $num_except = 0, $arr_search = array(), $num_level = 1) {
-        $_arr_customRows = $this->lists($num_no, $num_except, $arr_search);
+    function listsTree($arr_search = array(), $num_level = 1) {
+        $_arr_customs    = array();
 
-        $_arr_customs = array();
+        $_arr_getData = $this->lists(array(1000, 'limit'), $arr_search);
 
-        foreach ($_arr_customRows as $_key=>$_value) {
+        foreach ($_arr_getData as $_key=>$_value) {
             $_arr_customs[$_value['custom_id']]                     = $_value;
             $_arr_customs[$_value['custom_id']]['custom_level']     = $num_level;
             $arr_search['parent_id']                                = $_value['custom_id'];
-            $_arr_customs[$_value['custom_id']]['custom_childs']    = $this->listsTree(1000, 0, $arr_search, $num_level + 1);
+            $_arr_customs[$_value['custom_id']]['custom_childs']    = $this->listsTree($arr_search, $num_level + 1);
         }
 
         return $_arr_customs;
     }
 
 
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_customSelect = array(
             'custom_id',
             'custom_name',
@@ -122,22 +114,26 @@ class Custom extends Model {
             'custom_order',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
-
-        //print_r($_arr_where);
-
         $_arr_order = array(
             array('custom_order', 'ASC'),
             array('custom_id', 'ASC'),
         );
 
-        $_arr_customRows = $this->where($_arr_where)->order($_arr_order)->limit($num_except, $num_no)->select($_arr_customSelect);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order($_arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_customSelect);
 
-        foreach ($_arr_customRows as $_key=>$_value) {
-            $_arr_customRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_customRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 

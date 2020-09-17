@@ -16,7 +16,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="cate_form" id="cate_form" action="<?php echo $route_console; ?>cate/duplicate/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="cate_id" id="cate_id" value="<?php echo $cateRow['cate_id']; ?>">
 
         <div class="row">
@@ -115,26 +115,26 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             <div class="form-text"><?php echo $cateRow['cate_id']; ?></div>
                         </div>
 
-                            <div class="form-group">
-                                <label><?php echo $lang->get('Parent category'); ?></label>
-                                <div class="form-text"><?php if (isset($cateParent['cate_name'])) {
-                                    echo $cateParent['cate_name'];
-                                } else {
-                                    echo $lang->get('As a primary category');
-                                } ?></div>
-                            </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Template'); ?></label>
-                            <div class="form-text"><?php echo $lang->get($cateRow['cate_tpl']); ?></div>
-                        </div>
-
                         <div class="form-group">
                             <label><?php echo $lang->get('Status'); ?></label>
                             <div class="form-text">
                                 <?php $str_status = $cateRow['cate_status'];
                                 include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Parent category'); ?></label>
+                            <div class="form-text"><?php if (isset($cateParent['cate_name'])) {
+                                echo $cateParent['cate_name'];
+                            } else {
+                                echo $lang->get('As a primary category');
+                            } ?></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Template'); ?></label>
+                            <div class="form-text"><?php echo $lang->get($cateRow['cate_tpl']); ?></div>
                         </div>
                     </div>
                     <div class="card-footer text-right">

@@ -46,13 +46,13 @@ abstract class Ctrl extends Ctrl_Console {
             return $_mix_init;
         }
 
-        $arr_tplData['path_tpl'] = $str_tplPath;
+        $arr_tplData['path_tpl_index'] = $str_tplPath;
 
-        $_arr_tpl = array_replace_recursive($this->generalData, $arr_tplData);
+        $_arr_tpl = array_replace_recursive($this->generalBase, $arr_tplData);
+
+        //print_r($_arr_tpl);
 
         $this->obj_view->assign($_arr_tpl);
-
-        $this->obj_view->setPath($str_tplPath);
 
         $_str_outPut = '';
 
@@ -62,6 +62,8 @@ abstract class Ctrl extends Ctrl_Console {
                 'msg'   => 'Template not found',
             );
         }
+
+        //print_r($str_tplPath);
 
         $_str_outPut = $this->obj_view->fetch($str_tplName);
 

@@ -48,7 +48,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL); ?>
                     data: {
                         article_id: '<?php echo $_value['article_id']; ?>',
                         enforce: '<?php echo $search['enforce']; ?>',
-                        __token__: '<?php echo $token; ?>'
+                        <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                     },
                     timeout: 30000,
                     error: function (result) {

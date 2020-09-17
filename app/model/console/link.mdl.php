@@ -20,11 +20,6 @@ class Link extends Link_Base {
     public $inputSubmit  = array();
     public $linkRowDo  = array();
 
-    function m_init() { //构造函数
-        parent::m_init();
-    }
-
-
     /**
      * mdl_submit function.
      *
@@ -207,7 +202,7 @@ class Link extends Link_Base {
 
         $_arr_linkRow = $this->check($_arr_inputSubmit['link_name'], 'link_name', $_arr_inputSubmit['link_id'], $_arr_inputSubmit['link_cate_id'], $_arr_inputSubmit['link_type']);
 
-        if ($_arr_linkRow['rcode'] != 'y240102') {
+        if ($_arr_linkRow['rcode'] == 'y240102') {
             return array(
                 'msg'   => 'Link already exists',
                 'rcode' => 'x240404', //不存在记录

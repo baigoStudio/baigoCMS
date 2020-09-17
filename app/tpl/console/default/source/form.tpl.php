@@ -5,7 +5,7 @@
     } ?>
 
     <form name="source_form" id="source_form" action="<?php echo $route_console; ?>source/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="source_id" id="source_id" value="<?php echo $sourceRow['source_id']; ?>">
 
         <div class="modal-header">

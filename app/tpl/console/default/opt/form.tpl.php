@@ -10,7 +10,7 @@
 include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
     <form name="opt_form" id="opt_form" action="<?php echo $route_console; ?>opt/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="act" value="<?php echo $route_orig['act']; ?>">
 
         <div class="card">
@@ -99,7 +99,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     };
 
     $(document).ready(function(){
-        var obj_validate_form  = $('#opt_form').baigoValidate(opts_validate_form);
+        var obj_validate_form   = $('#opt_form').baigoValidate(opts_validate_form);
         var obj_submit_form     = $('#opt_form').baigoSubmit(opts_submit_form);
 
         $('#opt_form').submit(function(){
@@ -115,7 +115,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             $('#timezone_type').change(function(){
                 var _type = $(this).val();
                 var _str_appent;
-                $.each(_timezoneRowsJson[_type].list, function(_key, _value){
+                $.each(_timezoneRowsJson[_type].lists, function(_key, _value){
                     _str_appent += '<option';
                     if (_key == '<?php echo $config['var_extra']['base']['site_timezone']; ?>') {
                         _str_appent += ' selected';

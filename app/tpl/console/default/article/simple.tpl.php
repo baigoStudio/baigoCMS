@@ -1,5 +1,5 @@
     <form name="article_form" id="article_form" action="<?php echo $route_console; ?>article/simple-submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="article_id" id="article_id" value="<?php echo $articleRow['article_id']; ?>">
 
         <div class="modal-header">
@@ -59,6 +59,23 @@
                 <small class="form-text" id="msg_article_box"></small>
             </div>
 
+            <?php if ($gen_open === true) { ?>
+                <div class="form-group">
+                    <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
+                    <div>
+                        <?php foreach ($status_gen as $key=>$value) { ?>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="article_is_gen" id="article_is_gen_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($articleRow['article_is_gen'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                <label for="article_is_gen_<?php echo $value; ?>" class="form-check-label">
+                                    <?php echo $lang->get($value); ?>
+                                </label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <small class="form-text" id="msg_article_is_gen"></small>
+                </div>
+            <?php } ?>
+
             <div class="form-group">
                 <label><?php echo $lang->get('Mark'); ?></label>
                 <select name="article_mark_id" class="form-control">
@@ -117,13 +134,21 @@
 
             <div class="bg-validate-box"></div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary btn-sm">
-                <?php echo $lang->get('Save'); ?>
-            </button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
-                <?php echo $lang->get('Close', 'console.common'); ?>
-            </button>
+        <div class="modal-footer<?php if ($gen_open === true) { ?> d-flex justify-content-between<?php } ?>">
+            <?php if ($gen_open === true) { ?>
+                <a href="#gen_modal" data-url="<?php echo $route_gen; ?>article/single/id/<?php echo $articleRow['article_id']; ?>/view/iframe/" data-toggle="modal" class="btn btn-outline-primary btn-sm">
+                    <span class="fas fa-sync-alt"></span>
+                    <?php echo $lang->get('Generate'); ?>
+                </a>
+            <?php } ?>
+            <div>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <?php echo $lang->get('Save'); ?>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
+                    <?php echo $lang->get('Close', 'console.common'); ?>
+                </button>
+            </div>
         </div>
     </form>
 

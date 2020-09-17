@@ -20,26 +20,35 @@ class Article_Content extends Article_Content_Base {
     }
 
 
-    function clear($num_no, $num_except = 0, $arr_search = array()) {
+    function clear($pagination = 0, $arr_search = array()) {
         $_arr_where = array();
 
         if (isset($arr_search['max_id']) && $arr_search['max_id'] > 0) {
             $_arr_where[] = array('article_id', '<', $arr_search['max_id'], 'max_id');
         }
 
-        $_arr_articleRows = $this->where($_arr_where)->order('article_id', 'DESC')->limit($num_except, $num_no)->select('article_id');
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('article_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select('article_id');
 
-        $_mdl_article = Loader::model('article');
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_clearData = $_arr_getData['dataRows'];
+        } else {
+            $_arr_clearData = $_arr_getData;
+        }
 
-        foreach ($_arr_articleRows as $_key=>$_value) {
-            $_arr_articleRow = $_mdl_article->check($_value['article_id']);
+        if (!Func::isEmpty($_arr_clearData)) {
+            $_mdl_article = Loader::model('article');
 
-            if (!$_arr_articleRow) {
-                $this->where('article_id', '=', $_value['article_id'])->delete();
+            foreach ($_arr_clearData as $_key=>$_value) {
+                $_arr_articleRow = $_mdl_article->check($_value['article_id']);
+
+                if (!$_arr_articleRow) {
+                    $this->where('article_id', '=', $_value['article_id'])->delete();
+                }
             }
         }
 
-        return $_arr_articleRows;
+        return $_arr_getData;
     }
 
 

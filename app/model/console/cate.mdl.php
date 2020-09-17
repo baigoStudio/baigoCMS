@@ -60,19 +60,15 @@ class Cate extends Cate_Base {
 
         $_arr_cateRow = $this->readProcess($mix_cate, $str_by, 0, -1, $_arr_select);
 
-        if (!$_arr_cateRow) {
-            return array(
-                'rcode' => 'x250102', //不存在记录
-            );
+        if ($_arr_cateRow['rcode'] != 'y250102') {
+            return $_arr_cateRow;
         }
-
-        $_arr_cateRow['rcode']    = 'y250102';
 
         return $this->rowProcess($_arr_cateRow);
     }
 
 
-    function lists($num_no, $num_except = 0, $arr_search = array(), $arr_select = array()) {
+    function lists($pagination = 0, $arr_search = array(), $arr_select = array()) {
         $_arr_select = array(
             'cate_id',
             'cate_name',
@@ -91,11 +87,7 @@ class Cate extends Cate_Base {
             'cate_ftp_pasv',
         );
 
-        $_arr_cateRows = parent::lists($num_no, $num_except, $arr_search, $_arr_select);
-
-        //print_r($_arr_cateRows);
-
-        return $_arr_cateRows;
+        return parent::lists($pagination, $arr_search, $_arr_select);
     }
 
 

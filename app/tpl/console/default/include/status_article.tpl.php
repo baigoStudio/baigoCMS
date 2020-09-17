@@ -14,7 +14,6 @@
             ),
             'article_top'           => 0,
             'article_status'        => '',
-            'article_box'           => '',
         );
     }
 

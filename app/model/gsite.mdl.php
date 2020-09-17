@@ -48,9 +48,7 @@ class Gsite extends Model {
             'gsite_id',
         );
 
-        $_arr_gsiteRow = $this->read($mix_gsite, $str_by, $_arr_select);
-
-        return $_arr_gsiteRow;
+        return $this->readProcess($mix_gsite, $str_by, $_arr_select);
     }
 
 
@@ -64,6 +62,17 @@ class Gsite extends Model {
      * @return void
      */
     function read($mix_gsite, $str_by = 'gsite_id', $arr_select = array()) {
+        $_arr_gsiteRow = $this->readProcess($mix_gsite, $str_by, $arr_select);
+
+        if ($_arr_gsiteRow['rcode'] != 'y270102') {
+            return $_arr_gsiteRow;
+        }
+
+        return $this->rowProcess($_arr_gsiteRow);
+    }
+
+
+    function readProcess($mix_gsite, $str_by = 'gsite_id', $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'gsite_id',
@@ -120,8 +129,9 @@ class Gsite extends Model {
         }
 
         $_arr_gsiteRow['rcode'] = 'y270102';
+        $_arr_gsiteRow['msg']   = '';
 
-        return $this->rowProcess($_arr_gsiteRow);
+        return $_arr_gsiteRow;
     }
 
 
@@ -129,12 +139,10 @@ class Gsite extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_key (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
 
         $_arr_gsiteSelect = array(
             'gsite_id',
@@ -144,11 +152,11 @@ class Gsite extends Model {
             'gsite_cate_id',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('gsite_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_gsiteSelect);
 
-        $_arr_gsiteRows = $this->where($_arr_where)->order('gsite_id', 'DESC')->limit($num_except, $num_no)->select($_arr_gsiteSelect);
-
-        return $_arr_gsiteRows;
+        return $_arr_getData;
 
     }
 

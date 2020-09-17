@@ -21,7 +21,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="card bg-light mb-3">
         <div class="card-body">
             <form name="thumb_cache" id="thumb_cache" action="<?php echo $route_console; ?>thumb/cache/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <button type="submit" class="btn btn-primary">
                     <span class="fas fa-redo-alt"></span>
                     <?php echo $lang->get('Refresh cache'); ?>
@@ -31,7 +31,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="thumb_list" id="thumb_list" action="<?php echo $route_console; ?>thumb/delete/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="act" id="act" value="delete">
 
         <div class="table-responsive">
@@ -174,7 +174,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="thumb_default" id="thumb_default" action="<?php echo $route_console; ?>thumb/set-default/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="thumb_id" id="thumb_id" value="0">
     </form>
 

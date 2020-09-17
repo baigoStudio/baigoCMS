@@ -297,12 +297,12 @@ class Index extends Ctrl {
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
                         'rcode' => 'x020404',
-                        'error' => $this->obj_lang->get('Administrator already exists'),
+                        'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
                         'rcode' => 'x010404',
-                        'error' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
+                        'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }
             }
@@ -425,7 +425,7 @@ class Index extends Ctrl {
             if ($_arr_userRow['rcode'] != 'y010102') {
                 $_arr_return = array(
                     'rcode' => $_arr_userRow['rcode'],
-                    'error' => $this->obj_lang->get('User not found, please use add administrator'),
+                    'error_msg' => $this->obj_lang->get('User not found, please use add administrator'),
                 );
             } else {
                 $_arr_adminRow = $_mdl_admin->check($_arr_userRow['user_id']);
@@ -433,7 +433,7 @@ class Index extends Ctrl {
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
                         'rcode' => 'x020404',
-                        'error' => $this->obj_lang->get('Administrator already exists'),
+                        'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 }
             }

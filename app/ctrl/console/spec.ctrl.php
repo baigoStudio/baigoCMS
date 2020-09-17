@@ -8,8 +8,8 @@ namespace app\ctrl\console;
 
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Config;
 use ginkgo\Plugin;
+use ginkgo\File;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -46,20 +46,16 @@ class Spec extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_specCount  = $this->mdl_spec->count($_arr_search); //统计记录数
-        $_arr_pageRow    = $this->obj_request->pagination($_num_specCount); //取得分页数据
-        $_arr_specRows   = $this->mdl_spec->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_spec->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'specRows'   => $_arr_specRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'specRows'   => $_arr_getData['dataRows'],
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_specRows);
 
         $this->assign($_arr_tpl);
 
@@ -84,9 +80,9 @@ class Spec extends Ctrl {
 
         $_arr_search     = $this->obj_request->param($_arr_searchParam);
 
-        $_arr_specRows   = $this->mdl_spec->lists(1000, 0, $_arr_search); //列出
+        $_arr_getData   = $this->mdl_spec->lists(array(1000, 'limit'), $_arr_search); //列出
 
-        return $this->json($_arr_specRows);
+        return $this->json($_arr_getData);
     }
 
 
@@ -122,8 +118,6 @@ class Spec extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_specRows);
 
         $this->assign($_arr_tpl);
 
@@ -165,18 +159,24 @@ class Spec extends Ctrl {
                 'spec_name'                 => '',
                 'spec_status'               => $this->mdl_spec->arr_status[0],
                 'spec_content'              => '',
+                'spec_tpl'                  => '',
                 'spec_time_update_format'   => $this->mdl_spec->dateFormat(),
             );
         }
 
+        $_arr_tplRows  = File::instance()->dirList(BG_TPL_SPEC);
+
+        foreach ($_arr_tplRows as $_key=>$_value) {
+            $_arr_tplRows[$_key]['name_s'] = basename($_value['name'], GK_EXT_TPL);
+        }
+
         $_arr_tplData = array(
-            'specRow'  => $_arr_specRow,
+            'tplRows'   => $_arr_tplRows,
+            'specRow'   => $_arr_specRow,
             'token'     => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_specRows);
 
         $this->assign($_arr_tpl);
 
@@ -256,24 +256,22 @@ class Spec extends Ctrl {
             'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_specRow['spec_content']),
         );
 
-        $_arr_attachRows   = $_mdl_attach->lists(1000, 0, $_arr_search); //列出
+        $_arr_getData   = $_mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
 
-        foreach ($_arr_attachRows as $_key=>$_value) {
+        foreach ($_arr_getData as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
         }
 
         $_arr_tplData = array(
             'ids'           => implode(',', $_arr_search['attach_ids']),
             'specRow'       => $_arr_specRow,
-            'attachRows'    => $_arr_attachRows,
+            'attachRows'    => $_arr_getData,
             'token'         => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_specRows);
 
         $this->assign($_arr_tpl);
 

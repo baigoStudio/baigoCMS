@@ -45,7 +45,7 @@ class Captcha {
         } else {
             $_arr_return = array(
                 'rcode' => 'x030202',
-                'error' => $_obj_lang->get('Captcha is incorrect'),
+                'error_msg' => $_obj_lang->get('Captcha is incorrect'),
             );
         }
 

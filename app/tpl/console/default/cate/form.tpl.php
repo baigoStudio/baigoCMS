@@ -27,7 +27,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="cate_form" id="cate_form" action="<?php echo $route_console; ?>cate/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="cate_id" id="cate_id" value="<?php echo $cateRow['cate_id']; ?>">
 
         <div class="row">
@@ -98,6 +98,19 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php } ?>
 
                         <div class="form-group">
+                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
+                            <?php foreach ($status as $key=>$value) { ?>
+                                <div class="form-check">
+                                    <input type="radio" name="cate_status" id="cate_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($cateRow['cate_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                    <label for="cate_status_<?php echo $value; ?>" class="form-check-label">
+                                        <?php echo $lang->get($value); ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                            <small class="form-text" id="msg_cate_status"></small>
+                        </div>
+
+                        <div class="form-group">
                             <label><?php echo $lang->get('Parent category'); ?> <span class="text-danger">*</span></label>
                             <select name="cate_parent_id" id="cate_parent_id" class="form-control">
                                 <option value=""><?php echo $lang->get('Please select'); ?></option>
@@ -121,19 +134,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 } ?>
                             </select>
                             <small class="form-text" id="msg_cate_tpl"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($status as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="cate_status" id="cate_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($cateRow['cate_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="cate_status_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                            <small class="form-text" id="msg_cate_status"></small>
                         </div>
                     </div>
                     <?php if ($gen_open === true && isset($ftp_open) && $cateRow['cate_parent_id'] < 1) { ?>

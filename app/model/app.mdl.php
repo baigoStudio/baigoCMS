@@ -23,9 +23,7 @@ class App extends Model {
             'app_id',
         );
 
-        $_arr_appRow = $this->read($mix_app, $str_by, $num_notId, $_arr_select);
-
-        return $_arr_appRow;
+        return $this->readProcess($mix_app, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -39,6 +37,17 @@ class App extends Model {
      * @return void
      */
     function read($mix_app, $str_by = 'app_id', $num_notId = 0, $arr_select = array()) {
+        $_arr_appRow = $this->readProcess($mix_app, $str_by, $num_notId, $arr_select);
+
+        if ($_arr_appRow['rcode'] != 'y050102') {
+            return $_arr_appRow;
+        }
+
+        return $this->rowProcess($_arr_appRow);
+    }
+
+
+    function readProcess($mix_app, $str_by = 'app_id', $num_notId = 0, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'app_id',
@@ -69,7 +78,7 @@ class App extends Model {
         $_arr_appRow['rcode'] = 'y050102';
         $_arr_appRow['msg']   = '';
 
-        return $this->rowProcess($_arr_appRow);
+        return $_arr_appRow;
     }
 
 
@@ -77,12 +86,10 @@ class App extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param array $arr_search (default: array())
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_appSelect = array(
             'app_id',
             'app_key',
@@ -94,15 +101,21 @@ class App extends Model {
             'app_time',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('app_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_appSelect);
 
-        $_arr_appRows = $this->where($_arr_where)->order('app_id', 'DESC')->limit($num_except, $num_no)->select($_arr_appSelect);
-
-        foreach ($_arr_appRows as $_key=>$_value) {
-            $_arr_appRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_appRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 

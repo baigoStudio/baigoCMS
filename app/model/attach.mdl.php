@@ -23,13 +23,15 @@ class Attach extends Model {
     public $arr_box         = array('normal', 'recycle', 'reserve');
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $_arr_configUpload  = Config::get('upload', 'var_extra');
         $_mdl_thumb         = Loader::model('Thumb', '', 'index');
 
         $this->thumbRows    = $_mdl_thumb->cache();
 
         $_str_dirAttach     = str_ireplace(GK_PATH_PUBLIC, '', GK_PATH_ATTACH);
-        $_str_dirAttach     = str_ireplace(DS, '/', $_str_dirAttach);
+        $_str_dirAttach     = str_replace(DS, '/', $_str_dirAttach);
         $_str_dirAttach     = Func::fixDs($_str_dirAttach, '/');
 
         $this->urlPrefix    = $this->obj_request->root() . $_str_dirAttach;
@@ -49,32 +51,15 @@ class Attach extends Model {
             'attach_time',
         );
 
-        $_arr_attachRow = $this->readProcess($mix_attach, $str_by, $str_box, $_arr_select);
-
-        //print_r($_arr_attachRow);
-
-        if (!$_arr_attachRow) {
-            return array(
-                'msg'   => 'Attachment not found',
-                'rcode' => 'x070102', //不存在记录
-            );
-        }
-
-        $_arr_attachRow['rcode'] = 'y070102';
-        $_arr_attachRow['msg']   = '';
-
-        return $_arr_attachRow;
+        return $this->readProcess($mix_attach, $str_by, $str_box, $_arr_select);
     }
 
 
     function read($mix_attach, $str_by = 'attach_id', $str_box = '', $arr_select = array()) {
         $_arr_attachRow = $this->readProcess($mix_attach, $str_by, $str_box, $arr_select);
 
-        if (!$_arr_attachRow) {
-            return array(
-                'msg'   => 'Attachment not found',
-                'rcode' => 'x070102', //不存在记录
-            );
+        if ($_arr_attachRow['rcode'] != 'y070102') {
+            return $_arr_attachRow;
         }
 
         $_arr_attachRow                 = $this->rowProcess($_arr_attachRow);
@@ -85,9 +70,6 @@ class Attach extends Model {
         }
 
         $_arr_attachRow['thumbRows']    = $_arr_thumbRows;
-
-        $_arr_attachRow['rcode'] = 'y070102';
-        $_arr_attachRow['msg']   = '';
 
         return $_arr_attachRow;
     }
@@ -119,7 +101,15 @@ class Attach extends Model {
 
         $_arr_attachRow = $this->where($_arr_where)->find($arr_select);
 
-        //print_r($_arr_attachRow);
+        if (!$_arr_attachRow) {
+            return array(
+                'msg'   => 'Attachment not found',
+                'rcode' => 'x070102', //不存在记录
+            );
+        }
+
+        $_arr_attachRow['rcode'] = 'y070102';
+        $_arr_attachRow['msg']   = '';
 
         return $_arr_attachRow;
     }
@@ -129,15 +119,13 @@ class Attach extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_year (default: '')
      * @param string $str_month (default: '')
      * @param string $str_ext (default: '')
      * @param int $num_adminId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array(), $arr_select = array()) {
+    function lists($pagination = 0, $arr_search = array(), $arr_order = array(), $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'attach_id',
@@ -152,24 +140,32 @@ class Attach extends Model {
             );
         }
 
-        $_arr_where = $this->queryProcess($arr_search);
-
-        $_arr_attachRows = $this->where($_arr_where)->order('attach_id', 'DESC')->limit($num_except, $num_no)->select($arr_select);
-
-        foreach ($_arr_attachRows as $_key=>$_value) {
-            $_value                                 = $this->rowProcess($_value);
-            $_arr_attachRows[$_key]                 = $_value;
-
-            $_arr_thumbRows                         = $this->thumbProcess($_value);
-
-            if (isset($_arr_thumbRows[0]['thumb_url'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $_arr_thumbRows[0]['thumb_url'];
-            }
-
-            $_arr_attachRows[$_key]['thumbRows']    = $_arr_thumbRows;
+        if (Func::isEmpty($arr_order)) {
+            $arr_order = array('attach_id', 'DESC');
         }
 
-        return $_arr_attachRows;
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order($arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($arr_select);
+
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
+        }
+
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value         = $this->rowProcess($_value);
+            $_arr_thumbRows = $this->thumbProcess($_value);
+
+            if (isset($_arr_thumbRows[0]['thumb_url'])) {
+                $_value['thumb_default'] = $_arr_thumbRows[0]['thumb_url'];
+            }
+
+            $_value['thumbRows'] = $_arr_thumbRows;
+        }
+
+        return $_arr_getData;
     }
 
 
@@ -186,9 +182,7 @@ class Attach extends Model {
     function count($arr_search = array()) {
         $_arr_where = $this->queryProcess($arr_search);
 
-        $_num_adminCount = $this->where($_arr_where)->count();
-
-        return $_num_adminCount;
+        return $this->where($_arr_where)->count();
     }
 
 
@@ -253,11 +247,11 @@ class Attach extends Model {
         }
 
         if (isset($arr_search['min_id']) && $arr_search['min_id'] > 0) {
-            $_arr_where[] = array('attach_id', '>' . $arr_search['min_id'], 'min_id');
+            $_arr_where[] = array('attach_id', '>=', $arr_search['min_id'], 'min_id');
         }
 
         if (isset($arr_search['max_id']) && $arr_search['max_id'] > 0) {
-            $_arr_where[] = array('attach_id', '<', $arr_search['max_id'], 'max_id');
+            $_arr_where[] = array('attach_id', '<=', $arr_search['max_id'], 'max_id');
         }
 
         if (isset($arr_search['album_id']) && $arr_search['album_id'] > 0) {

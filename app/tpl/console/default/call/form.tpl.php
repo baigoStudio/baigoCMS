@@ -27,7 +27,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="call_form" id="call_form" action="<?php echo $route_console; ?>call/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="call_id" id="call_id" value="<?php echo $callRow['call_id']; ?>">
 
         <div class="row">
@@ -159,6 +159,19 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php } ?>
 
                         <div class="form-group">
+                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
+                            <?php foreach ($status as $key=>$value) { ?>
+                                <div class="form-check">
+                                    <input type="radio" name="call_status" id="call_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($callRow['call_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                    <label for="call_status_<?php echo $value; ?>" class="form-check-label">
+                                        <?php echo $lang->get($value); ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                            <small class="form-text" id="msg_call_status"></small>
+                        </div>
+
+                        <div class="form-group">
                             <label><?php echo $lang->get('Type'); ?> <span class="text-danger">*</span></label>
                             <select id="call_type" name="call_type" class="form-control">
                                 <option value=""><?php echo $lang->get('Please select'); ?></option>
@@ -200,19 +213,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <small class="form-text" id="msg_call_tpl"></small>
                             </div>
                         <?php } ?>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($status as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="call_status" id="call_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($callRow['call_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="call_status_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                            <small class="form-text" id="msg_call_status"></small>
-                        </div>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Amount of display'); ?> <span class="text-danger">*</span></label>

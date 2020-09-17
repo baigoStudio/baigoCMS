@@ -51,16 +51,13 @@ class Article_Content extends Ctrl {
             'max_id' => $_arr_inputClear['max_id'],
         );
 
-        $_num_perPage       = 10;
-        $_num_articleCount  = $this->mdl_articleContent->count();
-        $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $_num_perPage, 'post');
-        $_arr_articleRows   = $this->mdl_articleContent->clear($_num_perPage, 0, $_arr_search);
+        $_arr_getData   = $this->mdl_articleContent->clear(array(10, 'post'), $_arr_search);
 
-        if (Func::isEmpty($_arr_articleRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             $_str_status    = 'complete';
             $_str_msg       = 'Complete';
         } else {
-            $_arr_articleRow = end($_arr_articleRows);
+            $_arr_articleRow = end($_arr_getData['dataRows']);
             $_str_status    = 'loading';
             $_str_msg       = 'Submitting';
             $_num_maxId     = $_arr_articleRow['article_id'];
@@ -68,7 +65,7 @@ class Article_Content extends Ctrl {
 
         $_arr_return = array(
             'msg'       => $this->obj_lang->get($_str_msg),
-            'count'     => $_arr_pageRow['total'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'max_id'    => $_num_maxId,
             'status'    => $_str_status,
         );

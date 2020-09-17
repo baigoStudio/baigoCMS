@@ -71,7 +71,7 @@ class Cate extends Ctrl {
         $_arr_search = $this->obj_request->get($_arr_searchParam);
         $_arr_search['status'] = 'show';
 
-        $_arr_cateTree    = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateTree    = $this->mdl_cate->listsTree($_arr_search);
 
         $_arr_return = array(
             'cate_tree'   => $_arr_cateTree,

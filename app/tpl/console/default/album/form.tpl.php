@@ -24,7 +24,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="album_form" id="album_form" action="<?php echo $route_console; ?>album/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="album_id" id="album_id" value="<?php echo $albumRow['album_id']; ?>">
 
         <div class="row">
@@ -74,6 +74,21 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                             <?php } ?>
                             <small class="form-text" id="msg_album_status"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Template'); ?></label>
+                            <select name="album_tpl" id="album_tpl" class="form-control">
+                                <option <?php if (isset($albumRow['album_tpl']) && $albumRow['album_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
+                                <?php foreach ($tplRows as $key=>$value) {
+                                    if ($value['type'] == 'file') { ?>
+                                        <option <?php if ($albumRow['album_tpl'] == $value['name_s']) { ?>selected<?php } ?> value="<?php echo $value['name_s']; ?>">
+                                            <?php echo $value['name_s']; ?>
+                                        </option>
+                                    <?php }
+                                } ?>
+                            </select>
+                            <small class="form-text" id="msg_album_tpl"></small>
                         </div>
                     </div>
                     <div class="card-footer">

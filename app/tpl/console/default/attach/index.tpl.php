@@ -80,7 +80,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </form>
     </div>
 
-    <?php if (!empty($search['key']) || !empty($search['ext']) || !empty($search['year']) || !empty($search['month']) || !empty($search['admin'])) { ?>
+    <?php if (!empty($search['key']) || !empty($search['ext']) || !empty($search['year']) || !empty($search['month']) || isset($adminRow['admin_name'])) { ?>
         <div class="mb-3 text-right">
             <?php if (!empty($search['key'])) { ?>
                 <span class="badge badge-info">
@@ -110,10 +110,10 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 </span>
             <?php }
 
-            if (!empty($search['admin'])) { ?>
+            if (isset($adminRow['admin_name'])) { ?>
                 <span class="badge badge-info">
                     <?php echo $lang->get('Administrator'); ?>:
-                    <?php echo $lang->get($search['admin']); ?>
+                    <?php echo $adminRow['admin_name']; ?>
                 </span>
             <?php } ?>
 
@@ -148,7 +148,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <form name="attach_empty" id="attach_empty" action="<?php echo $route_console; ?>attach/empty-recycle/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <button type="submit" class="btn btn-danger">
                             <span class="fas fa-trash-alt"></span>
                             <?php echo $lang->get('Empty'); ?>
@@ -161,7 +161,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <form name="attach_clear" id="attach_clear" action="<?php echo $route_console; ?>attach/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <button type="submit" class="btn btn-warning">
                             <span class="fas fa-trash-alt"></span>
                             <?php echo $lang->get('Clean up attachments'); ?>
@@ -173,7 +173,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="attach_list" id="attach_list" action="<?php echo $route_console; ?>attach/box/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -246,18 +246,18 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 <span class="fas fa-edit"></span>
                                                 <?php echo $lang->get('Edit'); ?>
                                             </a>
+                                            <?php if ($value['attach_type'] == 'image') { ?>
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="right" title="<?php echo $lang->get('Use when the image cannot be displayed'); ?>" data-id="<?php echo $value['attach_id']; ?>" class="attach_fix">
+                                                    <span class="fas fa-sync-alt"></span>
+                                                    <?php echo $lang->get('Fix it'); ?>
+                                                </a>
+                                            <?php } ?>
                                             <a href="javascript:void(0);" data-id="<?php echo $value['attach_id']; ?>" class="text-danger attach_recycle mr-2">
                                                 <span class="fas fa-trash"></span>
                                                 <?php echo $lang->get('Recycle'); ?>
                                             </a>
-                                        <?php }
-
-                                        if ($value['attach_type'] == 'image') { ?>
-                                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="right" title="<?php echo $lang->get('Use when the image cannot be displayed'); ?>" data-id="<?php echo $value['attach_id']; ?>" class="attach_fix">
-                                                <span class="fas fa-sync-alt"></span>
-                                                <?php echo $lang->get('Fix it'); ?>
-                                            </a>
                                         <?php } ?>
+
                                     </div>
                                 </div>
                                 <dl class="row collapse mt-3 mb-0" id="td-collapse-<?php echo $value['attach_id']; ?>">
@@ -347,7 +347,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </form>
 
     <form name="attach_fix" id="attach_fix" action="<?php echo $route_console; ?>attach/fix/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="attach_id" id="attach_id" value="0">
     </form>
 

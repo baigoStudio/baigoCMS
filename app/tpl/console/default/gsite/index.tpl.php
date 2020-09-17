@@ -72,7 +72,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="gsite_list" id="gsite_list" action="<?php echo $route_console; ?>gsite/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -268,7 +268,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             $('.gsite_id').prop('checked', false);
             $('#gsite_id_' + _gsite_id).prop('checked', true);
             $('#act').val('delete');
-            $('#gsite_list').submit()
+            $('#gsite_list').submit();
         });
 
         $('#gsite_list').baigoCheckall();

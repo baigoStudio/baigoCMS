@@ -2,7 +2,7 @@
     'title'             => $lang->get('Administrator', 'console.common') . ' &raquo; ' . $lang->get('Authorization'),
     'menu_active'       => 'admin',
     'sub_active'        => 'auth',
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'baigoCheckall'     => 'true',
     'pathInclude'       => $path_tpl . 'include' . DS,
@@ -18,7 +18,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="auth_form" id="auth_form" action="<?php echo $route_console; ?>auth/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="row">
             <div class="col-xl-9">
@@ -31,7 +31,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         </div>
 
                         <div class="form-group">
-                            <label><?php echo $lang->get('Permission'); ?> <span class="text-danger">*</span></label>
+                            <label><?php echo $lang->get('Permission'); ?></label>
 
                             <table class="bg-table">
                                 <tbody>
@@ -71,19 +71,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 <div class="card bg-light">
                     <div class="card-body">
                         <div class="form-group">
-                            <label><?php echo $lang->get('Type'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($type as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="admin_type" id="admin_type_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($adminRow['admin_type'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="admin_type_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                            <small class="form-text" id="msg_admin_type"></small>
-                        </div>
-
-                        <div class="form-group">
                             <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
                             <?php foreach ($status as $key=>$value) { ?>
                                 <div class="form-check">
@@ -94,6 +81,19 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                             <?php } ?>
                             <small class="form-text" id="msg_admin_status"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Type'); ?> <span class="text-danger">*</span></label>
+                            <?php foreach ($type as $key=>$value) { ?>
+                                <div class="form-check">
+                                    <input type="radio" name="admin_type" id="admin_type_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($adminRow['admin_type'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                    <label for="admin_type_<?php echo $value; ?>" class="form-check-label">
+                                        <?php echo $lang->get($value); ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                            <small class="form-text" id="msg_admin_type"></small>
                         </div>
 
                         <div class="form-group">
@@ -133,9 +133,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             admin_note: {
                 max: 30
             },
-            admin_allow_cate: {
-                checkbox: '1'
-            },
             admin_type: {
                 require: true
             },
@@ -147,11 +144,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             admin_name: '<?php echo $lang->get('Username'); ?>',
             admin_note: '<?php echo $lang->get('Note'); ?>',
             admin_type: '<?php echo $lang->get('Type'); ?>',
-            admin_allow_cate: '<?php echo $lang->get('Permission'); ?>',
             admin_status: '<?php echo $lang->get('Status'); ?>'
-        },
-        selector_types: {
-            admin_allow_cate: 'validate'
         },
         type_msg: {
             require: '<?php echo $lang->get('{:attr} require'); ?>',

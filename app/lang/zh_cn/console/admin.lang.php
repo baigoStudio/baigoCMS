@@ -27,7 +27,7 @@ return array(
     'Missing ID'                => '无法获取 ID',
     'Administrator not found'   => '管理员不存在',
     'Token'                     => '表单令牌',
-    'Keyword'                  => '关键词',
+    'Keyword'                   => '关键词',
     'All'                       => '全部',
     'Close'                     => '关闭',
     'OK'                        => '确定',

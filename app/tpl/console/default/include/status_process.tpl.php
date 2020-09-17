@@ -9,6 +9,7 @@
         break;
 
         case 'wait':
+        case 'not':
             $_str_css = 'warning';
         break;
 

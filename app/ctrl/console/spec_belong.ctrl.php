@@ -58,9 +58,7 @@ class Spec_Belong extends Ctrl {
 
         $_arr_search['not_in'] = Db::table('spec_belong')->where('belong_spec_id', '=', $_arr_specRow['spec_id'])->fetchSql()->select('belong_article_id');
 
-        $_num_articleCount  = $this->mdl_articleSpecView->count($_arr_search); //统计记录数
-        $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount); //取得分页数据
-        $_arr_articleRows   = $this->mdl_articleSpecView->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_articleRows   = $this->mdl_articleSpecView->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_searchBelong = array(
             'spec_id' => $_arr_specRow['spec_id'],
@@ -68,20 +66,18 @@ class Spec_Belong extends Ctrl {
 
         $_str_pageParamBelong     = 'page_belong';
 
-        $_num_articleCountBelong    = $this->mdl_articleSpecView->count($_arr_searchBelong); //统计记录数
-        $_arr_pageRowBelong         = $this->obj_request->pagination($_num_articleCountBelong, 0, 'get', $_str_pageParamBelong); //取得分页数据
-        $_arr_articleRowsBelong     = $this->mdl_articleSpecView->lists($this->config['var_default']['perpage'], $_arr_pageRowBelong['except'], $_arr_searchBelong); //列出
+        $_arr_getData     = $this->mdl_articleSpecView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
 
         $_arr_tplData = array(
             'specRow'           => $_arr_specRow,
 
             'search'            => $_arr_search,
-            'pageRow'           => $_arr_pageRow,
-            'articleRows'       => $_arr_articleRows,
+            'pageRowSpec'       => $_arr_articleRows['pageRow'],
+            'articleRows'       => $_arr_articleRows['dataRows'],
 
             'pageParamBelong'   => $_str_pageParamBelong,
-            'pageRowBelong'     => $_arr_pageRowBelong,
-            'articleRowsBelong' => $_arr_articleRowsBelong,
+            'pageRowBelong'     => $_arr_getData['pageRow'],
+            'articleRowsBelong' => $_arr_getData['dataRows'],
 
             'token'             => $this->obj_request->token(),
         );
@@ -213,16 +209,13 @@ class Spec_Belong extends Ctrl {
             'max_id' => $_arr_inputClear['max_id'],
         );
 
-        $_num_perPage     = 10;
-        $_num_belongCount = $this->mdl_specBelong->count();
-        $_arr_pageRow     = $this->obj_request->pagination($_num_belongCount, $_num_perPage, 'post');
-        $_arr_belongRows  = $this->mdl_specBelong->clear($_num_perPage, 0, $_arr_search);
+        $_arr_getData  = $this->mdl_specBelong->clear(array(10, 'post'), $_arr_search);
 
-        if (Func::isEmpty($_arr_belongRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             $_str_status    = 'complete';
             $_str_msg       = 'Complete';
         } else {
-            $_arr_belongRow = end($_arr_belongRows);
+            $_arr_belongRow = end($_arr_getData['dataRows']);
             $_str_status    = 'loading';
             $_str_msg       = 'Submitting';
             $_num_maxId     = $_arr_belongRow['belong_id'];
@@ -230,7 +223,7 @@ class Spec_Belong extends Ctrl {
 
         $_arr_return = array(
             'msg'       => $this->obj_lang->get($_str_msg),
-            'count'     => $_arr_pageRow['total'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'max_id'    => $_num_maxId,
             'status'    => $_str_status,
         );

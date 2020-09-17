@@ -38,6 +38,10 @@ class Tag extends Tag_Base {
             $_arr_tagData['tag_status'] = $this->inputSubmit['tag_status'];
         }
 
+        if (isset($this->inputSubmit['tag_tpl'])) {
+            $_arr_tagData['tag_tpl'] = $this->inputSubmit['tag_tpl'];
+        }
+
         $_mix_vld = $this->validate($_arr_tagData, '', 'submit_db');
 
         if ($_mix_vld !== true) {
@@ -48,7 +52,7 @@ class Tag extends Tag_Base {
             );
         }
 
-        if (!isset($this->inputSubmit['tag_id']) && $this->inputSubmit['tag_id'] > 0) {
+        if (isset($this->inputSubmit['tag_id']) && $this->inputSubmit['tag_id'] > 0) {
             $_num_tagId = $this->inputSubmit['tag_id'];
 
             $_num_count     = $this->where('tag_id', '=', $_num_tagId)->update($_arr_tagData);
@@ -146,6 +150,7 @@ class Tag extends Tag_Base {
             'tag_id'       => array('int', 0),
             'tag_name'     => array('str', ''),
             'tag_status'   => array('str', ''),
+            'tag_tpl'      => array('str', ''),
             '__token__'    => array('str', ''),
         );
 
@@ -169,8 +174,12 @@ class Tag extends Tag_Base {
         }
 
         $_arr_checkResult = $this->check($_arr_inputSubmit['tag_name'], 'tag_name', $_arr_inputSubmit['tag_id']);
+
         if ($_arr_checkResult['rcode'] == 'y130102') {
-            return $_arr_checkResult;
+            return array(
+                'rcode' => 'x130404',
+                'msg'   => 'Tag already exists',
+            );
         }
 
         $_arr_inputSubmit['rcode'] = 'y130201';

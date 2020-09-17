@@ -26,6 +26,8 @@ class Call extends Model {
     protected $obj_request;
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $this->configRoute  = Config::get('route', 'index');
     }
 
@@ -35,9 +37,7 @@ class Call extends Model {
             'call_id',
         );
 
-        $_arr_callRow = $this->read($num_callId, $_arr_select);
-
-        return $_arr_callRow;
+        return $this->readProcess($num_callId, $_arr_select);
     }
 
     /**
@@ -48,6 +48,17 @@ class Call extends Model {
      * @return void
      */
     function read($num_callId, $arr_select = array()) {
+        $_arr_callRow = $this->readProcess($num_callId, $arr_select);
+
+        if ($_arr_callRow['rcode'] != 'y170102') {
+            return $_arr_callRow;
+        }
+
+        return $this->rowProcess($_arr_callRow);
+    }
+
+
+    function readProcess($num_callId, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'call_id',
@@ -81,7 +92,7 @@ class Call extends Model {
         $_arr_callRow['rcode'] = 'y170102';
         $_arr_callRow['msg']   = '';
 
-        return $this->rowProcess($_arr_callRow);
+        return $_arr_callRow;
     }
 
 
@@ -89,13 +100,11 @@ class Call extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_key (default: '')
      * @param string $str_type (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array(), $current = 'get') {
 
         $_arr_callSelect = array(
             'call_id',
@@ -114,15 +123,21 @@ class Call extends Model {
             'call_period',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('call_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_callSelect);
 
-        $_arr_callRows = $this->where($_arr_where)->order('call_id', 'DESC')->limit($num_except, $num_no)->select($_arr_callSelect);
-
-        foreach ($_arr_callRows as $_key=>$_value) {
-            $_arr_callRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_callRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
 
     }
 
@@ -138,11 +153,15 @@ class Call extends Model {
     function count($arr_search = array()) {
         $_arr_where = $this->queryProcess($arr_search);
 
-        $_num_callCount = $this->where($_arr_where)->count();
-
-        return $_num_callCount;
+        return $this->where($_arr_where)->count();
     }
 
+    function pagination($arr_search = array(), $perpage = 0, $current = 'get', $pageparam = 'page', $pergroup = 0) {
+
+        $_arr_where = $this->queryProcess($arr_search);
+
+        return $this->where($_arr_where)->pagination($perpage, $current, $pageparam, $pergroup);
+    }
 
     protected function queryProcess($arr_search = array()) {
         $_arr_where = array();

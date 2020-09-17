@@ -5,7 +5,7 @@
     } ?>
 
     <form name="tag_form" id="tag_form" action="<?php echo $route_console; ?>tag/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="tag_id" id="tag_id" value="<?php echo $tagRow['tag_id']; ?>">
 
         <div class="modal-header">
@@ -26,6 +26,21 @@
                 <label><?php echo $lang->get('Name'); ?> <span class="text-danger">*</span></label>
                 <input value="<?php echo $tagRow['tag_name']; ?>" name="tag_name" id="tag_name" class="form-control">
                 <small class="form-text" id="msg_tag_name"></small>
+            </div>
+
+            <div class="form-group">
+                <label><?php echo $lang->get('Template'); ?></label>
+                <select name="tag_tpl" id="tag_tpl" class="form-control">
+                    <option <?php if (isset($tagRow['tag_tpl']) && $tagRow['tag_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
+                    <?php foreach ($tplRows as $key=>$value) {
+                        if ($value['type'] == 'file') { ?>
+                            <option <?php if ($tagRow['tag_tpl'] == $value['name_s']) { ?>selected<?php } ?> value="<?php echo $value['name_s']; ?>">
+                                <?php echo $value['name_s']; ?>
+                            </option>
+                        <?php }
+                    } ?>
+                </select>
+                <small class="form-text" id="msg_tag_tpl"></small>
             </div>
 
             <div class="form-group">

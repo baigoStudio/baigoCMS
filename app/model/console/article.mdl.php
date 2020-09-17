@@ -110,6 +110,14 @@ class Article extends Article_Base {
             $_arr_articleData['article_attach_id'] = $this->inputSubmit['article_attach_id'];
         }
 
+        if (isset($this->inputSubmit['article_tpl'])) {
+            $_arr_articleData['article_tpl'] = $this->inputSubmit['article_tpl'];
+        }
+
+        if (isset($this->inputSubmit['article_is_gen'])) {
+            $_arr_articleData['article_is_gen'] = $this->inputSubmit['article_is_gen'];
+        }
+
         if ($_num_articleId > 0) {
             $_str_hook = 'edit'; //编辑文章时触发
         } else {
@@ -296,6 +304,7 @@ class Article extends Article_Base {
             'article_title'             => $this->inputSimple['article_title'],
             'article_status'            => $this->inputSimple['article_status'],
             'article_box'               => $this->inputSimple['article_box'],
+            'article_is_gen'            => $this->inputSimple['article_is_gen'],
             'article_is_time_pub'       => $this->inputSimple['article_is_time_pub'],
             'article_is_time_hide'      => $this->inputSimple['article_is_time_hide'],
             'article_cate_id'           => $this->inputSimple['article_cate_id'],
@@ -568,6 +577,7 @@ class Article extends Article_Base {
             'article_link'              => array('str', ''),
             'article_status'            => array('str', ''),
             'article_box'               => array('str', ''),
+            'article_is_gen'            => array('str', ''),
             'article_time_show_format'  => array('str', ''),
             'article_excerpt'           => array('str', ''),
             'article_content'           => array('str', '', true),
@@ -587,6 +597,7 @@ class Article extends Article_Base {
             'article_customs'           => array('arr', array()),
             'article_excerpt_type'      => array('str', 'auto'),
             'article_tag_hidden'        => array('str', ''),
+            'article_tpl'               => array('str', ''),
             '__token__'                 => array('str', ''),
         );
 
@@ -642,6 +653,7 @@ class Article extends Article_Base {
             'article_title'             => array('str', ''),
             'article_status'            => array('str', ''),
             'article_box'               => array('str', ''),
+            'article_is_gen'            => array('str', ''),
             'article_time_show_format'  => array('str', ''),
             'article_is_time_pub'       => array('int', 0),
             'article_time_pub_format'   => array('str', ''),
@@ -666,15 +678,6 @@ class Article extends Article_Base {
                 'rcode' => 'x120201',
                 'msg'   => end($_mix_vld),
             );
-        }
-
-        if ($_arr_inputSimple['article_id'] > 0) {
-            //验证文章
-            $_arr_articleRow = $this->check($_arr_inputSimple['article_id']);
-
-            if ($_arr_articleRow['rcode'] != 'y120102') {
-                return $_arr_articleRow;
-            }
         }
 
         $_arr_inputSimple['rcode'] = 'y120201';

@@ -1,6 +1,6 @@
 
     <form name="admin_addon_form" id="admin_addon_form" action="<?php echo $route_console; ?>admin/addon-submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="admin_id" id="admin_id" value="<?php echo $adminRow['admin_id']; ?>">
 
         <div class="modal-header">

@@ -17,7 +17,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="gsite_form" id="gsite_form" action="<?php echo $route_console; ?>gsite/duplicate/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="gsite_id" id="gsite_id" value="<?php echo $gsiteRow['gsite_id']; ?>">
 
         <div class="row">
@@ -100,7 +100,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             obj_submit_form.formSubmit();
         });
 
-        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite_source/form/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
+        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-source/form/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
     });
     </script>
 

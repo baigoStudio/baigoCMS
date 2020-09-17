@@ -19,7 +19,6 @@ class Group extends Group_Base {
     function submit() {
         $_arr_groupData = array(
             'group_name'     => $this->inputSubmit['group_name'],
-            'group_target'   => $this->inputSubmit['group_target'],
             'group_note'     => $this->inputSubmit['group_note'],
             'group_allow'    => $this->inputSubmit['group_allow'],
             'group_status'   => $this->inputSubmit['group_status'],
@@ -127,7 +126,6 @@ class Group extends Group_Base {
             'group_name'    => array('str', ''),
             'group_note'    => array('str', ''),
             'group_status'  => array('str', ''),
-            'group_target'  => array('str', ''),
             'group_allow'   => array('arr', array()),
             '__token__'     => array('str', ''),
         );

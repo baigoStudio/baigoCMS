@@ -26,7 +26,7 @@ class Cate extends Cate_Base {
 
         $_str_visitType   = Config::get('visit_type', 'var_extra.visit');
 
-        if ($_str_visitType != 'default') {
+        if (isset($this->obj_request->route['mod']) && $this->obj_request->route['mod'] == 'index' && $_str_visitType != 'default') {
             Config::set('route_type', 'noBaseFile', 'route');
         }
     }
@@ -66,10 +66,6 @@ class Cate extends Cate_Base {
     function urlProcess($arr_cateRow) {
         $_arr_configVisit   = Config::get('visit', 'var_extra');
         $_str_routeCate     = Config::get('cate', 'index.route');
-
-        if (!isset($_arr_configVisit['visit_type'])) {
-            $_arr_configVisit['visit_type'] = 'default';
-        }
 
         $_arr_urlRow = array(
             'url'           => '',
@@ -116,14 +112,11 @@ class Cate extends Cate_Base {
     }
 
 
-    function listsTree($num_no, $num_except = 0, $arr_search = array(), $num_level = 1) {
-        $_arr_cateRows  = $this->lists($num_no, $num_except, $arr_search);
+    function listsTree($arr_search = array(), $num_level = 1) {
+        $_arr_cates     = array();
+        $_arr_getData   = $this->lists(array(1000, 'limit'), $arr_search);
 
-        //print_r($_arr_cateRows);
-
-        $_arr_cates = array();
-
-        foreach ($_arr_cateRows as $_key=>$_value) {
+        foreach ($_arr_getData as $_key=>$_value) {
             $_arr_cateRow                                   = $_value;
             $_arr_cateRow['cate_url']                       = $this->urlProcess($_arr_cateRow);
 
@@ -132,7 +125,7 @@ class Cate extends Cate_Base {
             $_arr_cates[$_value['cate_id']]['cate_level']   = $num_level;
             unset($_arr_cates[$_value['cate_id']]['cate_breadcrumb']);
             $arr_search['parent_id']                        = $_value['cate_id'];
-            $_arr_cates[$_value['cate_id']]['cate_childs']  = $this->listsTree(1000, 0, $arr_search, $num_level + 1);
+            $_arr_cates[$_value['cate_id']]['cate_childs']  = $this->listsTree($arr_search, $num_level + 1);
         }
 
         return $_arr_cates;
@@ -162,9 +155,9 @@ class Cate extends Cate_Base {
             'status'    => 'show',
         );
 
-        $_arr_cateRows = $this->listsTree(1000, 0, $_arr_search);
+        $_arr_getData = $this->listsTree($_arr_search);
 
-        return $this->obj_cache->write('cate_tree', $_arr_cateRows);
+        return $this->obj_cache->write('cate_tree', $_arr_getData);
     }
 
 

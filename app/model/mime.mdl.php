@@ -21,9 +21,7 @@ class Mime extends Model {
             'mime_id',
         );
 
-        $_arr_mimeRow = $this->read($mix_mime, $str_by, $num_notId, $_arr_select);
-
-        return $_arr_mimeRow;
+        return $this->readProcess($mix_mime, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -33,6 +31,17 @@ class Mime extends Model {
     返回提示
     */
     function read($mix_mime, $str_by = 'mime_id', $num_notId = 0, $arr_select = array()) {
+        $_arr_mimeRow = $this->readProcess($mix_mime, $str_by, $num_notId, $arr_select);
+
+        if ($_arr_mimeRow['rcode'] != 'y080102') {
+            return $_arr_mimeRow;
+        }
+
+        return $this->rowProcess($_arr_mimeRow);
+    }
+
+
+    function readProcess($mix_mime, $str_by = 'mime_id', $num_notId = 0, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'mime_id',
@@ -56,7 +65,7 @@ class Mime extends Model {
         $_arr_mimeRow['rcode'] = 'y080102';
         $_arr_mimeRow['msg']   = '';
 
-        return $this->rowProcess($_arr_mimeRow);
+        return $_arr_mimeRow;
     }
 
 
@@ -65,7 +74,7 @@ class Mime extends Model {
         mime_id 允许类型 ID
         mime_content 允许类型宽度
     */
-    function lists($num_no, $num_except = 0) {
+    function lists($pagination = 0) {
         $_arr_mimeSelect = array(
             'mime_id',
             'mime_content',
@@ -73,13 +82,20 @@ class Mime extends Model {
             'mime_note',
         );
 
-        $_arr_mimeRows = $this->order('mime_id', 'DESC')->limit($num_except, $num_no)->select($_arr_mimeSelect);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->order('mime_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_mimeSelect);
 
-        foreach ($_arr_mimeRows as $_key=>$_value) {
-            $_arr_mimeRows[$_key]['mime_content'] = Json::decode($_value['mime_content']);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_mimeRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 

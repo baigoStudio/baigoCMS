@@ -22,7 +22,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             <ul class="list-group mb-3">
                 <li class="list-group-item">
                     <form name="form_cate" id="form_cate" class="form_clear" action="<?php echo $route_console; ?>cate_belong/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of belong to category'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_cate">
                             <span class="fas fa-trash-alt"></span>
@@ -33,7 +33,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                 <li class="list-group-item">
                     <form name="form_spec" id="form_spec" class="form_clear" action="<?php echo $route_console; ?>spec_belong/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of belong to special topic'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_spec">
                             <span class="fas fa-trash-alt"></span>
@@ -44,7 +44,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                 <li class="list-group-item">
                     <form name="form_tag" id="form_tag" class="form_clear" action="<?php echo $route_console; ?>tag_belong/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of belong to tag'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_tag">
                             <span class="fas fa-trash-alt"></span>
@@ -55,7 +55,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                 <li class="list-group-item">
                     <form name="form_album" id="form_album" class="form_clear" action="<?php echo $route_console; ?>album_belong/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of belong to album'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_album">
                             <span class="fas fa-trash-alt"></span>
@@ -66,7 +66,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                 <li class="list-group-item">
                     <form name="form_content" id="form_content" class="form_clear" action="<?php echo $route_console; ?>article_content/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of article content'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_content">
                             <span class="fas fa-trash-alt"></span>
@@ -77,7 +77,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                 <li class="list-group-item">
                     <form name="form_custom" id="form_custom" class="form_clear" action="<?php echo $route_console; ?>article_custom/clear/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of custom fields'); ?></div>
                         <button type="submit" class="btn btn-warning" id="btn_custom">
                             <span class="fas fa-trash-alt"></span>
@@ -101,7 +101,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
         <div class="col-md-9">
             <form name="opt_form" id="opt_form" action="<?php echo $route_console; ?>opt/dbconfig-submit/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
                 <div class="card">
                     <div class="card-body">
@@ -182,7 +182,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         	$('#upgrade_modal #upgrade_content').empty();
     	});
 
-        var obj_validate_form  = $('#opt_form').baigoValidate(opts_validate_form);
+        var obj_validate_form   = $('#opt_form').baigoValidate(opts_validate_form);
         var obj_submit_form     = $('#opt_form').baigoSubmit(opts_submit_form);
 
         $('#opt_form').submit(function(){

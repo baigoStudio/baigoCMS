@@ -33,6 +33,7 @@ class Album extends Album_Base {
             'album_name'    => $this->inputSubmit['album_name'],
             'album_content' => $this->inputSubmit['album_content'],
             'album_status'  => $this->inputSubmit['album_status'],
+            'album_tpl'     => $this->inputSubmit['album_tpl'],
         );
 
         $_mix_vld = $this->validate($_arr_albumData, '', 'submit_db');
@@ -196,6 +197,7 @@ class Album extends Album_Base {
             'album_name'    => array('str', ''),
             'album_content' => array('str', '', true),
             'album_status'  => array('str', ''),
+            'album_tpl'     => array('str', ''),
             '__token__'     => array('str', ''),
         );
 

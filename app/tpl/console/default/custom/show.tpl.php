@@ -119,6 +119,14 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             <div class="form-text"><?php echo $customRow['custom_id']; ?></div>
                         </div>
 
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Status'); ?></label>
+                            <div class="form-text">
+                                <?php $str_status = $customRow['custom_status'];
+                                include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
+                            </div>
+                        </div>
+
                         <?php if ($customRow['custom_parent_id'] < 1) { ?>
                             <div class="form-group">
                                 <label><?php echo $lang->get('Belong to category'); ?></label>
@@ -131,15 +139,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                             </div>
                         <?php } ?>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?></label>
-                            <div class="form-text">
-                                <?php $str_status = $customRow['custom_status'];
-                                include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
-                            </div>
-
-                        </div>
                     </div>
                     <div class="card-footer text-right">
                         <a href="<?php echo $route_console; ?>custom/form/id/<?php echo $customRow['custom_id']; ?>/">

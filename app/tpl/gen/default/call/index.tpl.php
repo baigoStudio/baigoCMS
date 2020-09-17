@@ -47,7 +47,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL); ?>
                     dataType: 'json',
                     data: {
                         call_id: '<?php echo $_value['call_id']; ?>',
-                        __token__: '<?php echo $token; ?>'
+                        <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                     },
                     timeout: 30000,
                     error: function (result) {

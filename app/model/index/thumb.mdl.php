@@ -19,6 +19,8 @@ class Thumb extends Thumb_Base {
     protected $obj_cache;
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $this->obj_cache    = Cache::instance();
     }
 
@@ -38,7 +40,7 @@ class Thumb extends Thumb_Base {
 
 
     function cacheProcess() {
-        $_arr_thumbRows = $this->lists(1000);
+        $_arr_thumbRows = $this->lists(array(1000, 'limit'));
 
         $_arr_thumbs = array();
 

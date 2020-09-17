@@ -17,6 +17,8 @@ defined('IN_GINKGO') or exit('Access Denied');
 class Custom extends Custom_Base {
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $this->obj_cache    = Cache::instance();
     }
 
@@ -48,7 +50,7 @@ class Custom extends Custom_Base {
             'status'    => 'enable',
         );
 
-        $_arr_customRows = $this->lists(1000, 0, $_arr_search);
+        $_arr_customRows = $this->lists(array(1000, 'limit'), $_arr_search);
 
         return $this->obj_cache->write('custom_lists', $_arr_customRows);
     }
@@ -60,7 +62,7 @@ class Custom extends Custom_Base {
             'status'    => 'enable',
         );
 
-        $_arr_customRows = $this->listsTree(1000, 0, $_arr_search);
+        $_arr_customRows = $this->listsTree($_arr_search);
 
         //print_r($_arr_customRows);
 

@@ -28,7 +28,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="spec_form" id="spec_form" action="<?php echo $route_console; ?>spec/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="spec_id" id="spec_id" value="<?php echo $specRow['spec_id']; ?>">
 
         <div class="row">
@@ -101,6 +101,21 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             <label><?php echo $lang->get('Updated time'); ?></label>
                             <input type="text" name="spec_time_update_format" id="spec_time_update_format" value="<?php echo $specRow['spec_time_update_format']['date_time']; ?>" class="form-control input_date">
                             <small class="form-text" id="msg_spec_time_update_format"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Template'); ?></label>
+                            <select name="spec_tpl" id="spec_tpl" class="form-control">
+                                <option <?php if (isset($specRow['spec_tpl']) && $specRow['spec_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
+                                <?php foreach ($tplRows as $key=>$value) {
+                                    if ($value['type'] == 'file') { ?>
+                                        <option <?php if ($specRow['spec_tpl'] == $value['name_s']) { ?>selected<?php } ?> value="<?php echo $value['name_s']; ?>">
+                                            <?php echo $value['name_s']; ?>
+                                        </option>
+                                    <?php }
+                                } ?>
+                            </select>
+                            <small class="form-text" id="msg_spec_tpl"></small>
                         </div>
                     </div>
                     <div class="card-footer">

@@ -29,7 +29,7 @@
                     <?php if (isset($albumRows[0]['album_id'])) { ?>
                         attach_album_ids: [<?php echo $albumRows[0]['album_id']; ?>],
                     <?php } ?>
-                    __token__: '<?php echo $token; ?>'
+                    <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                 },
                 server: '<?php echo $route_console; ?>attach/upload/', //文件接收服务端
                 pick: '#upload_select', //选择按钮

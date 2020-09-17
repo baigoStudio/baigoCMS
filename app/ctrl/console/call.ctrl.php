@@ -51,20 +51,16 @@ class Call extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_callCount   = $this->mdl_call->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_callCount); //取得分页数据
-        $_arr_callRows    = $this->mdl_call->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData    = $this->mdl_call->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'callRows'   => $_arr_callRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'callRows'   => $_arr_getData['dataRows'],
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_callRows);
 
         $this->assign($_arr_tpl);
 
@@ -107,12 +103,12 @@ class Call extends Ctrl {
             $_arr_searchSpec = array(
                 'spec_ids'    => $_arr_callRow['call_spec_ids'],
             );
-            $_arr_specRows = $this->mdl_spec->lists(1000, 0, $_arr_searchSpec);
+            $_arr_specRows = $this->mdl_spec->lists(array(1000, 'limit'), $_arr_searchSpec);
         }
 
         $_arr_search['parent_id']  = 0;
-        $_arr_cateRows = $this->mdl_cate->listsTree(1000, 0, $_arr_search); //列出
-        $_arr_markRows = $this->mdl_mark->lists(100);
+        $_arr_cateRows = $this->mdl_cate->listsTree($_arr_search); //列出
+        $_arr_markRows = $this->mdl_mark->lists(array(1000, 'limit'));
 
         if (isset($this->genOpen)) {
             switch ($_arr_callRow['call_file']) {
@@ -125,7 +121,7 @@ class Call extends Ctrl {
                 break;
             }
         } else {
-            $_arr_callRow['call_code'] = Html::encode('<?php echo callDisplay(' . $_arr_callRow['call_id'] . '); ?>');
+            $_arr_callRow['call_code'] = Html::encode('<?php print_r($call->get(' . $_arr_callRow['call_id'] . ')); ?>');
         }
 
         $_arr_tplData = array(
@@ -137,8 +133,6 @@ class Call extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_callRows);
 
         $this->assign($_arr_tpl);
 
@@ -177,7 +171,7 @@ class Call extends Ctrl {
                 $_arr_searchSpec = array(
                     'spec_ids'    => $_arr_callRow['call_spec_ids'],
                 );
-                $_arr_specRows = $this->mdl_spec->lists(1000, 0, $_arr_searchSpec);
+                $_arr_specRows = $this->mdl_spec->lists(array(1000, 'limit'), $_arr_searchSpec);
             }
         } else {
             if (!isset($this->groupAllow['call']['add']) && !$this->isSuper) { //判断权限
@@ -205,12 +199,12 @@ class Call extends Ctrl {
         }
 
         $_arr_search['parent_id']  = 0;
-        $_arr_cateRows = $this->mdl_cate->listsTree(1000, 0, $_arr_search); //列出
-        $_arr_markRows = $this->mdl_mark->lists(100);
+        $_arr_cateRows = $this->mdl_cate->listsTree($_arr_search); //列出
+        $_arr_markRows = $this->mdl_mark->lists(array(1000, 'limit'));
         $_arr_tplRows  = File::instance()->dirList(BG_TPL_CALL);
 
-        foreach ($_arr_tplRows as $_key=>$_value) {
-            $_arr_tplRows[$_key]['name_s'] = basename($_value['name'], GK_EXT_TPL);
+        foreach ($_arr_tplRows as $_key=>&$_value) {
+            $_value['name_s'] = basename($_value['name'], GK_EXT_TPL);
         }
 
         $_arr_tplData = array(
@@ -223,8 +217,6 @@ class Call extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_callRows);
 
         $this->assign($_arr_tpl);
 
@@ -375,11 +367,11 @@ class Call extends Ctrl {
         $_mdl_call    = Loader::model('Call', '', 'index');
 
         $_arr_search['status']   = 'enable';
-        $_arr_callRows           = $this->mdl_call->lists(1000, 0, $_arr_search);
+        $_arr_getData            = $this->mdl_call->lists(array(1000, 'limit'), $_arr_search);
 
         $_num_cacheSize = 0;
 
-        foreach ($_arr_callRows as $_key=>$_value) {
+        foreach ($_arr_getData as $_key=>$_value) {
             $_num_cacheSize = $_mdl_call->cacheProcess($_value['call_id']);
         }
 

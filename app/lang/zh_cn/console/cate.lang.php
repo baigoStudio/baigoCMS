@@ -28,7 +28,7 @@ return array(
     'Parent category not found' => '父栏目不存在',
     'Generate'              => '生成',
     'Token'                 => '表单令牌',
-    'Keyword'              => '关键词',
+    'Keyword'               => '关键词',
     'Duplicate'             => '克隆',
     'Template'              => '模板',
     'Inherit'               => '继承',

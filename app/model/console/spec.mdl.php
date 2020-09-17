@@ -32,6 +32,7 @@ class Spec extends Spec_Base {
             'spec_name'         => $this->inputSubmit['spec_name'],
             'spec_status'       => $this->inputSubmit['spec_status'],
             'spec_content'      => $this->inputSubmit['spec_content'],
+            'spec_tpl'          => $this->inputSubmit['spec_tpl'],
         );
 
         if (isset($this->inputSubmit['spec_attach_id'])) {
@@ -243,6 +244,7 @@ class Spec extends Spec_Base {
             'spec_name'                 => array('str', ''),
             'spec_status'               => array('str', ''),
             'spec_content'              => array('str', '', true),
+            'spec_tpl'                  => array('str', ''),
             'spec_time_update_format'   => array('str', ''),
             '__token__'                 => array('str', ''),
         );

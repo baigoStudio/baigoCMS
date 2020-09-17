@@ -20,13 +20,9 @@ class Album extends Model {
     public $arr_status = array('enable', 'disabled');
 
     function m_init() { //构造函数
-        $_arr_configVisit  = Config::get('visit', 'var_extra');
+        parent::m_init();
 
-        if (!isset($_arr_configVisit['visit_type'])) {
-            $_arr_configVisit['visit_type'] = 'default';
-        }
-
-        $this->configVisit  = $_arr_configVisit;
+        $this->configVisit  = Config::get('visit', 'var_extra');;
         $this->routeAlbum   = Config::get('album', 'index.route');
     }
 
@@ -39,7 +35,7 @@ class Album extends Model {
 
         $_arr_albumRows = $this->where($_arr_where)->select($_arr_albumSelect);
 
-        $_arr_albumIds = array();
+        $_arr_albumIds  = array();
 
         foreach ($_arr_albumRows as $_key=>$_value) {
             $_arr_albumIds[]   = $_value['album_id'];
@@ -54,11 +50,7 @@ class Album extends Model {
             'album_id',
         );
 
-        $_arr_albumRow = $this->read($mix_album, $str_by, $num_notId, $_arr_select);
-
-        //print_r($_arr_albumRow);
-
-        return $_arr_albumRow;
+        return $this->readProcess($mix_album, $str_by, $num_notId, $_arr_select);
     }
 
 
@@ -72,6 +64,18 @@ class Album extends Model {
      * @return void
      */
     function read($mix_album, $str_by = 'album_id', $num_notId = 0, $arr_select = array()) {
+        $_arr_albumRow = $this->readProcess($mix_album, $str_by, $num_notId, $arr_select);
+
+        if ($_arr_albumRow['rcode'] != 'y060102') {
+            return $_arr_albumRow;
+        }
+
+        return $this->rowProcess($_arr_albumRow);
+    }
+
+
+
+    function readProcess($mix_album, $str_by = 'album_id', $num_notId = 0, $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'album_id',
@@ -80,6 +84,7 @@ class Album extends Model {
                 'album_status',
                 'album_time',
                 'album_attach_id',
+                'album_tpl',
             );
         }
 
@@ -99,21 +104,20 @@ class Album extends Model {
 
         //print_r($_arr_albumRow);
 
-        return $this->rowProcess($_arr_albumRow);
+        return $_arr_albumRow;
     }
+
 
 
     /**
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param string $str_key (default: '')
      * @param string $str_type (default: '')
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
 
         $_arr_albumSelect = array(
             'album_id',
@@ -123,15 +127,21 @@ class Album extends Model {
             'album_attach_id',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('album_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_albumSelect);
 
-        $_arr_albumRows = $this->where($_arr_where)->order('album_id', 'DESC')->limit($num_except, $num_no)->select($_arr_albumSelect);
-
-        foreach ($_arr_albumRows as $_key=>$_value) {
-            $_arr_albumRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_albumRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 
@@ -146,9 +156,7 @@ class Album extends Model {
     function count($arr_search = array()) {
         $_arr_where = $this->queryProcess($arr_search);
 
-        $_num_count = $this->where($_arr_where)->count();
-
-        return $_num_count;
+        return $this->where($_arr_where)->count();
     }
 
 

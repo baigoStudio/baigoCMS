@@ -7,7 +7,6 @@
 namespace app\model\console;
 
 use app\model\Admin as Admin_Base;
-use ginkgo\Config;
 use ginkgo\Json;
 use ginkgo\Html;
 

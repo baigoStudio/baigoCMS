@@ -10,7 +10,7 @@ $cfg = array(
     'title'             => $lang->get('Administrator', 'console.common') . ' &raquo; ' . $title_sub,
     'menu_active'       => 'admin',
     'sub_active'        => $str_sub,
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'baigoCheckall'     => 'true',
     'pathInclude'       => $path_tpl . 'include' . DS,
@@ -26,7 +26,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </nav>
 
     <form name="admin_form" id="admin_form" autocomplete="off" action="<?php echo $route_console; ?>admin/submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="admin_id" id="admin_id" value="<?php echo $adminRow['admin_id']; ?>">
 
         <div class="row">
@@ -76,7 +76,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         </div>
 
                         <div class="form-group">
-                            <label><?php echo $lang->get('Permission'); ?> <span class="text-danger">*</span></label>
+                            <label><?php echo $lang->get('Permission'); ?></label>
 
                             <table class="bg-table">
                                 <tbody>
@@ -93,7 +93,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <?php include($cfg['pathInclude'] . 'cate_list_allow' . GK_EXT_TPL); ?>
                                 </tbody>
                             </table>
-                            <small class="form-text" id="msg_admin_allow_cate"></small>
                         </div>
 
                         <div class="form-group">
@@ -123,19 +122,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php } ?>
 
                         <div class="form-group">
-                            <label><?php echo $lang->get('Type'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($type as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="admin_type" id="admin_type_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($adminRow['admin_type'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="admin_type_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
-                                </div>
-                            <?php } ?>
-                            <small class="form-text" id="msg_admin_type"></small>
-                        </div>
-
-                        <div class="form-group">
                             <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
                             <?php foreach ($status as $key=>$value) { ?>
                                 <div class="form-check">
@@ -146,6 +132,19 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </div>
                             <?php } ?>
                             <small class="form-text" id="msg_admin_status"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Type'); ?> <span class="text-danger">*</span></label>
+                            <?php foreach ($type as $key=>$value) { ?>
+                                <div class="form-check">
+                                    <input type="radio" name="admin_type" id="admin_type_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($adminRow['admin_type'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                    <label for="admin_type_<?php echo $value; ?>" class="form-check-label">
+                                        <?php echo $lang->get($value); ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                            <small class="form-text" id="msg_admin_type"></small>
                         </div>
 
                         <div class="form-group">

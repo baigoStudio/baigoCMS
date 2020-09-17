@@ -44,18 +44,30 @@ class Admin extends Ctrl {
             'key'       => array('str', ''),
             'status'    => array('str', ''),
             'type'      => array('str', ''),
+            'group'     => array('int', 0),
         );
 
-        $_arr_search = $this->obj_request->param($_arr_searchParam);
+        $_arr_search    = $this->obj_request->param($_arr_searchParam);
 
-        $_num_adminCount  = $this->mdl_admin->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_adminCount); //取得分页数据
-        $_arr_adminRows   = $this->mdl_admin->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_groupRow  = array();
+
+        if ($_arr_search['group'] > 0) {
+            $_arr_search['group_id'] = $_arr_search['group'];
+
+            $_arr_groupRow = $this->mdl_group->read($_arr_search['group']);
+        }
+
+        $_arr_getData   = $this->mdl_admin->lists($this->config['var_default']['perpage'], $_arr_search); //列出
+
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
+            $_value['groupRow'] = $this->mdl_group->read($_value['admin_group_id']);
+        }
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'adminRows'  => $_arr_adminRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'adminRows'  => $_arr_getData['dataRows'],
+            'groupRow'   => $_arr_groupRow,
             'token'      => $this->obj_request->token(),
         );
 
@@ -107,7 +119,7 @@ class Admin extends Ctrl {
         $_arr_search = array(
             'parent_id' => 0
         );
-        $_arr_cateRows    = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows    = $this->mdl_cate->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'cateRows'  => $_arr_cateRows,
@@ -153,10 +165,7 @@ class Admin extends Ctrl {
             return $this->error($_arr_adminRow['msg'], $_arr_adminRow['rcode']);
         }
 
-        $_arr_searchGroup = array(
-            'group_target' => 'admin',
-        );
-        $_arr_groupRows   = $this->mdl_group->lists(1000, 0, $_arr_searchGroup);
+        $_arr_groupRows   = $this->mdl_group->lists(array(1000, 'limit'));
 
         $_arr_tplData = array(
             'groupRows' => $_arr_groupRows,
@@ -200,7 +209,7 @@ class Admin extends Ctrl {
         }
 
         if ($_arr_inputAddon['admin_group_id'] > 0) {
-            $_arr_groupRow = $this->mdl_group->check($_arr_inputAddon['admin_group_id'], 'group_id', 'admin');
+            $_arr_groupRow = $this->mdl_group->check($_arr_inputAddon['admin_group_id']);
 
             if ($_arr_groupRow['rcode'] != 'y040102') {
                 return $this->fetchJson($_arr_groupRow['msg'], $_arr_groupRow['rcode']);
@@ -266,7 +275,7 @@ class Admin extends Ctrl {
         $_arr_search = array(
             'parent_id' => 0
         );
-        $_arr_cateRows    = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows    = $this->mdl_cate->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'cateRows'  => $_arr_cateRows,
@@ -434,12 +443,12 @@ class Admin extends Ctrl {
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
                         'rcode' => 'x020404',
-                        'error' => $this->obj_lang->get('Administrator already exists'),
+                        'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
                         'rcode' => 'x010404',
-                        'error' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
+                        'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }
             }
@@ -470,12 +479,12 @@ class Admin extends Ctrl {
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
                         'rcode' => 'x020404',
-                        'error' => $this->obj_lang->get('Administrator already exists'),
+                        'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
                         'rcode' => 'x010404',
-                        'error' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
+                        'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }
             }

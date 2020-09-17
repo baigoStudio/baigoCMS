@@ -23,9 +23,7 @@ class Gather extends Model {
             'gather_id',
         );
 
-        $_arr_gatherRow = $this->read($mix_gather, $str_by, $_arr_select);
-
-        return $_arr_gatherRow;
+        return $this->readProcess($mix_gather, $str_by, $_arr_select);
     }
 
 
@@ -37,6 +35,17 @@ class Gather extends Model {
      * @return void
      */
     function read($mix_gather, $str_by = 'gather_id', $arr_select = array()) {
+        $_arr_gatherRow = $this->readProcess($mix_gather, $str_by, $arr_select);
+
+        if ($_arr_gatherRow['rcode'] != 'y280102') {
+            return $_arr_gatherRow;
+        }
+
+        return $this->rowProcess($_arr_gatherRow);
+    }
+
+
+    function readProcess($mix_gather, $str_by = 'gather_id', $arr_select = array()) {
         if (Func::isEmpty($arr_select)) {
             $arr_select = array(
                 'gather_id',
@@ -68,7 +77,7 @@ class Gather extends Model {
         $_arr_gatherRow['rcode']    = 'y280102';
         $_arr_gatherRow['msg']      = '';
 
-        return $this->rowProcess($_arr_gatherRow);
+        return $_arr_gatherRow;
     }
 
 
@@ -76,12 +85,10 @@ class Gather extends Model {
      * mdl_list function.
      *
      * @access public
-     * @param mixed $num_no
-     * @param int $num_except (default: 0)
      * @param array $arr_search (default: array())
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_gatherSelect = array(
             'gather_id',
             'gather_title',
@@ -95,15 +102,21 @@ class Gather extends Model {
             'gather_gsite_id',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('gather_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_gatherSelect);
 
-        $_arr_gatherRows = $this->where($_arr_where)->order('gather_id', 'DESC')->limit($num_except, $num_no)->select($_arr_gatherSelect);
-
-        foreach ($_arr_gatherRows as $_key=>$_value) {
-            $_arr_gatherRows[$_key] = $this->rowProcess($_value);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_eachData = &$_arr_getData['dataRows'];
+        } else {
+            $_arr_eachData = &$_arr_getData;
         }
 
-        return $_arr_gatherRows;
+        foreach ($_arr_eachData as $_key=>&$_value) {
+            $_value = $this->rowProcess($_value);
+        }
+
+        return $_arr_getData;
     }
 
 
@@ -117,11 +130,16 @@ class Gather extends Model {
     function count($arr_search = array()) {
         $_arr_where = $this->queryProcess($arr_search);
 
-        $_num_gatherCount = $this->where($_arr_where)->count();
-
-        return $_num_gatherCount;
+        return $this->where($_arr_where)->count();
     }
 
+
+    function pagination($arr_search = array(), $perpage = 0, $current = 'get', $pageparam = 'page', $pergroup = 0) {
+
+        $_arr_where = $this->queryProcess($arr_search);
+
+        return $this->where($_arr_where)->pagination($perpage, $current, $pageparam, $pergroup);
+    }
 
     /** 列出及统计 SQL 处理
      * sqlProcess function.

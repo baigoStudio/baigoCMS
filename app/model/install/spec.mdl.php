@@ -68,6 +68,12 @@ class Spec extends Model {
                 'default'   => 0,
                 'comment'   => '更新时间',
             ),
+            'spec_tpl' => array(
+                'type'      => 'varchar(1000)',
+                'not_null'  => true,
+                'default'   => '',
+                'comment'   => '模板',
+            ),
         );
     }
 

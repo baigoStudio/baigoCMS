@@ -34,7 +34,7 @@ class Thumb extends Ctrl {
             return $this->error('You do not have permission', 'x090301');
         }
 
-        $_arr_thumbRows   = $this->mdl_thumb->lists(1000); //列出
+        $_arr_thumbRows   = $this->mdl_thumb->lists(array(1000, 'limit')); //列出
 
         $_arr_tplData = array(
             'thumbRows'  => $_arr_thumbRows,

@@ -1,5 +1,5 @@
 /*
-v2.1.0 jQuery baigoSubmit plugin 表单提交插件
+v2.1.2 jQuery baigoSubmit plugin 表单提交插件
 (c) 2013 baigo studio - http://www.baigo.net/
 License: http://www.opensource.org/licenses/mit-license.php
 */
@@ -75,6 +75,9 @@ License: http://www.opensource.org/licenses/mit-license.php
                 url: '',
                 text: '',
                 icon: 'spinner-grow spinner-grow-sm',
+                attach_key: '',
+                separator: '',
+                equal: '',
                 delay: 3000
             }
         };
@@ -159,16 +162,28 @@ License: http://www.opensource.org/licenses/mit-license.php
                         //console.log(opts.jump);
 
                         if (_rcode_status == 'y' && opts.jump.url.length > 0 && opts.jump.text.length > 0) {
-                            var _jump_url = opts.jump.url;
+                            var _jump_url       = opts.jump.url;
+                            var _str_separator  = '';
+                            var _str_equal      = '';
 
-                            if (typeof opts.jump.attach_key != 'undefined' && typeof _attach_value != 'undefined') {
-                                if (_jump_url.indexOf('?')) {
-                                    _str_conn = '&';
+                            if (typeof opts.jump.attach_key != 'undefined' && opts.jump.attach_key.length > 0 && typeof _attach_value != 'undefined') {
+                                if (typeof opts.jump.separator != 'undefined' && opts.jump.separator.length > 0) {
+                                    _str_separator = opts.jump.separator;
                                 } else {
-                                    _str_conn = '?';
+                                    if (_jump_url.indexOf('?')) {
+                                        _str_separator = '&';
+                                    } else {
+                                        _str_separator = '?';
+                                    }
                                 }
 
-                                _jump_url = _jump_url + _str_conn + opts.jump.attach_key + '=' + _attach_value;
+                                if (typeof opts.jump.equal != 'undefined' && opts.jump.equal.length > 0) {
+                                    _str_equal = opts.jump.equal;
+                                } else {
+                                    _str_equal = '=';
+                                }
+
+                                _jump_url += _str_separator + opts.jump.attach_key + _str_equal + _attach_value;
                             }
 
                             $(modal_selector + ' ' + opts.modal.selector.ok).attr('href', _jump_url);
@@ -205,21 +220,21 @@ License: http://www.opensource.org/licenses/mit-license.php
                     break;
                 }
             },
-            submitFunc: function() {
-                var _str_conn;
+            submitFunc: function(callback) {
+                var _str_separator;
 
                 if (typeof opts.ajax_url == 'undefined' || opts.ajax_url == '') {
                     opts.ajax_url = obj_form.attr('action');
                 }
 
                 if (opts.ajax_url.indexOf('?') > 0) {
-                    _str_conn = '&';
+                    _str_separator = '&';
                 } else {
-                    _str_conn = '?';
+                    _str_separator = '?';
                 }
 
                 $.ajax({
-                    url: opts.ajax_url + _str_conn + new Date().getTime() + 'at' + Math.random(), //url
+                    url: opts.ajax_url + _str_separator + new Date().getTime() + 'at' + Math.random(), //url
                     //async: false, //设置为同步
                     type: 'post',
                     dataType: 'json', //数据格式为json
@@ -247,6 +262,10 @@ License: http://www.opensource.org/licenses/mit-license.php
                             result.msg = result.err_message;
                         }
 
+                        if (callback && callback instanceof Function) {
+                            callback(result);
+                        }
+
                         process.output('success', result.rcode, result.msg, result_attach_value); //输出消息
                         setTimeout(function(){
                             process.output();
@@ -258,12 +277,16 @@ License: http://www.opensource.org/licenses/mit-license.php
 
         //ajax 提交
         var el = {
-            formSubmit: function(url) {
-                if (typeof url != 'undefined') {
+            formSubmit: function(url, callback) {
+                if (typeof url != 'undefined' && url !== false) {
                     opts.ajax_url = url;
                 }
 
-                process.submitFunc();
+                process.submitFunc(function(result){
+                    if (callback && callback instanceof Function) {
+                        callback(result);
+                    }
+                });
             },
             ajaxUrl: function(url) {
                 if (typeof url != 'undefined') {

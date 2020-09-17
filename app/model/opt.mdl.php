@@ -33,7 +33,6 @@ class Opt {
             'pass'      => $this->inputDbconfig['pass'],
             'charset'   => $this->inputDbconfig['charset'],
             'prefix'    => $this->inputDbconfig['prefix'],
-            'debug'     => $this->inputDbconfig['debug'],
         );
 
         $_num_size   = Config::write(GK_APP_CONFIG . 'dbconfig' . GK_EXT_INC, $_arr_opt);
@@ -56,15 +55,14 @@ class Opt {
 
     function inputDbconfig($arr_data = '') {
         $_arr_inputParam = array(
-            'host'      => array('txt', 'localhost'),
+            'host'      => array('str', 'localhost'),
             'port'      => array('num', 3306),
-            'name'      => array('txt', ''),
-            'user'      => array('txt', ''),
-            'pass'      => array('txt', ''),
-            'charset'   => array('txt', ''),
-            'prefix'    => array('txt', ''),
-            'debug'     => array('txt', ''),
-            '__token__' => array('txt', ''),
+            'name'      => array('str', ''),
+            'user'      => array('str', ''),
+            'pass'      => array('str', ''),
+            'charset'   => array('str', ''),
+            'prefix'    => array('str', ''),
+            '__token__' => array('str', ''),
         );
 
         $_arr_inputDbconfig  = $this->obj_request->post($_arr_inputParam);

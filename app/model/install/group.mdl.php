@@ -21,10 +21,8 @@ class Group extends Model {
     function m_init() {
         $_mdl_group = Loader::model('Group', '', false);
         $this->arr_status   = $_mdl_group->arr_status;
-        $this->arr_target   = $_mdl_group->arr_target;
 
         $_str_status      = implode('\',\'', $this->arr_status);
-        $_str_target      = implode('\',\'', $this->arr_target);
 
         $this->create = array(
             'group_id' => array(
@@ -50,14 +48,6 @@ class Group extends Model {
                 'not_null'  => true,
                 'default'   => '',
                 'comment'   => '权限',
-            ),
-            'group_target' => array(
-                'type'      => 'enum(\'' . $_str_target . '\')',
-                'not_null'  => true,
-                'default'   => $this->arr_target[0],
-                'comment'   => '类型',
-                'update'    => $this->arr_target[0],
-                'old'       => 'group_type',
             ),
             'group_status' => array(
                 'type'      => 'enum(\'' . $_str_status . '\')',

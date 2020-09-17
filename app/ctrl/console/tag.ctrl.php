@@ -8,7 +8,7 @@ namespace app\ctrl\console;
 
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Json;
+use ginkgo\File;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -42,20 +42,16 @@ class Tag extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_tagCount = $this->mdl_tag->count($_arr_search); //统计记录数
-        $_arr_pageRow  = $this->obj_request->pagination($_num_tagCount); //取得分页数据
-        $_arr_tagRows  = $this->mdl_tag->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData  = $this->mdl_tag->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'   => $_arr_pageRow,
             'search'    => $_arr_search,
-            'tagRows'   => $_arr_tagRows,
+            'pageRow'   => $_arr_getData['pageRow'],
+            'tagRows'   => $_arr_getData['dataRows'],
             'token'     => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_tagRows);
 
         $this->assign($_arr_tpl);
 
@@ -82,11 +78,11 @@ class Tag extends Ctrl {
 
         $_arr_search['status'] = 'show';
 
-        $_arr_tagRows  = $this->mdl_tag->lists(1000, 0, $_arr_search); //列出
+        $_arr_getData  = $this->mdl_tag->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tags = array();
 
-        foreach ($_arr_tagRows as $_key=>$_value) {
+        foreach ($_arr_getData as $_key=>$_value) {
             $_arr_tags[] = $_value['tag_name'];
         }
 
@@ -127,17 +123,23 @@ class Tag extends Ctrl {
                 'tag_id'        => 0,
                 'tag_name'      => '',
                 'tag_status'    => $this->mdl_tag->arr_status[0],
+                'tag_tpl'       => '',
             );
         }
 
+        $_arr_tplRows  = File::instance()->dirList(BG_TPL_TAG);
+
+        foreach ($_arr_tplRows as $_key=>$_value) {
+            $_arr_tplRows[$_key]['name_s'] = basename($_value['name'], GK_EXT_TPL);
+        }
+
         $_arr_tplData = array(
-            'tagRow'  => $_arr_tagRow,
-            'token'    => $this->obj_request->token(),
+            'tplRows'   => $_arr_tplRows,
+            'tagRow'    => $_arr_tagRow,
+            'token'     => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_tagRows);
 
         $this->assign($_arr_tpl);
 

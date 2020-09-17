@@ -29,7 +29,9 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
             <ul class="navbar-nav">
                 <li class="nav-item dropdown<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'pm') { ?> active<?php } ?>">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        <span class="fas fa-envelope"></span>
+                        <svg class="bi" width="1em" height="1em" fill="currentColor">
+                            <use xlink:href="{:DIR_STATIC}lib/bootstrap-icons/1.0.0/bootstrap-icons.svg#envelope-fill"/>
+                        </svg>
                         <?php echo $lang->get('Private message', 'console.common'); ?>
                         <span id="box_pm_new" class="badge badge-secondary badge-pill"></span>
                     </a>

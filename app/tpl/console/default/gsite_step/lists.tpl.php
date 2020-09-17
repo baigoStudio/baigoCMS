@@ -12,8 +12,8 @@
 include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL);
 include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
 
-    <form name="gsite_form" id="gsite_form" action="<?php echo $route_console; ?>gsite_step/lists-submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+    <form name="gsite_form" id="gsite_form" action="<?php echo $route_console; ?>gsite-step/lists-submit/">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="gsite_id" id="gsite_id" value="<?php echo $gsiteRow['gsite_id']; ?>">
 
         <div class="row">
@@ -35,7 +35,7 @@ include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header"><?php echo $lang->get('Preview'); ?></div>
+                    <div class="card-header py-2"><?php echo $lang->get('Preview'); ?></div>
                     <div id="gsite_preview">
                         <div class="loading p-3">
                             <h4 class="text-info">
@@ -47,7 +47,7 @@ include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
                 </div>
 
                 <div class="card my-3">
-                    <div class="card-header"><?php echo $lang->get('Source code'); ?></div>
+                    <div class="card-header py-2"><?php echo $lang->get('Source code'); ?></div>
                     <div id="gsite_source">
                         <div class="loading p-3">
                             <h4 class="text-info">
@@ -108,9 +108,9 @@ include($cfg['pathInclude'] . 'console_foot' . GK_EXT_TPL); ?>
             }
         });
 
-        $('#gsite_preview').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite_preview/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
+        $('#gsite_preview').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-preview/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
 
-        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite_source/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
+        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-source/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
     });
     </script>
 

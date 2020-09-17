@@ -129,7 +129,7 @@ class Call {
 
         $_mdl_spec = Loader::model('Spec');
 
-        $_arr_specRows = $_mdl_spec->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchSpec);
+        $_arr_specRows = $_mdl_spec->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchSpec);
 
         $_arr_return = array(
             'specRows'  => $_arr_specRows,
@@ -158,10 +158,10 @@ class Call {
 
         $_mdl_tag = Loader::model('Tag');
 
-        $_arr_tagRows = $_mdl_tag->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchTag);
+        $_arr_tagRows = $_mdl_tag->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchTag);
 
-        foreach ($_arr_tagRows as $_key=>$_value) {
-            $_arr_tagRows[$_key]['tag_url'] = $_mdl_tag->urlProcess($_value);
+        foreach ($_arr_tagRows as $_key=>&$_value) {
+            $_value['tag_url'] = $_mdl_tag->urlProcess($_value);
         }
 
         $_arr_return = array(
@@ -185,7 +185,7 @@ class Call {
 
         $_mdl_link = Loader::model('Link');
 
-        $_arr_linkRows = $_mdl_link->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchLink);
+        $_arr_linkRows = $_mdl_link->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchLink);
 
         $_arr_return = array(
             'linkRows'  => $_arr_linkRows,
@@ -233,7 +233,7 @@ class Call {
 
         $_mdl_articleSpecView   = Loader::model('Article_Spec_View');
 
-        $_arr_articleRows = $_mdl_articleSpecView->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_search, $_arr_order, $_arr_group);
+        $_arr_articleRows = $_mdl_articleSpecView->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_search, $_arr_order, $_arr_group);
 
         $_arr_return = array(
             'articleRows' => $this->obj_index->articleListsProcess($_arr_articleRows),

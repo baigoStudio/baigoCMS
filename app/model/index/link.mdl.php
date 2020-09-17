@@ -18,6 +18,8 @@ class Link extends Link_Base {
     protected $obj_cache;
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $this->obj_cache  = Cache::instance();
     }
 
@@ -49,7 +51,7 @@ class Link extends Link_Base {
             'type'      => $str_type,
             'status'    => 'enable',
         );
-        $_arr_linkRows = $this->lists(1000, 0, $_arr_search);
+        $_arr_linkRows = $this->lists(array(1000, 'limit'), $_arr_search);
 
         return $this->obj_cache->write('link_' . $str_type, $_arr_linkRows);
     }

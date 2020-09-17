@@ -49,16 +49,13 @@ class Tag_Belong extends Ctrl {
             'max_id' => $_arr_inputClear['max_id'],
         );
 
-        $_num_perPage     = 10;
-        $_num_belongCount = $this->mdl_tagBelong->count();
-        $_arr_pageRow     = $this->obj_request->pagination($_num_belongCount, $_num_perPage, 'post');
-        $_arr_belongRows  = $this->mdl_tagBelong->clear($_num_perPage, 0, $_arr_search);
+        $_arr_getData  = $this->mdl_tagBelong->clear(array(10, 'post'), $_arr_search);
 
-        if (Func::isEmpty($_arr_belongRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             $_str_status    = 'complete';
             $_str_msg       = 'Complete';
         } else {
-            $_arr_belongRow = end($_arr_belongRows);
+            $_arr_belongRow = end($_arr_getData['dataRows']);
             $_str_status    = 'loading';
             $_str_msg       = 'Submitting';
             $_num_maxId     = $_arr_belongRow['belong_id'];
@@ -66,7 +63,7 @@ class Tag_Belong extends Ctrl {
 
         $_arr_return = array(
             'msg'       => $this->obj_lang->get($_str_msg),
-            'count'     => $_arr_pageRow['total'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'max_id'    => $_num_maxId,
             'status'    => $_str_status,
         );

@@ -80,7 +80,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <div class="card-group">
         <div class="card">
             <form name="attach_list_belong" id="attach_list_belong" action="<?php echo $route_console; ?>album_belong/remove/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <input type="hidden" name="album_id" value="<?php echo $albumRow['album_id']; ?>">
 
                 <div class="table-responsive">
@@ -188,8 +188,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </div>
                         </div>
                         <div class="float-right">
-                            <?php $_arr_pageRow = $pageRowBelong;
-                            $_str_pageParam = $pageParamBelong;
+                            <?php $pageRow = $pageRowBelong;
+                            $pageParam = $pageParamBelong;
                             include($cfg['pathInclude'] . 'pagination' . GK_EXT_TPL); ?>
                         </div>
                     </div>
@@ -198,7 +198,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </div>
         <div class="card">
             <form name="attach_list" id="attach_list" action="<?php echo $route_console; ?>album_belong/choose/">
-                <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                 <input type="hidden" name="album_id" value="<?php echo $albumRow['album_id']; ?>">
 
                 <div class="table-responsive">
@@ -289,8 +289,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </div>
                         </div>
                         <div class="float-right">
-                            <?php $_arr_pageRow = $pageRow;
-                            $_str_pageParam = 'page';
+                            <?php $pageRow = $pageRowAlbum;
+                            $pageParam = 'page';
                             include($cfg['pathInclude'] . 'pagination' . GK_EXT_TPL); ?>
                         </div>
                     </div>
@@ -300,7 +300,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     </div>
 
     <form name="album_cover" id="album_cover" action="<?php echo $route_console; ?>album/cover/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="album_id" value="<?php echo $albumRow['album_id']; ?>">
         <input type="hidden" name="attach_id" id="attach_id" value="0">
     </form>

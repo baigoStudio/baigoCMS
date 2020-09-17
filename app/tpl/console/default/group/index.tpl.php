@@ -43,20 +43,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </option>
                         <?php } ?>
                     </select>
-                    <select name="type" class="custom-select">
-                        <option value=""><?php echo $lang->get('All targets'); ?></option>
-                        <?php foreach ($target as $key=>$value) { ?>
-                            <option <?php if ($search['target'] == $value) { ?>selected<?php } ?> value="<?php echo $value; ?>">
-                                <?php echo $lang->get($value); ?>
-                            </option>
-                        <?php } ?>
-                    </select>
                 </div>
             </div>
         </form>
     </div>
 
-    <?php if (!empty($search['key']) || !empty($search['status']) || !empty($search['target'])) { ?>
+    <?php if (!empty($search['key']) || !empty($search['status'])) { ?>
         <div class="mb-3 text-right">
             <?php if (!empty($search['key'])) { ?>
                 <span class="badge badge-info">
@@ -70,13 +62,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     <?php echo $lang->get('Status'); ?>:
                     <?php echo $lang->get($search['status']); ?>
                 </span>
-            <?php }
-
-            if (!empty($search['target'])) { ?>
-                <span class="badge badge-info">
-                    <?php echo $lang->get('Target'); ?>:
-                    <?php echo $lang->get($search['target']); ?>
-                </span>
             <?php } ?>
 
             <a href="<?php echo $route_console; ?>group/index/" class="badge badge-danger badge-pill">
@@ -87,7 +72,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <?php } ?>
 
     <form name="group_list" id="group_list" action="<?php echo $route_console; ?>group/status/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
 
         <div class="table-responsive">
             <table class="table table-striped border bg-white">
@@ -110,8 +95,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <td class="d-none d-lg-table-cell bg-td-md text-right">
                             <small>
                                 <?php echo $lang->get('Status'); ?>
-                                /
-                                <?php echo $lang->get('Type'); ?>
                             </small>
                         </td>
                     </tr>
@@ -166,12 +149,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <?php $str_status = $value['group_status'];
                                         include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
                                     </dd>
-                                    <dt class="col-3">
-                                        <small><?php echo $lang->get('Target'); ?></small>
-                                    </dt>
-                                    <dd class="col-9">
-                                        <small><?php echo $lang->get($value['group_target']); ?></small>
-                                    </dd>
                                 </dl>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md">
@@ -181,9 +158,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <div>
                                     <?php $str_status = $value['group_status'];
                                     include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
-                                </div>
-                                <div>
-                                    <small><?php echo $lang->get($value['group_target']); ?></small>
                                 </div>
                             </td>
                         </tr>

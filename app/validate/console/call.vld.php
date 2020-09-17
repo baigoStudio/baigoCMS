@@ -103,7 +103,7 @@ class Call extends Validate {
         );
 
         $_arr_formatMsg = array(
-            'int' => $this->obj_lang->get('{:attr} must be integer')
+            'int' => $this->obj_lang->get('{:attr} must be integer'),
         );
 
         $this->setAttrName($_arr_attrName);

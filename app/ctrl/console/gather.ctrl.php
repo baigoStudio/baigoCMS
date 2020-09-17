@@ -9,7 +9,6 @@ namespace app\ctrl\console;
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\Http;
 use ginkgo\Image;
 use ginkgo\Ftp;
@@ -90,28 +89,24 @@ class Gather extends Ctrl {
             }
         }
 
-        $_num_gatherCount   = $this->mdl_gather->count($_arr_search); //统计记录数
-        $_arr_pageRow       = $this->obj_request->pagination($_num_gatherCount); //取得分页数据
-        $_arr_gatherRows    = $this->mdl_gather->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData    = $this->mdl_gather->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
-        foreach ($_arr_gatherRows as $_key=>$_value) {
-            $_arr_gatherRows[$_key]['cateRow']  = $this->mdl_cate->read($_value['gather_cate_id']);
-            $_arr_gatherRows[$_key]['gsiteRow'] = $this->mdl_gsite->read($_value['gather_gsite_id']);
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
+            $_value['cateRow']  = $this->mdl_cate->read($_value['gather_cate_id']);
+            $_value['gsiteRow'] = $this->mdl_gsite->read($_value['gather_gsite_id']);
         }
-
-        //print_r($_arr_gatherRows);
 
         $_arr_searchCate = array(
             'parent_id' => 0,
         );
-        $_arr_cateRows      = $this->mdl_cate->listsTree(1000, 0, $_arr_searchCate);
+        $_arr_cateRows      = $this->mdl_cate->listsTree($_arr_searchCate);
 
-        $_arr_gsiteRows     = $this->mdl_gsite->lists(1000);
+        $_arr_gsiteRows     = $this->mdl_gsite->lists(array(1000, 'limit'));
 
         $_arr_tplData = array(
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'gatherRows'    => $_arr_gatherRows,
+            'pageRow'       => $_arr_getData['pageRow'],
+            'gatherRows'    => $_arr_getData['dataRows'],
             'cateRows'      => $_arr_cateRows,
             'cateRow'       => $_arr_cateRow,
             'gsiteRow'      => $_arr_gsiteRow,
@@ -162,8 +157,6 @@ class Gather extends Ctrl {
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        //print_r($_arr_gatherRows);
-
         $this->assign($_arr_tpl);
 
         return $this->fetch();
@@ -204,14 +197,13 @@ class Gather extends Ctrl {
             $_arr_search['gather_ids'] = false;
         }
 
-        $_num_gatherCount   = $this->mdl_gather->count($_arr_search);
-        $_arr_pageRow       = $this->obj_request->pagination($_num_gatherCount, $this->configConsole['count_gather']); //取得分页数据
+        $_arr_pageRow       = $this->mdl_gather->pagination($_arr_search, $this->configConsole['count_gather']); //取得分页数据
 
         if ($_arr_search['page'] > $_arr_pageRow['total']) {
             return $this->error('Completed storage', 'y280404');
         }
 
-        $_arr_gatherRows    = $this->mdl_gather->lists($this->configConsole['count_gather'], $_arr_pageRow['except'], $_arr_search, 'ASC');
+        $_arr_getData    = $this->mdl_gather->lists(array($this->configConsole['count_gather'], $_arr_pageRow['offset'], 'limit'), $_arr_search, 'ASC');
 
         $_str_jump = $this->url['route_console'] . 'gathering/store/page/' . ($_arr_pageRow['page'] + 1) . '/view/iframe/';
 
@@ -230,13 +222,11 @@ class Gather extends Ctrl {
         $_arr_tplData = array(
             'jump'          => $_str_jump,
             'search'        => $_arr_search,
-            'gatherRows'    => $_arr_gatherRows,
+            'gatherRows'    => $_arr_getData,
             'token'         => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_gatherRows);
 
         $this->assign($_arr_tpl);
 
@@ -419,8 +409,8 @@ class Gather extends Ctrl {
             $_mdl_thumb         = Loader::model('Thumb');
             $_mdl_attach        = Loader::model('Attach');
 
-            $_arr_mimeRows      = $_mdl_mime->lists(100);
-            $_arr_thumbRows     = $_mdl_thumb->lists(1000);
+            $_arr_mimeRows      = $_mdl_mime->lists(array(1000, 'limit'));
+            $_arr_thumbRows     = $_mdl_thumb->lists(array(1000, 'limit'));
 
             $_arr_mimes         = array();
             $_arr_allowMimes    = array();

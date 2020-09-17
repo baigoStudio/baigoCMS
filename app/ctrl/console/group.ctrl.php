@@ -20,7 +20,6 @@ class Group extends Ctrl {
         $this->mdl_group    = Loader::model('Group');
 
         $this->generalData['status']    = $this->mdl_group->arr_status;
-        $this->generalData['target']    = $this->mdl_group->arr_target;
     }
 
 
@@ -38,25 +37,20 @@ class Group extends Ctrl {
         $_arr_searchParam = array(
             'key'       => array('str', ''),
             'status'    => array('str', ''),
-            'target'      => array('str', ''),
         );
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_groupCount  = $this->mdl_group->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_groupCount); //取得分页数据
-        $_arr_groupRows   = $this->mdl_group->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_group->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'groupRows'  => $_arr_groupRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'groupRows'  => $_arr_getData['dataRows'],
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_groupRows);
 
         $this->assign($_arr_tpl);
 
@@ -97,8 +91,6 @@ class Group extends Ctrl {
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        //print_r($_arr_groupRows);
-
         $this->assign($_arr_tpl);
 
         return $this->fetch();
@@ -138,7 +130,6 @@ class Group extends Ctrl {
                 'group_id'      => 0,
                 'group_name'    => '',
                 'group_status'  => $this->mdl_group->arr_status[0],
-                'group_target'    => $this->mdl_group->arr_target[0],
                 'group_allow'   => array(),
                 'group_note'    => '',
             );
@@ -150,8 +141,6 @@ class Group extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_groupRows);
 
         $this->assign($_arr_tpl);
 

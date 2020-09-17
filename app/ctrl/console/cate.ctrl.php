@@ -47,9 +47,9 @@ class Cate extends Ctrl {
 
         if (Func::isEmpty($_arr_search['key']) && Func::isEmpty($_arr_search['status'])) {
             $_arr_search['parent_id'] = 0;
-            $_arr_cateRows   = $this->mdl_cate->listsTree(1000, 0, $_arr_search); //列出
+            $_arr_cateRows   = $this->mdl_cate->listsTree($_arr_search); //列出
         } else {
-            $_arr_cateRows   = $this->mdl_cate->lists(1000, 0, $_arr_search); //列出
+            $_arr_cateRows   = $this->mdl_cate->lists(array(1000, 'limit'), $_arr_search); //列出
         }
 
 
@@ -163,7 +163,7 @@ class Cate extends Ctrl {
 
         $_arr_search['parent_id'] = 0;
 
-        $_arr_cateRows   = $this->mdl_cate->listsTree(1000, 0, $_arr_search);
+        $_arr_cateRows   = $this->mdl_cate->listsTree($_arr_search);
 
         $_arr_tplData = array(
             'tplRows'   => File::instance()->dirList(BG_TPL_INDEX),
@@ -243,7 +243,7 @@ class Cate extends Ctrl {
             }
         }
 
-        $_arr_cateRows   = $this->mdl_cate->lists(1000, 0, $_arr_search); //列出
+        $_arr_cateRows   = $this->mdl_cate->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tplData = array(
             'cateRow'    => $_arr_cateRow,
@@ -446,7 +446,7 @@ class Cate extends Ctrl {
             if ($_arr_cateRow['rcode'] == 'y250102') {
                 $_arr_return = array(
                     'rcode' => 'x250404',
-                    'error' => $this->obj_lang->get('Alias already exists'),
+                    'error_msg' => $this->obj_lang->get('Alias already exists'),
                 );
             } else {
                 if (is_numeric($_arr_inputCheck['cate_alias'])) {
@@ -454,7 +454,7 @@ class Cate extends Ctrl {
                     if ($_arr_cateRow['rcode'] == 'y250102') {
                         $_arr_return = array(
                             'rcode' => 'x250404',
-                            'error' => $this->obj_lang->get('Alias already exists'),
+                            'error_msg' => $this->obj_lang->get('Alias already exists'),
                         );
                     }
                 }
@@ -469,7 +469,7 @@ class Cate extends Ctrl {
         $_mdl_cate    = Loader::model('Cate', '', 'index');
 
         $arr_search['status']   = 'show';
-        $_arr_cateRows          = $this->mdl_cate->lists(1000, 0, $arr_search);
+        $_arr_cateRows          = $this->mdl_cate->lists(array(1000, 'limit'), $arr_search);
 
         $_num_cacheSize = 0;
 

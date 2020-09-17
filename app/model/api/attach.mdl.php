@@ -7,7 +7,6 @@
 namespace app\model\api;
 
 use app\model\index\Attach as Attach_Index;
-use ginkgo\Config;
 use ginkgo\Func;
 
 //不能非法包含或直接执行

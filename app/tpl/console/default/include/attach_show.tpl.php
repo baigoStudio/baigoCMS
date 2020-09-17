@@ -1,7 +1,7 @@
                         <div class="form-group">
                             <label><?php echo $lang->get('Path'); ?></label>
                             <div>
-                                <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $attachRow['attach_url']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid">
+                                <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $attachRow['attach_url']; ?>" data-toggle="async" alt="<?php echo $attachRow['attach_name']; ?>" class="img-fluid">
                             </div>
 
                             <div>
@@ -19,7 +19,7 @@
                                 <ul class="list-unstyled">
                                     <?php foreach ($attachRow['thumbRows'] as $key_thumb=>$value_thumb) { ?>
                                         <li class="media mb-3">
-                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value_thumb['thumb_url']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="mr-3" width="60">
+                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value_thumb['thumb_url']; ?>" data-toggle="async" alt="<?php echo $attachRow['attach_name']; ?>" class="mr-3" width="60">
 
                                             <div class="media-body">
                                                 <h6><?php echo $value_thumb['thumb_width'], ' x ', $value_thumb['thumb_height'], ' ', $lang->get($value_thumb['thumb_type']); ?></h6>
@@ -36,7 +36,7 @@
                         <?php } ?>
 
                         <form name="attach_fix" id="attach_fix" action="<?php echo $route_console; ?>attach/fix/">
-                            <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                            <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                             <input type="hidden" name="attach_id" id="attach_id" value="<?php echo $attachRow['attach_id']; ?>">
 
                             <div class="form-group">

@@ -58,15 +58,13 @@ class Tag extends Ctrl {
 
         $_arr_search['tag_ids'] = array($_arr_tagRow['tag_id']);
 
-        $_num_articleCount  = $this->mdl_articleTagView->count($_arr_search); //统计记录数
-        $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $this->configVisit['perpage_in_tag']); //取得分页数据
-        $_arr_articleRows   = $this->mdl_articleTagView->lists($this->configVisit['perpage_in_tag'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_articleTagView->lists($this->configVisit['perpage_in_tag'], $_arr_search); //列出
 
         $_arr_tplData = array(
             'urlRow'        => $this->mdl_tag->urlProcess($_arr_tagRow),
-            'pageRow'       => $_arr_pageRow,
             //'search'        => $_arr_search,
-            'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
+            'pageRow'       => $_arr_getData['pageRow'],
+            'articleRows'   => $this->obj_index->articleListsProcess($_arr_getData['dataRows']),
             'tagRow'        => $_arr_tagRow,
         );
 
@@ -77,8 +75,14 @@ class Tag extends Ctrl {
 
         $this->assign($_arr_tpl);
 
-        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+        $_str_tpl = '';
 
-        return $this->fetch();
+        if (!Func::isEmpty($_arr_tagRow['tag_tpl']) && $_arr_tagRow['tag_tpl'] !== '-1') {
+            $_str_tpl = BG_TPL_TAG . $_arr_tagRow['tag_tpl'] . GK_EXT_TPL;
+        }
+
+        //print_r($_arr_tagRow);
+
+        return $this->fetch($_str_tpl);
     }
 }

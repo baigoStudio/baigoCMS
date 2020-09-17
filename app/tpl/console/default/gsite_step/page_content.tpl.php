@@ -12,8 +12,8 @@
 include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL);
 include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
 
-    <form name="gsite_form" id="gsite_form" action="<?php echo $route_console; ?>gsite_step/page-content-submit/">
-        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+    <form name="gsite_form" id="gsite_form" action="<?php echo $route_console; ?>gsite-step/page-content-submit/">
+        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="gsite_id" id="gsite_id" value="<?php echo $gsiteRow['gsite_id']; ?>">
 
         <div class="row">
@@ -108,7 +108,7 @@ include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header"><?php echo $lang->get('Preview'); ?></div>
+                    <div class="card-header py-2"><?php echo $lang->get('Preview'); ?></div>
                     <div id="gsite_preview">
                         <div class="loading p-3">
                             <h4 class="text-info">
@@ -120,7 +120,7 @@ include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
                 </div>
 
                 <div class="card my-3">
-                    <div class="card-header"><?php echo $lang->get('Source code'); ?></div>
+                    <div class="card-header py-2"><?php echo $lang->get('Source code'); ?></div>
                     <div id="gsite_source">
                         <div class="loading p-3">
                             <h4 class="text-info">
@@ -186,7 +186,7 @@ include($cfg['pathInclude'] . 'console_foot' . GK_EXT_TPL); ?>
                     '<div class="input-group-prepend">' +
                         '<span class="input-group-text"><?php echo $lang->get('Search'); ?></span>' +
                     '</div>' +
-                    '<input type="text" name="gsite_page_content_replace[' + count + '][search]" id="gsite_page_content_replace_' + count + '" class="form-control">' +
+                    '<input type="text" name="gsite_page_content_replace[' + count + '][search]" id="gsite_page_content_replace_' + count + '_search" class="form-control">' +
                 '</div>' +
             '</div>' +
             '<div class="form-group col-lg-6">' +
@@ -194,7 +194,7 @@ include($cfg['pathInclude'] . 'console_foot' . GK_EXT_TPL); ?>
                     '<div class="input-group-prepend">' +
                         '<span class="input-group-text"><?php echo $lang->get('Replace'); ?></span>' +
                     '</div>' +
-                    '<input type="text" name="gsite_page_content_replace[' + count + '][replace]" id="gsite_page_content_replace_' + count + '" class="form-control">' +
+                    '<input type="text" name="gsite_page_content_replace[' + count + '][replace]" id="gsite_page_content_replace_' + count + '_replace" class="form-control">' +
                     '<span class="input-group-append">' +
                         '<button type="button" data-count="' + count + '" class="btn btn-info replace_del">' +
                             '<span class="fas fa-trash-alt"></span>' +
@@ -233,9 +233,9 @@ include($cfg['pathInclude'] . 'console_foot' . GK_EXT_TPL); ?>
             replaceDel(_count);
         });
 
-        $('#gsite_preview').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite_preview/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
+        $('#gsite_preview').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-preview/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
 
-        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite_source/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
+        $('#gsite_source').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-source/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');
     });
     </script>
 

@@ -22,18 +22,18 @@ class Spec_View extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_specSelect = array(
             'spec_id',
             'spec_name',
             'spec_status',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('spec_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_specSelect);
 
-        $_arr_specRows = $this->where($_arr_where)->order('spec_id', 'DESC')->limit($num_except, $num_no)->select($_arr_specSelect);
-
-        return $_arr_specRows;
+        return $_arr_getData;
     }
 
 

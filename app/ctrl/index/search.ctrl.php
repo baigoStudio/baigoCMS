@@ -42,8 +42,10 @@ class Search extends Ctrl {
             }
         }
 
-        $_arr_pageRow       = array();
-        $_arr_articleRows   = array();
+        $_arr_pageRow   = array();
+        $_arr_getData   = array(
+            'dataRows' => array(),
+        );
 
         if (!Func::isEmpty($_arr_search['key']) || isset($_arr_search['has_custom'])) {
             $_arr_search['cate_ids'] = false;
@@ -56,29 +58,27 @@ class Search extends Ctrl {
 
             $_mdl_articleCustomView    = Loader::model('Article_Custom_View');
 
-            $_num_articleCount  = $_mdl_articleCustomView->count($_arr_search); //统计记录数
-            $_arr_pageRow       = $this->obj_request->pagination($_num_articleCount, $this->configVisit['perpage_in_search']); //取得分页数据
-            $_arr_articleRows   = $_mdl_articleCustomView->lists($this->configVisit['perpage_in_search'], $_arr_pageRow['except'], $_arr_search); //列出
+            $_arr_getData   = $_mdl_articleCustomView->lists($this->configVisit['perpage_in_search'], $_arr_search); //列出
         }
 
-        if (!Func::isEmpty($_arr_articleRows)) {
-            foreach ($_arr_articleRows as $_key=>$_value) {
-                $_arr_articleRows[$_key]['article_title'] = str_ireplace($_arr_search['key'], '<span class="highlight">' . $_arr_search['key'] . '</span>', $_value['article_title']);
+        if (!Func::isEmpty($_arr_getData['dataRows'])) {
+            foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
+                $_value['article_title'] = str_ireplace($_arr_search['key'], '<span class="highlight">' . $_arr_search['key'] . '</span>', $_value['article_title']);
             }
         }
 
         $_arr_tplData = array(
             'urlRow'        => $this->urlProcess($_arr_search),
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
+            'pageRow'       => $_arr_getData['pageRow'],
+            'articleRows'   => $this->obj_index->articleListsProcess($_arr_getData['dataRows']),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
         $this->assign($_arr_tpl);
 
-        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+        //$this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
 
         return $this->fetch();
     }
@@ -97,16 +97,16 @@ class Search extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_arr_articleRows   = array();
+        $_arr_getData   = array();
 
         if (!Func::isEmpty($_arr_search['key'])) {
             $_mdl_articleCateView    = Loader::model('Article_Cate_View');
-            $_arr_articleRows        = $_mdl_articleCateView->lists($this->configVisit['perpage_in_ajax'], 0, $_arr_search); //列出
+            $_arr_getData            = $_mdl_articleCateView->lists(array($this->configVisit['perpage_in_ajax'], 'limit'), $_arr_search); //列出
         }
 
-        $_arr_articleRows = $this->obj_index->articleListsProcess($_arr_articleRows, false);
+        $_arr_getData = $this->obj_index->articleListsProcess($_arr_getData, false);
 
-        return $this->json($_arr_articleRows);
+        return $this->json($_arr_getData);
     }
 
 

@@ -93,35 +93,43 @@ class Album_Belong extends Album_Belong_Base {
     }
 
 
-    function clear($num_no, $num_except = 0, $arr_search = array()) {
+    function clear($pagination = 0, $arr_search = array()) {
         $_arr_belongSelect = array(
             'belong_id',
             'belong_album_id',
             'belong_attach_id',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_belongSelect);
 
-        $_arr_belongRows = $this->where($_arr_where)->order('belong_id', 'DESC')->limit($num_except, $num_no)->select($_arr_belongSelect);
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_clearData = $_arr_getData['dataRows'];
+        } else {
+            $_arr_clearData = $_arr_getData;
+        }
 
-        $_mdl_attach = Loader::model('Attach');
-        $_mdl_album  = Loader::model('Album');
+        if (!Func::isEmpty($_arr_clearData)) {
+            $_mdl_attach = Loader::model('Attach');
+            $_mdl_album  = Loader::model('Album');
 
-        foreach ($_arr_belongRows as $_key=>$_value) {
-            $_arr_attachRow = $_mdl_attach->check($_value['belong_attach_id']);
+            foreach ($_arr_getData as $_key=>$_value) {
+                $_arr_attachRow = $_mdl_attach->check($_value['belong_attach_id']);
 
-            if ($_arr_attachRow['rcode'] != 'y070102') {
-                $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
-            }
+                if ($_arr_attachRow['rcode'] != 'y070102') {
+                    $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                }
 
-            $_arr_albumRow = $_mdl_album->check($_value['belong_album_id']);
+                $_arr_albumRow = $_mdl_album->check($_value['belong_album_id']);
 
-            if ($_arr_albumRow['rcode'] != 'y060102') {
-                $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                if ($_arr_albumRow['rcode'] != 'y060102') {
+                    $this->delete(0, 0, false, false, false, false, $_value['belong_id']);
+                }
             }
         }
 
-        return $_arr_belongRows;
+        return $_arr_getData;
     }
 
 

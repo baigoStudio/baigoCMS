@@ -8,6 +8,7 @@ namespace app\ctrl\console;
 
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
+use ginkgo\File;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -41,22 +42,17 @@ class Album extends Ctrl {
             'status'    => array('str', ''),
         );
 
-        $_arr_search = $this->obj_request->param($_arr_searchParam);
-
-        $_num_albumCount  = $this->mdl_album->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_albumCount); //取得分页数据
-        $_arr_albumRows   = $this->mdl_album->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_search   = $this->obj_request->param($_arr_searchParam);
+        $_arr_getData  = $this->mdl_album->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'    => $_arr_pageRow,
             'search'     => $_arr_search,
-            'albumRows'  => $_arr_albumRows,
+            'pageRow'    => $_arr_getData['pageRow'],
+            'albumRows'  => $_arr_getData['dataRows'],
             'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_albumRows);
 
         $this->assign($_arr_tpl);
 
@@ -80,8 +76,6 @@ class Album extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_attachRows);
 
         $this->assign($_arr_tpl);
 
@@ -108,11 +102,9 @@ class Album extends Ctrl {
 
         $_arr_search['status'] = 'enable';
 
-        $_arr_albumRows   = $this->mdl_album->lists(1000, 0, $_arr_search); //列出
+        $_arr_getData   = $this->mdl_album->lists(array(1000, 'limit'), $_arr_search); //列出
 
-        //print_r($_arr_albumRows);
-
-        return $this->json($_arr_albumRows);
+        return $this->json($_arr_getData['dataRows']);
     }
 
 
@@ -131,32 +123,28 @@ class Album extends Ctrl {
             'key'       => array('str', ''),
         );
 
-        $_arr_search = $this->obj_request->param($_arr_searchParam);
+        $_arr_search    = $this->obj_request->param($_arr_searchParam);
+        $_arr_getData   = $this->mdl_album->lists(12, $_arr_search); //列出
 
-        $_num_perPage       = 12;
-        $_num_albumCount    = $this->mdl_album->count($_arr_search); //统计记录数
-        $_arr_pageRow       = $this->obj_request->pagination($_num_albumCount, $_num_perPage); //取得分页数据
-        $_arr_albumRows     = $this->mdl_album->lists($_num_perPage, $_arr_pageRow['except'], $_arr_search); //列出
-
-        foreach ($_arr_albumRows as $_key=>$_value) {
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             $_arr_attachRow = $this->mdl_attach->read($_value['album_attach_id']);
 
             if ($_arr_attachRow['rcode'] == 'y070102') {
                 if (!isset($_arr_attachRow['thumb_default'])) {
-                    $_arr_albumRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
+                    $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
                 }
             } else {
-                $_arr_albumRows[$_key]['thumb_default'] = '';
+                $_value['thumb_default'] = '';
             }
 
-            $_arr_albumRows[$_key]['album_url'] = $this->mdl_albumIndex->urlProcess($_value);
-            $_arr_albumRows[$_key]['attachRow'] = $_arr_attachRow;
+            $_value['album_url'] = $this->mdl_albumIndex->urlProcess($_value);
+            $_value['attachRow'] = $_arr_attachRow;
         }
 
         $_arr_tplData = array(
-            'pageRow'   => $_arr_pageRow,
             'search'    => $_arr_search,
-            'albumRows' => $_arr_albumRows,
+            'pageRow'   => $_arr_getData['pageRow'],
+            'albumRows' => $_arr_getData['dataRows'],
         );
 
         return $this->json($_arr_tplData);
@@ -195,8 +183,6 @@ class Album extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_albumRows);
 
         $this->assign($_arr_tpl);
 
@@ -238,17 +224,23 @@ class Album extends Ctrl {
                 'album_name'    => '',
                 'album_status'  => $this->mdl_album->arr_status[0],
                 'album_content' => '',
+                'album_tpl'     => '',
             );
         }
 
+        $_arr_tplRows  = File::instance()->dirList(BG_TPL_ALBUM);
+
+        foreach ($_arr_tplRows as $_key=>$_value) {
+            $_arr_tplRows[$_key]['name_s'] = basename($_value['name'], GK_EXT_TPL);
+        }
+
         $_arr_tplData = array(
+            'tplRows'   => $_arr_tplRows,
             'albumRow'  => $_arr_albumRow,
             'token'     => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_albumRows);
 
         $this->assign($_arr_tpl);
 

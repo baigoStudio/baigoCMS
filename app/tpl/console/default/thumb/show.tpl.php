@@ -26,7 +26,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <form name="thumb_regen" id="thumb_regen" action="<?php echo $route_console; ?>attach/regen/">
-                        <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <input type="hidden" name="thumb_id" value="<?php echo $thumbRow['thumb_id']; ?>">
 
                         <div class="form-group">

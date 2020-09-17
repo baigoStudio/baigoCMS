@@ -73,14 +73,12 @@ class Article extends Ctrl {
             $_mdl_article  = Loader::model('Article_Spec_View');
         }
 
-        $_num_articleCount    = $_mdl_article->count($_arr_search);
-        $_arr_pageRow         = $this->obj_request->pagination($_num_articleCount, $_arr_search['perpage']);
-        $_arr_articleRows     = $_mdl_article->lists($_arr_search['perpage'], $_arr_pageRow['except'], $_arr_search);
+        $_arr_getData     = $_mdl_article->lists($_arr_search['perpage'], $_arr_search);
 
         $_arr_return = array(
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows, false),
+            'pageRow'       => $_arr_getData['pageRow'],
+            'articleRows'   => $this->obj_index->articleListsProcess($_arr_getData['dataRows'], false),
         );
 
         $_mix_result    = Plugin::listen('filter_api_article_lists', $_arr_return); //编辑文章时触发

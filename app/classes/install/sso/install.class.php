@@ -63,7 +63,6 @@ class Install extends Sso {
 
     function dbconfig($dbconfig) {
         $dbconfig['prefix']      = 'sso_';
-        $dbconfig['debug']       = false;
         $dbconfig['timestamp']   = GK_NOW;
 
         $_str_crypt = Json::encode($dbconfig);

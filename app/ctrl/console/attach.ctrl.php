@@ -8,7 +8,6 @@ namespace app\ctrl\console;
 
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Config;
 use ginkgo\Func;
 use ginkgo\File;
 use ginkgo\Upload;
@@ -92,18 +91,22 @@ class Attach extends Ctrl {
             $_arr_search['attach_ids'] = explode(',', $_arr_search['ids']);
         }
 
-        $_arr_search['admin_id'] = $_arr_search['admin'];
+        $_arr_adminRow  = array();
 
-        $_num_attachCount  = $this->mdl_attach->count($_arr_search); //统计记录数
-        $_arr_pageRow      = $this->obj_request->pagination($_num_attachCount); //取得分页数据
-        $_arr_attachRows   = $this->mdl_attach->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_search); //列出
+        if ($_arr_search['admin'] > 0) {
+            $_arr_search['admin_id'] = $_arr_search['admin'];
 
-        foreach ($_arr_attachRows as $_key=>$_value) {
+            $_arr_adminRow = $this->mdl_admin->read($_arr_search['admin']);
+        }
+
+        $_arr_getData   = $this->mdl_attach->lists($this->config['var_default']['perpage'], $_arr_search); //列出
+
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
 
-            $_arr_attachRows[$_key]['adminRow'] = $this->mdl_admin->read($_value['attach_admin_id']);
+            $_value['adminRow'] = $this->mdl_admin->read($_value['attach_admin_id']);
         }
 
         $_arr_searchAll = array(
@@ -121,22 +124,21 @@ class Attach extends Ctrl {
         $_arr_attachCount['all']        = $this->mdl_attach->count($_arr_searchAll);
         $_arr_attachCount['recycle']    = $this->mdl_attach->count($_arr_searchRecycle);
         $_arr_attachCount['reserve']    = $this->mdl_attach->count($_arr_searchReserve);
-        $_arr_yearRows                  = $this->mdl_attach->year(100);
+        $_arr_yearRows                  = $this->mdl_attach->year();
         $_arr_extRows                   = $this->mdl_attach->ext();
 
         $_arr_tplData = array(
-            'pageRow'       => $_arr_pageRow,
+            'pageRow'       => $_arr_getData['pageRow'],
+            'attachRows'    => $_arr_getData['dataRows'],
             'search'        => $_arr_search,
             'attachCount'   => $_arr_attachCount,
-            'attachRows'    => $_arr_attachRows,
-            'yearRows'      => $_arr_yearRows, //目录列表
-            'extRows'       => $_arr_extRows, //扩展名列表
+            'yearRows'      => $_arr_yearRows,
+            'extRows'       => $_arr_extRows,
+            'adminRow'      => $_arr_adminRow,
             'token'         => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_attachRows);
 
         $this->assign($_arr_tpl);
 
@@ -167,7 +169,7 @@ class Attach extends Ctrl {
             $_arr_articleRow = $this->mdl_article->read($_num_articleId);
         }
 
-        $_arr_yearRows  = $this->mdl_attach->year(100);
+        $_arr_yearRows  = $this->mdl_attach->year();
         $_arr_extRows   = $this->mdl_attach->ext();
 
         foreach ($this->mdl_thumb->arr_type as $_key=>$_value) {
@@ -183,8 +185,6 @@ class Attach extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_attachRows);
 
         $this->assign($_arr_tpl);
 
@@ -213,7 +213,7 @@ class Attach extends Ctrl {
         );
         $_arr_adminRow      = array();
         $_arr_albumRows     = array();
-        $_arr_attachRows    = array();
+        $_arr_getData       = array();
 
         if ($_num_attachId > 0) {
             if (!isset($this->groupAllow['attach']['edit']) && !$this->isSuper) { //判断权限
@@ -250,7 +250,7 @@ class Attach extends Ctrl {
             $_arr_searchAlbum = array(
                 'attach_id'    => $_arr_attachRow['attach_id'],
             );
-            $_arr_albumRows = $this->mdl_albumView->lists(1000, 0, $_arr_searchAlbum);
+            $_arr_albumRows = $this->mdl_albumView->lists(array(1000, 'limit'), $_arr_searchAlbum);
         } else {
             if (!isset($this->groupAllow['attach']['add']) && !$this->isSuper) { //判断权限
                 return $this->error('You do not have permission', 'x070302');
@@ -277,13 +277,11 @@ class Attach extends Ctrl {
 
                 $_mdl_attachAlbumView  = Loader::model('Attach_Album_View');
 
-                $_num_attachCount   = $_mdl_attachAlbumView->count($_arr_searchBelong); //统计记录数
-                $_arr_pageRow       = $this->obj_request->pagination($_num_attachCount); //取得分页数据
-                $_arr_attachRows    = $_mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_pageRow['except'], $_arr_searchBelong); //列出
+                $_arr_getData    = $_mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
 
-                foreach ($_arr_attachRows as $_key=>$_value) {
+                foreach ($_arr_getData as $_key=>&$_value) {
                     if (!isset($_value['thumb_default'])) {
-                        $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                        $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
                     }
                 }
             }
@@ -292,7 +290,7 @@ class Attach extends Ctrl {
         //print_r($_arr_albumIds);
 
         $_arr_tplData = array(
-            'attachRows'    => $_arr_attachRows,
+            'attachRows'    => $_arr_getData,
             'albumRows'     => $_arr_albumRows,
             'albumRow'      => $_arr_albumRow,
             'attachRow'     => $_arr_attachRow,
@@ -300,8 +298,6 @@ class Attach extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_attachRows);
 
         $this->assign($_arr_tpl);
 
@@ -360,7 +356,7 @@ class Attach extends Ctrl {
         $_arr_searchAlbum = array(
             'attach_id'    => $_arr_attachRow['attach_id'],
         );
-        $_arr_albumRows = $this->mdl_albumView->lists(1000, 0, $_arr_searchAlbum);
+        $_arr_albumRows = $this->mdl_albumView->lists(array(1000, 'limit'), $_arr_searchAlbum);
 
         $_arr_tplData = array(
             'adminRow'  => $_arr_adminRow,
@@ -370,8 +366,6 @@ class Attach extends Ctrl {
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        //print_r($_arr_attachRows);
 
         $this->assign($_arr_tpl);
 
@@ -411,21 +405,18 @@ class Attach extends Ctrl {
 
         $_arr_search['box'] = 'normal';
 
-        $_num_perPage      = 12;
-        $_num_attachCount  = $this->mdl_attach->count($_arr_search); //统计记录数
-        $_arr_pageRow      = $this->obj_request->pagination($_num_attachCount, $_num_perPage); //取得分页数据
-        $_arr_attachRows   = $this->mdl_attach->lists($_num_perPage, $_arr_pageRow['except'], $_arr_search); //列出
+        $_arr_getData   = $this->mdl_attach->lists(12, $_arr_search); //列出
 
-        foreach ($_arr_attachRows as $_key=>$_value) {
+        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             if (!isset($_value['thumb_default'])) {
-                $_arr_attachRows[$_key]['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
+                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
             }
         }
 
         $_arr_tplData = array(
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
-            'attachRows'    => $_arr_attachRows,
+            'pageRow'       => $_arr_getData['pageRow'],
+            'attachRows'    => $_arr_getData['dataRows'],
         );
 
         return $this->json($_arr_tplData);
@@ -615,22 +606,15 @@ class Attach extends Ctrl {
             'max_id'    => $_arr_inputRegen['max_id'],
         );
 
-        $_arr_order = array(
-            array('attach_id', 'ASC'),
-        );
+        $_arr_order = array('attach_id', 'ASC');
 
-        $_num_perPage     = 10;
-        $_num_attachCount = $this->mdl_attach->count($_arr_search);
-        $_arr_pageRow     = $this->obj_request->pagination($_num_attachCount, $_num_perPage, 'post');
-        $_arr_attachRows  = $this->mdl_attach->lists($_num_perPage, $_arr_pageRow['except'], $_arr_search, $_arr_order);
+        $_arr_getData   = $this->mdl_attach->lists(array(10, 'post'), $_arr_search, $_arr_order);
 
-        //$_obj_finfo       = new finfo();
+        $_str_status    = 'complete';
+        $_str_msg       = 'Complete';
 
-        $_str_status = 'complete';
-        $_str_msg    = 'Complete';
-
-        if ($_arr_pageRow['page'] < $_arr_pageRow['total']) {
-            foreach ($_arr_attachRows as $_key=>$_value) {
+        if ($_arr_getData['pageRow']['page'] < $_arr_getData['pageRow']['total']) {
+            foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
                 if (Func::isFile($_value['attach_path'])) {
                     $this->uploadProcess($_value);
                 } else {
@@ -641,8 +625,8 @@ class Attach extends Ctrl {
             }
             $_str_status = 'loading';
             $_str_msg    = 'Submitting';
-        } else if ($_arr_pageRow['page'] == $_arr_pageRow['total']) {
-            foreach ($_arr_attachRows as $_key=>$_value) {
+        } else if ($_arr_getData['pageRow']['page'] == $_arr_getData['pageRow']['total']) {
+            foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
                 if (Func::isFile($_value['attach_path'])) {
                     $this->uploadProcess($_value);
                 } else {
@@ -653,9 +637,9 @@ class Attach extends Ctrl {
         }
 
         $_arr_return = array(
-            'page'      => $_arr_pageRow['page'],
             'msg'       => $this->obj_lang->get($_str_msg),
-            'count'     => $_arr_pageRow['total'],
+            'page'      => $_arr_getData['pageRow']['page'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'status'    => $_str_status,
             'min_id'    => $_arr_inputRegen['min_id'],
             'max_id'    => $_arr_inputRegen['max_id'],
@@ -773,18 +757,15 @@ class Attach extends Ctrl {
             'max_id'    => $_num_maxId,
         );
 
-        $_num_perPage     = 10;
-        $_num_attachCount = $this->mdl_attach->count($_arr_searchCount);
-        $_arr_pageRow     = $this->obj_request->pagination($_num_attachCount, $_num_perPage, 'post');
-        $_arr_attachRows  = $this->mdl_attach->lists($_num_perPage, 0, $_arr_searchList);
+        $_arr_getData  = $this->mdl_attach->lists(array(10, 'post'), $_arr_searchList);
 
-        if (Func::isEmpty($_arr_attachRows)) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
             $_str_status    = 'complete';
             $_str_msg       = 'Complete';
         } else {
-            foreach ($_arr_attachRows as $_key=>$_value) {
+            foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
                 $_arr_attachRow = $this->mdl_attach->clearChk($_value);
-                //print_r($_arr_attachRow);
+
                 if ($_arr_attachRow['rcode'] == 'x070406') {
                     $this->mdl_attach->inputBox['act']           = 'recycle';
                     $this->mdl_attach->inputBox['attach_ids']    = array($_value['attach_id']);
@@ -797,7 +778,7 @@ class Attach extends Ctrl {
         }
 
         $_arr_return = array(
-            'count'     => $_arr_pageRow['total'],
+            'count'     => $_arr_getData['pageRow']['total'],
             'msg'       => $this->obj_lang->get($_str_msg),
             'status'    => $_str_status,
             'max_id'    => $_num_maxId,
@@ -867,14 +848,14 @@ class Attach extends Ctrl {
             'box' => 'recycle',
         );
 
-        $_arr_attachIds   = array();
-        $_num_perPage     = 10;
-        $_num_attachCount = $this->mdl_attach->count($_arr_search);
-        $_arr_pageRow     = $this->obj_request->pagination($_num_attachCount, $_num_perPage, 'post');
-        $_arr_attachRows  = $this->mdl_attach->lists(1000, 0, $_arr_search);
+        $_arr_attachIds = array();
+        $_arr_getData   = $this->mdl_attach->lists(array(10, 'post'), $_arr_search);
 
-        if ($_num_attachCount > 0) {
-            foreach ($_arr_attachRows as $_key=>$_value) {
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
+            $_str_status     = 'complete';
+            $_str_msg        = 'Complete';
+        } else {
+            foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
                 $_arr_attachIds[] = $_value['attach_id'];
             }
 
@@ -891,14 +872,11 @@ class Attach extends Ctrl {
 
             $_str_status     = 'loading';
             $_str_msg        = 'Submitting';
-        } else {
-            $_str_status     = 'complete';
-            $_str_msg        = 'Complete';
         }
 
         $_arr_return = array(
             'msg'    => $this->obj_lang->get($_str_msg),
-            'count'  => $_arr_pageRow['total'],
+            'count'  => $_arr_getData['pageRow']['total'],
             'status' => $_str_status,
         );
 
@@ -971,9 +949,9 @@ class Attach extends Ctrl {
 
 
     private function deleteProcess($search) {
-        $_obj_file         = File::instance();
+        $_obj_file     = File::instance();
 
-        $_arr_attachRows  = $this->mdl_attach->lists(1000, 0, $search);
+        $_arr_attachRows  = $this->mdl_attach->lists(array(1000, 'limit'), $search);
 
         foreach ($_arr_attachRows as $_key=>$_value) {
             if (isset($_value['thumbRows']) && !Func::isEmpty($_value['thumbRows'])) {
@@ -1019,8 +997,8 @@ class Attach extends Ctrl {
         $_arr_mimes         = array();
         $_arr_allowMimes    = array();
         $_arr_allowExts     = array();
-        $_arr_mimeRows      = $_mdl_mime->lists(100);
-        $_arr_thumbRows     = $this->mdl_thumb->lists(1000);
+        $_arr_mimeRows      = $_mdl_mime->lists(array(1000, 'limit'));
+        $_arr_thumbRows     = $this->mdl_thumb->lists(array(1000, 'limit'));
 
         foreach ($_arr_mimeRows as $_key=>$_value) {
             $_arr_allowExts[] = strtolower($_value['mime_ext']);

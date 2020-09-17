@@ -19,6 +19,8 @@ class Gsite_Step extends Gsite {
     protected $table = 'gsite';
 
     function m_init() { //构造函数
+        parent::m_init();
+
         $this->configContent = Config::get('gsite_step_content', 'console');
     }
 

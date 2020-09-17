@@ -67,6 +67,13 @@ class Index {
     function cateRead($num_cateId) {
         $_arr_cateRow = $this->mdl_cate->cache($num_cateId);
 
+        if (!isset($_arr_cateRow['rcode'])) {
+            return array(
+                'msg'   => 'Missing rcode',
+                'rcode' => 'x250102',
+            );
+        }
+
         if ($_arr_cateRow['rcode'] != 'y250102') {
             return $_arr_cateRow;
         }
@@ -95,10 +102,10 @@ class Index {
             $_arr_searchCate['parent_id'] = $search['parent_id'];
         }
 
-        $_arr_cateRows = $this->mdl_cate->lists($search['top'], $search['except'], $_arr_searchCate);
+        $_arr_cateRows = $this->mdl_cate->lists(array($search['top'], $search['except'], 'limit'), $_arr_searchCate);
 
-        foreach ($_arr_cateRows as $_key=>$_value) {
-            $_arr_cateRows[$_key] = $this->cateRead($_value['cate_id']);
+        foreach ($_arr_cateRows as $_key=>&$_value) {
+            $_value = $this->cateRead($_value['cate_id']);
         }
 
         return $_arr_cateRows;
@@ -112,10 +119,10 @@ class Index {
         );
 
         $_mdl_tagView   = Loader::model('Tag_View');
-        $_arr_tagRows   = $_mdl_tagView->lists(10, 0, $_arr_searchTag);
+        $_arr_tagRows   = $_mdl_tagView->lists(array(10, 'limit'), $_arr_searchTag);
 
-        foreach ($_arr_tagRows as $_key=>$_value) {
-            $_arr_tagRows[$_key]['tag_url'] = $_mdl_tagView->urlProcess($_value);
+        foreach ($_arr_tagRows as $_key=>&$_value) {
+            $_value['tag_url'] = $_mdl_tagView->urlProcess($_value);
         }
 
         return $_arr_tagRows;
@@ -145,16 +152,12 @@ class Index {
     function assLists($arr_tagIds) {
         $_arr_configVisit  = Config::get('visit', 'var_extra');
 
-        if (!isset($_arr_configVisit['count_associate'])) {
-            $_arr_configVisit['count_associate'] = 10;
-        }
-
         $_mdl_articleTagView   = Loader::model('Article_Tag_View', '', 'index');
 
         $_arr_search = array(
             'tag_ids' => $arr_tagIds,
         );
-        $_arr_assRows = $_mdl_articleTagView->lists($_arr_configVisit['count_associate'], 0, $_arr_search);
+        $_arr_assRows = $_mdl_articleTagView->lists(array($_arr_configVisit['count_associate'], 'limit'), $_arr_search);
 
         return $this->articleListsProcess($_arr_assRows);
     }
@@ -262,6 +265,13 @@ class Index {
         $_mdl_call      = Loader::model('Call', '', 'index');
         $_arr_callRow   = $_mdl_call->cache($num_callId);
 
+        if (!isset($_arr_cateRow['rcode'])) {
+            return array(
+                'msg'   => 'Missing rcode',
+                'rcode' => 'y170102',
+            );
+        }
+
         if ($_arr_callRow['rcode'] != 'y170102') {
             return $_arr_callRow;
         }
@@ -311,10 +321,6 @@ class Index {
         );
 
         $_arr_configBase  = Config::get('base', 'var_extra');
-
-        if (!isset($_arr_configBase['site_tpl'])) {
-            $_arr_configBase['site_tpl'] = 'default';
-        }
 
         $_str_pathTpl = BG_TPL_INDEX . $_arr_configBase['site_tpl'] . DS;
 

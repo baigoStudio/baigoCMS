@@ -43,6 +43,7 @@ class Tag extends Model {
                 'tag_id',
                 'tag_name',
                 'tag_status',
+                'tag_tpl',
                 'tag_article_count',
             );
         }
@@ -74,7 +75,7 @@ class Tag extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_tagSelect = array(
             'tag_id',
             'tag_name',
@@ -82,17 +83,17 @@ class Tag extends Model {
             'tag_status',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
-
         if (isset($arr_search['type']) && $arr_search['type'] == 'tag_rank') {
             $_arr_order = array('tag_article_count', 'DESC');
         } else {
             $_arr_order = array('tag_id', 'DESC');
         }
 
-        $_arr_tagRows = $this->where($_arr_where)->order($_arr_order)->limit($num_except, $num_no)->select($_arr_tagSelect);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order($_arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_tagSelect);
 
-        return $_arr_tagRows;
+        return $_arr_getData;
     }
 
 

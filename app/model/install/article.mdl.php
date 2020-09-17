@@ -196,6 +196,12 @@ class Article extends Model {
                 'default'   => 0,
                 'comment'   => '置顶',
             ),
+            'article_tpl' => array(
+                'type'      => 'varchar(1000)',
+                'not_null'  => true,
+                'default'   => '',
+                'comment'   => '模板',
+            ),
         );
     }
 

@@ -49,6 +49,12 @@ class Tag extends Model {
                 'default'   => 0,
                 'comment'   => '文章数',
             ),
+            'tag_tpl' => array(
+                'type'      => 'varchar(1000)',
+                'not_null'  => true,
+                'default'   => '',
+                'comment'   => '模板',
+            ),
         );
     }
 

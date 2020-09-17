@@ -6,7 +6,7 @@
 
 namespace app\model\console;
 
-use ginkgo\Model;
+use app\classes\Model;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -23,18 +23,16 @@ class Album_View extends Model {
      * @param int $num_parentId (default: 0)
      * @return void
      */
-    function lists($num_no, $num_except = 0, $arr_search = array()) {
+    function lists($pagination = 0, $arr_search = array()) {
         $_arr_albumSelect = array(
             'album_id',
             'album_name',
             'album_status',
         );
 
-        $_arr_where = $this->queryProcess($arr_search);
-
-        $_arr_group = array('album_id');
-
-        $_arr_albumRows = $this->where($_arr_where)->order('album_id', 'DESC')->group($_arr_group)->limit($num_except, $num_no)->select($_arr_albumSelect);
+        $_arr_where         = $this->queryProcess($arr_search);
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_albumRows     = $this->where($_arr_where)->order('album_id', 'DESC')->group('album_id')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_albumSelect);
 
         return $_arr_albumRows;
     }

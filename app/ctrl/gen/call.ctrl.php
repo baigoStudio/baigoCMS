@@ -9,7 +9,6 @@ namespace app\ctrl\gen;
 use app\classes\gen\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
-use ginkgo\Config;
 use ginkgo\File;
 use ginkgo\Html;
 use ginkgo\Ftp;
@@ -53,8 +52,7 @@ class Call extends Ctrl {
 
         $_arr_search['status'] ='enable';
 
-        $_num_callCount  = $this->mdl_call->count($_arr_search);
-        $_arr_pageRow    = $this->obj_request->pagination($_num_callCount, $this->configConsole['count_gen']);
+        $_arr_pageRow    = $this->mdl_call->pagination($_arr_search, $this->configConsole['count_gen']);
 
         $_str_jump       = $this->url['route_gen'];
 
@@ -67,7 +65,7 @@ class Call extends Ctrl {
         } else {
             $_str_jump .= 'call/index/page/' . ($_arr_search['page'] + 1) . '/';
 
-            $_arr_callRows   = $this->mdl_call->lists($this->configConsole['count_gen'], $_arr_pageRow['except'], $_arr_search);
+            $_arr_callRows   = $this->mdl_call->lists(array($this->configConsole['count_gen'], 'limit'), $_arr_search);
         }
 
         if ($_arr_search['overall'] == 'overall') {
@@ -244,7 +242,7 @@ class Call extends Ctrl {
             'period' => $_arr_callRow['call_period_time'],
         );
 
-        $_arr_specRows = $this->mdl_spec->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchSpec);
+        $_arr_specRows = $this->mdl_spec->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchSpec);
 
         $_arr_return = array(
             'specRows'  => $_arr_specRows,
@@ -271,7 +269,7 @@ class Call extends Ctrl {
             'type'      => $_arr_callRow['call_type'],
         );
 
-        $_arr_tagRows = $this->mdl_tag->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchTag);
+        $_arr_tagRows = $this->mdl_tag->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchTag);
 
         $_arr_return = array(
             'tagRows'  => $_arr_tagRows,
@@ -292,7 +290,7 @@ class Call extends Ctrl {
             'type'      => 'friend',
         );
 
-        $_arr_linkRows = $this->mdl_link->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_searchLink);
+        $_arr_linkRows = $this->mdl_link->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchLink);
 
         $_arr_return = array(
             'linkRows'  => $_arr_linkRows,
@@ -340,7 +338,7 @@ class Call extends Ctrl {
 
         $_mdl_articleSpecView   = Loader::model('Article_Spec_View');
 
-        $_arr_articleRows = $_mdl_articleSpecView->lists($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], $_arr_search, $_arr_order, $_arr_group);
+        $_arr_articleRows = $_mdl_articleSpecView->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_search, $_arr_order, $_arr_group);
 
         $_arr_return = array(
             'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
@@ -385,11 +383,9 @@ class Call extends Ctrl {
 
         $_arr_tplData['callRow'] = $_arr_callRow;
 
-        $_str_pathTpl = BG_TPL_CALL;
+        $_str_tpl = BG_TPL_CALL . $_arr_callRow['call_tpl'] . GK_EXT_TPL;
 
-        $_str_tpl = $_arr_callRow['call_tpl'];
-
-        $_mix_outputResult = $this->outputProcess($_arr_tplData, $_arr_callRow['call_path'], $_str_pathTpl, DS . $_str_tpl);
+        $_mix_outputResult = $this->outputProcess($_arr_tplData, $_arr_callRow['call_path'], BG_TPL_CALL, $_str_tpl);
 
         if (is_array($_mix_outputResult) && isset($_mix_outputResult['rcode'])) {
             return $_mix_outputResult;
@@ -414,7 +410,7 @@ class Call extends Ctrl {
     private function ftpProcess($arr_callRow) {
         $_mdl_cate    = Loader::model('Cate', '', 'console');
 
-        $_arr_ftpRows = $_mdl_cate->lists(1000);
+        $_arr_ftpRows = $_mdl_cate->lists(array(1000, 'limit'));
 
         foreach ($_arr_ftpRows as $_key=>$_value) {
             $_config_ftp = array(

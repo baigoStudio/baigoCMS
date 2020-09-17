@@ -7,7 +7,6 @@
 namespace app\classes\console;
 
 use ginkgo\Loader;
-use ginkgo\Config;
 use ginkgo\Crypt;
 use ginkgo\Sign;
 use ginkgo\Json;

@@ -7,7 +7,6 @@
 namespace app\model\api;
 
 use app\model\index\Article as Article_Index;
-use ginkgo\Config;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');

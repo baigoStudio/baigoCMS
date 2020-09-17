@@ -62,7 +62,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php echo $albumRow['album_content']; ?>
                     </div>
 
-                    <?php if (isset($attachRows) && !empty($attachRows)) { ?>
+                    <?php if (!empty($attachRows)) { ?>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -108,7 +108,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 <div class="card-body">
                     <?php if ($attachRow['attach_id'] > 0) { ?>
                         <form name="attach_form" id="attach_form" action="<?php echo $route_console; ?>attach/submit/">
-                            <input type="hidden" name="__token__" value="<?php echo $token; ?>">
+                            <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                             <input type="hidden" name="attach_id" id="attach_id" value="<?php echo $attachRow['attach_id']; ?>">
 
                             <div class="form-group">

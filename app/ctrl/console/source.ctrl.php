@@ -38,12 +38,9 @@ class Source extends Ctrl {
 
         $_arr_search = $this->obj_request->param($_arr_searchParam);
 
-        $_num_sourceCount = $this->mdl_source->count($_arr_search); //统计记录数
-        $_arr_pageRow     = $this->obj_request->pagination($_num_sourceCount); //取得分页数据
-        $_arr_sourceRows  = $this->mdl_source->lists(1000, 0, $_arr_search); //列出
+        $_arr_sourceRows  = $this->mdl_source->lists(array(1000, 'limit'), $_arr_search); //列出
 
         $_arr_tplData = array(
-            'pageRow'       => $_arr_pageRow,
             'search'        => $_arr_search,
             'sourceRows'    => $_arr_sourceRows,
             'token'         => $this->obj_request->token(),

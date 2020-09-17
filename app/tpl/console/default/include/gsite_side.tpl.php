@@ -6,19 +6,19 @@
                                 <span class="fas fa-pen fa-fw"></span>
                                 <?php echo $lang->get('Edit'); ?>
                             </a>
-                            <a href="<?php echo $route_console; ?>gsite_step/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'lists') { ?> active<?php } ?>">
+                            <a href="<?php echo $route_console; ?>gsite-step/lists/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'lists') { ?> active<?php } ?>">
                                 <span class="fas fa-list fa-fw"></span>
                                 <?php echo $lang->get('List settings'); ?>
                             </a>
-                            <a href="<?php echo $route_console; ?>gsite_step/content/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'content') { ?> active<?php } ?>">
+                            <a href="<?php echo $route_console; ?>gsite-step/content/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'content') { ?> active<?php } ?>">
                                 <span class="fas fa-file fa-fw"></span>
                                 <?php echo $lang->get('Content settings'); ?>
                             </a>
-                            <a href="<?php echo $route_console; ?>gsite_step/page-lists/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'page_lists') { ?> active<?php } ?>">
+                            <a href="<?php echo $route_console; ?>gsite-step/page-lists/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'page-lists') { ?> active<?php } ?>">
                                 <span class="fas fa-ellipsis-h fa-fw"></span>
                                 <?php echo $lang->get('Paging list settings'); ?>
                             </a>
-                            <a href="<?php echo $route_console; ?>gsite_step/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'page_content') { ?> active<?php } ?>">
+                            <a href="<?php echo $route_console; ?>gsite-step/page-content/id/<?php echo $gsiteRow['gsite_id']; ?>/" class="list-group-item list-group-item-action<?php if ($route_orig['act'] == 'page-content') { ?> active<?php } ?>">
                                 <span class="fas fa-scroll fa-fw"></span>
                                 <?php echo $lang->get('Paging content settings'); ?>
                             </a>
