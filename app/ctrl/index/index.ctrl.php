@@ -28,8 +28,6 @@ class Index extends Ctrl {
 
         $this->assign($_arr_tpl);
 
-        //$this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
-
         return $this->fetch();
     }
 

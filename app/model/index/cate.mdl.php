@@ -23,12 +23,6 @@ class Cate extends Cate_Base {
         parent::m_init();
 
         $this->obj_cache  = Cache::instance();
-
-        $_str_visitType   = Config::get('visit_type', 'var_extra.visit');
-
-        if (isset($this->obj_request->route['mod']) && $this->obj_request->route['mod'] == 'index' && $_str_visitType != 'default') {
-            Config::set('route_type', 'noBaseFile', 'route');
-        }
     }
 
 
@@ -81,7 +75,7 @@ class Cate extends Cate_Base {
             if (isset($arr_cateRow['cate_breadcrumb'][0]['cate_prefix']) && !Func::isEmpty($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'])) {
                 $_str_urlPrefix = Func::fixDs($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'], '/');
             } else {
-                $_str_urlPrefix = $this->obj_request->baseUrl();
+                $_str_urlPrefix = $this->obj_request->baseUrl(false, $this->routeType);
             }
 
             if (!isset($arr_cateRow['cate_id'])) {

@@ -63,7 +63,7 @@ abstract class Ctrl extends Gk_Ctrl {
             'param'         => $this->param,
         );
 
-        $this->generalBase = $_arr_data;
+        //$this->generalBase = $_arr_data;
         $this->generalData = array_replace_recursive($this->generalData, $_arr_data);
     }
 

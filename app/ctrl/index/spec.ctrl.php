@@ -21,8 +21,6 @@ class Spec extends Ctrl {
 
         $this->mdl_spec             = Loader::model('Spec');
         $this->mdl_articleSpecView  = Loader::model('Article_Spec_View');
-
-        //$this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
     }
 
 

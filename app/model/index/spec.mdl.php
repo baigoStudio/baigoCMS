@@ -8,6 +8,7 @@ namespace app\model\index;
 
 use app\model\Spec as Spec_Base;
 use ginkgo\Func;
+use ginkgo\Config;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -18,7 +19,7 @@ class Spec extends Spec_Base {
     function m_init() { //构造函数
         parent::m_init();
 
-        $this->urlPrefix        = $this->obj_request->baseUrl() . $this->routeSpec . '/';
+        $this->urlPrefix        = $this->obj_request->baseUrl(false, $this->routeType) . $this->routeSpec . '/';
         $this->urlPrefixMore    = $this->urlPrefix;
     }
 

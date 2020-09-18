@@ -12,6 +12,7 @@ use ginkgo\Config;
 use ginkgo\File;
 use ginkgo\Func;
 use ginkgo\Ftp;
+use ginkgo\View;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -42,21 +43,24 @@ abstract class Ctrl extends Ctrl_Console {
     protected function outputProcess($arr_tplData, $str_pathFile, $str_tplPath, $str_tplName) {
         $_mix_init = $this->indexInit();
 
+        //print_r($this->url);
+
         if ($_mix_init !== true) {
             return $_mix_init;
         }
 
         $arr_tplData['path_tpl_index'] = $str_tplPath;
 
-        $_arr_tpl = array_replace_recursive($this->generalBase, $arr_tplData);
+        $_arr_tpl = array_replace_recursive($this->generalData, $arr_tplData);
 
-        //print_r($_arr_tpl);
+        $_obj_view  = View::instance();
+        $_obj_view->setPath($str_tplPath);
 
-        $this->obj_view->assign($_arr_tpl);
+        $_obj_view->assign($_arr_tpl);
 
         $_str_outPut = '';
 
-        if (!$this->obj_view->has($str_tplName)) {
+        if (!$_obj_view->has($str_tplName)) {
             return array(
                 'rcode' => 'x030410',
                 'msg'   => 'Template not found',
@@ -65,7 +69,7 @@ abstract class Ctrl extends Ctrl_Console {
 
         //print_r($str_tplPath);
 
-        $_str_outPut = $this->obj_view->fetch($str_tplName);
+        $_str_outPut = $_obj_view->fetch($str_tplName);
 
         return $this->obj_file->fileWrite($str_pathFile, $_str_outPut);
     }

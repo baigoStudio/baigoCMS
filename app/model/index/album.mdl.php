@@ -7,6 +7,7 @@
 namespace app\model\index;
 
 use app\model\Album as Album_Base;
+use ginkgo\Config;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -17,7 +18,7 @@ class Album extends Album_Base {
     function m_init() { //构造函数
         parent::m_init();
 
-        $this->urlPrefix        = $this->obj_request->baseUrl() . $this->routeAlbum . '/';
+        $this->urlPrefix        = $this->obj_request->baseUrl(false, $this->routeType) . $this->routeAlbum . '/';
         $this->urlPrefixMore    = $this->urlPrefix;
     }
 

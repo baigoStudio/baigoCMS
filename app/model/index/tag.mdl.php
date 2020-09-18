@@ -16,9 +16,9 @@ defined('IN_GINKGO') or exit('Access Denied');
 class Tag extends Tag_Base {
 
     function urlProcess($arr_tagRow) {
-        $_configRoute  = Config::get('route', 'index');
+        $_configRoute   = Config::get('route', 'index');
 
-        $_str_urlPrefix = $this->obj_request->baseUrl() . $_configRoute['tag'] . '/';
+        $_str_urlPrefix = $this->obj_request->baseUrl(false, $this->routeType) . $_configRoute['tag'] . '/';
 
         /*print_r($_str_urlPrefix);
         print_r('<br>');*/

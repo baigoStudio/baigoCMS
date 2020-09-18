@@ -18,7 +18,17 @@ abstract class Model extends Gk_Model {
     protected $configBase;
 
     protected function m_init() {
-        $this->configBase = Config::get('base', 'var_extra');
+        $_str_visitType = Config::get('visit_type', 'var_extra.visit');
+
+        if ($_str_visitType == 'default') {
+            $_str_routeType = '';
+        } else {
+            $_str_routeType = 'noBaseFile';
+        }
+
+        $this->configBase   = Config::get('base', 'var_extra');
+        $this->visitType    = $_str_visitType;
+        $this->routeType    = $_str_routeType;
     }
 
 

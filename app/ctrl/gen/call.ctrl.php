@@ -65,7 +65,7 @@ class Call extends Ctrl {
         } else {
             $_str_jump .= 'call/index/page/' . ($_arr_search['page'] + 1) . '/';
 
-            $_arr_callRows   = $this->mdl_call->lists(array($this->configConsole['count_gen'], 'limit'), $_arr_search);
+            $_arr_callRows   = $this->mdl_call->lists(array($this->configConsole['count_gen'], $_arr_pageRow['offset'], 'limit'), $_arr_search);
         }
 
         if ($_arr_search['overall'] == 'overall') {

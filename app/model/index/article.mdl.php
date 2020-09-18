@@ -36,9 +36,7 @@ class Article extends Article_Base {
 
         $this->configRoute  = Config::get('route', 'index');
 
-        $_str_visitType   = Config::get('visit_type', 'var_extra.visit');
-
-        if ($_str_visitType == 'static') {
+        if ($this->visitType == 'static') {
             $this->whereAnd_3 = array(
                 array('article_is_gen', '=', 'yes', '', '', 'OR'),
                 array('LENGTH(`article_link`)', '>', 0, 'article_link_length', '', 'OR'),
@@ -111,7 +109,7 @@ class Article extends Article_Base {
             if (isset($arr_cateRow['cate_breadcrumb'][0]['cate_prefix']) && !Func::isEmpty($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'])) {
                 $_str_urlPrefix = Func::fixDs($arr_cateRow['cate_breadcrumb'][0]['cate_prefix'], '/');
             } else {
-                $_str_urlPrefix = $this->obj_request->baseUrl();
+                $_str_urlPrefix = $this->obj_request->baseUrl(false, $this->routeType);
             }
 
             $_str_articleUrl = $_str_urlPrefix . $this->configRoute['article'] . '/' . $arr_articleRow['article_url_name'];
