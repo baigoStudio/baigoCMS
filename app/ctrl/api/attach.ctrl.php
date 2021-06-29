@@ -43,8 +43,7 @@ class Attach extends Ctrl {
             'attachRows'    => $_arr_getData['dataRows'],
         );
 
-        $_mix_result    = Plugin::listen('filter_api_attach_lists', $_arr_return); //编辑文章时触发
-        $_arr_return    = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return    = Plugin::listen('filter_api_attach_lists', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }
@@ -75,8 +74,7 @@ class Attach extends Ctrl {
             'attachRow' => $_arr_attachRow,
         );
 
-        $_mix_result   = Plugin::listen('filter_api_attach_read', $_arr_return); //编辑文章时触发
-        $_arr_return   = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return   = Plugin::listen('filter_api_attach_read', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }

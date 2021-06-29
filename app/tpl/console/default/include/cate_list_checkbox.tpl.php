@@ -6,7 +6,7 @@
                         <?php if ($is_edit) { ?>
                             <div class="form-check">
                                 <input type="checkbox" value="<?php echo $_value['cate_id']; ?>" name="<?php echo $form_name; ?>_cate_ids[]" id="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>" <?php if (in_array($_value['cate_id'], $cate_ids)) { ?> checked<?php } ?> data-parent="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_parent_id']; ?>" class="form-check-input">
-                                <label for="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>"  class="form-check-label">
+                                <label for="<?php echo $form_name; ?>_cate_ids_<?php echo $_value['cate_id']; ?>" class="form-check-label">
                                     <?php echo $_value['cate_name']; ?>
                                 </label>
                             </div>

@@ -35,7 +35,7 @@ include($cfg['pathInclude'] . 'index_head' . GK_EXT_TPL); ?>
                 </button>
             </span>
             <span class="input-group-append">
-                <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                     <span class="sr-only">Dropdown</span>
                 </button>
             </span>

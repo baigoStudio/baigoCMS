@@ -331,7 +331,7 @@ class Admin extends Ctrl {
             }
 
             if (!Func::isEmpty($_arr_userSubmit)) {
-                $_arr_editResult = $this->obj_user->edit($_arr_inputSubmit['admin_id'], 'user_id', $_arr_userSubmit);
+                $_arr_editResult = $this->obj_user->edit($_arr_inputSubmit['admin_id'], $_arr_userSubmit);
             }
         } else {
             if (!isset($this->groupAllow['admin']['add']) && !$this->isSuper) {
@@ -436,18 +436,18 @@ class Admin extends Ctrl {
         $_str_adminName = $this->obj_request->get('admin_name');
 
         if (!Func::isEmpty($_str_adminName)) {
-            $_arr_userRow   = $this->obj_user->read($_str_adminName, 'user_name');
+            $_arr_userRow   = $this->obj_reg->chkname($_str_adminName);
 
-            if ($_arr_userRow['rcode'] == 'y010102') {
+            if ($_arr_userRow['rcode'] == 'x010404') {
                 $_arr_adminRow = $this->mdl_admin->check($_arr_userRow['user_id']);
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
-                        'rcode' => 'x020404',
+                        'rcode'     => 'x020404',
                         'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
-                        'rcode' => 'x010404',
+                        'rcode'     => $_arr_userRow['rcode'],
                         'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }
@@ -472,18 +472,18 @@ class Admin extends Ctrl {
         $_str_adminMail = $this->obj_request->get('admin_mail');
 
         if (!Func::isEmpty($_str_adminMail)) {
-            $_arr_userRow   = $this->obj_user->read($_str_adminMail, 'user_mail');
+            $_arr_userRow   = $this->obj_reg->chkmail($_str_adminMail);
 
-            if ($_arr_userRow['rcode'] == 'y010102') {
+            if ($_arr_userRow['rcode'] == 'x010404') {
                 $_arr_adminRow = $this->mdl_admin->check($_arr_userRow['user_id']);
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
-                        'rcode' => 'x020404',
+                        'rcode'     => 'x020404',
                         'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
-                        'rcode' => 'x010404',
+                        'rcode'     => $_arr_userRow['rcode'],
                         'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }

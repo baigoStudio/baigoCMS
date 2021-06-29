@@ -2,7 +2,6 @@
     'title'          => $lang->get('Gathering', 'console.common') . ' &raquo; ' . $lang->get('Gathering site', 'console.common'),
     'menu_active'    => 'gather',
     'sub_active'     => 'gsite',
-    'help'           => 'gsite_list#form',
     'baigoSubmit'    => 'true',
     'pathInclude'    => $path_tpl . 'include' . DS,
 );

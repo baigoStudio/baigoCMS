@@ -139,6 +139,6 @@ return array(
     '{:attr} must be integer'           => '{:attr} 必须是整数',
     'Timestamp out of range'            => '时间戳超出允许范围',
 
-    'x070405'   => '尚未创建栏目，<a href="{:route_console}cate/form/" target="_top">点击立刻设置</a>',
+    'x250401'   => '尚未创建栏目，<a href="{:route_console}cate/form/" target="_top">点击立刻设置</a>',
     'x070405'   => '尚未设置允许上传的文件类型，<a href="{:route_console}mime/form/" target="_top">点击立刻设置</a>',
 );

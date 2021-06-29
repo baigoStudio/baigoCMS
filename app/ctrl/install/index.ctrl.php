@@ -287,21 +287,21 @@ class Index extends Ctrl {
         $_str_adminName = $this->obj_request->get('admin_name');
 
         if (!Func::isEmpty($_str_adminName)) {
-            $_obj_user      = Loader::classes('User', 'sso', 'console');
+            $_obj_reg       = Loader::classes('Reg', 'sso', 'console');
             $_mdl_admin     = Loader::model('Admin');
 
-            $_arr_userRow   = $_obj_user->read($_str_adminName, 'user_name');
+            $_arr_userRow   = $_obj_reg->chkname($_str_adminName);
 
-            if ($_arr_userRow['rcode'] == 'y010102') {
-                $_arr_adminRow = $_mdl_admin->check($_arr_userRow['user_id']);
+            if ($_arr_userRow['rcode'] == 'x010404') {
+                $_arr_adminRow = $_mdl_admin->check($_str_adminName, 'admin_name');
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
-                        'rcode' => 'x020404',
+                        'rcode'     => 'x020404',
                         'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 } else {
                     $_arr_return = array(
-                        'rcode' => 'x010404',
+                        'rcode'     => 'x010404',
                         'error_msg' => $this->obj_lang->get('User already exists, please use authorization as administrator'),
                     );
                 }
@@ -384,7 +384,7 @@ class Index extends Ctrl {
         }
 
         $_arr_tplData = array(
-            'token'         => $this->obj_request->token(),
+            'token' => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
@@ -415,20 +415,15 @@ class Index extends Ctrl {
         $_str_adminName = $this->obj_request->get('admin_name');
 
         if (!Func::isEmpty($_str_adminName)) {
-            $_obj_user      = Loader::classes('User', 'sso', 'console');
+            $_obj_reg       = Loader::classes('Reg', 'sso', 'console');
             $_mdl_admin     = Loader::model('Admin');
 
-            $_arr_userRow   = $_obj_user->read($_str_adminName, 'user_name');
+            $_arr_userRow   = $_obj_reg->chkname($_str_adminName);
 
             //print_r($_arr_userRow);
 
-            if ($_arr_userRow['rcode'] != 'y010102') {
-                $_arr_return = array(
-                    'rcode' => $_arr_userRow['rcode'],
-                    'error_msg' => $this->obj_lang->get('User not found, please use add administrator'),
-                );
-            } else {
-                $_arr_adminRow = $_mdl_admin->check($_arr_userRow['user_id']);
+            if ($_arr_userRow['rcode'] == 'x010404') {
+                $_arr_adminRow = $_mdl_admin->check($_str_adminName, 'admin_name');
 
                 if ($_arr_adminRow['rcode'] == 'y020102') {
                     $_arr_return = array(
@@ -436,6 +431,11 @@ class Index extends Ctrl {
                         'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 }
+            } else {
+                $_arr_return = array(
+                    'rcode'     => 'x010102',
+                    'error_msg' => $this->obj_lang->get('User not found, please use add administrator'),
+                );
             }
         }
 
@@ -460,7 +460,7 @@ class Index extends Ctrl {
             return $this->fetchJson($_mix_installType['msg'], $_mix_installType['rcode']);
         }
 
-        $_obj_user   = Loader::classes('User', 'sso', 'console');
+        $_obj_reg    = Loader::classes('Reg', 'sso', 'console');
         $_mdl_admin  = Loader::model('Admin');
 
         $_arr_inputSubmit = $_mdl_admin->inputAuth();
@@ -470,10 +470,10 @@ class Index extends Ctrl {
         }
 
         //检验用户名是否存在
-        $_arr_userRow = $_obj_user->read($_arr_inputSubmit['admin_name'], 'user_name');
+        $_arr_userRow = $_obj_reg->chkname($_arr_inputSubmit['admin_name']);
 
-        if ($_arr_userRow['rcode'] != 'y010102') {
-            return $this->fetchJson('User not found, please use add administrator', $_arr_userRow['rcode']);
+        if ($_arr_userRow['rcode'] != 'x010404') {
+            return $this->fetchJson('User not found, please use add administrator', 'x010102');
         }
 
         $_arr_adminRow = $_mdl_admin->check($_arr_userRow['user_id']);
@@ -481,7 +481,7 @@ class Index extends Ctrl {
             return $this->fetchJson('Administrator already exists', 'x020404');
         }
 
-        $_mdl_admin->inputSubmit['admin_id']   = $_arr_userRow['user_id'];
+        $_mdl_admin->inputSubmit['admin_id'] = $_arr_userRow['user_id'];
 
         $_arr_authResult = $_mdl_admin->submit();
 

@@ -7,8 +7,7 @@
 namespace app\model\console;
 
 use app\model\Album as Album_Base;
-use ginkgo\Json;
-use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -30,10 +29,11 @@ class Album extends Album_Base {
      */
     function submit() {
         $_arr_albumData = array(
-            'album_name'    => $this->inputSubmit['album_name'],
-            'album_content' => $this->inputSubmit['album_content'],
-            'album_status'  => $this->inputSubmit['album_status'],
-            'album_tpl'     => $this->inputSubmit['album_tpl'],
+            'album_name'      => $this->inputSubmit['album_name'],
+            'album_content'   => $this->inputSubmit['album_content'],
+            'album_status'    => $this->inputSubmit['album_status'],
+            'album_tpl'       => $this->inputSubmit['album_tpl'],
+            'album_attach_id' => $this->inputSubmit['album_attach_id'],
         );
 
         $_mix_vld = $this->validate($_arr_albumData, '', 'submit_db');
@@ -193,12 +193,13 @@ class Album extends Album_Base {
 
     function inputSubmit() {
         $_arr_inputParam = array(
-            'album_id'      => array('int', 0),
-            'album_name'    => array('str', ''),
-            'album_content' => array('str', '', true),
-            'album_status'  => array('str', ''),
-            'album_tpl'     => array('str', ''),
-            '__token__'     => array('str', ''),
+            'album_id'        => array('int', 0),
+            'album_name'      => array('str', ''),
+            'album_content'   => array('str', '', true),
+            'album_status'    => array('str', ''),
+            'album_tpl'       => array('str', ''),
+            'album_attach_id' => array('int', 0),
+            '__token__'       => array('str', ''),
         );
 
         $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
@@ -244,7 +245,7 @@ class Album extends Album_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['album_ids'] = Func::arrayFilter($_arr_inputDelete['album_ids']);
+        $_arr_inputDelete['album_ids'] = Arrays::filter($_arr_inputDelete['album_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -274,7 +275,7 @@ class Album extends Album_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['album_ids'] = Func::arrayFilter($_arr_inputStatus['album_ids']);
+        $_arr_inputStatus['album_ids'] = Arrays::filter($_arr_inputStatus['album_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

@@ -29,6 +29,8 @@ return array(
     'Keyword'                               => '关键词',
     'Template'          => '模板',
     'Inherit'           => '继承',
+    'Cover'             => '封面',
+    'Select'            => '选择',
     'All'                                   => '全部',
     'Close'                                 => '关闭',
     'OK'                                    => '确定',

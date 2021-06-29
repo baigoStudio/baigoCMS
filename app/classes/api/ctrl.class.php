@@ -11,7 +11,7 @@ use ginkgo\Loader;
 use ginkgo\Func;
 use ginkgo\Crypt;
 use ginkgo\Sign;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Plugin;
 
 //不能非法包含或直接执行
@@ -121,7 +121,7 @@ abstract class Ctrl extends Ctrl_Base {
                 );
             }
 
-            $_arr_data['decrypt'] = Json::decode($_str_decrypt);
+            $_arr_data['decrypt'] = Arrays::fromJson($_str_decrypt);
         }
 
         $this->appRow = $_arr_appRow;

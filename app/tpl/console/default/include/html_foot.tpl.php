@@ -9,12 +9,12 @@
 
     if (isset($cfg['baigoSubmit'])) { ?>
         <!--表单验证 js-->
-        <script src="{:DIR_STATIC}lib/baigoSubmit/2.1.2/baigoSubmit.min.js" type="text/javascript"></script>
+        <script src="{:DIR_STATIC}lib/baigoSubmit/2.1.3/baigoSubmit.min.js" type="text/javascript"></script>
     <?php }
 
     if (isset($cfg['baigoValidate'])) { ?>
         <!--表单验证 js-->
-        <script src="{:DIR_STATIC}lib/baigoValidate/3.0.2/baigoValidate.min.js" type="text/javascript"></script>
+        <script src="{:DIR_STATIC}lib/baigoValidate/3.0.3/baigoValidate.min.js" type="text/javascript"></script>
     <?php }
 
     if (isset($cfg['prism'])) { ?>
@@ -23,7 +23,7 @@
 
     if (isset($cfg['baigoDialog']) || isset($cfg['upload'])) { ?>
         <!--表单 ajax 提交 js-->
-        <script src="{:DIR_STATIC}lib/baigoDialog/1.0.1/baigoDialog.min.js" type="text/javascript"></script>
+        <script src="{:DIR_STATIC}lib/baigoDialog/1.1.0/baigoDialog.min.js" type="text/javascript"></script>
     <?php }
 
     if (isset($cfg['baigoQuery'])) { ?>
@@ -133,6 +133,13 @@
             scrollInput: false,
             mask: true
         };
+    <?php }
+
+    if (isset($cfg['captchaReload'])) { ?>
+        function captchaReload() {
+            var imgSrc = '<?php echo $route_misc; ?>captcha/index/' + new Date().getTime() + '/' + Math.random() + '/';
+            $('.bg-captcha-img').attr('src', imgSrc);
+        }
     <?php } ?>
 
     $(document).ready(function(){
@@ -189,7 +196,7 @@
                     var data = dialogApi.getData();
 
                     if (data.iframesrc.length > 0) {
-                        var result = '[iframe ' + data.ratio + ']' + data.iframesrc + '[/iframe]';
+                        var result = '[iframe=' + data.ratio + ']' + data.iframesrc + '[/iframe]';
                         //console.log(result);
                         tinymce.activeEditor.execCommand('mceInsertContent', false, '<p>' + result + '</p>');
                     }
@@ -214,7 +221,7 @@
                 quickbars_insert_toolbar: 'image quicktable charmap',
                 contextmenu: false,
                 content_style: 'img { max-width: 100%; }',
-                autosave_restore_when_empty: true,
+                autosave_restore_when_empty: <?php if (isset($adminLogged['admin_prefer']['editor']['restore']) && $adminLogged['admin_prefer']['editor']['restore'] === 'on') { ?>true<?php } else { ?>false<?php } ?>,
                 powerpaste_word_import: 'clean',
                 powerpaste_html_import: 'clean',
                 convert_urls: false,
@@ -247,8 +254,7 @@
 
         if (isset($cfg['captchaReload'])) { ?>
             $('.bg-captcha-btn, .bg-captcha-img').click(function(){
-                var imgSrc = '<?php echo $route_misc; ?>captcha/index/' + new Date().getTime() + '/' + Math.random() + '/';
-                $('.bg-captcha-img').attr('src', imgSrc);
+                captchaReload();
             });
         <?php }
 
@@ -263,14 +269,14 @@
             });
         <?php } ?>
 
-        $('.collapse').on('shown.bs.collapse', function(){
-            var _key = $(this).data('key');
-            $('#bg-caret-' + _key).attr('class', 'fas fa-chevron-up');
-        });
-
-        $('.collapse').on('hidden.bs.collapse', function(){
+        $('.bg-collapse.collapse').on('shown.bs.collapse', function(){
             var _key = $(this).data('key');
             $('#bg-caret-' + _key).attr('class', 'fas fa-chevron-down');
+        });
+
+        $('.bg-collapse.collapse').on('hidden.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-' + _key).attr('class', 'fas fa-chevron-right');
         });
 
         <?php if (!isset($cfg['no_loading'])) { ?>

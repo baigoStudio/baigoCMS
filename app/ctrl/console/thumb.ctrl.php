@@ -244,9 +244,7 @@ class Thumb extends Ctrl {
 
 
     private function cacheProcess() {
-        $_mdl_thumb    = Loader::model('Thumb', '', 'index');
-
-        $_num_cacheSize = $_mdl_thumb->cacheProcess();
+        $_num_cacheSize = $this->mdl_thumb->cacheProcess();
 
         if ($_num_cacheSize > 0) {
             $_str_rcode = 'y090110';

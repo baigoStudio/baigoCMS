@@ -29,7 +29,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -137,12 +137,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                             <span class="fas fa-images"></span>
                                             <?php echo $lang->get('Set cover'); ?>
                                         </a>
-                                        <?php if ($gen_open === true) { ?>
-                                            <a href="#gen_modal" data-url="<?php echo $route_gen; ?>spec/single/id/<?php echo $value['spec_id']; ?>/view/iframe/" data-toggle="modal" class="mr-2">
-                                                <span class="fas fa-sync-alt"></span>
-                                                <?php echo $lang->get('Generate'); ?>
-                                            </a>
-                                        <?php } ?>
                                         <a href="javascript:void(0);" data-id="<?php echo $value['spec_id']; ?>" class="spec_delete text-danger">
                                             <span class="fas fa-trash-alt"></span>
                                             <?php echo $lang->get('Delete'); ?>

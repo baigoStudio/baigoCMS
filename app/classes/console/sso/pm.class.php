@@ -7,7 +7,7 @@
 namespace app\classes\console\sso;
 
 use app\classes\Sso;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Crypt;
 use ginkgo\Sign;
 
@@ -24,9 +24,9 @@ class Pm extends Sso {
     }
 
 
-    function send($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function send($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_to_name'        => $_arr_pmSubmit['pm_to_name'],
             'pm_title'          => $_arr_pmSubmit['pm_title'],
@@ -34,7 +34,7 @@ class Pm extends Sso {
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -66,16 +66,16 @@ class Pm extends Sso {
     }
 
 
-    function status($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function status($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_ids'            => $_arr_pmSubmit['pm_ids'],
             'pm_status'         => $_arr_pmSubmit['pm_status'],
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -105,15 +105,15 @@ class Pm extends Sso {
     }
 
 
-    function revoke($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function revoke($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_ids'            => $_arr_pmSubmit['pm_ids'],
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -145,15 +145,15 @@ class Pm extends Sso {
     }
 
 
-    function delete($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function delete($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_ids'            => $_arr_pmSubmit['pm_ids'],
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -185,15 +185,15 @@ class Pm extends Sso {
     }
 
 
-    function read($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function read($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_id'             => $_arr_pmSubmit['pm_id'],
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -241,9 +241,9 @@ class Pm extends Sso {
     }
 
 
-    function lists($str_user, $str_by = 'user_id', $_arr_pmSubmit = array()) {
+    function lists($num_userId, $_arr_pmSubmit = array()) {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($_arr_pmSubmit['user_access_token']),
             'pm_type'           => $_arr_pmSubmit['pm_type'],
             'pm_status'         => $_arr_pmSubmit['pm_status'],
@@ -252,7 +252,7 @@ class Pm extends Sso {
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -302,14 +302,14 @@ class Pm extends Sso {
     }
 
 
-    function check($str_user, $str_by = 'user_id', $str_accessToken = '') {
+    function check($num_userId, $str_accessToken = '') {
         $_arr_crypt = array(
-            $str_by             => $str_user,
+            'user_id'           => $num_userId,
             'user_access_token' => md5($str_accessToken),
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 

@@ -6,7 +6,6 @@
 
 namespace app\model;
 
-use ginkgo\Func;
 use ginkgo\Config;
 
 //不能非法包含或直接执行

@@ -12,7 +12,7 @@ use ginkgo\Func;
 use ginkgo\Config;
 use ginkgo\Crypt;
 use ginkgo\Sign;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Http;
 use ginkgo\Html;
 use ginkgo\Log;
@@ -327,7 +327,7 @@ class App extends Ctrl {
             'timestamp' => GK_NOW,
         );
 
-        $_str_src       = Json::encode($_arr_src);
+        $_str_src       = Arrays::toJson($_arr_src);
 
         $_str_appKey    = Crypt::crypt($_arr_appRow['app_key'], $_arr_appRow['app_name']);
         $_str_encrypt   = Crypt::encrypt($_str_src, $_str_appKey, $_arr_appRow['app_secret']);
@@ -375,7 +375,7 @@ class App extends Ctrl {
                 'rcode' => 'x050401',
             );
 
-            Log::record('type: notify, action: ' . $_str_urlNotify . ', app_id: ' . $_arr_appRow['app_id'] . ', result: failed ' . Json::encode($_arr_notifyResult), 'log');
+            Log::record('type: notify, action: ' . $_str_urlNotify . ', app_id: ' . $_arr_appRow['app_id'] . ', result: failed ' . Arrays::toJson($_arr_notifyResult), 'log');
         }
 
         return $this->fetchJson($_arr_return['msg'], $_arr_return['rcode']);

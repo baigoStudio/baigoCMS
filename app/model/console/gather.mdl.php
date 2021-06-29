@@ -8,6 +8,8 @@ namespace app\model\console;
 
 use app\model\Gather as Gather_Base;
 use ginkgo\Func;
+use ginkgo\Arrays;
+use ginkgo\String;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -63,7 +65,7 @@ class Gather extends Gather_Base {
         if (isset($arr_gatherSubmit['gather_time_show'])) {
             $_arr_gatherData['gather_time_show']  = $this->obj_request->input($arr_gatherSubmit['gather_time_show'], 'int', 0);
         } else if (isset($arr_gatherSubmit['gather_time_show_format'])) {
-            $_arr_gatherData['gather_time_show']  = Func::strtotime($this->obj_request->input($arr_gatherSubmit['gather_time_show_format'], 'str', ''));
+            $_arr_gatherData['gather_time_show']  = String::toTime($this->obj_request->input($arr_gatherSubmit['gather_time_show_format'], 'str', ''));
         }
 
         if (isset($arr_gatherSubmit['gather_content'])) {
@@ -137,7 +139,7 @@ class Gather extends Gather_Base {
         $_arr_where[] = array('gather_id', 'IN', $this->inputDelete['gather_ids'], 'gather_ids');
 
         if (!Func::isEmpty($arr_cateIds)) {
-            $arr_cateIds = Func::arrayFilter($arr_cateIds);
+            $arr_cateIds = Arrays::filter($arr_cateIds);
 
             $_arr_where[] = array('gather_cate_id', 'IN', $arr_cateIds, 'cate_ids');
         }
@@ -177,9 +179,7 @@ class Gather extends Gather_Base {
             'DISTINCT FROM_UNIXTIME(`gather_time_show`, \'%Y\') AS `gather_year`',
         );
 
-        $_arr_gatherRows     = $this->where('gather_time_show', '>', 0)->order('gather_time', 'ASC')->limit(100)->select($_arr_gatherSelect);
-
-        return $_arr_gatherRows;
+        return $this->where('gather_time_show', '>', 0)->order('gather_time', 'ASC')->select($_arr_gatherSelect);
     }
 
 
@@ -254,7 +254,7 @@ class Gather extends Gather_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['gather_ids'] = Func::arrayFilter($_arr_inputDelete['gather_ids']);
+        $_arr_inputDelete['gather_ids'] = Arrays::filter($_arr_inputDelete['gather_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 

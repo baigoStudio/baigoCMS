@@ -18,6 +18,18 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </a>
     </nav>
 
+    <div class="card bg-light mb-3">
+        <div class="card-body">
+            <form name="mime_cache" id="mime_cache" action="<?php echo $route_console; ?>mime/cache/">
+                <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
+                <button type="submit" class="btn btn-primary">
+                    <span class="fas fa-redo-alt"></span>
+                    <?php echo $lang->get('Refresh cache'); ?>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <form name="mime_list" id="mime_list" action="<?php echo $route_console; ?>mime/delete/">
         <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
         <input type="hidden" name="act" id="act" value="delete">
@@ -161,6 +173,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     }
                 });
             }
+        });
+
+        var obj_cache = $('#mime_cache').baigoSubmit(opts_submit_list);
+        $('#mime_cache').submit(function(){
+            obj_cache.formSubmit();
         });
 
         $('.mime_delete').click(function(){

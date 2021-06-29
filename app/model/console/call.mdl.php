@@ -7,8 +7,7 @@
 namespace app\model\console;
 
 use app\model\Call as Call_Base;
-use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -89,11 +88,11 @@ class Call extends Call_Base {
             );
         }
 
-        $_arr_callData['call_amount']          = Json::encode($_arr_callData['call_amount']);
-        $_arr_callData['call_cate_ids']        = Json::encode($_arr_callData['call_cate_ids']);
-        $_arr_callData['call_cate_excepts']    = Json::encode($_arr_callData['call_cate_excepts']);
-        $_arr_callData['call_spec_ids']        = Json::encode($_arr_callData['call_spec_ids']);
-        $_arr_callData['call_mark_ids']        = Json::encode($_arr_callData['call_mark_ids']);
+        $_arr_callData['call_amount']          = Arrays::toJson($_arr_callData['call_amount']);
+        $_arr_callData['call_cate_ids']        = Arrays::toJson($_arr_callData['call_cate_ids']);
+        $_arr_callData['call_cate_excepts']    = Arrays::toJson($_arr_callData['call_cate_excepts']);
+        $_arr_callData['call_spec_ids']        = Arrays::toJson($_arr_callData['call_spec_ids']);
+        $_arr_callData['call_mark_ids']        = Arrays::toJson($_arr_callData['call_mark_ids']);
 
         if ($this->inputSubmit['call_id'] > 0) { //插入
             $_num_callId = $this->inputSubmit['call_id'];
@@ -276,7 +275,7 @@ class Call extends Call_Base {
 
         $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputDelete['call_ids'] = Func::arrayFilter($_arr_inputDelete['call_ids']);
+        $_arr_inputDelete['call_ids'] = Arrays::filter($_arr_inputDelete['call_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -297,14 +296,14 @@ class Call extends Call_Base {
 
     function inputStatus() {
         $_arr_inputParam = array(
-            'call_ids' => array('arr', array()),
+            'call_ids'  => array('arr', array()),
             'act'       => array('str', ''),
             '__token__' => array('str', ''),
         );
 
         $_arr_inputStatus = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputStatus['call_ids'] = Func::arrayFilter($_arr_inputStatus['call_ids']);
+        $_arr_inputStatus['call_ids'] = Arrays::filter($_arr_inputStatus['call_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

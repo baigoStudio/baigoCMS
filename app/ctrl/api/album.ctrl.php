@@ -18,6 +18,7 @@ class Album extends Ctrl {
     protected function c_init($param = array()) { //构造函数
         parent::c_init();
 
+        $this->mdl_attach    = Loader::model('Attach');
         $this->mdl_album     = Loader::model('Album');
     }
 
@@ -45,8 +46,11 @@ class Album extends Ctrl {
             return $this->fetchJson('Album is invalid', 'x060102');
         }
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+
         $_arr_return = array(
-            'albumRow' => $_arr_albumRow,
+            'albumRow'   => $_arr_albumRow,
+            'attachRow'  => $_arr_attachRow,
         );
 
         return $this->json($_arr_return);

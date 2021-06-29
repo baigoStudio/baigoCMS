@@ -34,7 +34,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -98,7 +98,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <th>&nbsp;</th>
                                 <th><?php echo $lang->get('Images in album'); ?></th>
                                 <th class="d-none d-lg-table-cell bg-td-md text-right">
-                                    <small><?php echo $lang->get('Status'); ?></small>
+                                    <small>
+                                        <?php echo $lang->get('Status'); ?>
+                                        /
+                                        <?php echo $lang->get('Note'); ?>
+                                    </small>
                                 </th>
                             </tr>
                         </thead>
@@ -115,7 +119,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     </td>
                                     <td class="bg-td-xs">
                                         <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid">
+                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid">
                                         </a>
                                     </td>
                                     <td>
@@ -159,14 +163,25 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 $str_status = $value['attach_box'];
                                                 include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
                                             </dd>
+                                            <dt class="col-3">
+                                                <small><?php echo $lang->get('Note'); ?></small>
+                                            </dt>
+                                            <dd class="col-9">
+                                                <small><?php echo $value['attach_note']; ?></small>
+                                            </dd>
                                         </dl>
                                     </td>
                                     <td class="d-none d-lg-table-cell bg-td-md text-right">
-                                        <?php if ($albumRow['album_attach_id'] == $value['attach_id']) { ?>
-                                            <span class="badge badge-info"><?php echo $lang->get('Cover'); ?></span>
-                                        <?php }
-                                        $str_status = $value['attach_box'];
-                                        include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
+                                        <div>
+                                            <?php if ($albumRow['album_attach_id'] == $value['attach_id']) { ?>
+                                                <span class="badge badge-info"><?php echo $lang->get('Cover'); ?></span>
+                                            <?php }
+                                            $str_status = $value['attach_box'];
+                                            include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
+                                        </div>
+                                        <div>
+                                            <small><?php echo $value['attach_note']; ?></small>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -233,7 +248,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     </td>
                                     <td class="bg-td-xs">
                                         <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid">
+                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid">
                                         </a>
                                     </td>
                                     <td>

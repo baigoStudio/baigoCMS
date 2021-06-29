@@ -37,12 +37,12 @@
         'note' => 'BMP image',
         'content' => array(
             'image/bmp',
+            'image/ms-bmp',
             'image/x-bmp',
             'image/x-bitmap',
             'image/x-xbitmap',
             'image/x-win-bitmap',
             'image/x-windows-bmp',
-            'image/ms-bmp',
             'image/x-ms-bmp',
             'application/bmp',
             'application/x-bmp',

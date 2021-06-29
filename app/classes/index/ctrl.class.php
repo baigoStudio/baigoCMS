@@ -8,7 +8,6 @@ namespace app\classes\index;
 
 use app\classes\Ctrl as Ctrl_Base;
 use ginkgo\Loader;
-use ginkgo\Func;
 use ginkgo\Config;
 use ginkgo\Plugin;
 

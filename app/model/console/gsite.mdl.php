@@ -7,8 +7,7 @@
 namespace app\model\console;
 
 use app\model\Gsite as Gsite_Base;
-use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -274,7 +273,7 @@ class Gsite extends Gsite_Base {
 
         $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputDelete['gsite_ids'] = Func::arrayFilter($_arr_inputDelete['gsite_ids']);
+        $_arr_inputDelete['gsite_ids'] = Arrays::filter($_arr_inputDelete['gsite_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -304,7 +303,7 @@ class Gsite extends Gsite_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['gsite_ids'] = Func::arrayFilter($_arr_inputStatus['gsite_ids']);
+        $_arr_inputStatus['gsite_ids'] = Arrays::filter($_arr_inputStatus['gsite_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

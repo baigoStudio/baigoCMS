@@ -8,13 +8,22 @@ namespace app\model\console;
 
 use app\model\Mime as Mime_Base;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
+use ginkgo\Cache;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
 
 /*-------------MIME 模型-------------*/
 class Mime extends Mime_Base {
+
+    protected $obj_cache;
+
+    function m_init() { //构造函数
+        parent::m_init();
+
+        $this->obj_cache    = Cache::instance();
+    }
 
     /*============提交允许类型============
     @str_mimeName 允许类型
@@ -40,7 +49,7 @@ class Mime extends Mime_Base {
             );
         }
 
-        $_arr_mimeData['mime_content']    = Json::encode($_arr_mimeData['mime_content']);
+        $_arr_mimeData['mime_content']    = Arrays::toJson($_arr_mimeData['mime_content']);
 
         if ($this->inputSubmit['mime_id'] > 0) {
             $_num_mimeId = $this->inputSubmit['mime_id'];
@@ -151,7 +160,7 @@ class Mime extends Mime_Base {
      */
     function inputDelete() {
         $_arr_inputParam = array(
-            'mime_ids' => array('arr', array()),
+            'mime_ids'  => array('arr', array()),
             '__token__' => array('str', ''),
         );
 
@@ -159,9 +168,9 @@ class Mime extends Mime_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['mime_ids'] = Func::arrayFilter($_arr_inputDelete['mime_ids']);
+        $_arr_inputDelete['mime_ids'] = Arrays::filter($_arr_inputDelete['mime_ids']);
 
-        $_mix_vld = $this->validate($_arr_inputDelete, '', 'submit');
+        $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
         if ($_mix_vld !== true) {
             return array(
@@ -175,5 +184,75 @@ class Mime extends Mime_Base {
         $this->inputDelete = $_arr_inputDelete;
 
         return $_arr_inputDelete;
+    }
+
+
+    function inputCommon() {
+        $_arr_inputParam = array(
+            '__token__' => array('str', ''),
+        );
+
+        $_arr_inputCommon = $this->obj_request->post($_arr_inputParam);
+
+        $_mix_vld = $this->validate($_arr_inputCommon, '', 'common');
+
+        if ($_mix_vld !== true) {
+            return array(
+                'rcode' => 'x080201',
+                'msg'   => end($_mix_vld),
+            );
+        }
+
+        $_arr_inputCommon['rcode'] = 'y080201';
+
+        $this->inputCommon = $_arr_inputCommon;
+
+        return $_arr_inputCommon;
+    }
+
+
+    function cache($str_name = '') {
+        $_arr_return = array();
+
+        if (Func::isEmpty($str_name)) {
+            $str_name = 'mime_lists';
+        }
+
+        if (!$this->obj_cache->check($str_name, true)) {
+            $this->cacheProcess();
+        }
+
+        $_arr_return = $this->obj_cache->read($str_name);
+
+        return $_arr_return;
+    }
+
+
+    function cacheProcess() {
+        $_arr_mimeRows      = $this->lists(array(1000, 'limit'));
+
+        $_num_cacheSize     = 0;
+        $_arr_mimes         = array();
+        $_arr_allowMimes    = array();
+        $_arr_allowExts     = array();
+
+        foreach ($_arr_mimeRows as $_key=>$_value) {
+            $_arr_allowExts[] = strtolower($_value['mime_ext']);
+            if (is_array($_value['mime_content'])) {
+                if (Func::isEmpty($_arr_allowMimes)) {
+                    $_arr_allowMimes  = $_value['mime_content'];
+                } else {
+                    $_arr_allowMimes  = array_merge($_arr_allowMimes, $_value['mime_content']);
+                }
+
+                $_arr_mimes[strtolower($_value['mime_ext'])] = $_value['mime_content'];
+            }
+        }
+
+        $_num_cacheSize += $this->obj_cache->write('mime_lists', $_arr_mimes);
+        $_num_cacheSize += $this->obj_cache->write('allow_mime', Arrays::filter($_arr_allowMimes));
+        $_num_cacheSize += $this->obj_cache->write('allow_ext', Arrays::filter($_arr_allowExts));
+
+        return $_num_cacheSize;
     }
 }

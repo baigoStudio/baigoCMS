@@ -9,8 +9,8 @@ defined('IN_GINKGO') or exit('Access denied');
 
 define('PRD_CMS_NAME', 'baigo CMS');
 define('PRD_CMS_URL', 'http://www.baigo.net/cms/');
-define('PRD_CMS_VER', '3.0-beta-2');
-define('PRD_CMS_PUB', 20200917);
+define('PRD_CMS_VER', '3.0-alpha-1');
+define('PRD_CMS_PUB', 20210629);
 define('PRD_CMS_HELP', 'http://doc.baigo.net/cms/');
 define('PRD_VER_CHECK', 'http://www.baigo.net/ver_check/check.php');
 

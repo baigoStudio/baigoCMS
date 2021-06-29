@@ -8,6 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
+use ginkgo\Arrays;
 use ginkgo\Html;
 
 //不能非法包含或直接执行
@@ -112,8 +113,10 @@ class Gather extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -180,13 +183,13 @@ class Gather extends Model {
         }
 
         if (isset($arr_search['gather_ids']) && !Func::isEmpty($arr_search['gather_ids'])) {
-            $arr_search['gather_ids'] = Func::arrayFilter($arr_search['gather_ids']);
+            $arr_search['gather_ids'] = Arrays::filter($arr_search['gather_ids']);
 
             $_arr_where[] = array('gather_id', 'IN', $arr_search['gather_ids'], 'gather_ids');
         }
 
         if (isset($arr_search['not_ids']) && !Func::isEmpty($arr_search['not_ids'])) {
-            $arr_search['not_ids'] = Func::arrayFilter($arr_search['not_ids']);
+            $arr_search['not_ids'] = Arrays::filter($arr_search['not_ids']);
 
             $_arr_where[] = array('gather_id', 'NOT IN', $arr_search['not_ids'], 'not_ids');
         }

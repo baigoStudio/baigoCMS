@@ -41,6 +41,7 @@ class Qlist {
         $_arr_attachIds = array();
 
         if (!Func::isEmpty($str_html)) {
+            $str_html  = Html::decode($str_html);
             $_arr_rule = array(
                 'img_src'   => array('img[src*="' . $this->urlPrefix . '"]', 'src'),
             );
@@ -61,12 +62,16 @@ class Qlist {
                     $_arr_name  = explode('.', $_str_name); //将文件名转换成数组
                 }
 
-                $_arr_attachIds[] = $_arr_name[0]; //得到文件id
+                $_arr_attachIds[] = (int)$_arr_name[0]; //得到文件id
             }
         }
 
         if (Func::isEmpty($_arr_attachIds)) {
             $_arr_attachIds = array(0);
+        }
+
+        if (!isset($_arr_attachIds[0])) {
+            $_arr_attachIds[0] = 0;
         }
 
         return $_arr_attachIds;
@@ -101,7 +106,7 @@ class Qlist {
                             print_r(PHP_EOL);
                             print_r($_value_filter);
                             print_r(PHP_EOL);*/
-                            if (!stristr($_value_filter, $_value['img_src'])) {
+                            if (!stristr($_value['img_src'], $_value_filter)) {
                                 $_arr_return[] = $_value['img_src'];
                             }
                         }

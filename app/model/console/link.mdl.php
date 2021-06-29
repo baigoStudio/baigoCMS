@@ -7,8 +7,7 @@
 namespace app\model\console;
 
 use app\model\Link as Link_Base;
-use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Plugin;
 
 //不能非法包含或直接执行
@@ -46,8 +45,7 @@ class Link extends Link_Base {
             $_str_hook = 'add';
         }
 
-        $_mix_result    = Plugin::listen('filter_console_link_' . $_str_hook, $_arr_linkData);
-        $_arr_linkData  = Plugin::resultProcess($_arr_linkData, $_mix_result);
+        $_arr_linkData    = Plugin::listen('filter_console_link_' . $_str_hook, $_arr_linkData);
 
         $_mix_vld = $this->validate($_arr_linkData, '', 'submit_db');
 
@@ -282,7 +280,7 @@ class Link extends Link_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['link_ids'] = Func::arrayFilter($_arr_inputDelete['link_ids']);
+        $_arr_inputDelete['link_ids'] = Arrays::filter($_arr_inputDelete['link_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -312,7 +310,7 @@ class Link extends Link_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['link_ids'] = Func::arrayFilter($_arr_inputStatus['link_ids']);
+        $_arr_inputStatus['link_ids'] = Arrays::filter($_arr_inputStatus['link_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

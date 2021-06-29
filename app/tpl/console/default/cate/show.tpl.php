@@ -110,32 +110,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             <div class="col-xl-3">
                 <div class="card bg-light">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label><?php echo $lang->get('ID'); ?></label>
-                            <div class="form-text"><?php echo $cateRow['cate_id']; ?></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?></label>
-                            <div class="form-text">
-                                <?php $str_status = $cateRow['cate_status'];
-                                include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Parent category'); ?></label>
-                            <div class="form-text"><?php if (isset($cateParent['cate_name'])) {
-                                echo $cateParent['cate_name'];
-                            } else {
-                                echo $lang->get('As a primary category');
-                            } ?></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Template'); ?></label>
-                            <div class="form-text"><?php echo $lang->get($cateRow['cate_tpl']); ?></div>
-                        </div>
+                        <?php include($cfg['pathInclude'] . 'cate_info' . GK_EXT_TPL); ?>
                     </div>
                     <div class="card-footer text-right">
                         <a href="<?php echo $route_console; ?>cate/form/id/<?php echo $cateRow['cate_id']; ?>/">

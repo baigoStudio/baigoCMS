@@ -7,9 +7,9 @@
 namespace app\model\console;
 
 use app\model\Thumb as Thumb_Base;
-use ginkgo\Func;
 use ginkgo\Config;
 use ginkgo\File;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -188,7 +188,7 @@ class Thumb extends Thumb_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['thumb_ids'] = Func::arrayFilter($_arr_inputDelete['thumb_ids']);
+        $_arr_inputDelete['thumb_ids'] = Arrays::filter($_arr_inputDelete['thumb_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 

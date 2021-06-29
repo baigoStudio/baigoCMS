@@ -34,13 +34,17 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <th class="d-none d-lg-table-cell bg-td-xs">&nbsp;</th>
                                 <th><?php echo $lang->get('Detail'); ?></th>
                                 <th class="d-none d-lg-table-cell bg-td-md">
-                                    <small><?php echo $lang->get('Size'); ?></small>
+                                    <small>
+                                        <?php echo $lang->get('Size'); ?>
+                                        /
+                                        <?php echo $lang->get('Time'); ?>
+                                    </small>
                                 </th>
                                 <th class="d-none d-lg-table-cell bg-td-md text-right">
                                     <small>
                                         <?php echo $lang->get('Status'); ?>
                                         /
-                                        <?php echo $lang->get('Time'); ?>
+                                        <?php echo $lang->get('Note'); ?>
                                     </small>
                                 </th>
                             </tr>
@@ -58,7 +62,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     </td>
                                     <td class="d-none d-lg-table-cell bg-td-xs">
                                         <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid rounded">
+                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid rounded">
                                         </a>
                                     </td>
                                     <td>
@@ -93,7 +97,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                             </dt>
                                             <dd class="col-9">
                                                 <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid rounded" id="img_<?php echo $value['attach_id']; ?>">
+                                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid rounded" id="img_<?php echo $value['attach_id']; ?>">
                                                 </a>
                                             </dd>
                                             <dt class="col-3">
@@ -101,6 +105,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                             </dt>
                                             <dd class="col-9">
                                                 <small><?php echo $value['attach_size_format']; ?></small>
+                                            </dd>
+                                            <dt class="col-3">
+                                                <small><?php echo $lang->get('Time'); ?></small>
+                                            </dt>
+                                            <dd class="col-9">
+                                                <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></small>
                                             </dd>
                                             <dt class="col-3">
                                                 <small><?php echo $lang->get('Status'); ?></small>
@@ -113,15 +123,20 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
                                             </dd>
                                             <dt class="col-3">
-                                                <small><?php echo $lang->get('Time'); ?></small>
+                                                <small><?php echo $lang->get('Note'); ?></small>
                                             </dt>
                                             <dd class="col-9">
-                                                <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></small>
+                                                <small><?php echo $value['attach_note']; ?></small>
                                             </dd>
                                         </dl>
                                     </td>
                                     <td class="d-none d-lg-table-cell bg-td-md">
-                                        <small><?php echo $value['attach_size_format']; ?></small>
+                                        <small>
+                                            <div class="mb-2"><?php echo $value['attach_size_format']; ?></div>
+                                            <div>
+                                                <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></abbr>
+                                            </div>
+                                        </small>
                                     </td>
                                     <td class="d-none d-lg-table-cell bg-td-md text-right">
                                         <div>
@@ -132,7 +147,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                             include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?>
                                         </div>
                                         <div>
-                                            <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></small>
+                                            <small><?php echo $value['attach_note']; ?></small>
                                         </div>
                                     </td>
                                 </tr>
@@ -154,33 +169,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         <div class="col-xl-3">
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="form-group">
-                        <label><?php echo $lang->get('ID'); ?></label>
-                        <div class="form-text"><?php echo $specRow['spec_id']; ?></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label><?php echo $lang->get('Name'); ?></label>
-                        <div class="form-text">
-                            <?php echo $specRow['spec_name']; ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label><?php echo $lang->get('Time'); ?></label>
-                        <div class="form-text"><?php echo $specRow['spec_time_format']['date_time']; ?></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label><?php echo $lang->get('Updated time'); ?></label>
-                        <div class="form-text"><?php echo $specRow['spec_time_update_format']['date_time']; ?></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label><?php echo $lang->get('Status'); ?></label>
-                        <div class="form-text"><?php $str_status = $specRow['spec_status'];
-                        include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?></div>
-                    </div>
+                    <?php include($cfg['pathInclude'] . 'spec_info' . GK_EXT_TPL); ?>
                 </div>
             </div>
         </div>

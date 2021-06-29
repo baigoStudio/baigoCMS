@@ -54,6 +54,9 @@ class Mime extends Validate {
             'mime_ids',
             '__token__',
         ),
+        'common' => array(
+            '__token__',
+        ),
     );
 
     function v_init() { //构造函数

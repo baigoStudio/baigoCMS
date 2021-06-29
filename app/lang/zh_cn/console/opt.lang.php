@@ -23,6 +23,7 @@ return array(
     'Checking'                          => '正在检查 ...',
     'You do not have permission'        => '您没有权限',
     'Site name'                         => '站点名称',
+    'Unaffiliated articles'             => '无隶属的文章',
     'Count of per page'                 => '每页显示数',
     'Date format'                       => '日期格式',
     'Short date format'                 => '短日期格式',
@@ -59,9 +60,9 @@ return array(
     'Article count per page in the ajax search'     => 'AJAX 搜索显示文章数',
     'Article count per page in the API'             => 'API 接口中每页文章数',
     'Image count per page in the album'             => '相册中每页图片数',
-    'Upgrade data'                  => '升级数据',
-    'Upgrade'                       => '升级',
-    'Confirm upgrade'               => '确认升级',
+    'Upgrade data'                      => '升级数据',
+    'Upgrade'                           => '升级',
+    'Confirm upgrade'                   => '确认升级',
 
     'Submitting'                        => '提交中',
 
@@ -91,10 +92,10 @@ return array(
     'Copy table successfully'           => '复制成功',
     'Copy table failed'                 => '复制失败',
 
-    'Drop fields'                      => '丢弃字段',
-    'Drop fields successfully'         => '丢弃成功',
-    'Drop fields failed'               => '丢弃失败',
-    'No need to drop fields'           => '无需丢弃',
+    'Drop fields'                       => '丢弃字段',
+    'Drop fields successfully'          => '丢弃成功',
+    'Drop fields failed'                => '丢弃失败',
+    'No need to drop fields'            => '无需丢弃',
 
     'Clean up'                          => '清理',
     'Clean up data'                     => '清理数据',
@@ -146,8 +147,8 @@ return array(
     'Warning! This operation will take a long time!'    => '警告！此操作将耗费较长时间！',
     'Check for updated module being disabled'                                       => '检查更新模块被禁用',
     'Do not add a slash <kbd>/</kbd> at the end'                                    => '末尾请勿加 <kbd>/</kbd>',
-    'Select or type the extension name'                                          => '选择或输入扩展名',
-    'Select or type the format parameter of the <code>date</code> function'      => '选择或输入 <code>date</code> 函数的格式参数',
+    'Select or type the extension name'                                             => '选择或输入扩展名',
+    'Select or type the format parameter of the <code>date</code> function'         => '选择或输入 <code>date</code> 函数的格式参数',
     'There are new versions, this is the latest version of the issues and help.'    => '有新版本可供升级，下面是最新版本的发布和更新帮助。',
     'Page count of generate static page, the remaining pages will be displayed via dynamic page' => '生成静态页面的页数，超过部分通过动态页面显示。',
 );

@@ -8,7 +8,6 @@ namespace app\ctrl\gen;
 
 use app\classes\gen\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Func;
 use ginkgo\Html;
 use ginkgo\Plugin;
 
@@ -135,8 +134,7 @@ class Spec extends Ctrl {
 
         $_arr_tpl = array_replace_recursive($this->generalData, $arr_tplData);
 
-        $_mix_result = Plugin::listen('filter_gen_spec_lists', $_arr_tpl); //编辑文章时触发
-        $_arr_tpl    = Plugin::resultProcess($_arr_tpl, $_mix_result);
+        $_arr_tpl = Plugin::listen('filter_gen_spec_lists', $_arr_tpl); //编辑文章时触发
 
         if (isset($arr_pathRow['lists_path_index'])) {
             $this->outputProcess($arr_tplData, $arr_pathRow['lists_path_index'], $_str_pathTpl, 'spec' . DS . 'index');

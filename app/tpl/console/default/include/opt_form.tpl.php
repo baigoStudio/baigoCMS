@@ -19,7 +19,7 @@
                             <label>
                                 <?php echo $lang->get($_value['title']);
 
-                                if (isset($_value['require']) && $_value['require'] > 0) { ?> <span class="text-danger">*</span><?php } ?>
+                                if (isset($_value['require']) && ($_value['require'] == true || $_value['require'] == 'true')) { ?> <span class="text-danger">*</span><?php } ?>
                             </label>
                         <?php }
 
@@ -56,7 +56,7 @@
                             case 'radio': ?>
                                 <div>
                                     <?php foreach ($_value['option'] as $_key_opt=>$_value_opt) { ?>
-                                        <div class="form-check <?php if (!isset($_value_opt['note'])) { ?>form-check-inline<?php } ?>">
+                                        <div class="form-check<?php if (!isset($_value_opt['note'])) { ?> form-check-inline<?php } ?>">
                                             <input type="radio"<?php if ($_value['this'] == $_key_opt) { ?> checked<?php } ?> value="<?php echo $_key_opt; ?>" name="<?php echo $_key; ?>" id="<?php echo $_key; ?>_<?php echo $_key_opt; ?>" class="form-check-input">
                                             <label for="<?php echo $_key; ?>_<?php echo $_key_opt; ?>" class="form-check-label">
                                                 <?php echo $lang->get($_value_opt['value']); ?>

@@ -20,7 +20,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -182,9 +182,9 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <script type="text/javascript">
     $(document).ready(function(){
         $('#gather_modal').on('shown.bs.modal',function(event){
-        		var _obj_button   = $(event.relatedTarget);
-        		var _all          = _obj_button.data('all');
-        		var _id           = _obj_button.data('id');
+            var _obj_button   = $(event.relatedTarget);
+            var _all          = _obj_button.data('all');
+            var _id           = _obj_button.data('id');
 
             var _url = '<?php echo $route_console; ?>grab/grab/view/iframe/';
 
@@ -196,10 +196,10 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             }
             $('#gather_modal iframe').attr('src', _url);
         	}).on('hidden.bs.modal', function(){
-            	$('#gather_modal #gather_modal_icon').attr('class', 'spinner-grow spinner-grow-sm text-info');
-            	$('#gather_modal #gather_modal_msg').attr('class', 'text-info');
-            	$('#gather_modal #gather_modal_msg').text('<?php echo $lang->get('Grabbing'); ?>');
-            	$('#gather_modal iframe').attr('src', '');
+                $('#gather_modal #gather_modal_icon').attr('class', 'spinner-grow spinner-grow-sm text-info');
+                $('#gather_modal #gather_modal_msg').attr('class', 'text-info');
+                $('#gather_modal #gather_modal_msg').text('<?php echo $lang->get('Grabbing'); ?>');
+                $('#gather_modal iframe').attr('src', '');
         	});
 
         var obj_query = $('#gsite_search').baigoQuery();

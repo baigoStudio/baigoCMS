@@ -29,11 +29,6 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <div class="form-group">
-                        <label><?php echo $lang->get('Email'); ?></label>
-                        <div class="form-text"><?php echo $userRow['user_mail']; ?></div>
-                    </div>
-
-                    <div class="form-group">
                         <label><?php echo $lang->get('Permission'); ?></label>
                         <table class="bg-table">
                             <tbody>
@@ -111,6 +106,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </a>
                 </div>
             </div>
+
+            <?php include($cfg['pathInclude'] . 'user_info' . GK_EXT_TPL); ?>
         </div>
     </div>
 

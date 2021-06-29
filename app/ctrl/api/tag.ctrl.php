@@ -9,7 +9,6 @@ namespace app\ctrl\api;
 
 use app\classes\api\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Func;
 use ginkgo\Plugin;
 
 
@@ -54,8 +53,7 @@ class Tag extends Ctrl {
             'tagRow'   => $_arr_tagRow,
         );
 
-        $_mix_result = Plugin::listen('filter_api_tag_read', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_tag_read', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }

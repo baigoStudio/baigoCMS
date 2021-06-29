@@ -100,11 +100,11 @@ class Album extends Ctrl {
 
         $_arr_search  = $this->obj_request->param($_arr_searchParam);
 
-        $_arr_search['status'] = 'enable';
+        //$_arr_search['status'] = 'enable';
 
-        $_arr_getData   = $this->mdl_album->lists(array(1000, 'limit'), $_arr_search); //列出
+        $_arr_albumRows   = $this->mdl_album->lists(array(1000, 'limit'), $_arr_search); //列出
 
-        return $this->json($_arr_getData['dataRows']);
+        return $this->json($_arr_albumRows);
     }
 
 
@@ -128,15 +128,6 @@ class Album extends Ctrl {
 
         foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
             $_arr_attachRow = $this->mdl_attach->read($_value['album_attach_id']);
-
-            if ($_arr_attachRow['rcode'] == 'y070102') {
-                if (!isset($_arr_attachRow['thumb_default'])) {
-                    $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
-                }
-            } else {
-                $_value['thumb_default'] = '';
-            }
-
             $_value['album_url'] = $this->mdl_albumIndex->urlProcess($_value);
             $_value['attachRow'] = $_arr_attachRow;
         }
@@ -178,7 +169,10 @@ class Album extends Ctrl {
             return $this->error($_arr_albumRow['msg'], $_arr_albumRow['rcode']);
         }
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_albumRow['album_attach_id']);
+
         $_arr_tplData = array(
+            'attachRow' => $_arr_attachRow,
             'albumRow'  => $_arr_albumRow,
         );
 
@@ -214,17 +208,24 @@ class Album extends Ctrl {
             if ($_arr_albumRow['rcode'] != 'y060102') {
                 return $this->error($_arr_albumRow['msg'], $_arr_albumRow['rcode']);
             }
+
+            $_arr_attachRow = $this->mdl_attach->read($_arr_albumRow['album_attach_id']);
         } else {
             if (!isset($this->groupAllow['attach']['album']) && !$this->isSuper) { //判断权限
                 return $this->error('You do not have permission', 'x060302');
             }
 
             $_arr_albumRow = array(
-                'album_id'      => 0,
-                'album_name'    => '',
-                'album_status'  => $this->mdl_album->arr_status[0],
-                'album_content' => '',
-                'album_tpl'     => '',
+                'album_id'        => 0,
+                'album_name'      => '',
+                'album_status'    => $this->mdl_album->arr_status[0],
+                'album_content'   => '',
+                'album_tpl'       => '',
+                'album_attach_id' => 0,
+            );
+
+            $_arr_attachRow = array(
+                'attach_thumb' => '',
             );
         }
 
@@ -236,6 +237,7 @@ class Album extends Ctrl {
 
         $_arr_tplData = array(
             'tplRows'   => $_arr_tplRows,
+            'attachRow' => $_arr_attachRow,
             'albumRow'  => $_arr_albumRow,
             'token'     => $this->obj_request->token(),
         );

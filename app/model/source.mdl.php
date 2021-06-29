@@ -102,8 +102,10 @@ class Source extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;

@@ -98,8 +98,7 @@ class Call extends Ctrl {
             'cateRows'  => $_arr_cateRows,
         );
 
-        $_mix_result = Plugin::listen('filter_api_call_cate', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_call_cate', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -127,8 +126,7 @@ class Call extends Ctrl {
             'specRows'  => $_arr_specRows,
         );
 
-        $_mix_result = Plugin::listen('filter_api_call_spec', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_call_spec', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -156,8 +154,7 @@ class Call extends Ctrl {
             'tagRows'  => $_arr_tagRows,
         );
 
-        $_mix_result = Plugin::listen('filter_api_call_tag', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_call_tag', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -169,6 +166,7 @@ class Call extends Ctrl {
         $_arr_searchLink = array(
             'status'    => 'enable',
             'type'      => 'friend',
+            'cate_ids'  => $_arr_callRow['call_cate_ids'],
         );
 
         $_mdl_link     = Loader::model('Link');
@@ -179,8 +177,7 @@ class Call extends Ctrl {
             'linkRows'  => $_arr_linkRows,
         );
 
-        $_mix_result = Plugin::listen('filter_api_call_link', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_call_link', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -227,8 +224,7 @@ class Call extends Ctrl {
             'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows, false),
         );
 
-        $_mix_result = Plugin::listen('filter_api_call_article', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_api_call_article', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }

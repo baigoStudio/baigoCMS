@@ -7,9 +7,12 @@
 namespace app\model\console;
 
 use app\model\Article as Article_Base;
+use ginkgo\Loader;
 use ginkgo\Func;
 use ginkgo\Html;
 use ginkgo\Plugin;
+use ginkgo\Arrays;
+use ginkgo\String;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -55,7 +58,7 @@ class Article extends Article_Base {
         if (isset($this->inputSubmit['article_time_show'])) {
             $_arr_articleData['article_time_show'] = $this->inputSubmit['article_time_show'];
         } else if (isset($this->inputSubmit['article_time_show_format'])) {
-            $_arr_articleData['article_time_show'] = Func::strtotime($this->inputSubmit['article_time_show_format']);
+            $_arr_articleData['article_time_show'] = String::toTime($this->inputSubmit['article_time_show_format']);
         }
 
         if (isset($this->inputSubmit['article_is_time_pub'])) {
@@ -69,11 +72,11 @@ class Article extends Article_Base {
         } else {
             if ($_num_articleId > 0) { //编辑文章时
                 if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSubmit['article_time_pub_format'])) { //表单有输入则更新
-                    $_arr_articleData['article_time_pub'] = Func::strtotime($this->inputSubmit['article_time_pub_format']);
+                    $_arr_articleData['article_time_pub'] = String::toTime($this->inputSubmit['article_time_pub_format']);
                 }
             } else { //创建文章时
                 if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSubmit['article_time_pub_format'])) { //表单有输入
-                    $_arr_articleData['article_time_pub'] = Func::strtotime($this->inputSubmit['article_time_pub_format']);
+                    $_arr_articleData['article_time_pub'] = String::toTime($this->inputSubmit['article_time_pub_format']);
                 } else {
                     $_arr_articleData['article_time_pub'] = GK_NOW; //表单无输入则当前时间
                 }
@@ -90,7 +93,7 @@ class Article extends Article_Base {
             $_arr_articleData['article_time_hide'] = $this->inputSubmit['article_time_hide'];
         } else {
             if ($_arr_articleData['article_is_time_hide'] > 0 && isset($this->inputSubmit['article_time_hide_format'])) { //表单有输入则更新
-                $_arr_articleData['article_time_hide'] = Func::strtotime($this->inputSubmit['article_time_hide_format']);
+                $_arr_articleData['article_time_hide'] = String::toTime($this->inputSubmit['article_time_hide_format']);
             }
         }
 
@@ -118,14 +121,17 @@ class Article extends Article_Base {
             $_arr_articleData['article_is_gen'] = $this->inputSubmit['article_is_gen'];
         }
 
+        if (isset($this->inputSubmit['article_top'])) {
+            $_arr_articleData['article_top'] = $this->inputSubmit['article_top'];
+        }
+
         if ($_num_articleId > 0) {
             $_str_hook = 'edit'; //编辑文章时触发
         } else {
             $_str_hook = 'add';
         }
 
-        $_mix_result        = Plugin::listen('filter_console_article_'. $_str_hook, $_arr_articleData);
-        $_arr_articleData   = Plugin::resultProcess($_arr_articleData, $_mix_result);
+        $_arr_articleData = Plugin::listen('filter_console_article_'. $_str_hook, $_arr_articleData);
 
         $_mix_vld = $this->validate($_arr_articleData, '', 'submit_db');
 
@@ -312,14 +318,16 @@ class Article extends Article_Base {
             'article_top'               => $this->inputSimple['article_top'],
         );
 
-        $_arr_articleData['article_time_show'] = Func::strtotime($_arr_articleData['article_time_show_format']);
-
-        if ($_arr_articleData['article_is_time_pub'] > 0) { //表单有输入则更新
-            $_arr_articleData['article_time_pub'] = Func::strtotime($_arr_articleData['article_time_pub_format']);
+        if (isset($this->inputSimple['article_time_show_format'])) {
+            $_arr_articleData['article_time_show'] = String::toTime($this->inputSimple['article_time_show_format']);
         }
 
-        if ($_arr_articleData['article_is_time_hide'] > 0) { //表单有输入则更新
-            $_arr_articleData['article_time_hide'] = Func::strtotime($_arr_articleData['article_time_hide_format']);
+        if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSimple['article_time_pub_format'])) { //表单有输入则更新
+            $_arr_articleData['article_time_pub']  = String::toTime($this->inputSimple['article_time_pub_format']);
+        }
+
+        if ($_arr_articleData['article_is_time_hide'] > 0 && isset($this->inputSimple['article_time_hide_format'])) { //表单有输入则更新
+            $_arr_articleData['article_time_hide'] = String::toTime($this->inputSimple['article_time_hide_format']);
         }
 
         $_mix_vld = $this->validate($_arr_articleData, '', 'simple_db');
@@ -515,24 +523,44 @@ class Article extends Article_Base {
      * @access public
      * @return void
      */
-    function unknownCate($arr_articleIds) {
+    function clear($pagination = 0, $arr_search = array()) {
+        $_arr_where = array();
 
-        $_arr_articleData = array(
-            'article_cate_id' => -1,
-        );
-
-        $_num_count     = $this->where('article_id', 'IN', $arr_articleIds, 'article_ids')->update($_arr_articleData);
-
-        //如车影响行数小于0则返回错误
-        if ($_num_count > 0) {
-            $_str_rcode = 'y120103';
-        } else {
-            $_str_rcode = 'x120103';
+        if (isset($arr_search['max_id']) && $arr_search['max_id'] > 0) {
+            $_arr_where[] = array('article_id', '<', $arr_search['max_id'], 'max_id');
         }
 
-        return array(
-            'rcode' => $_str_rcode,
-        ); //成功
+        $_arr_select = array(
+            'article_id',
+            'article_cate_id',
+        );
+
+        $_arr_pagination    = $this->paginationProcess($pagination);
+        $_arr_getData       = $this->where($_arr_where)->order('article_id', 'DESC')->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_select);
+
+        if (isset($_arr_getData['dataRows'])) {
+            $_arr_clearData = $_arr_getData['dataRows'];
+        } else {
+            $_arr_clearData = $_arr_getData;
+        }
+
+        if (!Func::isEmpty($_arr_clearData)) {
+            $_mdl_cate = Loader::model('Cate');
+
+            $_arr_articleData = array(
+                'article_cate_id' => -1,
+            );
+
+            foreach ($_arr_clearData as $_key=>$_value) {
+                $_arr_cateRow = $_mdl_cate->check($_value['article_id']);
+
+                if ($_arr_cateRow['rcode'] != 'y250102' && $_value['article_cate_id'] > 0) {
+                    $this->where('article_id', '=', $_value['article_id'])->update($_arr_articleData);
+                }
+            }
+        }
+
+        return $_arr_getData;
     }
 
 
@@ -547,9 +575,7 @@ class Article extends Article_Base {
             'DISTINCT FROM_UNIXTIME(`article_time_pub`, \'%Y\') AS `article_year`',
         );
 
-        $_arr_articleRows     = $this->where('article_time', '>', 0, 'article_time')->order('article_time', 'ASC')->limit(100)->select($_arr_articleSelect);
-
-        return $_arr_articleRows;
+        return $this->where('article_time', '>', 0)->order('article_time', 'ASC')->select($_arr_articleSelect);
     }
 
 
@@ -574,6 +600,7 @@ class Article extends Article_Base {
         $_arr_inputParam = array(
             'article_id'                => array('int', 0),
             'article_title'             => array('str', ''),
+            'article_attach_id'         => array('int', 0),
             'article_link'              => array('str', ''),
             'article_status'            => array('str', ''),
             'article_box'               => array('str', ''),
@@ -598,6 +625,7 @@ class Article extends Article_Base {
             'article_excerpt_type'      => array('str', 'auto'),
             'article_tag_hidden'        => array('str', ''),
             'article_tpl'               => array('str', ''),
+            'article_top'               => array('int', 0),
             '__token__'                 => array('str', ''),
         );
 
@@ -613,12 +641,12 @@ class Article extends Article_Base {
             $_arr_inputSubmit['article_cate_ids'] = array($_arr_inputSubmit['article_cate_id']);
         }
 
-        $_arr_inputSubmit['article_cate_ids'] = Func::arrayFilter($_arr_inputSubmit['article_cate_ids']);
+        $_arr_inputSubmit['article_cate_ids'] = Arrays::filter($_arr_inputSubmit['article_cate_ids']);
 
-        $_arr_inputSubmit['article_spec_ids'] = Func::arrayFilter($_arr_inputSubmit['article_spec_ids']);
+        $_arr_inputSubmit['article_spec_ids'] = Arrays::filter($_arr_inputSubmit['article_spec_ids']);
 
         $_arr_articleTags   = explode(',', $_arr_inputSubmit['article_tag_hidden']);
-        $_arr_inputSubmit['article_tags'] = Func::arrayFilter($_arr_articleTags);
+        $_arr_inputSubmit['article_tags'] = Arrays::filter($_arr_articleTags);
 
         $_mix_vld = $this->validate($_arr_inputSubmit, '', 'submit');
 
@@ -736,7 +764,7 @@ class Article extends Article_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['article_ids'] = Func::arrayFilter($_arr_inputDelete['article_ids']);
+        $_arr_inputDelete['article_ids'] = Arrays::filter($_arr_inputDelete['article_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -766,7 +794,7 @@ class Article extends Article_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['article_ids'] = Func::arrayFilter($_arr_inputStatus['article_ids']);
+        $_arr_inputStatus['article_ids'] = Arrays::filter($_arr_inputStatus['article_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 
@@ -796,7 +824,7 @@ class Article extends Article_Base {
 
         //print_r($_arr_inputMove);
 
-        $_arr_inputMove['article_ids'] = Func::arrayFilter($_arr_inputMove['article_ids']);
+        $_arr_inputMove['article_ids'] = Arrays::filter($_arr_inputMove['article_ids']);
 
         $_mix_vld = $this->validate($_arr_inputMove, '', 'move');
 
@@ -815,11 +843,36 @@ class Article extends Article_Base {
     }
 
 
+    function inputClear() {
+        $_arr_inputParam = array(
+            'max_id'    => array('int', 0),
+            '__token__' => array('str', ''),
+        );
+
+        $_arr_inputClear = $this->obj_request->post($_arr_inputParam);
+
+        $_mix_vld = $this->validate($_arr_inputClear, '', 'clear');
+
+        if ($_mix_vld !== true) {
+            return array(
+                'rcode' => 'x120201',
+                'msg'   => end($_mix_vld),
+            );
+        }
+
+        $_arr_inputClear['rcode'] = 'y120201';
+
+        $this->inputClear = $_arr_inputClear;
+
+        return $_arr_inputClear;
+    }
+
+
     protected function actQueryProcess($arr_articleIds = false, $arr_cateIds = false, $num_adminId = 0, $str_box = '') {
         $_arr_where[] = array('article_id', 'IN', $arr_articleIds, 'article_ids');
 
         if (!Func::isEmpty($arr_cateIds)) {
-            $_str_cateIds = Func::arrayFilter($arr_cateIds);
+            $_str_cateIds = Arrays::filter($arr_cateIds);
             $_arr_where[] = array('article_cate_id', 'IN', $arr_cateIds, 'cate_ids');
         }
 

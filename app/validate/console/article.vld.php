@@ -76,6 +76,10 @@ class Article extends Validate {
         'attach_id' => array(
             '>' => 0,
         ),
+        'max_id' => array(
+            'require' => true,
+            'format'  => 'int',
+        ),
         '__token__' => array(
             'require' => true,
             'token'   => true,
@@ -163,6 +167,10 @@ class Article extends Validate {
         'status' => array(
             'article_ids',
             'act',
+            '__token__',
+        ),
+        'clear' => array(
+            'max_id',
             '__token__',
         ),
         'common' => array(

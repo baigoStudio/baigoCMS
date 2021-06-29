@@ -7,6 +7,7 @@
 namespace app\model\index;
 
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -134,14 +135,20 @@ class Article_Spec_View extends Article {
             $_arr_where[] = array('article_mark_id', '=', $arr_search['mark_id']);
         }
 
+        if (isset($arr_search['mark_ids']) && !Func::isEmpty($arr_search['mark_ids'])) {
+            $arr_search['mark_ids'] = Arrays::filter($arr_search['mark_ids']);
+
+            $_arr_where[] = array('article_mark_id', 'IN', $arr_search['mark_ids'], 'mark_ids');
+        }
+
         if (isset($arr_search['cate_ids']) && !Func::isEmpty($arr_search['cate_ids'])) {
-            $arr_search['cate_ids'] = Func::arrayFilter($arr_search['cate_ids']);
+            $arr_search['cate_ids'] = Arrays::filter($arr_search['cate_ids']);
 
             $_arr_where[] = array('belong_cate_id', 'IN', $arr_search['cate_ids'], 'cate_ids');
         }
 
         if (isset($arr_search['spec_ids']) && !Func::isEmpty($arr_search['spec_ids'])) {
-            $arr_search['spec_ids'] = Func::arrayFilter($arr_search['spec_ids']);
+            $arr_search['spec_ids'] = Arrays::filter($arr_search['spec_ids']);
 
             $_arr_where[] = array('belong_spec_id', 'IN', $arr_search['spec_ids'], 'spec_ids');
         }

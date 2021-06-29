@@ -35,8 +35,8 @@ class Attach_Album_View extends Attach {
 
         if (!Func::isEmpty($_arr_eachData)) {
             foreach ($_arr_eachData as $_key=>&$_value) {
-                $_value                 = $this->rowProcess($_value);
-                $_value['thumbRows']    = $this->thumbProcess($_value);
+                $_value = $this->rowProcess($_value);
+                $_value = $this->thumbProcess($_value);
             }
         }
 
@@ -64,7 +64,7 @@ class Attach_Album_View extends Attach {
         $_arr_where[] = array('attach_box', '=', 'normal');
 
         if (isset($arr_search['key']) && !Func::isEmpty($arr_search['key'])) {
-            $_arr_where[] = array('attach_name|attach_id', 'LIKE', '%' . $arr_search['key'] . '%', 'key');
+            $_arr_where[] = array('attach_name|attach_note|attach_id', 'LIKE', '%' . $arr_search['key'] . '%', 'key');
         }
 
         if (isset($arr_search['year']) && !Func::isEmpty($arr_search['year'])) {

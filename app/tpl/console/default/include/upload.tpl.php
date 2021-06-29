@@ -26,9 +26,6 @@
             var opts_wu = {
                 //附加表单数据
                 formData: {
-                    <?php if (isset($albumRows[0]['album_id'])) { ?>
-                        attach_album_ids: [<?php echo $albumRows[0]['album_id']; ?>],
-                    <?php } ?>
                     <?php echo $token['name']; ?>: '<?php echo $token['value']; ?>'
                 },
                 server: '<?php echo $route_console; ?>attach/upload/', //文件接收服务端
@@ -42,7 +39,8 @@
                 },
                 fileNumLimit: <?php echo $config['var_extra']['upload']['limit_count']; ?>, //队列限制
                 fileSingleSizeLimit: <?php echo $limit_size; ?>, //单个尺寸限制
-                resize: false //不压缩 image
+                resize: false, //不压缩 image
+                compress: false //不压缩 image
             };
 
             function queuedTpl(_key, _file, _msg) {
@@ -85,14 +83,12 @@
                 $('#upload_begin').click(function(){
                     var _formData = obj_wu.option('formData');
 
-                    if (typeof _formData.attach_album_ids == 'undefined') {
-                        _formData.attach_album_ids = [];
+                    if (typeof _formData['attach_album_ids[0]'] == 'undefined') {
+                        _formData['attach_album_ids[0]'] = '';
                     }
 
                     $('.attach_album_ids').each(function(key, value){
-                        if ($(value).prop('checked')) {
-                            _formData.attach_album_ids.push($(value).val());
-                        }
+                        _formData['attach_album_ids[' + key + ']'] = $(value).val();
                     });
 
                     //console.log(_formData);

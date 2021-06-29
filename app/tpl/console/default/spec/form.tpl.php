@@ -117,6 +117,27 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </select>
                             <small class="form-text" id="msg_spec_tpl"></small>
                         </div>
+
+                        <div class="form-group">
+                            <label><?php echo $lang->get('Cover'); ?></label>
+                            <div id="spec_attach_img" class="mb-2">
+                                <?php if (isset($attachRow['attach_thumb']) && !empty($attachRow['attach_thumb'])) { ?>
+                                    <img src="<?php echo $attachRow['attach_thumb']; ?>" class="img-fluid">
+                                <?php } ?>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <input type="text" id="spec_attach_src" readonly value="<?php if (isset($attachRow['attach_thumb'])) { echo $attachRow['attach_thumb']; } ?>" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" href="#spec_modal" data-act="cover">
+                                        <span class="fas fa-image"></span>
+                                        <?php echo $lang->get('Select'); ?>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="spec_attach_id" id="spec_attach_id" value="<?php echo $specRow['spec_attach_id']; ?>">
+                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">
@@ -191,16 +212,23 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         $('#spec_modal').on('shown.bs.modal', function(event) {
     		var _obj_button   = $(event.relatedTarget);
     		var _act          = _obj_button.data('act');
+            var _url          = '<?php echo $route_console; ?>';
 
     		switch (_act) {
-        		case 'album':
-            		var _url  = '<?php echo $route_console; ?>album/choose/view/modal/';
-        		break;
+                case 'album':
+                    _url  += 'album/choose/view/modal/';
+                break;
 
-        		default:
-            		var _url  = '<?php echo $route_console; ?>attach/choose/view/modal/';
-        		break;
+                case 'cover':
+                    _url  += 'attach/choose/target/spec_cover/';
+                break;
+
+                default:
+                    _url  += 'attach/choose/';
+                break;
             }
+
+            _url  += 'view/modal/';
 
             $('#spec_modal .modal-content').load(_url);
     	}).on('hidden.bs.modal', function(){

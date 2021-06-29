@@ -4,6 +4,7 @@
             'default_height'    => 500,
             'resize'            => '',
             'autosize'          => '',
+            'restore'           => '',
         ),
         'excerpt' => array(
             'type'  => 'auto',
@@ -16,7 +17,7 @@
     'opt_extra' => array(
         'app' => array(
             'title' => 'API Permissions',
-            'ctrl'   => 'app',
+            'ctrl'  => 'app',
             'act'   => 'index',
         ),
     ),

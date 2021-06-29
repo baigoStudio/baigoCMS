@@ -17,7 +17,7 @@ $cfg = array(
     'title'             => $title,
     'menu_active'       => 'attach',
     'sub_active'        => $str_sub,
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'tooltip'           => 'true',
     'upload'            => 'true',
@@ -76,7 +76,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <tr>
                                             <td class="text-nowrap bg-td-xs">
                                                 <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" width="60">
+                                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" width="60">
                                                 </a>
                                             </td>
                                             <td>
@@ -104,13 +104,13 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </div>
 
         <div class="col-xl-3">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <?php if ($attachRow['attach_id'] > 0) { ?>
-                        <form name="attach_form" id="attach_form" action="<?php echo $route_console; ?>attach/submit/">
-                            <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
-                            <input type="hidden" name="attach_id" id="attach_id" value="<?php echo $attachRow['attach_id']; ?>">
+            <?php if ($attachRow['attach_id'] > 0) { ?>
+                <form name="attach_form" id="attach_form" action="<?php echo $route_console; ?>attach/submit/">
+                    <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
+                    <input type="hidden" name="attach_id" id="attach_id" value="<?php echo $attachRow['attach_id']; ?>">
 
+                    <div class="card bg-light">
+                        <div class="card-body">
                             <div class="form-group">
                                 <label><?php echo $lang->get('ID'); ?></label>
                                 <input type="text" value="<?php echo $attachRow['attach_id']; ?>" class="form-control-plaintext" readonly>
@@ -118,8 +118,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
                             <div class="form-group">
                                 <label><?php echo $lang->get('Original name'); ?></label>
-                                <input type="text" name="attach_name" id="attach_name" value="<?php echo $attachRow['attach_name']; ?>" class="form-control">
-                                <small class="form-text" id="msg_attach_name"></small>
+                                <input type="text" value="<?php echo $attachRow['attach_name']; ?>" readonly class="form-control">
                             </div>
 
                             <div class="form-group">
@@ -132,6 +131,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <label><?php echo $lang->get('MIME'); ?></label>
                                 <input type="text" name="attach_mime" id="attach_mime" value="<?php echo $attachRow['attach_mime']; ?>" class="form-control">
                                 <small class="form-text" id="msg_attach_mime"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Note'); ?></label>
+                                <input type="text" name="attach_note" id="attach_note" value="<?php echo $attachRow['attach_note']; ?>" class="form-control">
+                                <small class="form-text" id="msg_attach_note"></small>
                             </div>
 
                             <div class="form-group">
@@ -156,11 +161,15 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <?php echo $lang->get('Save'); ?>
                             </button>
                         </div>
-                    </form>
-                <?php } else {
-                    include($cfg['pathInclude'] . 'attach_addon' . GK_EXT_TPL);
-                } ?>
-            </div>
+                    </div>
+                </form>
+            <?php } else { ?>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <?php include($cfg['pathInclude'] . 'attach_addon' . GK_EXT_TPL); ?>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
     </div>
 
@@ -169,8 +178,8 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     <script type="text/javascript">
     var opts_validate_form = {
         rules: {
-            attach_name: {
-                length: '1,1000'
+            attach_note: {
+                max: 1000
             },
             attach_ext: {
                 length: '1,5'
@@ -183,7 +192,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             }
         },
         attr_names: {
-            attach_name: '<?php echo $lang->get('Original name'); ?>',
+            attach_note: '<?php echo $lang->get('Note'); ?>',
             attach_ext: '<?php echo $lang->get('Extension'); ?>',
             attach_mime: '<?php echo $lang->get('MIME'); ?>',
             attach_box: '<?php echo $lang->get('Status'); ?>'
@@ -224,4 +233,5 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         });
     });
     </script>
+
 <?php include($cfg['pathInclude'] . 'html_foot' . GK_EXT_TPL);

@@ -54,6 +54,7 @@ return array(
     'Group'                     => '群组',
     'Do not addon group'        => '不加入组',
     'Group not found'           => '群组不存在',
+    'Info from SSO'             => '来自 SSO 的信息',
     'Add administrator successfully'                                    => '添加管理员成功',
     'Add administrator failed'                                          => '添加管理员失败',
     'Update administrator successfully'                                 => '更新管理员成功',

@@ -4,7 +4,7 @@
 
     if (isset($cfg['baigoDialog'])) { ?>
         <!--表单 ajax 提交 js-->
-        <script src="{:DIR_STATIC}lib/baigoDialog/1.0.1/baigoDialog.min.js" type="text/javascript"></script>
+        <script src="{:DIR_STATIC}lib/baigoDialog/1.1.0/baigoDialog.min.js" type="text/javascript"></script>
     <?php }
 
     if (isset($cfg['prism'])) { ?>

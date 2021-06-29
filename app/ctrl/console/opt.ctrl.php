@@ -68,8 +68,8 @@ class Opt extends Ctrl {
             $_arr_tplData['timezoneLangJson']   = json_encode($_arr_timezoneLang);
             $_arr_tplData['timezoneType']       = strtolower($_arr_timezone[0]);
 
-            $_mdl_thumb     = Loader::model('Thumb');
-            $_arr_thumbRows = $_mdl_thumb->lists(array(1000, 'limit'));
+            $_mdl_thumb     = Loader::model('Thumb', '', false);
+            $_arr_thumbRows = $_mdl_thumb->cache();
 
             $_arr_thumbs = array();
 

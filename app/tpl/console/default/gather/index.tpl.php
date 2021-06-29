@@ -25,7 +25,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -61,7 +61,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 <span class="badge badge-info">
                     <?php echo $lang->get('Site'); ?>:
                     <?php if ($search['gsite'] < 0) {
-                        echo $lang->get('Not belong');
+                        echo $lang->get('Not affiliated');
                     } else {
                         if (isset($gsiteRow['gsite_name'])) {
                             echo $gsiteRow['gsite_name'];
@@ -76,7 +76,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 <span class="badge badge-info">
                     <?php echo $lang->get('Category'); ?>:
                     <?php if ($search['cate'] < 0) {
-                        echo $lang->get('Not belong');
+                        echo $lang->get('Not affiliated');
                     } else {
                         if (isset($cateRow['cate_name'])) {
                             echo $cateRow['cate_name'];
@@ -228,16 +228,18 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </dl>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md">
-                                <div class="mb-2">
-                                    <?php if (isset($value['gsiteRow']['gsite_name'])) { ?>
-                                        <small><?php echo $value['gsiteRow']['gsite_name']; ?></small>
+                                <small>
+                                    <div class="mb-2">
+                                        <?php if (isset($value['gsiteRow']['gsite_name'])) {
+                                            echo $value['gsiteRow']['gsite_name'];
+                                        } ?>
+                                    </div>
+                                    <?php if (isset($value['cateRow']['cate_name'])) { ?>
+                                        <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
+                                            <?php echo $value['cateRow']['cate_name']; ?>
+                                        </abbr>
                                     <?php } ?>
-                                </div>
-                                <?php if (isset($value['cateRow']['cate_name'])) { ?>
-                                    <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
-                                        <?php echo $value['cateRow']['cate_name']; ?>
-                                    </small>
-                                <?php } ?>
+                                </small>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md text-right">
                                 <div class="mb-2">

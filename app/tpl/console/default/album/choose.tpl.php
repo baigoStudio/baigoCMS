@@ -125,7 +125,7 @@
         var _str_appent = '<div class="col-4 col-lg-2 mb-3">' +
             '<div class="card h-100">' +
                 '<a href="' + value.album_url.url + '" class="h-100" target="_blank">' +
-                    '<img src="' + value.thumb_default + '" alt="' + value.album_name + '" class="card-img-top" alt="' + value.album_name + '" title="' + value.album_name + '">' +
+                    '<img src="' + value.attach_thumb + '" alt="' + value.album_name + '" class="card-img-top" alt="' + value.album_name + '" title="' + value.album_name + '">' +
                 '</a>' +
 
                 '<div class="card-body p-2">' +
@@ -133,7 +133,7 @@
                 '</div>' +
 
                 '<div>' +
-                    '<button type="button" class="btn btn-outline-success btn-block bg-btn-bottom album_insert" data-url="' + value.album_url.url + '" data-thumb="' + value.thumb_default + '" data-name="' + value.album_name + '" data-id="' + value.album_id + '">'+
+                    '<button type="button" class="btn btn-outline-success btn-block bg-btn-bottom album_insert" data-url="' + value.album_url.url + '" data-thumb="' + value.attach_thumb + '" data-name="' + value.album_name + '" data-id="' + value.album_id + '">'+
                         '<?php echo $lang->get('Insert album'); ?>' +
                     '</button>' +
                 '</div>' +

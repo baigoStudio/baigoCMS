@@ -8,7 +8,6 @@ namespace app\ctrl\api;
 
 use app\classes\api\Ctrl;
 use ginkgo\Loader;
-use ginkgo\Func;
 use ginkgo\Plugin;
 
 //不能非法包含或直接执行
@@ -50,8 +49,7 @@ class Cate extends Ctrl {
             'cateRow'   => $_arr_cateRow,
         );
 
-        $_mix_result  = Plugin::listen('filter_api_cate_read', $_arr_return); //编辑文章时触发
-        $_arr_return  = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return  = Plugin::listen('filter_api_cate_read', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }
@@ -77,8 +75,7 @@ class Cate extends Ctrl {
             'cate_tree'   => $_arr_cateTree,
         );
 
-        $_mix_result   = Plugin::listen('filter_api_cate_tree', $_arr_return); //编辑文章时触发
-        $_arr_return   = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return   = Plugin::listen('filter_api_cate_tree', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }

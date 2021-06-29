@@ -9,6 +9,7 @@ namespace app\classes\console;
 use app\classes\Ctrl as Ctrl_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\File;
 use ginkgo\Session;
 use ginkgo\Cookie;
 use ginkgo\Config;
@@ -169,7 +170,7 @@ abstract class Ctrl extends Ctrl_Base {
 
         $arr_adminRow = array_replace_recursive($arr_adminRow, $_arr_loginResult);
 
-        $this->obj_auth->write($arr_adminRow, true, $str_type, $str_remember, array($this->url['route_console'], $this->url['route_gen']));
+        $this->obj_auth->write($arr_adminRow, false, $str_type, $str_remember, array($this->url['route_console'], $this->url['route_gen']));
 
         return array(
             'rcode' => 'y020401',
@@ -215,7 +216,7 @@ abstract class Ctrl extends Ctrl_Base {
 
         $_str_configInstalled     = GK_APP_CONFIG . 'installed' . GK_EXT_INC;
 
-        if (Func::isFile($_str_configInstalled)) { //如果新文件存在
+        if (File::fileHas($_str_configInstalled)) { //如果新文件存在
             $_arr_installed       = Config::load($_str_configInstalled, 'installed');
 
             if (PRD_CMS_PUB > $_arr_installed['prd_installed_pub']) { //如果小于当前版本

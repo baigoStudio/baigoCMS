@@ -9,7 +9,9 @@ namespace app\model;
 use app\classes\Model;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 use ginkgo\Config;
+use ginkgo\String;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -17,16 +19,16 @@ defined('IN_GINKGO') or exit('Access Denied');
 /*-------------附件模型-------------*/
 class Attach extends Model {
 
-    protected $obj_request;
-    protected $urlPrefix;
-    protected $thumbRows    = array();
-    public $arr_box         = array('normal', 'recycle', 'reserve');
+    public $thumbRows   = array();
+    public $arr_box     = array('normal', 'recycle', 'reserve');
+
+    public $urlPrefix;
 
     function m_init() { //构造函数
         parent::m_init();
 
         $_arr_configUpload  = Config::get('upload', 'var_extra');
-        $_mdl_thumb         = Loader::model('Thumb', '', 'index');
+        $_mdl_thumb         = Loader::model('Thumb', '', false);
 
         $this->thumbRows    = $_mdl_thumb->cache();
 
@@ -34,7 +36,10 @@ class Attach extends Model {
         $_str_dirAttach     = str_replace(DS, '/', $_str_dirAttach);
         $_str_dirAttach     = Func::fixDs($_str_dirAttach, '/');
 
-        $this->urlPrefix    = $this->obj_request->root() . $_str_dirAttach;
+        $_str_dirRoot       = $this->obj_request->root();
+
+        $this->urlPrefix    = $_str_dirRoot . $_str_dirAttach;
+        $this->dirPrefix    = $_str_dirRoot . GK_NAME_STATIC . '/image/';
 
         if (!Func::isEmpty($_arr_configUpload['ftp_host']) && !Func::isEmpty($_arr_configUpload['url_prefix'])) {
             $this->urlPrefix = Func::fixDs($_arr_configUpload['url_prefix'], '/');
@@ -62,14 +67,8 @@ class Attach extends Model {
             return $_arr_attachRow;
         }
 
-        $_arr_attachRow                 = $this->rowProcess($_arr_attachRow);
-        $_arr_thumbRows                 = $this->thumbProcess($_arr_attachRow);
-
-        if (isset($_arr_thumbRows[0]['thumb_url'])) {
-            $_arr_attachRow['thumb_default'] = $_arr_thumbRows[0]['thumb_url'];
-        }
-
-        $_arr_attachRow['thumbRows']    = $_arr_thumbRows;
+        $_arr_attachRow = $this->rowProcess($_arr_attachRow);
+        $_arr_attachRow = $this->thumbProcess($_arr_attachRow);
 
         return $_arr_attachRow;
     }
@@ -87,6 +86,7 @@ class Attach extends Model {
             $arr_select = array(
                 'attach_id',
                 'attach_name',
+                'attach_note',
                 'attach_time',
                 'attach_ext',
                 'attach_mime',
@@ -130,6 +130,7 @@ class Attach extends Model {
             $arr_select = array(
                 'attach_id',
                 'attach_name',
+                'attach_note',
                 'attach_time',
                 'attach_ext',
                 'attach_mime',
@@ -146,7 +147,7 @@ class Attach extends Model {
 
         $_arr_where         = $this->queryProcess($arr_search);
         $_arr_pagination    = $this->paginationProcess($pagination);
-        $_arr_getData       = $this->where($_arr_where)->order($arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($arr_select);
+        $_arr_getData       = $this->where($_arr_where)->order($arr_order)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'], $_arr_pagination['pageparam'])->select($arr_select);
 
         if (isset($_arr_getData['dataRows'])) {
             $_arr_eachData = &$_arr_getData['dataRows'];
@@ -154,15 +155,11 @@ class Attach extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value         = $this->rowProcess($_value);
-            $_arr_thumbRows = $this->thumbProcess($_value);
-
-            if (isset($_arr_thumbRows[0]['thumb_url'])) {
-                $_value['thumb_default'] = $_arr_thumbRows[0]['thumb_url'];
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+                $_value = $this->thumbProcess($_value);
             }
-
-            $_value['thumbRows'] = $_arr_thumbRows;
         }
 
         return $_arr_getData;
@@ -200,6 +197,9 @@ class Attach extends Model {
     protected function thumbProcess($arr_attachRow) {
         $_arr_thumbRows = array();
 
+        $arr_attachRow['thumb_default'] = $this->dirPrefix . 'file_' . $arr_attachRow['attach_ext'] . '.png';
+        $arr_attachRow['attach_thumb']  = $this->dirPrefix . 'file_' . $arr_attachRow['attach_ext'] . '.png';
+
         if ($arr_attachRow['attach_type'] == 'image') {
             foreach ($this->thumbRows as $_key=>$_value) {
                 $_arr_thumbRows[$_key]                      = $_value;
@@ -207,9 +207,16 @@ class Attach extends Model {
                 $_arr_thumbRows[$_key]['thumb_url_name']    = $_str_thumbNameUrl;
                 $_arr_thumbRows[$_key]['thumb_url']         = $this->urlPrefix . $_str_thumbNameUrl;
             }
+
+            if (isset($_arr_thumbRows[0]['thumb_url'])) {
+                $arr_attachRow['thumb_default'] = $_arr_thumbRows[0]['thumb_url'];
+                $arr_attachRow['attach_thumb']  = $_arr_thumbRows[0]['thumb_url'];
+            }
         }
 
-        return $_arr_thumbRows;
+        $arr_attachRow['thumbRows'] = $_arr_thumbRows;
+
+        return $arr_attachRow;
     }
 
 
@@ -217,7 +224,7 @@ class Attach extends Model {
         $_arr_where = array();
 
         if (isset($arr_search['key']) && !Func::isEmpty($arr_search['key'])) {
-            $_arr_where[] = array('attach_name|attach_id', 'LIKE', '%' . $arr_search['key'] . '%', 'key');
+            $_arr_where[] = array('attach_name|attach_note|attach_id', 'LIKE', '%' . $arr_search['key'] . '%', 'key');
         }
 
         if (isset($arr_search['year']) && !Func::isEmpty($arr_search['year'])) {
@@ -237,7 +244,7 @@ class Attach extends Model {
         }
 
         if (isset($arr_search['attach_ids']) && !Func::isEmpty($arr_search['attach_ids'])) {
-            $arr_search['attach_ids'] = Func::arrayFilter($arr_search['attach_ids']);
+            $arr_search['attach_ids'] = Arrays::filter($arr_search['attach_ids']);
 
             $_arr_where[] = array('attach_id', 'IN', $arr_search['attach_ids'], 'attach_ids');
         }
@@ -259,7 +266,7 @@ class Attach extends Model {
         }
 
         if (isset($arr_search['album_ids']) && !Func::isEmpty($arr_search['album_ids'])) {
-            $arr_search['album_ids'] = Func::arrayFilter($arr_search['album_ids']);
+            $arr_search['album_ids'] = Arrays::filter($arr_search['album_ids']);
 
             $_arr_where[] = array('belong_album_id', 'IN', $arr_search['album_ids'], 'album_ids');
         }
@@ -301,12 +308,12 @@ class Attach extends Model {
             $arr_attachRow['attach_size'] = 0;
         }
 
-        $_str_attachNameUrl                         = $this->nameProcess($arr_attachRow);
-        $arr_attachRow['attach_url_name']           = $_str_attachNameUrl;
-        $arr_attachRow['attach_url']                = $this->urlPrefix . $_str_attachNameUrl;
+        $_str_attachNameUrl                  = $this->nameProcess($arr_attachRow);
+        $arr_attachRow['attach_url_name']    = $_str_attachNameUrl;
+        $arr_attachRow['attach_url']         = $this->urlPrefix . $_str_attachNameUrl;
         $arr_attachRow['attach_time_format'] = $this->dateFormat($arr_attachRow['attach_time']);
 
-        $arr_attachRow['attach_size_format'] = Func::sizeFormat($arr_attachRow['attach_size']);
+        $arr_attachRow['attach_size_format'] = String::sizeFormat($arr_attachRow['attach_size']);
 
         return $arr_attachRow;
     }

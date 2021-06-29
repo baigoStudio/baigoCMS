@@ -13,7 +13,7 @@ use ginkgo\File;
 use ginkgo\Upload;
 use ginkgo\Image;
 use ginkgo\Ftp;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -38,11 +38,12 @@ class Attach extends Ctrl {
             );
 
             if (!Func::isEmpty($_config_ftp['host']) && !Func::isEmpty($_config_ftp['user']) && !Func::isEmpty($_config_ftp['pass'])) {
-                $this->obj_ftp = Ftp::instance($_config_ftp);
+                $this->obj_ftp   = Ftp::instance($_config_ftp);
                 $this->ftpInit   = true;
             }
         }
 
+        $this->obj_upload       = Upload::instance();
         $this->obj_qlist        = Loader::classes('Qlist');
 
         $this->mdl_admin        = Loader::model('Admin');
@@ -102,10 +103,6 @@ class Attach extends Ctrl {
         $_arr_getData   = $this->mdl_attach->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-
             $_value['adminRow'] = $this->mdl_admin->read($_value['attach_admin_id']);
         }
 
@@ -157,16 +154,17 @@ class Attach extends Ctrl {
             return $this->error('You do not have permission', 'x070301');
         }
 
-        $_num_articleId = 0;
+        $_arr_searchParam = array(
+            'article' => array('int', 0),
+            'target'  => array('str', ''),
+        );
 
-        if (isset($this->param['article'])) {
-            $_num_articleId = $this->obj_request->input($this->param['article'], 'int', 0);
-        }
+        $_arr_search = $this->obj_request->param($_arr_searchParam);
 
         $_arr_articleRow = array();
 
-        if ($_num_articleId > 0) {
-            $_arr_articleRow = $this->mdl_article->read($_num_articleId);
+        if ($_arr_search['article'] > 0) {
+            $_arr_articleRow = $this->mdl_article->read($_arr_search['article']);
         }
 
         $_arr_yearRows  = $this->mdl_attach->year();
@@ -177,11 +175,12 @@ class Attach extends Ctrl {
         }
 
         $_arr_tplData = array(
-            'articleRow'    => $_arr_articleRow,
-            'yearRows'      => $_arr_yearRows, //目录列表
-            'extRows'       => $_arr_extRows, //扩展名列表
-            'thumbType'     => Json::encode($_arr_thumbType),
-            'token'         => $this->obj_request->token(),
+            'search'     => $_arr_search,
+            'articleRow' => $_arr_articleRow,
+            'yearRows'   => $_arr_yearRows, //目录列表
+            'extRows'    => $_arr_extRows, //扩展名列表
+            'thumbType'  => Arrays::toJson($_arr_thumbType),
+            'token'      => $this->obj_request->token(),
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
@@ -205,15 +204,14 @@ class Attach extends Ctrl {
             $_num_attachId = $this->obj_request->input($this->param['id'], 'int', 0);
         }
 
-        $_arr_attachRow = array(
-            'attach_id' => 0,
-        );
-        $_arr_albumRow      = array(
+
+        $_arr_albumRow = array(
             'album_id' => 0,
         );
-        $_arr_adminRow      = array();
-        $_arr_albumRows     = array();
-        $_arr_getData       = array();
+        $_arr_albumRows = array();
+        $_arr_getData = array(
+            'dataRows' => array(),
+        );
 
         if ($_num_attachId > 0) {
             if (!isset($this->groupAllow['attach']['edit']) && !$this->isSuper) { //判断权限
@@ -229,7 +227,7 @@ class Attach extends Ctrl {
             if ($_arr_attachRow['attach_type'] == 'image') {
                 //print_r($_arr_url);
                 foreach ($_arr_attachRow['thumbRows'] as $_key_thumb=>$_value_thumb) {
-                    if (Func::isFile($_value_thumb['thumb_path'])) {
+                    if (File::fileHas($_value_thumb['thumb_path'])) {
                         $_arr_attachRow['thumbRows'][$_key_thumb]['thumb_exists'] = 'exists';
                     } else {
                         $_arr_attachRow['thumbRows'][$_key_thumb]['thumb_exists'] = 'notfound';
@@ -239,7 +237,7 @@ class Attach extends Ctrl {
                 $_arr_attachRow['attach_url'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
             }
 
-            if (Func::isFile($_arr_attachRow['attach_path'])) {
+            if (File::fileHas($_arr_attachRow['attach_path'])) {
                 $_arr_attachRow['attach_exists'] = 'exists';
             } else {
                 $_arr_attachRow['attach_exists'] = 'notfound';
@@ -256,6 +254,12 @@ class Attach extends Ctrl {
                 return $this->error('You do not have permission', 'x070302');
             }
 
+            $_arr_attachRow = array(
+                'attach_id' => 0,
+            );
+
+            $_arr_adminRow = array();
+
             $_num_albumId  = 0;
 
             if (isset($this->param['album'])) {
@@ -269,7 +273,7 @@ class Attach extends Ctrl {
                     return $this->error($_arr_albumRow['msg'], $_arr_albumRow['rcode']);
                 }
 
-                $_arr_albumRows[]   = $_arr_albumRow;
+                $_arr_albumRows[0] = $_arr_albumRow;
 
                 $_arr_searchBelong = array(
                     'album_id' => $_num_albumId,
@@ -278,22 +282,17 @@ class Attach extends Ctrl {
                 $_mdl_attachAlbumView  = Loader::model('Attach_Album_View');
 
                 $_arr_getData    = $_mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
-
-                foreach ($_arr_getData as $_key=>&$_value) {
-                    if (!isset($_value['thumb_default'])) {
-                        $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-                    }
-                }
             }
         }
 
         //print_r($_arr_albumIds);
 
         $_arr_tplData = array(
-            'attachRows'    => $_arr_getData,
+            'attachRows'    => $_arr_getData['dataRows'],
             'albumRows'     => $_arr_albumRows,
             'albumRow'      => $_arr_albumRow,
             'attachRow'     => $_arr_attachRow,
+            'adminRow'      => $_arr_adminRow,
             'token'         => $this->obj_request->token(),
         );
 
@@ -335,7 +334,7 @@ class Attach extends Ctrl {
         if ($_arr_attachRow['attach_type'] == 'image') {
             //print_r($_arr_url);
             foreach ($_arr_attachRow['thumbRows'] as $_key_thumb=>$_value_thumb) {
-                if (Func::isFile($_value_thumb['thumb_path'])) {
+                if (File::fileHas($_value_thumb['thumb_path'])) {
                     $_arr_attachRow['thumbRows'][$_key_thumb]['thumb_exists'] = 'exists';
                 } else {
                     $_arr_attachRow['thumbRows'][$_key_thumb]['thumb_exists'] = 'notfound';
@@ -345,7 +344,7 @@ class Attach extends Ctrl {
             $_arr_attachRow['attach_url'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
         }
 
-        if (Func::isFile($_arr_attachRow['attach_path'])) {
+        if (File::fileHas($_arr_attachRow['attach_path'])) {
             $_arr_attachRow['attach_exists'] = 'exists';
         } else {
             $_arr_attachRow['attach_exists'] = 'notfound';
@@ -407,12 +406,6 @@ class Attach extends Ctrl {
 
         $_arr_getData   = $this->mdl_attach->lists(12, $_arr_search); //列出
 
-        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-        }
-
         $_arr_tplData = array(
             'search'        => $_arr_search,
             'pageRow'       => $_arr_getData['pageRow'],
@@ -453,9 +446,9 @@ class Attach extends Ctrl {
 
         $_num_submitCount = 0;
 
-        if (Func::isEmpty($_arr_albumIds)) {
+        if (Func::isEmpty($_arr_inputSubmit['attach_album_ids'])) {
             $_num_deleteCount = $this->mdl_albumBelong->delete(0, $_arr_inputSubmit['attach_id']);
-        } else {
+        } else if (!Func::isEmpty($_arr_albumIds)) {
             foreach ($_arr_albumIds as $_key=>$_value) {
                 $_arr_submitResultBelong = $this->mdl_albumBelong->submit($_arr_inputSubmit['attach_id'], $_value);
 
@@ -505,21 +498,21 @@ class Attach extends Ctrl {
             return $this->fetchJson($_arr_inputUpload['msg'], $_arr_inputUpload['rcode']);
         }
 
-        $_obj_upload = Upload::instance();
+        $this->obj_upload->setMime($this->mimeRows);
 
-        $_obj_upload->setMime($this->mimeRows);
-
-        if (!$_obj_upload->create('attach_files')) {
-            $_str_error  = $_obj_upload->getError();
+        if (!$this->obj_upload->create('attach_files')) {
+            $_str_error  = $this->obj_upload->getError();
             return $this->fetchJson($_str_error, 'x070403');
         }
 
         $this->mdl_attach->inputSubmit = array(
-            'attach_name'       => $_obj_upload->name(),
-            'attach_ext'        => $_obj_upload->ext(),
-            'attach_mime'       => $_obj_upload->mime(),
+            'attach_name'       => $this->obj_upload->getInfo('name'),
+            'attach_note'       => $this->obj_upload->getInfo('name'),
+            'attach_ext'        => $this->obj_upload->getInfo('ext'),
+            'attach_mime'       => $this->obj_upload->getInfo('mime'),
+            'attach_size'       => $this->obj_upload->getInfo('size'),
+            'attach_box'        => 'normal',
             'attach_admin_id'   => $this->adminLogged['admin_id'],
-            'attach_size'       => $_obj_upload->size(),
         );
 
         $_arr_submitResult = $this->mdl_attach->submit();
@@ -533,11 +526,11 @@ class Attach extends Ctrl {
 
         $_arr_attachPath = pathinfo($_arr_submitResult['attach_path']);
 
-        if (!$_obj_upload->move($_arr_attachPath['dirname'], $_arr_attachPath['basename'])) {
+        if (!$this->obj_upload->move($_arr_attachPath['dirname'], $_arr_attachPath['basename'])) {
             $this->mdl_attach->inputReserve['attach_id'] = $_arr_submitResult['attach_id'];
             $this->mdl_attach->reserve();
 
-            $_str_error = $_obj_upload->getError();
+            $_str_error = $this->obj_upload->getError();
 
             return $this->fetchJson($_str_error, 'x070401');
         }
@@ -553,9 +546,9 @@ class Attach extends Ctrl {
         );
         $_arr_albumIds = $this->mdl_album->ids($_arr_searchAlbum);
 
-        if (Func::isEmpty($_arr_albumIds)) {
+        if (Func::isEmpty($_arr_inputUpload['attach_album_ids'])) {
             $_num_deleteCount = $this->mdl_albumBelong->delete(0, $_arr_submitResult['attach_id']);
-        } else {
+        } else if (!Func::isEmpty($_arr_albumIds)) {
             foreach ($_arr_albumIds as $_key=>$_value) {
                 $this->mdl_albumBelong->submit($_arr_submitResult['attach_id'], $_value);
             }
@@ -615,7 +608,7 @@ class Attach extends Ctrl {
 
         if ($_arr_getData['pageRow']['page'] < $_arr_getData['pageRow']['total']) {
             foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
-                if (Func::isFile($_value['attach_path'])) {
+                if (File::fileHas($_value['attach_path'])) {
                     $this->uploadProcess($_value);
                 } else {
                     $this->mdl_attach->inputReserve['attach_id'] = $_value['attach_id'];
@@ -627,7 +620,7 @@ class Attach extends Ctrl {
             $_str_msg    = 'Submitting';
         } else if ($_arr_getData['pageRow']['page'] == $_arr_getData['pageRow']['total']) {
             foreach ($_arr_getData['dataRows'] as $_key=>$_value) {
-                if (Func::isFile($_value['attach_path'])) {
+                if (File::fileHas($_value['attach_path'])) {
                     $this->uploadProcess($_value);
                 } else {
                     $this->mdl_attach->inputReserve['attach_id'] = $_value['attach_id'];
@@ -677,7 +670,7 @@ class Attach extends Ctrl {
             return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);
         }
 
-        if (!Func::isFile($_arr_attachRow['attach_path'])) {
+        if (!File::fileHas($_arr_attachRow['attach_path'])) {
             $this->mdl_attach->inputReserve['attach_id'] = $_arr_attachRow['attach_id'];
             $this->mdl_attach->reserve();
 
@@ -809,11 +802,11 @@ class Attach extends Ctrl {
             return $this->fetchJson($_arr_inputDelete['msg'], $_arr_inputDelete['rcode']);
         }
 
-        $_arr_deleteResult = $this->deleteProcess($_arr_search);
+        $_arr_deleteResult = $this->deleteProcess($_arr_inputDelete);
 
-        if ($_arr_deleteResult['rcode'] == 'y070104') {
+        /*if ($_arr_deleteResult['rcode'] == 'y070104') {
             return $this->fetchJson($_arr_deleteResult['msg'], $_arr_deleteResult['rcode']);
-        }
+        }*/
 
         $_arr_langReplace = array(
             'count' => $_arr_deleteResult['count'],
@@ -908,19 +901,7 @@ class Attach extends Ctrl {
         }
 
         if ($this->ftpInit) {
-            if (!$this->obj_ftp->init()) {
-                $_str_error = $this->obj_ftp->getError();
-                return array(
-                    'msg'   => $_str_error,
-                    'rcode' => 'x070410',
-                );
-            }
-
-            /*print_r($attachRow['attach_path']);
-            print_r(PHP_EOL);
-            print_r('/' . $attachRow['attach_url_name']);*/
-
-            if (!$this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false, FTP_BINARY)) {
+            if (!$this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false)) {
                 $_str_error = $this->obj_ftp->getError();
                 return array(
                     'msg'   => $_str_error,
@@ -934,7 +915,7 @@ class Attach extends Ctrl {
                 foreach ($_arr_thumbs as $_key=>$_value) {
                     $_str_remoteThumb = str_ireplace(GK_PATH_ATTACH, '', $_value);
 
-                    if (!$this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false, FTP_BINARY)) {
+                    if (!$this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false)) {
                         return array(
                             'msg'   => 'Upload thumbnail to remote directory failed',
                             'rcode' => 'x070410',
@@ -964,14 +945,6 @@ class Attach extends Ctrl {
         }
 
         if ($this->ftpInit) {
-            if (!$this->obj_ftp->init()) {
-                $_str_error = $this->obj_ftp->getError();
-                return array(
-                    'msg'   => $_str_error,
-                    'rcode' => 'x070401',
-                );
-            }
-
             foreach ($_arr_attachRows as $_key=>$_value) {
                 if (isset($_value['thumbRows']) && !Func::isEmpty($_value['thumbRows'])) {
                     foreach ($_value['thumbRows'] as $_key_thumb=>$_value_thumb) {
@@ -992,61 +965,17 @@ class Attach extends Ctrl {
 
 
     protected function init($chk_admin = true) {
-        $_mdl_mime          = Loader::model('Mime');
+        $_mdl_mime           = Loader::model('Mime');
 
-        $_arr_mimes         = array();
-        $_arr_allowMimes    = array();
-        $_arr_allowExts     = array();
-        $_arr_mimeRows      = $_mdl_mime->lists(array(1000, 'limit'));
-        $_arr_thumbRows     = $this->mdl_thumb->lists(array(1000, 'limit'));
+        $this->mimeRows      = $_mdl_mime->cache();
+        $this->allowExts     = $_mdl_mime->cache('allow_ext');
+        $this->allowMimes    = $_mdl_mime->cache('allow_mime');
 
-        foreach ($_arr_mimeRows as $_key=>$_value) {
-            $_arr_allowExts[] = strtolower($_value['mime_ext']);
-            if (is_array($_value['mime_content'])) {
-                if (Func::isEmpty($_arr_allowMimes)) {
-                    $_arr_allowMimes  = $_value['mime_content'];
-                } else {
-                    $_arr_allowMimes  = array_merge($_arr_allowMimes, $_value['mime_content']);
-                }
-
-                $_arr_mimes[strtolower($_value['mime_ext'])] = $_value['mime_content'];
-            }
-        }
-
-        $this->thumbRows     = $_arr_thumbRows;
-        $this->mimeRows      = $_arr_mimes;
-        $this->allowExts     = Func::arrayFilter($_arr_allowExts);
-        $this->allowMimes    = Func::arrayFilter($_arr_allowMimes);
-
-        //print_r($this->allowMimes);
-        $_str_limitUnit = strtolower($this->config['var_extra']['upload']['limit_unit']);
-        $_num_sizeUnit  = 1;
-
-        switch ($_str_limitUnit) { //初始化单位
-            case 'tb':
-                $_num_sizeUnit = GK_TB;
-            break;
-
-            case 'gb':
-                $_num_sizeUnit = GK_GB;
-            break;
-
-            case 'mb':
-                $_num_sizeUnit = GK_MB;
-            break;
-
-            case 'kb':
-                $_num_sizeUnit = GK_KB;
-            break;
-
-            default:
-                $_num_sizeUnit = 1;
-            break;
-        }
+        $this->thumbRows     = $this->mdl_attach->thumbRows;
 
         $this->generalData['allow_exts']    = implode(',', $this->allowExts);
         $this->generalData['allow_mimes']   = implode(',', $this->allowMimes);
-        $this->generalData['limit_size']    = $this->config['var_extra']['upload']['limit_size'] * $_num_sizeUnit;
+        $this->generalData['limit_size']    = $this->obj_upload->limitSize;
 
         return parent::init();
     }

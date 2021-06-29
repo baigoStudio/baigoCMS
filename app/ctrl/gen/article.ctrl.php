@@ -218,24 +218,22 @@ class Article extends Ctrl {
 
         $_arr_tagRows    = $this->obj_index->tagLists($_arr_inputSubmit['article_id']);
 
-        $_arr_attachRow  = array();
-
         $_arr_tagIds     = array();
-        $_arr_assRows    = array();
 
         foreach ($_arr_tagRows as $_key=>$_value) {
             $_arr_tagIds[] = $_value['tag_id'];
         }
 
-        if (!Func::isEmpty($_arr_tagIds)) {
-            $_arr_assRows = $this->obj_index->assLists($_arr_tagIds);
-        }
+        $_arr_assRows = $this->obj_index->assLists($_arr_tagIds, $_arr_cateRow['cate_ids']);
 
         $_arr_articleRow['article_content'] = $this->obj_index->linkProcess($_arr_articleRow['article_content'], $_arr_cateRow['cate_ids']);
         $_arr_articleRow['article_content'] = $this->obj_index->albumProcess($_arr_articleRow['article_content']);
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
+
         $_arr_tplData = array(
             'cateRow'       => $_arr_cateRow,
+            'attachRow'     => $_arr_attachRow,
             'articleRow'    => $_arr_articleRow,
             'tagRows'       => $_arr_tagRows,
             'associateRows' => $_arr_assRows,
@@ -284,8 +282,7 @@ class Article extends Ctrl {
 
         //print_r($_str_tpl);
 
-        $_mix_result    = Plugin::listen('filter_gen_article', $arr_tplData); //编辑文章时触发
-        $arr_tplData    = Plugin::resultProcess($arr_tplData, $_mix_result);
+        $arr_tplData    = Plugin::listen('filter_gen_article', $arr_tplData); //编辑文章时触发
 
         $_mix_outputResult = $this->outputProcess($arr_tplData, $arr_tplData['articleRow']['article_path'], $_str_tplPath, $_str_tpl);
 
@@ -310,15 +307,6 @@ class Article extends Ctrl {
 
 
     private function ftpProcess($arr_articleRow) {
-        if (!$this->obj_ftp->init()) {
-            return array(
-                'msg'   => $this->obj_ftp->getError(),
-                'rcode' => 'x070410',
-            );
-        }
-
-        //print_r($this->ftpRow['cate_ftp_path'] . '/' . $arr_articleRow['article_path_name']);
-
         $_ftp_status = $this->obj_ftp->fileUpload($arr_articleRow['article_path'], '/' . $this->configRoute['article'] . '/' . $arr_articleRow['article_path_name']);
 
         if ($_ftp_status !== true) {

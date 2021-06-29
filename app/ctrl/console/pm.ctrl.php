@@ -48,7 +48,7 @@ class Pm extends Ctrl {
             'key'               => $_arr_search['key'],
             'page'              => $_arr_search['page'],
         );
-        $_arr_reseult   = $this->obj_pm->lists($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_reseult   = $this->obj_pm->lists($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         if (!isset($_arr_reseult['pmRows']) || Func::isEmpty($_arr_reseult['pmRows'])) {
             $_arr_reseult = array(
@@ -96,7 +96,7 @@ class Pm extends Ctrl {
             'pm_id'             => $_num_pmId,
         );
 
-        $_arr_pmRow = $this->obj_pm->read($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_pmRow = $this->obj_pm->read($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         if ($_arr_pmRow['rcode'] != 'y110102') {
             return $this->error($_arr_pmRow['msg'], $_arr_pmRow['msg']);
@@ -108,7 +108,7 @@ class Pm extends Ctrl {
             'pm_ids'            => array($_num_pmId),
         );
 
-        $this->obj_pm->status($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $this->obj_pm->status($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         $_arr_pmRow['pm_title']     = Ubbcode::convert($_arr_pmRow['pm_title']);
         $_arr_pmRow['pm_content']   = Ubbcode::convert($_arr_pmRow['pm_content']);
@@ -155,7 +155,7 @@ class Pm extends Ctrl {
                 'pm_id'             => $_num_pmId,
             );
 
-            $_arr_pmRow = $this->obj_pm->read($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+            $_arr_pmRow = $this->obj_pm->read($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
             if ($_arr_pmRow['rcode'] != 'y110102') {
                 return $this->error($_arr_pmRow['msg'], $_arr_pmRow['msg']);
@@ -208,7 +208,7 @@ class Pm extends Ctrl {
             'pm_content'        => $_arr_inputSend['pm_content'],
         );
 
-        $_arr_sendResult = $this->obj_pm->send($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_sendResult = $this->obj_pm->send($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         return $this->json($_arr_sendResult);
     }
@@ -236,7 +236,7 @@ class Pm extends Ctrl {
             'pm_ids'            => $_arr_inputRevoke['pm_ids'],
         );
 
-        $_arr_revokeResult = $this->obj_pm->revoke($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_revokeResult = $this->obj_pm->revoke($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         return $this->json($_arr_revokeResult);
     }
@@ -264,7 +264,7 @@ class Pm extends Ctrl {
             'pm_ids'            => $_arr_inputDelete['pm_ids'],
         );
 
-        $_arr_deleteResult = $this->obj_pm->delete($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_deleteResult = $this->obj_pm->delete($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         return $this->json($_arr_deleteResult);
     }
@@ -293,7 +293,7 @@ class Pm extends Ctrl {
             'pm_status'         => $_arr_inputStatus['act'],
         );
 
-        $_arr_statusResult = $this->obj_pm->status($this->adminLogged['admin_id'], 'user_id', $_arr_pmSubmit);
+        $_arr_statusResult = $this->obj_pm->status($this->adminLogged['admin_id'], $_arr_pmSubmit);
 
         return $this->json($_arr_statusResult);
     }

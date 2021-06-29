@@ -10,7 +10,7 @@ $cfg = array(
     'title'             => $lang->get('Call', 'console.common') . ' &raquo; ' . $title_sub,
     'menu_active'       => 'call',
     'sub_active'        => $str_sub,
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'baigoCheckall'     => 'true',
     'typeahead'         => 'true',
@@ -40,102 +40,91 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             <small class="form-text" id="msg_call_name"></small>
                         </div>
 
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="call_article">
-                                <div class="alert alert-success">
-                                    <span class="fas fa-filter"></span>
-                                    <?php echo $lang->get('Filter'); ?>
-                                </div>
+                        <div class="alert alert-success">
+                            <span class="fas fa-filter"></span>
+                            <?php echo $lang->get('Filter'); ?>
+                        </div>
 
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Category'); ?></label>
-                                    <div class="form-check">
-                                        <label for="call_cate_ids_0"  class="form-check-label">
-                                            <input type="checkbox" id="call_cate_ids_0" data-parent="first" class="form-check-input">
-                                            <?php echo $lang->get('All categories'); ?>
-                                        </label>
-                                    </div>
-                                    <table class="bg-table">
-                                        <tbody>
-                                            <?php $cate_ids = $callRow['call_cate_ids'];
-                                            $form_name = 'call';
-                                            include($cfg['pathInclude'] . 'cate_list_checkbox' . GK_EXT_TPL); ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div class="form-group call_for_article call_for_link">
+                            <label><?php echo $lang->get('Category'); ?></label>
+                            <div class="form-check">
+                                <label for="call_cate_ids_0"  class="form-check-label">
+                                    <input type="checkbox" id="call_cate_ids_0" data-parent="first" class="form-check-input">
+                                    <?php echo $lang->get('All categories'); ?>
+                                </label>
+                            </div>
+                            <table class="bg-table">
+                                <tbody>
+                                    <?php $cate_ids = $callRow['call_cate_ids'];
+                                    $form_name = 'call';
+                                    include($cfg['pathInclude'] . 'cate_list_checkbox' . GK_EXT_TPL); ?>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Special topic'); ?></label>
-                                    <div id="spec_list">
-                                        <?php foreach ($specRows as $key=>$value) { ?>
-                                            <div class="input-group mb-2" id="spec_item_<?php echo $value['spec_id']; ?>">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text border-success">
-                                                        <input type="hidden" name="call_spec_ids[]" value="<?php echo $value['spec_id']; ?>">
-                                                        <span class="fas fa-check-circle text-primary"></span>
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control border-success bg-transparent" readonly value="<?php echo $value['spec_name']; ?>">
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-success spec_del" data-id="<?php echo $value['spec_id']; ?>">
-                                                        <span class="fas fa-trash-alt"></span>
-                                                    </button>
-                                                </div>
+                        <div class="form-group call_for_article">
+                            <label><?php echo $lang->get('Special topic'); ?></label>
+                            <div id="spec_list">
+                                <?php foreach ($specRows as $key=>$value) { ?>
+                                    <div class="input-group mb-2" id="spec_item_<?php echo $value['spec_id']; ?>">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text border-success">
+                                                <input type="hidden" name="call_spec_ids[]" value="<?php echo $value['spec_id']; ?>">
+                                                <span class="fas fa-check-circle text-primary"></span>
                                             </div>
-                                        <?php } ?>
-                                    </div>
-                                    <input type="text" id="spec_key" name="spec_key" placeholder="<?php echo $lang->get('Keyword'); ?>" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('With pictures'); ?></label>
-                                    <select id="call_attach" name="call_attach" class="form-control">
-                                        <?php foreach ($attach as $key=>$value) { ?>
-                                            <option <?php if ($callRow['call_attach'] == $value) { ?>selected<?php } ?> value="<?php echo $value; ?>">
-                                                <?php echo $lang->get($value); ?>
-                                            </option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Mark'); ?></label>
-                                    <?php foreach ($markRows as $key=>$value) { ?>
-                                        <div class="form-check">
-                                            <label for="call_mark_ids_<?php echo $value['mark_id']; ?>"  class="form-check-label">
-                                                <input type="checkbox" <?php if (in_array($value['mark_id'], $callRow['call_mark_ids'])) { ?>checked<?php } ?> value="<?php echo $value['mark_id']; ?>" name="call_mark_ids[]" id="call_mark_ids_<?php echo $value['mark_id']; ?>" class="form-check-input">
-                                                <?php echo $value['mark_name']; ?>
-                                            </label>
                                         </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane" id="call_cate">
-                                <div class="alert alert-success">
-                                    <span class="fas fa-filter"></span>
-                                    <?php echo $lang->get('Filter'); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Category'); ?></label>
-                                    <div class="form-check">
-                                        <label for="call_cate_id_0" class="form-check-label">
-                                            <input type="radio" <?php if ($callRow['call_cate_id'] == 0) { ?>checked<?php } ?> value="0" name="call_cate_id" id="call_cate_id_0" class="form-check-input">
-                                            <?php echo $lang->get('All categories'); ?>
-                                        </label>
+                                        <input type="text" class="form-control border-success bg-transparent" readonly value="<?php echo $value['spec_name']; ?>">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-success spec_del" data-id="<?php echo $value['spec_id']; ?>">
+                                                <span class="fas fa-trash-alt"></span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <table class="bg-table">
-                                        <tbody>
-                                            <?php $cate_id = $callRow['call_cate_id'];
-                                            $cate_excepts = $callRow['call_cate_excepts'];
-                                            //$lang = $callRow['call_cate_excepts'];
-                                            $form_name = 'call';
-                                            include($cfg['pathInclude'] . 'cate_list_radio' . GK_EXT_TPL); ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <?php } ?>
                             </div>
+                            <input type="text" id="spec_key" name="spec_key" placeholder="<?php echo $lang->get('Keyword'); ?>" class="form-control">
+                        </div>
+
+                        <div class="form-group call_for_article">
+                            <label><?php echo $lang->get('With pictures'); ?></label>
+                            <select id="call_attach" name="call_attach" class="form-control">
+                                <?php foreach ($attach as $key=>$value) { ?>
+                                    <option <?php if ($callRow['call_attach'] == $value) { ?>selected<?php } ?> value="<?php echo $value; ?>">
+                                        <?php echo $lang->get($value); ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group call_for_article">
+                            <label><?php echo $lang->get('Mark'); ?></label>
+                            <?php foreach ($markRows as $key=>$value) { ?>
+                                <div class="form-check">
+                                    <label for="call_mark_ids_<?php echo $value['mark_id']; ?>"  class="form-check-label">
+                                        <input type="checkbox" <?php if (in_array($value['mark_id'], $callRow['call_mark_ids'])) { ?>checked<?php } ?> value="<?php echo $value['mark_id']; ?>" name="call_mark_ids[]" id="call_mark_ids_<?php echo $value['mark_id']; ?>" class="form-check-input">
+                                        <?php echo $value['mark_name']; ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <div class="form-group d-none call_for_cate">
+                            <label><?php echo $lang->get('Category'); ?></label>
+                            <div class="form-check">
+                                <label for="call_cate_id_0" class="form-check-label">
+                                    <input type="radio" <?php if ($callRow['call_cate_id'] == 0) { ?>checked<?php } ?> value="0" name="call_cate_id" id="call_cate_id_0" class="form-check-input">
+                                    <?php echo $lang->get('All categories'); ?>
+                                </label>
+                            </div>
+                            <table class="bg-table">
+                                <tbody>
+                                    <?php $cate_id = $callRow['call_cate_id'];
+                                    $cate_excepts = $callRow['call_cate_excepts'];
+                                    //$lang = $callRow['call_cate_excepts'];
+                                    $form_name = 'call';
+                                    include($cfg['pathInclude'] . 'cate_list_radio' . GK_EXT_TPL); ?>
+                                </tbody>
+                            </table>
                         </div>
 
                         <div class="bg-validate-box"></div>
@@ -362,31 +351,46 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         $('#spec_item_' + id).remove();
     }
 
+    function dspShow(selector) {
+        $(selector).removeClass('d-none');
+        $(selector).addClass('d-block');
+    }
+
+    function dspNone(selector) {
+        $(selector).addClass('d-none');
+        $(selector).removeClass('d-block');
+    }
+
     function callType(call_type) {
         switch (call_type) {
             case 'cate':
-                $('#call_article').hide();
-                $('#call_cate').show();
+                dspNone('.call_for_article');
+                dspShow('.call_for_cate');
             break;
 
             case 'link':
+                dspNone('.call_for_article');
+                dspNone('.call_for_cate');
+                dspShow('.call_for_link');
+            break;
+
             case 'spec':
             case 'tag_list':
             case 'tag_rank':
-                $('#call_article').hide();
-                $('#call_cate').hide();
+                dspNone('.call_for_article');
+                dspNone('.call_for_cate');
             break;
 
             default:
-                $('#call_article').show();
-                $('#call_cate').hide();
+                dspShow('.call_for_article');
+                dspNone('.call_for_cate');
             break;
         }
     }
 
     $(document).ready(function(){
         callType('<?php echo $callRow['call_type']; ?>');
-        var obj_validate_form  = $('#call_form').baigoValidate(opts_validate_form);
+        var obj_validate_form   = $('#call_form').baigoValidate(opts_validate_form);
         var obj_submit_form     = $('#call_form').baigoSubmit(opts_submit_form);
 
         $('#call_form').submit(function(){
@@ -434,4 +438,5 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         });
     });
     </script>
+
 <?php include($cfg['pathInclude'] . 'html_foot' . GK_EXT_TPL);

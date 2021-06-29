@@ -56,6 +56,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </div>
 
                     <div class="form-group">
+                        <label><?php echo $lang->get('Note'); ?></label>
+                        <div class="form-text"><?php echo $attachRow['attach_note']; ?></div>
+                    </div>
+
+                    <div class="form-group">
                         <label><?php echo $lang->get('Add on album'); ?></label>
                         <div class="form-text">
                             <?php foreach ($albumRows as $key=>$value) { ?>

@@ -10,8 +10,7 @@ use app\classes\console\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
 use ginkgo\Config;
-use ginkgo\Http;
-use ginkgo\Ftp;
+//use ginkgo\Http;
 use ginkgo\Html;
 
 //不能非法包含或直接执行
@@ -22,7 +21,7 @@ class Grab extends Ctrl {
     protected function c_init($param = array()) {
         parent::c_init();
 
-        $this->obj_http         = Http::instance();
+        //$this->obj_http         = Http::instance();
         $this->obj_html         = Html::instance();
         $this->obj_qlist        = Loader::classes('Qlist');
 
@@ -377,7 +376,7 @@ class Grab extends Ctrl {
             $this->obj_html->setAttrAllow($_arr_gsiteRow['gsite_attr_allow']);
         }
         if (!Func::isEmpty($_arr_gsiteRow['gsite_ignore_tag'])) {
-            $this->obj_html->setAttrIgnore($_arr_gsiteRow['gsite_ignore_tag']);
+            $this->obj_html->setTagIgnore($_arr_gsiteRow['gsite_ignore_tag']);
         }
         if (!Func::isEmpty($_arr_gsiteRow['gsite_attr_except'])) {
             //print_r($_arr_gsiteRow['gsite_attr_except']);
@@ -388,7 +387,7 @@ class Grab extends Ctrl {
             $content = $this->obj_html->stripAttr($content);
         }
 
-        $content = Func::fillImg($content, $contentUrl); //补全 URL
+        $content = Html::fillImg($content, $contentUrl); //补全 URL
 
         return $content;
     }

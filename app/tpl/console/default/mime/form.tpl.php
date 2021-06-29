@@ -90,7 +90,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <option value=""><?php echo $lang->get('Please select'); ?></option>
                                 <?php foreach ($mimeOften as $key_often=>$value_often) { ?>
                                     <option value="<?php echo $key_often; ?>">
-                                        <?php echo $lang->get($value_often['note']), ' - ', $key_often; ?>
+                                        <?php echo $lang->get($value_often['note']), ' - ', $key_often;
+
+                                        if (isset($value_often['exist'])) {
+                                            echo ' [ ', $lang->get('Existed'), ' ]';
+                                        } ?>
                                     </option>
                                 <?php } ?>
                             </select>

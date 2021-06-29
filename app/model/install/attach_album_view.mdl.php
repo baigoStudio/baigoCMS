@@ -20,6 +20,7 @@ class Attach_Album_View extends Model {
             array('attach.attach_id'),
             array('attach.attach_ext'),
             array('attach.attach_name'),
+            array('attach.attach_note'),
             array('attach.attach_time'),
             array('attach.attach_box'),
             array('album_belong.belong_album_id'),

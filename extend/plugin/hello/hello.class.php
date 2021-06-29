@@ -19,13 +19,15 @@ if (!class_exists('extend\plugin\hello\Hello')) { //防止类重复
             //第一个参数是 钩子 的名称
             //第二个参数是 对象名 一般为本类
             //第三个是插件所执行的 方法（函数）
-            Plugin::add('filter_fw_view', $this, 'sayHello');
-            //Plugin::add('filter_fw_view', $this, 'doHello');
+            Plugin::add('action_fw_init', $this, 'sayHello');
+            //Plugin::add('filter_fw_init', $this, 'doHello');
         }
 
 
         function sayHello($data) {
-            //print_r($this->opts);
+            $data = str_ireplace(array('a', 't'), array('A', 'T'), $data);
+
+            return $data;
         }
 
 

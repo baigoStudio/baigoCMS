@@ -21,6 +21,17 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
             <ul class="list-group mb-3">
                 <li class="list-group-item">
+                    <form name="form_article" id="form_article" class="form_clear" action="<?php echo $route_console; ?>article/clear/">
+                        <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
+                        <div class="mb-2"><?php echo $lang->get('Unaffiliated articles'); ?></div>
+                        <button type="submit" class="btn btn-warning" id="btn_article">
+                            <span class="fas fa-trash-alt"></span>
+                            <?php echo $lang->get('Clean up'); ?>
+                        </button>
+                    </form>
+                </li>
+
+                <li class="list-group-item">
                     <form name="form_cate" id="form_cate" class="form_clear" action="<?php echo $route_console; ?>cate_belong/clear/">
                         <input type="hidden" name="<?php echo $token['name']; ?>" value="<?php echo $token['value']; ?>">
                         <div class="mb-2"><?php echo $lang->get('Data of belong to category'); ?></div>
@@ -192,6 +203,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         });
 
         var obj_dialog = $.baigoDialog(opts_dialog);
+
+        var obj_clear_article  = $('#form_article').baigoClear(opts_clear);
+
+        $('#form_article').submit(function(){
+            obj_dialog.confirm('<?php echo $lang->get('Warning! This operation will take a long time!'); ?>', function(confirm_result){
+                if (confirm_result) {
+                    obj_clear_article.clearSubmit();
+                }
+            });
+        });
 
         var obj_clear_cate  = $('#form_cate').baigoClear(opts_clear);
 

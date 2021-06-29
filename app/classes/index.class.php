@@ -149,15 +149,21 @@ class Index {
     }
 
 
-    function assLists($arr_tagIds) {
-        $_arr_configVisit  = Config::get('visit', 'var_extra');
+    function assLists($arr_tagIds = array(), $arr_cateIds = array()) {
+        $_arr_configVisit   = Config::get('visit', 'var_extra');
+        $_mdl_articleView   = Loader::model('Article_Tag_View', '', 'index');
 
-        $_mdl_articleTagView   = Loader::model('Article_Tag_View', '', 'index');
+        if (Func::isEmpty($arr_tagIds)) {
+            $_arr_search = array(
+                'cate_ids' => $arr_cateIds,
+            );
+        } else {
+            $_arr_search = array(
+                'tag_ids' => $arr_tagIds,
+            );
+        }
 
-        $_arr_search = array(
-            'tag_ids' => $arr_tagIds,
-        );
-        $_arr_assRows = $_mdl_articleTagView->lists(array($_arr_configVisit['count_associate'], 'limit'), $_arr_search);
+        $_arr_assRows = $_mdl_articleView->lists(array($_arr_configVisit['count_associate'], 'limit'), $_arr_search);
 
         return $this->articleListsProcess($_arr_assRows);
     }
@@ -211,11 +217,14 @@ class Index {
                     $_arr_articleCateRow = $this->cateRead($_value['article_cate_id']);
 
                     if (isset($_arr_articleCateRow['rcode']) && $_arr_articleCateRow['rcode'] == 'y250102') {
-                        $_arr_attachRow      = array();
+                        $_arr_attachRow = $this->mdl_attach->read($_value['article_attach_id']);
 
-                        if ($_value['article_attach_id'] > 0) {
-                            $_arr_attachRow = $this->mdl_attach->read($_value['article_attach_id']);
-                            //print_r($_arr_attachRow);
+                        if ($_arr_attachRow['rcode'] == 'y070102') {
+                            if (Func::isEmpty($_arr_attachRow['thumb_default'])) {
+                                $_value['thumb_default'] = $this->dirStatic . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
+                            }
+                        } else {
+                            $_value['thumb_default'] = '';
                         }
 
                         $arr_articleRows[$_key]['cateRow']     = $_arr_articleCateRow;
@@ -242,19 +251,19 @@ class Index {
 
     function specListsProcess($arr_specRows) {
         if (!Func::isEmpty($arr_specRows)) {
-            foreach ($arr_specRows as $_key=>$_value) {
+            foreach ($arr_specRows as $_key=>&$_value) {
                 $_arr_attachRow = $this->mdl_attach->read($_value['spec_attach_id']);
 
                 if ($_arr_attachRow['rcode'] == 'y070102') {
-                    if (!isset($_arr_attachRow['thumb_default'])) {
-                        $arr_specRows[$_key]['thumb_default'] = $this->dirStatic . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
+                    if (Func::isEmpty($_arr_attachRow['thumb_default'])) {
+                        $_value['thumb_default'] = $this->dirStatic . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
                     }
                 } else {
-                    $arr_specRows[$_key]['thumb_default'] = '';
+                    $_value['thumb_default'] = '';
                 }
 
-                $arr_specRows[$_key]['spec_url']    = $this->mdl_spec->urlProcess($_value);
-                $arr_specRows[$_key]['attachRow']   = $_arr_attachRow;
+                $_value['spec_url']    = $this->mdl_spec->urlProcess($_value);
+                $_value['attachRow']   = $_arr_attachRow;
             }
         }
 
@@ -265,7 +274,7 @@ class Index {
         $_mdl_call      = Loader::model('Call', '', 'index');
         $_arr_callRow   = $_mdl_call->cache($num_callId);
 
-        if (!isset($_arr_cateRow['rcode'])) {
+        if (!isset($_arr_callRow['rcode'])) {
             return array(
                 'msg'   => 'Missing rcode',
                 'rcode' => 'y170102',
@@ -308,7 +317,7 @@ class Index {
         $_arr_attachRow = $this->mdl_attach->read($_arr_albumRow['album_attach_id']);
 
         if ($_arr_attachRow['rcode'] == 'y070102') {
-            if (!isset($_arr_attachRow['thumb_default'])) {
+            if (Func::isEmpty($_arr_attachRow['thumb_default'])) {
                 $_arr_attachRow['thumb_default'] = $this->dirStatic . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
             }
         } else {
@@ -338,11 +347,14 @@ class Index {
 
     private function ubbcode($string) {
         $_arr_regs = array(
-            '/\[iframe\](.+?)\[\/iframe\]/i' => '<div class="embed-responsive embed-responsive-16by9"><iframe src="$1" class="embed-responsive-item" scrolling="auto"></iframe></div>',
-            '/\[iframe\s+(.+?)\](.+?)\[\/iframe\]/i' => '<div class="embed-responsive embed-responsive-$1"><iframe src="$2" class="embed-responsive-item" scrolling="auto"></iframe></div>',
+            '/\[iframe=(.+)\](.+)\[\/iframe\]/i'         => '<div class="embed-responsive embed-responsive-$1"><iframe src="$2" class="embed-responsive-item" scrolling="auto"></iframe></div>',
+            '/\[iframe\s+(.+)\](.+)\[\/iframe\]/i'       => '<div class="embed-responsive embed-responsive-$1"><iframe src="$2" class="embed-responsive-item" scrolling="auto"></iframe></div>',
+            '/\[iframe\](.+)\[\/iframe\]/i'              => '<div class="embed-responsive embed-responsive-16by9"><iframe src="$1" class="embed-responsive-item" scrolling="auto"></iframe></div>',
         );
 
-        Ubbcode::addPreg($_arr_regs);
+        Ubbcode::addRegex($_arr_regs);
+
+        Ubbcode::$nl2br = false;
 
         return Ubbcode::convert($string);
     }

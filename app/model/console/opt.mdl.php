@@ -9,6 +9,7 @@ namespace app\model\console;
 use app\model\Opt as Opt_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\File;
 use ginkgo\Http;
 use ginkgo\Html;
 use ginkgo\Config;
@@ -117,7 +118,7 @@ class Opt extends Opt_Base {
     }
 
     function chkver() {
-        if (!Func::isFile($this->pathLatest)) {
+        if (!File::fileHas($this->pathLatest)) {
             $this->latest();
         }
 

@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
@@ -41,7 +41,7 @@ class Album extends Model {
             $_arr_albumIds[]   = $_value['album_id'];
         }
 
-        return Func::arrayFilter($_arr_albumIds);
+        return Arrays::filter($_arr_albumIds);
     }
 
 
@@ -137,8 +137,10 @@ class Album extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -172,7 +174,7 @@ class Album extends Model {
         }
 
         if (isset($arr_search['album_ids']) && !Func::isEmpty($arr_search['album_ids'])) {
-            $arr_search['album_ids'] = Func::arrayFilter($arr_search['album_ids']);
+            $arr_search['album_ids'] = Arrays::filter($arr_search['album_ids']);
 
             $_arr_where[] = array('album_id', 'IN', $arr_search['album_ids'], 'album_ids');
         }

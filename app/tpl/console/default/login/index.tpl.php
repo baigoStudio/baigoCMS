@@ -118,7 +118,11 @@ include($cfg['pathInclude'] . 'login_head' . GK_EXT_TPL); ?>
 
         $('#login_form').submit(function(){
             if (obj_validate_form.verify()) {
-                obj_submit_form.formSubmit();
+                obj_submit_form.formSubmit(false, function(result){
+                    if (typeof result.rcode == 'undefined' || result.rcode != 'y020401') {
+                        captchaReload();
+                    }
+                });
             }
         });
     });

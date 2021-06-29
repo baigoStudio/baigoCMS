@@ -113,8 +113,11 @@ class Spec extends Ctrl {
             return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
         }
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+
         $_arr_tplData = array(
-            'specRow'  => $_arr_specRow,
+            'specRow'   => $_arr_specRow,
+            'attachRow' => $_arr_attachRow,
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
@@ -149,6 +152,8 @@ class Spec extends Ctrl {
             if ($_arr_specRow['rcode'] != 'y180102') {
                 return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
             }
+
+            $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
         } else {
             if (!isset($this->groupAllow['spec']['add']) && !$this->isSuper) { //判断权限
                 return $this->error('You do not have permission', 'x180302');
@@ -161,6 +166,11 @@ class Spec extends Ctrl {
                 'spec_content'              => '',
                 'spec_tpl'                  => '',
                 'spec_time_update_format'   => $this->mdl_spec->dateFormat(),
+                'spec_attach_id'            => 0,
+            );
+
+            $_arr_attachRow = array(
+                'attach_thumb' => '',
             );
         }
 
@@ -173,6 +183,7 @@ class Spec extends Ctrl {
         $_arr_tplData = array(
             'tplRows'   => $_arr_tplRows,
             'specRow'   => $_arr_specRow,
+            'attachRow' => $_arr_attachRow,
             'token'     => $this->obj_request->token(),
         );
 
@@ -211,9 +222,14 @@ class Spec extends Ctrl {
             }
         }
 
-        $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['spec_content']);
+        if ($_arr_inputSubmit['spec_attach_id'] < 1) {
+            $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['spec_content']);
 
-        $this->mdl_spec->inputSubmit['spec_attach_id'] = $_arr_attachIds[0];
+            if ($_arr_attachIds[0] > 0) {
+                $this->mdl_spec->inputSubmit['spec_attach_id'] = $_arr_attachIds[0];
+            }
+        }
+
         $_arr_submitResult = $this->mdl_spec->submit();
 
         $_arr_submitResult['msg'] = $this->obj_lang->get($_arr_submitResult['msg']);
@@ -249,25 +265,24 @@ class Spec extends Ctrl {
             return $this->error('You do not have permission', 'x180301');
         }
 
-        $_mdl_attach       = Loader::model('Attach');
-
         $_arr_search = array(
             'box'           => 'normal',
             'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_specRow['spec_content']),
         );
 
-        $_arr_getData   = $_mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
-
-        foreach ($_arr_getData as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
+        if ($_arr_specRow['spec_attach_id'] > 0) {
+            $_arr_search['attach_ids'][] = $_arr_specRow['spec_attach_id'];
         }
+
+        $_arr_getData   = $this->mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
+
+        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
 
         $_arr_tplData = array(
             'ids'           => implode(',', $_arr_search['attach_ids']),
             'specRow'       => $_arr_specRow,
             'attachRows'    => $_arr_getData,
+            'attachRow'     => $_arr_attachRow,
             'token'         => $this->obj_request->token(),
         );
 
@@ -300,8 +315,7 @@ class Spec extends Ctrl {
             return $this->fetchJson($_arr_inputCover['msg'], $_arr_inputCover['rcode']);
         }
 
-        $_mdl_attach    = Loader::model('Attach');
-        $_arr_attachRow = $_mdl_attach->check($_arr_inputCover['attach_id']);
+        $_arr_attachRow = $this->mdl_attach->check($_arr_inputCover['attach_id']);
 
         if ($_arr_attachRow['rcode'] != 'y070102') {
             return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);

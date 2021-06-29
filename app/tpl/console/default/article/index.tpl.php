@@ -44,7 +44,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -56,7 +56,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <?php $check_id = $search['cate'];
                         include($cfg['pathInclude'] . 'cate_list_option' . GK_EXT_TPL); ?>
                         <option<?php if ($search['cate'] == -1) { ?> selected<?php } ?> value="-1">
-                            <?php echo $lang->get('Not belong'); ?>
+                            <?php echo $lang->get('Not affiliated'); ?>
                         </option>
                     </select>
                     <select name="year" class="custom-select">
@@ -95,7 +95,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         </form>
     </div>
 
-    <?php if (!empty($search['key']) || !empty($search['cate']) || isset($cateRow['cate_name']) || !empty($search['year']) || !empty($search['month']) || isset($markRow['mark_name']) || !empty($search['status'])) { ?>
+    <?php if (!empty($search['key']) || !empty($search['cate']) || isset($cateRow['cate_name']) || !empty($search['year']) || !empty($search['month']) || isset($markRow['mark_name']) || !empty($search['status']) || isset($adminRow['admin_name'])) { ?>
         <div class="mb-3 text-right">
             <?php if (!empty($search['key'])) { ?>
                 <span class="badge badge-info">
@@ -110,7 +110,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     <?php if (isset($cateRow['cate_name'])) {
                         echo $cateRow['cate_name'];
                     } else if ($search['cate'] < 0) {
-                        echo $lang->get('Not belong');
+                        echo $lang->get('Not affiliated');
                     } ?>
                 </span>
             <?php }
@@ -140,6 +140,13 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 <span class="badge badge-info">
                     <?php echo $lang->get('Status'); ?>:
                     <?php echo $lang->get($search['status']); ?>
+                </span>
+            <?php }
+
+            if (isset($adminRow['admin_name'])) { ?>
+                <span class="badge badge-info">
+                    <?php echo $lang->get('Administrator'); ?>:
+                    <?php echo $adminRow['admin_name']; ?>
                 </span>
             <?php } ?>
 
@@ -188,6 +195,13 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <th><?php echo $lang->get('Article'); ?></th>
                         <th class="d-none d-lg-table-cell bg-td-md">
                             <small><?php echo $lang->get('Category'); ?></small>
+                        </th>
+                        <th class="d-none d-lg-table-cell bg-td-md text-right">
+                            <small>
+                                <?php echo $lang->get('Administrator'); ?>
+                                /
+                                <?php echo $lang->get('Hits'); ?>
+                            </small>
                         </th>
                         <th class="d-none d-lg-table-cell bg-td-md text-right">
                             <small>
@@ -278,11 +292,41 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <small><?php echo $lang->get('Category'); ?></small>
                                     </dt>
                                     <dd class="col-9">
-                                        <?php if (isset($value['cateRow']['cate_name'])) { ?>
-                                            <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
-                                                <?php echo $value['cateRow']['cate_name']; ?>
-                                            </small>
-                                        <?php } ?>
+                                        <small>
+                                            <?php if (isset($value['cateRow']['cate_name'])) { ?>
+                                                <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
+                                                    <a href="<?php echo $route_console; ?>article/index/cate/<?php echo $value['cateRow']['cate_id']; ?>/">
+                                                        <?php echo $value['cateRow']['cate_name']; ?>
+                                                    </a>
+                                                </abbr>
+                                            <?php } else {
+                                                echo $lang->get('Unknown');
+                                            } ?>
+                                        </small>
+                                    </dd>
+                                    <dt class="col-3">
+                                        <small><?php echo $lang->get('Administrator'); ?></small>
+                                    </dt>
+                                    <dd class="col-9">
+                                        <small>
+                                            <?php if (isset($value['adminRow']['admin_name'])) { ?>
+                                                <a href="<?php echo $route_console; ?>article/index/admin/<?php echo $value['adminRow']['admin_id']; ?>/">
+                                                    <?php echo $value['adminRow']['admin_name']; ?>
+                                                </a>
+                                            <?php } else {
+                                                echo $lang->get('Unknown');
+                                            } ?>
+                                        </small>
+                                    </dd>
+                                    <dt class="col-3">
+                                        <small><?php echo $lang->get('Hits'); ?></small>
+                                    </dt>
+                                    <dd class="col-9">
+                                        <small>
+                                            <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $lang->get('Daily hits'), ' ', $value['article_hits_day'], '<br>', $lang->get('Weekly hits'), ' ', $value['article_hits_week'], '<br>', $lang->get('Monthly hits'), ' ', $value['article_hits_month'], '<br>', $lang->get('Yearly hits'), ' ', $value['article_hits_year'], '<br>', $lang->get('Total hits'), ' ', $value['article_hits_all']; ?>">
+                                                <?php echo $value['article_hits_all']; ?>
+                                            </abbr>
+                                        </small>
                                     </dd>
                                     <dt class="col-3">
                                         <small><?php echo $lang->get('Status'); ?></small>
@@ -300,11 +344,35 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 </dl>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md">
-                                <?php if (isset($value['cateRow']['cate_name'])) { ?>
-                                    <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
-                                        <?php echo $value['cateRow']['cate_name']; ?>
-                                    </small>
-                                <?php } ?>
+                                <small>
+                                    <?php if (isset($value['cateRow']['cate_name'])) { ?>
+                                        <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $str_cateBeadcrumb; ?>">
+                                            <a href="<?php echo $route_console; ?>article/index/cate/<?php echo $value['cateRow']['cate_id']; ?>/">
+                                                <?php echo $value['cateRow']['cate_name']; ?>
+                                            </a>
+                                        </abbr>
+                                    <?php } else {
+                                        echo $lang->get('Unknown');
+                                    } ?>
+                                </small>
+                            </td>
+                            <td class="d-none d-lg-table-cell bg-td-md text-right">
+                                <small>
+                                    <div class="mb-2">
+                                        <?php if (isset($value['adminRow']['admin_name'])) { ?>
+                                            <a href="<?php echo $route_console; ?>article/index/admin/<?php echo $value['adminRow']['admin_id']; ?>/">
+                                                <?php echo $value['adminRow']['admin_name']; ?>
+                                            </a>
+                                        <?php } else {
+                                            echo $lang->get('Unknown');
+                                        } ?>
+                                    </div>
+                                    <div>
+                                        <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $lang->get('Daily hits'), ' ', $value['article_hits_day'], '<br>', $lang->get('Weekly hits'), ' ', $value['article_hits_week'], '<br>', $lang->get('Monthly hits'), ' ', $value['article_hits_month'], '<br>', $lang->get('Yearly hits'), ' ', $value['article_hits_year'], '<br>', $lang->get('Total hits'), ' ', $value['article_hits_all']; ?>">
+                                            <?php echo $value['article_hits_all']; ?>
+                                        </abbr>
+                                    </div>
+                                </small>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md text-right">
                                 <div class="mb-2">

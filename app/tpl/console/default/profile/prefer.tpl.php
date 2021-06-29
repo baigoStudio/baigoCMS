@@ -2,7 +2,7 @@
     'title'             => $lang->get('Profile', 'console.common') . ' &raquo; ' . $lang->get('Preferences', 'console.common'),
     'menu_active'       => 'profile',
     'sub_active'        => 'prefer',
-    'baigoValidate'    => 'true',
+    'baigoValidate'     => 'true',
     'baigoSubmit'       => 'true',
     'pathInclude'       => $path_tpl . 'include' . DS,
 );

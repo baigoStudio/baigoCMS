@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Html;
 
 //不能非法包含或直接执行
@@ -352,25 +352,25 @@ class Gsite extends Model {
             $arr_gsiteRow['gsite_charset']                 = strtoupper($arr_gsiteRow['gsite_charset']);
         }
         if (isset($arr_gsiteRow['gsite_attr_except'])) {
-            $arr_gsiteRow['gsite_attr_except']             = Json::decode($arr_gsiteRow['gsite_attr_except']);
+            $arr_gsiteRow['gsite_attr_except']             = Arrays::fromJson($arr_gsiteRow['gsite_attr_except']);
         }
         if (isset($arr_gsiteRow['gsite_title_replace'])) {
-            $arr_gsiteRow['gsite_title_replace']           = Json::decode($arr_gsiteRow['gsite_title_replace']);
+            $arr_gsiteRow['gsite_title_replace']           = Arrays::fromJson($arr_gsiteRow['gsite_title_replace']);
         }
         if (isset($arr_gsiteRow['gsite_content_replace'])) {
-            $arr_gsiteRow['gsite_content_replace']         = Json::decode($arr_gsiteRow['gsite_content_replace']);
+            $arr_gsiteRow['gsite_content_replace']         = Arrays::fromJson($arr_gsiteRow['gsite_content_replace']);
         }
         if (isset($arr_gsiteRow['gsite_time_replace'])) {
-            $arr_gsiteRow['gsite_time_replace']            = Json::decode($arr_gsiteRow['gsite_time_replace']);
+            $arr_gsiteRow['gsite_time_replace']            = Arrays::fromJson($arr_gsiteRow['gsite_time_replace']);
         }
         if (isset($arr_gsiteRow['gsite_source_replace'])) {
-            $arr_gsiteRow['gsite_source_replace']          = Json::decode($arr_gsiteRow['gsite_source_replace']);
+            $arr_gsiteRow['gsite_source_replace']          = Arrays::fromJson($arr_gsiteRow['gsite_source_replace']);
         }
         if (isset($arr_gsiteRow['gsite_author_replace'])) {
-            $arr_gsiteRow['gsite_author_replace']          = Json::decode($arr_gsiteRow['gsite_author_replace']);
+            $arr_gsiteRow['gsite_author_replace']          = Arrays::fromJson($arr_gsiteRow['gsite_author_replace']);
         }
         if (isset($arr_gsiteRow['gsite_page_content_replace'])) {
-            $arr_gsiteRow['gsite_page_content_replace']    = Json::decode($arr_gsiteRow['gsite_page_content_replace']);
+            $arr_gsiteRow['gsite_page_content_replace']    = Arrays::fromJson($arr_gsiteRow['gsite_page_content_replace']);
         }
 
         return $arr_gsiteRow;

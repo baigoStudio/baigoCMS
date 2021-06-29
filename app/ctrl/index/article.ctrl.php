@@ -62,26 +62,26 @@ class Article extends Ctrl {
             return $this->redirect($_arr_cateRow['cate_link']);
         }
 
-        $_arr_tagRows    = $this->obj_index->tagLists($_num_articleId);
+        $_arr_tagRows   = $this->obj_index->tagLists($_num_articleId);
 
         $_arr_tagIds    = array();
-        $_arr_assRows   = array();
 
         foreach ($_arr_tagRows as $_key=>$_value) {
             $_arr_tagIds[] = $_value['tag_id'];
         }
 
-        if (!Func::isEmpty($_arr_tagIds)) {
-            $_arr_assRows = $this->obj_index->assLists($_arr_tagIds);
-        }
+        $_arr_assRows = $this->obj_index->assLists($_arr_tagIds, $_arr_cateRow['cate_ids']);
 
         $_arr_articleRow['article_content'] = $this->obj_index->linkProcess($_arr_articleRow['article_content'], $_arr_cateRow['cate_ids']);
         $_arr_articleRow['article_content'] = $this->obj_index->albumProcess($_arr_articleRow['article_content']);
 
         $this->mdl_article->hits($_arr_articleRow['article_id']);
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
+
         $_arr_tplData = array(
             'cateRow'       => $_arr_cateRow,
+            'attachRow'     => $_arr_attachRow,
             'articleRow'    => $_arr_articleRow,
             'tagRows'       => $_arr_tagRows,
             'associateRows' => $_arr_assRows,
@@ -89,8 +89,7 @@ class Article extends Ctrl {
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_mix_result = Plugin::listen('filter_pub_article_show', $_arr_tpl);
-        $_arr_tpl    = Plugin::resultProcess($_arr_tpl, $_mix_result);
+        $_arr_tpl = Plugin::listen('filter_pub_article_show', $_arr_tpl);
 
         $this->assign($_arr_tpl);
 

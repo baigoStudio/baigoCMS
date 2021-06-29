@@ -9,7 +9,7 @@ namespace app\classes\console\sso;
 use app\classes\Sso;
 use ginkgo\Crypt;
 use ginkgo\Sign;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -44,7 +44,7 @@ class Reg extends Sso {
             'timestamp' => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -109,7 +109,7 @@ class Reg extends Sso {
             'timestamp' => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 
@@ -156,7 +156,7 @@ class Reg extends Sso {
             'timestamp' => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 

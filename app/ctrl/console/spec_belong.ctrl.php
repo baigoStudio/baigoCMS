@@ -66,7 +66,12 @@ class Spec_Belong extends Ctrl {
 
         $_str_pageParamBelong     = 'page_belong';
 
-        $_arr_getData     = $this->mdl_articleSpecView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
+        $_arr_pagination = array(
+            0 => $this->config['var_default']['perpage'],
+            3 => $_str_pageParamBelong,
+        );
+
+        $_arr_getData     = $this->mdl_articleSpecView->lists($_arr_pagination, $_arr_searchBelong); //列出
 
         $_arr_tplData = array(
             'specRow'           => $_arr_specRow,

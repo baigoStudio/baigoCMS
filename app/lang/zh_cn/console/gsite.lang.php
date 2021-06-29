@@ -24,7 +24,7 @@ return array(
     'Source code'                           => '源代码',
     'Preview'                               => '预览',
     'Token'                                 => '表单令牌',
-    'Keyword'                              => '关键词',
+    'Keyword'                               => '关键词',
     'All'                                   => '全部',
     'Close'                                 => '关闭',
     'OK'                                    => '确定',

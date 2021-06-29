@@ -28,4 +28,12 @@ return array(
         'title'     => 'OpenSSL',
         'installed' => false,
     ),
+    'xml' => array(
+        'title'     => 'XML',
+        'installed' => false,
+    ),
+    'dom' => array(
+        'title'     => 'Document Object Model',
+        'installed' => false,
+    ),
 );

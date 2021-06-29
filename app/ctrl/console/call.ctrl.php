@@ -110,16 +110,18 @@ class Call extends Ctrl {
         $_arr_cateRows = $this->mdl_cate->listsTree($_arr_search); //列出
         $_arr_markRows = $this->mdl_mark->lists(array(1000, 'limit'));
 
-        if (isset($this->genOpen)) {
+        if ($this->genOpen === true) {
             switch ($_arr_callRow['call_file']) {
                 case 'js':
-                    $_arr_callRow['call_code'] = Html::encode('<script src="' . $_arr_callRow['call_url'] . '" type="text/javascript"></script>');
+                    $_arr_callRow['call_code'] = Html::encode('<script src="' . $this->obj_request->root(true) . $_arr_callRow['call_url'] . '" type="text/javascript"></script>');
                 break;
 
                 default:
-                    $_arr_callRow['call_code'] = Html::encode('<!--#include virtual="' . $_arr_callRow['call_url'] . '" -->');
+                    $_arr_callRow['call_code'] = Html::encode('<!--#include virtual="' . $this->obj_request->root() . $_arr_callRow['call_url'] . '" -->');
                 break;
             }
+
+            $_arr_callRow['call_url']  = $this->obj_request->root(true) . $_arr_callRow['call_url'];
         } else {
             $_arr_callRow['call_code'] = Html::encode('<?php print_r($call->get(' . $_arr_callRow['call_id'] . ')); ?>');
         }

@@ -2,7 +2,7 @@
         <?php if (isset($articleRows) && !empty($articleRows)) {
             foreach ($articleRows as $key=>$value) { ?>
                 <li>
-                    <a href="<?php echo $value['cate_url']['article_url']; ?>"><?php echo $value['article_title']; ?></a>
+                    <a href="<?php echo $value['article_url']; ?>"><?php echo $value['article_title']; ?></a>
                 </li>
             <?php }
         } ?>

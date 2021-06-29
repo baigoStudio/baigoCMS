@@ -72,6 +72,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <span class="fas fa-images"></span>
                                         <?php echo $lang->get('Add album'); ?>
                                     </a>
+                                    <?php if ($cateRow['cate_id'] > 0) { ?>
+                                        <a href="<?php echo $route_console; ?>cate/attach/id/<?php echo $cateRow['cate_id']; ?>/" class="btn btn-outline-secondary">
+                                            <?php echo $lang->get('Cover management'); ?>
+                                        </a>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <textarea name="cate_content" id="cate_content" class="form-control tinymce"><?php echo $cateRow['cate_content']; ?></textarea>
@@ -89,110 +94,139 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
 
             <div class="col-xl-3">
                 <div class="card bg-light">
-                    <div class="card-body">
-                        <?php if ($cateRow['cate_id'] > 0) { ?>
-                            <div class="form-group">
-                                <label><?php echo $lang->get('ID'); ?></label>
-                                <input type="text" value="<?php echo $cateRow['cate_id']; ?>" class="form-control-plaintext" readonly>
-                            </div>
-                        <?php } ?>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
-                            <?php foreach ($status as $key=>$value) { ?>
-                                <div class="form-check">
-                                    <input type="radio" name="cate_status" id="cate_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($cateRow['cate_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
-                                    <label for="cate_status_<?php echo $value; ?>" class="form-check-label">
-                                        <?php echo $lang->get($value); ?>
-                                    </label>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <?php if ($cateRow['cate_id'] > 0) { ?>
+                                <div class="form-group">
+                                    <label><?php echo $lang->get('ID'); ?></label>
+                                    <input type="text" value="<?php echo $cateRow['cate_id']; ?>" class="form-control-plaintext" readonly>
                                 </div>
                             <?php } ?>
-                            <small class="form-text" id="msg_cate_status"></small>
-                        </div>
 
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Parent category'); ?> <span class="text-danger">*</span></label>
-                            <select name="cate_parent_id" id="cate_parent_id" class="form-control">
-                                <option value=""><?php echo $lang->get('Please select'); ?></option>
-                                <option <?php if ($cateRow['cate_parent_id'] == 0) { ?>selected<?php } ?> value="0"><?php echo $lang->get('As a primary category'); ?></option>
-                                <?php $check_id = $cateRow['cate_parent_id'];
-                                $disabled_id = $cateRow['cate_id'];
-                                include($cfg['pathInclude'] . 'cate_list_option' . GK_EXT_TPL); ?>
-                            </select>
-                            <small class="form-text" id="msg_cate_parent_id"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Template'); ?> <span class="text-danger">*</span></label>
-                            <select name="cate_tpl" id="cate_tpl" class="form-control">
-                                <option value=""><?php echo $lang->get('Please select'); ?></option>
-                                <option <?php if (isset($cateRow['cate_tpl']) && $cateRow['cate_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
-                                <?php foreach ($tplRows as $key=>$value) {
-                                    if ($value['type'] == 'dir') { ?>
-                                        <option <?php if (isset($cateRow['cate_tpl']) && $cateRow['cate_tpl'] == $value['name']) { ?>selected<?php } ?> value="<?php echo $value['name']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php }
-                                } ?>
-                            </select>
-                            <small class="form-text" id="msg_cate_tpl"></small>
-                        </div>
-                    </div>
-                    <?php if ($gen_open === true && isset($ftp_open) && $cateRow['cate_parent_id'] < 1) { ?>
-                        <div class="list-group list-group-flush">
-                            <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-ftp">
-                                <span>
-                                    <?php echo $lang->get('FTP Issue'); ?>
-                                </span>
-                                <small class="fas fa-chevron-<?php if (!empty($cateRow['cate_ftp_host'])) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-ftp"></small>
-                            </a>
-
-                            <div id="bg-form-ftp" data-key="ftp" class="list-group-item collapse<?php if (!empty($cateRow['cate_ftp_host'])) { ?> show<?php } ?>">
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('FTP Host'); ?></label>
-                                    <input type="text" name="cate_ftp_host" id="cate_ftp_host" value="<?php echo $cateRow['cate_ftp_host']; ?>" class="form-control">
-                                    <small class="form-text" id="msg_cate_ftp_host"></small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Host port'); ?></label>
-                                    <input type="text" name="cate_ftp_port" id="cate_ftp_port" value="<?php echo $cateRow['cate_ftp_port']; ?>" class="form-control">
-                                    <small class="form-text" id="msg_cate_ftp_port"></small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Username'); ?></label>
-                                    <input type="text" name="cate_ftp_user" id="cate_ftp_user" value="<?php echo $cateRow['cate_ftp_user']; ?>" class="form-control">
-                                    <small class="form-text" id="msg_cate_ftp_user"></small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Password'); ?></label>
-                                    <input type="text" name="cate_ftp_pass" id="cate_ftp_pass" value="<?php echo $cateRow['cate_ftp_pass']; ?>" class="form-control">
-                                    <small class="form-text" id="msg_cate_ftp_pass"></small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label><?php echo $lang->get('Remote path'); ?></label>
-                                    <input type="text" name="cate_ftp_path" id="cate_ftp_path" value="<?php echo $cateRow['cate_ftp_path']; ?>" class="form-control">
-                                    <small class="form-text" id="msg_cate_ftp_path"><?php echo $lang->get('Do not add a slash <kbd>/</kbd> at the end'); ?></small>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" name="cate_ftp_pasv" id="cate_ftp_pasv" value="on" <?php if ($cateRow['cate_ftp_pasv'] === 'on') { ?>checked<?php } ?> class="custom-control-input">
-                                        <label for="cate_ftp_pasv" class="custom-control-label">
-                                            <?php echo $lang->get('Passive mode'); ?>
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Status'); ?> <span class="text-danger">*</span></label>
+                                <?php foreach ($status as $key=>$value) { ?>
+                                    <div class="form-check">
+                                        <input type="radio" name="cate_status" id="cate_status_<?php echo $value; ?>" value="<?php echo $value; ?>" <?php if ($cateRow['cate_status'] == $value) { ?>checked<?php } ?> class="form-check-input">
+                                        <label for="cate_status_<?php echo $value; ?>" class="form-check-label">
+                                            <?php echo $lang->get($value); ?>
                                         </label>
+                                    </div>
+                                <?php } ?>
+                                <small class="form-text" id="msg_cate_status"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Parent category'); ?> <span class="text-danger">*</span></label>
+                                <select name="cate_parent_id" id="cate_parent_id" class="form-control">
+                                    <option value=""><?php echo $lang->get('Please select'); ?></option>
+                                    <option <?php if ($cateRow['cate_parent_id'] == 0) { ?>selected<?php } ?> value="0"><?php echo $lang->get('As a primary category'); ?></option>
+                                    <?php $check_id = $cateRow['cate_parent_id'];
+                                    $disabled_id = $cateRow['cate_id'];
+                                    include($cfg['pathInclude'] . 'cate_list_option' . GK_EXT_TPL); ?>
+                                </select>
+                                <small class="form-text" id="msg_cate_parent_id"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Template'); ?> <span class="text-danger">*</span></label>
+                                <select name="cate_tpl" id="cate_tpl" class="form-control">
+                                    <option value=""><?php echo $lang->get('Please select'); ?></option>
+                                    <option <?php if (isset($cateRow['cate_tpl']) && $cateRow['cate_tpl'] == '-1') { ?>selected<?php } ?> value="-1"><?php echo $lang->get('Inherit'); ?></option>
+                                    <?php foreach ($tplRows as $key=>$value) {
+                                        if ($value['type'] == 'dir') { ?>
+                                            <option <?php if (isset($cateRow['cate_tpl']) && $cateRow['cate_tpl'] == $value['name']) { ?>selected<?php } ?> value="<?php echo $value['name']; ?>"><?php echo $value['name']; ?></option>
+                                        <?php }
+                                    } ?>
+                                </select>
+                                <small class="form-text" id="msg_cate_tpl"></small>
+                            </div>
+                        </div>
+
+                        <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-cover">
+                            <span><?php echo $lang->get('Cover'); ?></span>
+                            <small class="fas fa-chevron-down" id="bg-caret-form-cover"></small>
+                        </a>
+
+                        <div id="bg-form-cover" data-key="cover" class="list-group-item collapse">
+                            <div class="form-group">
+                                <div id="cate_attach_img" class="mb-2">
+                                    <?php if (isset($attachRow['attach_thumb']) && !empty($attachRow['attach_thumb'])) { ?>
+                                        <img src="<?php echo $attachRow['attach_thumb']; ?>" class="img-fluid">
+                                    <?php } ?>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <input type="text" id="cate_attach_src" readonly value="<?php if (isset($attachRow['attach_thumb'])) { echo $attachRow['attach_thumb']; } ?>" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" href="#cate_modal" data-id="<?php echo $cateRow['cate_id']; ?>" data-act="cover">
+                                            <span class="fas fa-image"></span>
+                                            <?php echo $lang->get('Select'); ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="cate_attach_id" id="cate_attach_id" value="<?php echo $cateRow['cate_attach_id']; ?>">
+                            </div>
+                        </div>
+
+                        <?php if ($gen_open === true && isset($ftp_open) && $cateRow['cate_parent_id'] < 1) { ?>
+                            <div class="list-group list-group-flush">
+                                <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-ftp">
+                                    <span>
+                                        <?php echo $lang->get('FTP Issue'); ?>
+                                    </span>
+                                    <small class="fas fa-chevron-<?php if (!empty($cateRow['cate_ftp_host'])) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-form-ftp"></small>
+                                </a>
+
+                                <div id="bg-form-ftp" data-key="ftp" class="list-group-item collapse<?php if (!empty($cateRow['cate_ftp_host'])) { ?> show<?php } ?>">
+                                    <div class="form-group">
+                                        <label><?php echo $lang->get('FTP Host'); ?></label>
+                                        <input type="text" name="cate_ftp_host" id="cate_ftp_host" value="<?php echo $cateRow['cate_ftp_host']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_cate_ftp_host"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><?php echo $lang->get('Host port'); ?></label>
+                                        <input type="text" name="cate_ftp_port" id="cate_ftp_port" value="<?php echo $cateRow['cate_ftp_port']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_cate_ftp_port"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><?php echo $lang->get('Username'); ?></label>
+                                        <input type="text" name="cate_ftp_user" id="cate_ftp_user" value="<?php echo $cateRow['cate_ftp_user']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_cate_ftp_user"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><?php echo $lang->get('Password'); ?></label>
+                                        <input type="text" name="cate_ftp_pass" id="cate_ftp_pass" value="<?php echo $cateRow['cate_ftp_pass']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_cate_ftp_pass"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><?php echo $lang->get('Remote path'); ?></label>
+                                        <input type="text" name="cate_ftp_path" id="cate_ftp_path" value="<?php echo $cateRow['cate_ftp_path']; ?>" class="form-control">
+                                        <small class="form-text" id="msg_cate_ftp_path"><?php echo $lang->get('Do not add a slash <kbd>/</kbd> at the end'); ?></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" name="cate_ftp_pasv" id="cate_ftp_pasv" value="on" <?php if ($cateRow['cate_ftp_pasv'] === 'on') { ?>checked<?php } ?> class="custom-control-input">
+                                            <label for="cate_ftp_pasv" class="custom-control-label">
+                                                <?php echo $lang->get('Passive mode'); ?>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php } ?>
-                    <div class="list-group list-group-flush">
+                        <?php } ?>
+
                         <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-link">
                             <span>
                                 <?php echo $lang->get('Jump to'); ?>
                             </span>
-                            <small class="fas fa-chevron-<?php if (!empty($cateRow['cate_link'])) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-link"></small>
+                            <small class="fas fa-chevron-<?php if (!empty($cateRow['cate_link'])) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-form-link"></small>
                         </a>
 
                         <div id="bg-form-link" data-key="link" class="list-group-item collapse<?php if (!empty($cateRow['cate_link'])) { ?> show list-group-item-warning<?php } ?>">
@@ -327,14 +361,20 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         $('#cate_modal').on('shown.bs.modal', function(event) {
     		var _obj_button   = $(event.relatedTarget);
     		var _act          = _obj_button.data('act');
+            var _id           = _obj_button.data('id');
+            var _url          = '<?php echo $route_console; ?>';
 
     		switch (_act) {
         		case 'album':
-            		var _url  = '<?php echo $route_console; ?>album/choose/view/modal/';
+            		_url  += 'album/choose/view/modal/';
         		break;
 
+                case 'cover':
+                    _url  += 'attach/choose/cate/' + _id + '/target/cate_cover/';
+                break;
+
         		default:
-            		var _url  = '<?php echo $route_console; ?>attach/choose/view/modal/';
+            		_url  += 'attach/choose/view/modal/';
         		break;
             }
 
@@ -351,6 +391,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                 tinyMCE.triggerSave();
                 obj_submit_form.formSubmit();
             }
+        });
+
+        $('.list-group-item.collapse').on('shown.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-up');
+        });
+
+        $('.list-group-item.collapse').on('hidden.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-down');
         });
     });
     </script>

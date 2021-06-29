@@ -70,8 +70,7 @@ class Tag extends Ctrl {
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_mix_result = Plugin::listen('filter_pub_tag_show', $_arr_tpl);
-        $_arr_tpl    = Plugin::resultProcess($_arr_tpl, $_mix_result);
+        $_arr_tpl = Plugin::listen('filter_pub_tag_show', $_arr_tpl);
 
         $this->assign($_arr_tpl);
 

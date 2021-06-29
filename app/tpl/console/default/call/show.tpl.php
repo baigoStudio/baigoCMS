@@ -32,23 +32,25 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><?php echo $lang->get('URL'); ?></label>
-                            <div class="form-text">
-                                <code>
-                                    <?php echo $callRow['call_url']; ?>
-                                </code>
+                        <?php if ($gen_open === true) { ?>
+                            <div class="form-group">
+                                <label><?php echo $lang->get('URL'); ?></label>
+                                <div class="form-text">
+                                    <code>
+                                        <?php echo $callRow['call_url']; ?>
+                                    </code>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label><?php echo $lang->get('Path'); ?></label>
-                            <div class="form-text">
-                                <code>
-                                    <?php echo $callRow['call_path']; ?>
-                                </code>
+                            <div class="form-group">
+                                <label><?php echo $lang->get('Path'); ?></label>
+                                <div class="form-text">
+                                    <code>
+                                        <?php echo $callRow['call_path']; ?>
+                                    </code>
+                                </div>
                             </div>
-                        </div>
+                        <?php } ?>
 
                         <div class="form-group">
                             <label><?php echo $lang->get('Name'); ?></label>

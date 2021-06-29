@@ -7,8 +7,7 @@
 namespace app\model\console;
 
 use app\model\Custom as Custom_Base;
-use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -48,7 +47,7 @@ class Custom extends Custom_Base {
             );
         }
 
-        $_arr_customData['custom_opt'] = Json::encode($_arr_customData['custom_opt']);
+        $_arr_customData['custom_opt'] = Arrays::toJson($_arr_customData['custom_opt']);
 
         if ($this->inputSubmit['custom_id'] > 0) {
             $_num_customId = $this->inputSubmit['custom_id'];
@@ -293,7 +292,7 @@ class Custom extends Custom_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['custom_ids'] = Func::arrayFilter($_arr_inputDelete['custom_ids']);
+        $_arr_inputDelete['custom_ids'] = Arrays::filter($_arr_inputDelete['custom_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -323,7 +322,7 @@ class Custom extends Custom_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['custom_ids'] = Func::arrayFilter($_arr_inputStatus['custom_ids']);
+        $_arr_inputStatus['custom_ids'] = Arrays::filter($_arr_inputStatus['custom_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

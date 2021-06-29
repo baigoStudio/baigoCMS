@@ -9,6 +9,7 @@ namespace app\model\console;
 use app\model\Spec_Belong as Spec_Belong_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -104,8 +105,8 @@ class Spec_Belong extends Spec_Belong_Base {
         }
 
         if (!Func::isEmpty($_arr_clearData)) {
-            $_mdl_article = Loader::model('article');
-            $_mdl_spec    = Loader::model('spec');
+            $_mdl_article = Loader::model('Article');
+            $_mdl_spec    = Loader::model('Spec');
 
             foreach ($_arr_clearData as $_key=>$_value) {
                 $_arr_articleRow = $_mdl_article->check($_value['belong_article_id']);
@@ -197,22 +198,22 @@ class Spec_Belong extends Spec_Belong_Base {
         }
 
         if (!Func::isEmpty($arr_specIds)) {
-            $arr_specIds = Func::arrayFilter($arr_specIds);
+            $arr_specIds = Arrays::filter($arr_specIds);
             $_arr_where[] = array('belong_spec_id', 'IN', $arr_specIds, 'spec_ids');
         }
 
         if (!Func::isEmpty($arr_articleIds)) {
-            $arr_articleIds = Func::arrayFilter($arr_articleIds);
+            $arr_articleIds = Arrays::filter($arr_articleIds);
             $_arr_where[] = array('belong_article_id', 'IN', $arr_articleIds, 'article_ids');
         }
 
         if (!Func::isEmpty($arr_notSpecIds)) {
-            $arr_notSpecIds = Func::arrayFilter($arr_notSpecIds);
+            $arr_notSpecIds = Arrays::filter($arr_notSpecIds);
             $_arr_where[] = array('belong_spec_id', 'NOT IN', $arr_notSpecIds, 'not_spec_ids');
         }
 
         if (!Func::isEmpty($arr_notArticleIds)) {
-            $arr_notArticleIds = Func::arrayFilter($arr_notArticleIds);
+            $arr_notArticleIds = Arrays::filter($arr_notArticleIds);
             $_arr_where[] = array('belong_article_id', 'NOT IN', $arr_notArticleIds, 'not_article_ids');
         }
 

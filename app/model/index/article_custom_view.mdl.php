@@ -8,6 +8,7 @@ namespace app\model\index;
 
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -133,7 +134,7 @@ class Article_Custom_View extends Article {
         }
 
         if (isset($arr_search['cate_ids']) && !Func::isEmpty($arr_search['cate_ids'])) {
-            $arr_search['cate_ids'] = Func::arrayFilter($arr_search['cate_ids']);
+            $arr_search['cate_ids'] = Arrays::filter($arr_search['cate_ids']);
 
             $_arr_where[] = array('belong_cate_id', 'IN', $arr_search['cate_ids'], 'cate_ids');
         }

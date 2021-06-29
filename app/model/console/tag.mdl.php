@@ -7,7 +7,7 @@
 namespace app\model\console;
 
 use app\model\Tag as Tag_Base;
-use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -204,7 +204,7 @@ class Tag extends Tag_Base {
 
         $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputDelete['tag_ids'] = Func::arrayFilter($_arr_inputDelete['tag_ids']);
+        $_arr_inputDelete['tag_ids'] = Arrays::filter($_arr_inputDelete['tag_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -232,7 +232,7 @@ class Tag extends Tag_Base {
 
         $_arr_inputStatus = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputStatus['tag_ids'] = Func::arrayFilter($_arr_inputStatus['tag_ids']);
+        $_arr_inputStatus['tag_ids'] = Arrays::filter($_arr_inputStatus['tag_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

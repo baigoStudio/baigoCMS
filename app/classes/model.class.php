@@ -54,6 +54,7 @@ abstract class Model extends Gk_Model {
         $_num_length    = false; // limit 参数 1
         $_num_perpage   = 0; // 每页记录数
         $_mix_current   = ''; // 当前页获取方法
+        $_str_pageparam = 'page'; // 分页参数名
 
         if (is_array($pagination)) { // 如果是数组, 则认定为复杂参数
             if (isset($pagination[2]) && isset($pagination[1]) && isset($pagination[0])) { // 指定了参数2
@@ -90,6 +91,10 @@ abstract class Model extends Gk_Model {
             } else if (isset($pagination[0])) { // 只指定了参数0, 则设置每页记录数
                 $_num_perpage = (int)$pagination[0]; // 每页记录数
             }
+
+            if (isset($pagination[3])) { // 如指定了参数3, 则设置分页参数名
+                $_str_pageparam = $pagination[3];
+            }
         } else { // 非数组则则设置每页记录数
             $_num_perpage = (int)$pagination; // 每页记录数
         }
@@ -99,6 +104,7 @@ abstract class Model extends Gk_Model {
             'length'    => $_num_length,
             'perpage'   => $_num_perpage,
             'current'   => $_mix_current,
+            'pageparam' => $_str_pageparam,
         );
     }
 
@@ -137,7 +143,6 @@ abstract class Model extends Gk_Model {
                 $_str_unit = 'Days ago';
             }
         } else if ($_str_year == $_str_yearThis) { //今年
-
             $_str_diff = date($this->configBase['site_date_short'] . ' ' . $this->configBase['site_time_short'], $time);
         } else {
             $_str_diff = date($this->configBase['site_date'] . ' ' . $this->configBase['site_time_short'], $time);
@@ -164,4 +169,3 @@ abstract class Model extends Gk_Model {
         return $_mix_return;
     }
 }
-

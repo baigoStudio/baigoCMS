@@ -200,29 +200,42 @@
         var _str_appent = '<div class="col-4 col-lg-2 mb-3">' +
             '<div class="card h-100">' +
                 '<a href="' + value.attach_url + '" class="h-100" target="_blank">' +
-                    '<img src="' + value.thumb_default + '" alt="' + value.attach_name + '" class="card-img-top" alt="' + value.attach_name + '" title="' + value.attach_name + '">' +
+                    '<img src="' + value.attach_thumb + '" alt="' + value.attach_name + '" class="card-img-top" alt="' + value.attach_name + '" title="' + value.attach_name + '">' +
                 '</a>' +
 
                 '<div class="card-body p-2">' +
                     '<div class="text-truncate" title="' + value.attach_name + '"><small>' + value.attach_name + '</small></div>' +
                 '</div>' +
 
-                '<div class="dropdown">' +
-                    '<button type="button" class="btn btn-outline-success btn-block bg-btn-bottom dropdown-toggle" data-toggle="dropdown">'+
-                        '<?php echo $lang->get('Insert'); ?>' +
-                    '</button>' +
-                    '<div class="dropdown-menu">' +
-                        '<button type="button" data-src="' + value.attach_url + '" data-name="' + value.attach_name + '" data-id="' + value.attach_id + '" data-type="' + value.attach_type + '" data-ext="' + value.attach_ext + '" class="dropdown-item attach_insert"><?php echo $lang->get('Insert original image'); ?></button>';
+                <?php switch ($search['target']) {
+                    case 'cate_cover':
+                    case 'article_cover':
+                    case 'album_cover':
+                    case 'spec_cover': ?>
+                        '<button type="button" class="btn btn-outline-success btn-block bg-btn-bottom attach_insert" data-src="' + value.attach_thumb + '" data-name="' + value.attach_name + '" data-id="' + value.attach_id + '" data-type="' + value.attach_type + '" data-ext="' + value.attach_ext + '">' +
+                            '<?php echo $lang->get('Select'); ?>' +
+                        '</button>' +
+                    <?php break;
 
-                        if (value.attach_type == 'image') {
-                            $.each(value.thumbRows, function(thumb_i, field_thumb){
-                                _str_appent += '<a href="javascript:void(0);" data-src="' + field_thumb.thumb_url + '" data-name"' + value.attach_name + '" data-id="' + value.attach_id + '" data-type="' + value.attach_type + '" data-ext="' + value.attach_ext + '" class="dropdown-item attach_insert"><?php echo $lang->get('Insert'); ?>: ' + field_thumb.thumb_width + ' x ' + field_thumb.thumb_height + ' ' + _thumbType[field_thumb.thumb_type] + '</a>';
-                            });
-                        }
+                    default: ?>
+                        '<div class="dropdown">' +
+                            '<button type="button" class="btn btn-outline-success btn-block bg-btn-bottom dropdown-toggle" data-toggle="dropdown">' +
+                                '<?php echo $lang->get('Insert'); ?>' +
+                            '</button>' +
+                            '<div class="dropdown-menu">' +
+                                '<button type="button" data-src="' + value.attach_url + '" data-name="' + value.attach_name + '" data-id="' + value.attach_id + '" data-type="' + value.attach_type + '" data-ext="' + value.attach_ext + '" class="dropdown-item attach_insert"><?php echo $lang->get('Insert original image'); ?></button>';
 
-                        _str_appent += '<a href="' + value.attach_url + '" target="_blank" class="dropdown-item"><?php echo $lang->get('View original image'); ?></a>' +
-                    '</div>' +
-                '</div>' +
+                                if (value.attach_type == 'image') {
+                                    $.each(value.thumbRows, function(thumb_i, field_thumb){
+                                        _str_appent += '<a href="javascript:void(0);" data-src="' + field_thumb.thumb_url + '" data-name"' + value.attach_name + '" data-id="' + value.attach_id + '" data-type="' + value.attach_type + '" data-ext="' + value.attach_ext + '" class="dropdown-item attach_insert"><?php echo $lang->get('Insert'); ?>: ' + field_thumb.thumb_width + ' x ' + field_thumb.thumb_height + ' ' + _thumbType[field_thumb.thumb_type] + '</a>';
+                                    });
+                                }
+
+                                _str_appent += '<a href="' + value.attach_url + '" target="_blank" class="dropdown-item"><?php echo $lang->get('View original image'); ?></a>' +
+                            '</div>' +
+                        '</div>' +
+                    <?php break;
+                } ?>
             '</div>' +
         '</div>';
 
@@ -238,7 +251,7 @@
 
         if (typeof article != 'undefined' && article > 0) {
             _url += 'article/' + article + '/';
-            _row_selector       = '#attach_list_article';
+            _row_selector = '#attach_list_article';
         } else {
             article = 0;
         }
@@ -277,19 +290,55 @@
     }
 
     function insertAttach(src, name, id, type, ext) {
-        var _str = '';
+        <?php switch ($search['target']) {
+            case 'article_cover': ?>
+                if (type == 'image') {
+                    $('#article_attach_id').val(id);
+                    $('#article_attach_src').val(src);
+                    $('#article_attach_img').html('<img src="' + src + '" class="img-fluid">');
+                }
+            <?php break;
 
-        switch (type) {
-            case 'image':
-                _str = '<img src="' + src + '" data-id="' + id + '" class="img-fluid">'
-            break;
+            case 'album_cover': ?>
+                if (type == 'image') {
+                    $('#album_attach_id').val(id);
+                    $('#album_attach_src').val(src);
+                    $('#album_attach_img').html('<img src="' + src + '" class="img-fluid">');
+                }
+            <?php break;
 
-            default:
-                _str = '<img src="{:DIR_STATIC}image/file_' + ext + '.png"> <a href="' + src + '">' + name + '</a>'
-            break;
-        }
+            case 'spec_cover': ?>
+                if (type == 'image') {
+                    $('#spec_attach_id').val(id);
+                    $('#spec_attach_src').val(src);
+                    $('#spec_attach_img').html('<img src="' + src + '" class="img-fluid">');
+                }
+            <?php break;
 
-        tinyMCE.execCommand('mceInsertContent', false , _str);
+            case 'cate_cover': ?>
+                if (type == 'image') {
+                    $('#cate_attach_id').val(id);
+                    $('#cate_attach_src').val(src);
+                    $('#cate_attach_img').html('<img src="' + src + '" class="img-fluid">');
+                }
+            <?php break;
+
+            default: ?>
+                var _str = '';
+
+                switch (type) {
+                    case 'image':
+                        _str = '<img src="' + src + '" data-id="' + id + '" class="img-fluid">'
+                    break;
+
+                    default:
+                        _str = '<img src="{:DIR_STATIC}image/file_' + ext + '.png"> <a href="' + src + '">' + name + '</a>'
+                    break;
+                }
+
+                tinyMCE.execCommand('mceInsertContent', false , _str);
+            <?php break;
+        } ?>
     }
 
     $(document).ready(function(){
@@ -325,7 +374,7 @@
             var _article    = $(this).data('article');
             reloadAttach(_page, _year, _month, _ext, _key, _article);
         });
-        $('#attach_list').on('click', '.attach_insert', function(){
+        $('#attach_list, #attach_list_article').on('click', '.attach_insert', function(){
             var _src    = $(this).data('src');
             var _name   = $(this).data('name');
             var _id     = $(this).data('id');

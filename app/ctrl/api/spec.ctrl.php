@@ -19,6 +19,7 @@ class Spec extends Ctrl {
     protected function c_init($param = array()) { //构造函数
         parent::c_init();
 
+        $this->mdl_attach   = Loader::model('Attach');
         $this->mdl_spec     = Loader::model('Spec');
     }
 
@@ -42,12 +43,14 @@ class Spec extends Ctrl {
             return $this->fetchJson($_arr_specRow['msg'], $_arr_specRow['rcode'], 404);
         }
 
+        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+
         $_arr_return = array(
-            'specRow'   => $_arr_specRow,
+            'specRow'    => $_arr_specRow,
+            'attachRow'  => $_arr_attachRow,
         );
 
-        $_mix_result  = Plugin::listen('filter_api_spec_read', $_arr_return); //编辑文章时触发
-        $_arr_return  = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return  = Plugin::listen('filter_api_spec_read', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }
@@ -75,8 +78,7 @@ class Spec extends Ctrl {
             'specRows'   => $this->obj_index->specListsProcess($_arr_getData['dataRows']),
         );
 
-        $_mix_result    = Plugin::listen('filter_api_spec_lists', $_arr_return); //编辑文章时触发
-        $_arr_return    = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return    = Plugin::listen('filter_api_spec_lists', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }

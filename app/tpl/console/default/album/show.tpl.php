@@ -50,6 +50,17 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <div class="form-text"><?php $str_status = $albumRow['album_status'];
                         include($cfg['pathInclude'] . 'status_process' . GK_EXT_TPL); ?></div>
                     </div>
+
+                    <div class="form-group">
+                        <label><?php echo $lang->get('Cover'); ?></label>
+                        <div class="mb-2">
+                            <?php if (isset($attachRow['attach_thumb']) && !empty($attachRow['attach_thumb'])) { ?>
+                                <img src="<?php echo $attachRow['attach_thumb']; ?>" class="img-fluid">
+                            <?php } ?>
+                        </div>
+
+                        <div class="form-text"><?php if (isset($attachRow['attach_thumb'])) { echo $attachRow['attach_thumb']; } ?></div>
+                    </div>
                 </div>
                 <div class="card-footer text-right">
                     <a href="<?php echo $route_console; ?>album/form/id/<?php echo $albumRow['album_id']; ?>/">

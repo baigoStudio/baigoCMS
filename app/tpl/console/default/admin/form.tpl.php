@@ -165,6 +165,10 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         </button>
                     </div>
                 </div>
+
+                <?php if ($adminRow['admin_id'] > 0) {
+                    include($cfg['pathInclude'] . 'user_info' . GK_EXT_TPL);
+                } ?>
             </div>
         </div>
     </form>

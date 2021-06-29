@@ -11,6 +11,7 @@ use ginkgo\Func;
 use ginkgo\Config;
 use ginkgo\Plugin;
 use ginkgo\Cache;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -46,6 +47,7 @@ class Cate extends Cate_Base {
             'cate_content',
             'cate_link',
             'cate_parent_id',
+            'cate_attach_id',
             'cate_prefix',
             'cate_perpage',
             'cate_ftp_host',
@@ -76,6 +78,7 @@ class Cate extends Cate_Base {
             'cate_alias',
             'cate_status',
             'cate_parent_id',
+            'cate_attach_id',
             'cate_prefix',
             'cate_order',
             'cate_perpage',
@@ -100,6 +103,7 @@ class Cate extends Cate_Base {
             'cate_content'      => $this->inputSubmit['cate_content'],
             'cate_link'         => $this->inputSubmit['cate_link'],
             'cate_parent_id'    => $this->inputSubmit['cate_parent_id'],
+            'cate_attach_id'    => $this->inputSubmit['cate_attach_id'],
             'cate_prefix'       => $this->inputSubmit['cate_prefix'],
             'cate_perpage'      => $this->inputSubmit['cate_perpage'],
             'cate_ftp_host'     => $this->inputSubmit['cate_ftp_host'],
@@ -116,8 +120,7 @@ class Cate extends Cate_Base {
             $_str_hook = 'add';
         }
 
-        $_mix_result    = Plugin::listen('filter_console_cate_' . $_str_hook, $_arr_cateData); //编辑文章时触发
-        $_arr_cateData  = Plugin::resultProcess($_arr_cateData, $_mix_result);
+        $_arr_cateData    = Plugin::listen('filter_console_cate_' . $_str_hook, $_arr_cateData); //编辑文章时触发
 
         $_mix_vld = $this->validate($_arr_cateData, '', 'submit_db');
 
@@ -159,6 +162,31 @@ class Cate extends Cate_Base {
             'cate_id'   => $_num_cateId,
             'rcode'     => $_str_rcode,
             'msg'       => $_str_msg,
+        );
+    }
+
+
+    function cover() {
+        $_arr_cateData = array(
+            'cate_attach_id'  => $this->inputCover['attach_id'],
+        );
+
+        $_num_cateId    = $this->inputCover['cate_id'];
+
+        $_num_count     = $this->where('cate_id', '=', $_num_cateId)->update($_arr_cateData); //更新数
+
+        if ($_num_count > 0) { //数据库更新是否成功
+            $_str_rcode = 'y250103';
+            $_str_msg   = 'Set cover successfully';
+        } else {
+            $_str_rcode = 'x250103';
+            $_str_msg   = 'Did not make any changes';
+        }
+
+        return array(
+            'cate_id'    => $_num_cateId,
+            'rcode'      => $_str_rcode,
+            'msg'        => $_str_msg,
         );
     }
 
@@ -304,7 +332,12 @@ class Cate extends Cate_Base {
 
 
     function chkAttach($arr_attachRow) {
-        return $this->where('cate_content', 'LIKE', '%' . $arr_attachRow['attach_url_name'] . '%')->find('cate_id');
+        $_arr_where = array(
+            array('cate_attach_id', '=', $arr_attachRow['attach_id'], 'cate_attach_id', 'int', 'OR'),
+            array('cate_content', 'LIKE', '%' . $arr_attachRow['attach_url_name'] . '%', 'cate_content', 'str', 'OR'),
+        );
+
+        return $this->where($_arr_where)->find('cate_id');
     }
 
 
@@ -323,6 +356,7 @@ class Cate extends Cate_Base {
             'cate_content'      => array('str', '', true),
             'cate_link'         => array('str', ''),
             'cate_parent_id'    => array('int', 0),
+            'cate_attach_id'    => array('int', 0),
             'cate_alias'        => array('str', ''),
             'cate_perpage'      => array('int', 0),
             'cate_status'       => array('str', ''),
@@ -401,6 +435,38 @@ class Cate extends Cate_Base {
     }
 
 
+    function inputCover() {
+        $_arr_inputParam = array(
+            'cate_id'   => array('int', 0),
+            'attach_id' => array('int', 0),
+            '__token__' => array('str', ''),
+        );
+
+        $_arr_inputCover = $this->obj_request->post($_arr_inputParam);
+
+        $_mix_vld = $this->validate($_arr_inputCover, '', 'cover');
+
+        if ($_mix_vld !== true) {
+            return array(
+                'rcode' => 'x250201',
+                'msg'   => end($_mix_vld),
+            );
+        }
+
+        $_arr_cateRow = $this->check($_arr_inputCover['cate_id']);
+
+        if ($_arr_cateRow['rcode'] != 'y250102') {
+            return $_arr_cateRow;
+        }
+
+        $_arr_inputCover['rcode'] = 'y250201';
+
+        $this->inputCover = $_arr_inputCover;
+
+        return $_arr_inputCover;
+    }
+
+
     function inputCommon() {
         $_arr_inputParam = array(
             '__token__' => array('str', ''),
@@ -440,7 +506,7 @@ class Cate extends Cate_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['cate_ids'] = Func::arrayFilter($_arr_inputDelete['cate_ids']);
+        $_arr_inputDelete['cate_ids'] = Arrays::filter($_arr_inputDelete['cate_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -470,7 +536,7 @@ class Cate extends Cate_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['cate_ids'] = Func::arrayFilter($_arr_inputStatus['cate_ids']);
+        $_arr_inputStatus['cate_ids'] = Arrays::filter($_arr_inputStatus['cate_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

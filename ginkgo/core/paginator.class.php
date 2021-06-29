@@ -12,49 +12,32 @@ defined('IN_GINKGO') or exit('Access denied');
 // 分页处理类
 class Paginator {
 
-    protected static $instance; // 当前实例
-
+    public $config = array(); // 配置
     public $current; // 当前页
     public $count; // 总记录数
     public $totalRow; // 总页数
-    public $perpage; // 每页记录数
-    public $pergroup; // 每组页数
-    public $pageparam = 'page'; // 分页参数
+
+    protected static $instance; // 当前实例
+
+    private $configThis = array(
+        'perpage'      => 10,
+        'pergroup'     => 10,
+        'pageparam'    => 'page',
+    );
 
     protected function __construct($config = array()) {
-        $_arr_configDefault = Config::get('var_default'); // 取得默认配置
+        $this->config($config);
 
-        if (isset($config['perpage']) && is_int($config['perpage'])) { // 如果指定了每页数
-            $_num_perpage = $config['perpage'];
-        } else {
-            $_num_perpage = $_arr_configDefault['perpage'];
+        if ($this->config['perpage'] < 1) { // 如果每页数依然小于 1, 则直接为 10
+            $this->config['perpage'] = 10;
         }
 
-        if (isset($config['pergroup']) && is_int($config['pergroup'])) { // 如果指定了每个分组的页数
-            $_num_pergroup = $config['pergroup'];
-        } else {
-            $_num_pergroup = $_arr_configDefault['pergroup'];
+        if ($this->config['pergroup'] < 1) { // 如果每个分组的页数依然小于 1, 则默认为 10
+            $this->config['pergroup'] = 10;
         }
-
-        if (isset($config['pageparam']) && is_string($config['pageparam'])) { // 如果指定了分页参数
-            $this->pageparam = $config['pageparam'];
-        }
-
-        if ($_num_perpage < 1) { // 如果每页数依然小于 1, 则直接为 10
-            $_num_perpage = 10;
-        }
-
-        if ($_num_pergroup < 1) { // 如果每个分组的页数依然小于 1, 则默认为 10
-            $_num_pergroup = 10;
-        }
-
-        $this->perpage      = $_num_perpage;
-        $this->pergroup     = $_num_pergroup;
     }
 
-    protected function __clone() {
-
-    }
+    protected function __clone() { }
 
     /** 实例化
      * instance function.
@@ -64,11 +47,32 @@ class Paginator {
      * @return 当前类的实例
      */
     public static function instance($config = array()) {
-        if (Func::isEmpty(static::$instance)) {
-            static::$instance = new static($config);
+        if (Func::isEmpty(self::$instance)) {
+            self::$instance = new static($config);
         }
 
-        return static::$instance;
+        return self::$instance;
+    }
+
+
+    public function config($config = array()) {
+        $_arr_config   = Config::get('var_default'); // 获取数据库配置
+
+        $_arr_configDo = $this->configThis;
+
+        if (is_array($_arr_config) && !Func::isEmpty($_arr_config)) {
+            $_arr_configDo = array_replace_recursive($_arr_configDo, $_arr_config); // 合并配置
+        }
+
+        if (is_array($this->config) && !Func::isEmpty($this->config)) {
+            $_arr_configDo = array_replace_recursive($_arr_configDo, $this->config); // 合并配置
+        }
+
+        if (is_array($config) && !Func::isEmpty($config)) {
+            $_arr_configDo = array_replace_recursive($_arr_configDo, $config); // 合并配置
+        }
+
+        $this->config  = $_arr_configDo;
     }
 
 
@@ -77,10 +81,9 @@ class Paginator {
      *
      * @access public
      * @param string $current (default: 'get') 方法
-     * @param string $param (default: 'page') 参数名
      * @return 分页参数
      */
-    function make($current = 'get') {
+    public function make($current = 'get') {
         $this->current($current);
         $_arr_totalRow  = $this->totalProcess();
         $_num_offset    = $this->offsetProcess();
@@ -91,6 +94,7 @@ class Paginator {
             'page'      => $this->current, // 当前页码
             'count'     => $this->count, // 总记录数
             'offset'    => $_num_offset, // 应排除的记录数
+            'except'    => $_num_offset, // 应排除的记录数, 兼容老版本
         );
 
         return array_replace_recursive($_arr_return, $_arr_totalRow, $_arr_groupRow, $_arr_stepRow);
@@ -105,14 +109,14 @@ class Paginator {
      * @return void
      */
 
-    function current($current = 'get') {
+    public function current($current = 'get') {
         $_obj_request   = Request::instance(); // 实例化请求对象
         $_arr_param     = $_obj_request->param; // 参数
-        $_str_pageparam = $this->pageparam;
+        $_str_pageparam = $this->config['pageparam'];
 
         if (is_numeric($current)) { // 如果参数为数字, 则直接认为是当前页码
             $_num_current = $current;
-        } else {
+        } else if (is_string($current)) {
             $current = strtolower($current); // 将参数转为小写
 
             switch ($current) {
@@ -136,6 +140,8 @@ class Paginator {
         }
 
         $this->current = $_num_current;
+
+        return $_num_current;
     }
 
 
@@ -146,7 +152,7 @@ class Paginator {
      * @param mixed $count 记录数
      * @return 记录数
      */
-    function count($count = 0) {
+    public function count($count = 0) {
         if ($count > 0) {
             $this->count = $count;
         } else {
@@ -162,11 +168,11 @@ class Paginator {
      * @param mixed $perpage 每页记录数
      * @return 每页记录数
      */
-    function perpage($perpage = 0) {
+    public function perpage($perpage = 0) {
         if ($perpage > 0) {
-            $this->perpage = $perpage;
+            $this->config['perpage'] = $perpage;
         } else {
-            return $this->perpage;
+            return $this->config['perpage'];
         }
     }
 
@@ -178,11 +184,11 @@ class Paginator {
      * @param mixed $pergroup 每组页数
      * @return 每组页数
      */
-    function pergroup($pergroup = 0) {
+    public function pergroup($pergroup = 0) {
         if ($pergroup > 0) {
-            $this->pergroup = $pergroup;
+            $this->config['pergroup'] = $pergroup;
         } else {
-            return $this->pergroup;
+            return $this->config['pergroup'];
         }
     }
 
@@ -194,11 +200,11 @@ class Paginator {
      * @param mixed $pageparam 分页参数
      * @return 分页参数
      */
-    function pageparam($pageparam = '') {
+    public function pageparam($pageparam = '') {
         if (Func::isEmpty($pageparam)) {
-            return $this->pageparam;
+            return $this->config['pageparam'];
         } else {
-            $this->pageparam = $pageparam;
+            $this->config['pageparam'] = $pageparam;
         }
     }
 
@@ -213,7 +219,7 @@ class Paginator {
         $_num_final     = false; // 尾页
 
         $_num_current   = $this->current;
-        $_num_perpage   = $this->perpage;
+        $_num_perpage   = $this->config['perpage'];
 
         $_num_total = $this->count / $_num_perpage; // 记录数除以每页数
 
@@ -225,12 +231,12 @@ class Paginator {
             $_num_total = intval($_num_total); // 将总页数转换为整数
         }
 
-        if ($_num_current > 1) { // 当前页码大于 1 时
-            $_num_first = 1; // 显示首页连接
+        if ($_num_current > 1 && $_num_total > 1) { // 当前页码大于 1 时
+            $_num_first = 1; // 显示首页按钮
         }
 
-        if ($_num_current < $_num_total) { // 当前页小于总页数时
-            $_num_final = $_num_total; // 显示尾页
+        if ($_num_current < $_num_total && $_num_total > 1) { // 当前页小于总页数时
+            $_num_final = $_num_total; // 显示尾页按钮
         }
 
         if ($_num_current > $_num_total) { // 如果当前页码大于总页数, 则总页数为当前页码
@@ -243,9 +249,9 @@ class Paginator {
             'total' => $_num_total,
         );
 
-        $this->perpage  = $_num_perpage;
-        $this->current  = $_num_current;
-        $this->totalRow = $_arr_totalRow;
+        $this->config['perpage'] = $_num_perpage;
+        $this->current           = $_num_current;
+        $this->totalRow          = $_arr_totalRow;
 
         return $_arr_totalRow;
     }
@@ -261,7 +267,7 @@ class Paginator {
         $_num_groupPrev     = false; // 上一组
         $_num_groupNext     = false; // 下一组
 
-        $_num_pergroup      = $this->pergroup;
+        $_num_pergroup      = $this->config['pergroup'];
         $_arr_totalRow      = $this->totalRow;
         $_num_total         = $_arr_totalRow['total'];
         $_num_final         = $_arr_totalRow['final'];
@@ -289,8 +295,8 @@ class Paginator {
             'group_next'    => $_num_groupNext, // 下一组
         );
 
-        $this->pergroup = $_num_pergroup;
-        $this->groupRow = $_arr_groupRow;
+        $this->config['pergroup'] = $_num_pergroup;
+        $this->groupRow           = $_arr_groupRow;
 
         return $_arr_groupRow;
     }
@@ -307,7 +313,7 @@ class Paginator {
         $_num_offset    = 0;
 
         if ($_num_current > 1) { // 如果当前页码小于 1, 则需排除
-            $_num_offset = ($_num_current - 1) * $this->perpage;
+            $_num_offset = ($_num_current - 1) * $this->config['perpage'];
         }
 
         return $_num_offset;
@@ -342,5 +348,3 @@ class Paginator {
         );
     }
 }
-
-

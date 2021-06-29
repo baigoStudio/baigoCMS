@@ -8,6 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
+use ginkgo\Arrays;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
@@ -34,8 +35,7 @@ class Cate extends Model {
                 'cate_id',
             );
 
-            $_arr_where  = $this->queryProcess($mix_search);
-
+            $_arr_where    = $this->queryProcess($mix_search);
             $_arr_getData  = $this->where($_arr_where)->select($_arr_cateSelect);
 
             foreach ($_arr_getData as $_key=>$_value) {
@@ -50,7 +50,7 @@ class Cate extends Model {
             $_arr_cateIds[] = $mix_search;
         }
 
-        return Func::arrayFilter($_arr_cateIds);
+        return Arrays::filter($_arr_cateIds);
     }
 
 
@@ -84,6 +84,7 @@ class Cate extends Model {
                 'cate_content',
                 'cate_link',
                 'cate_parent_id',
+                'cate_attach_id',
                 'cate_prefix',
                 'cate_status',
                 'cate_perpage',
@@ -117,6 +118,7 @@ class Cate extends Model {
                 'cate_alias',
                 'cate_status',
                 'cate_parent_id',
+                'cate_attach_id',
                 'cate_prefix',
                 'cate_perpage',
             );
@@ -137,8 +139,10 @@ class Cate extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -248,13 +252,13 @@ class Cate extends Model {
         }
 
         if (isset($arr_search['not_ids']) && !Func::isEmpty($arr_search['not_ids'])) {
-            $arr_search['not_ids'] = Func::arrayFilter($arr_search['not_ids']);
+            $arr_search['not_ids'] = Arrays::filter($arr_search['not_ids']);
 
             $_arr_where[] = array('cate_id', 'NOT IN', $arr_search['not_ids'], 'not_ids');
         }
 
         if (isset($arr_search['cate_ids']) && !Func::isEmpty($arr_search['cate_ids'])) {
-            $arr_search['cate_ids'] = Func::arrayFilter($arr_search['cate_ids']);
+            $arr_search['cate_ids'] = Arrays::filter($arr_search['cate_ids']);
 
             $_arr_where[] = array('cate_id', 'IN', $arr_search['cate_ids'], 'cate_ids');
         }

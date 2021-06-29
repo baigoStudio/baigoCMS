@@ -101,7 +101,7 @@ abstract class Ctrl extends Ctrl_Console {
             );
 
             if (!Func::isEmpty($_config_ftp['host']) && !Func::isEmpty($_config_ftp['user']) && !Func::isEmpty($_config_ftp['pass'])) {
-                $this->obj_ftp = Ftp::instance($_config_ftp);
+                $this->obj_ftp   = Ftp::instance($_config_ftp);
                 $this->ftpInit   = true;
             }
         }

@@ -10,11 +10,15 @@ return array(
                     'format'     => 'int',
                 ),
                 'resize' => array(
-                    'title'      => 'Resize',
+                    'title'      => 'Allow resizing',
                     'type'       => 'switch',
                 ),
                 'autosize' => array(
                     'title'      => 'Auto resize',
+                    'type'       => 'switch',
+                ),
+                'restore' => array(
+                    'title'      => 'Auto load draft',
                     'type'       => 'switch',
                 ),
             ),
@@ -60,4 +64,3 @@ return array(
         'What is the name of your most respected teacher?',
     ),
 );
-

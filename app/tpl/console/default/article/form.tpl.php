@@ -1,5 +1,4 @@
-<?php
-function custom_list_form($arr_customRows, $article_customs = array(), $lang = '') {
+<?php function custom_list_form($arr_customRows, $article_customs = array(), $lang = '') {
     if (!empty($arr_customRows)) {
         foreach ($arr_customRows as $key=>$value) {
             if (isset($value['custom_childs']) && !empty($value['custom_childs'])) { ?>
@@ -147,10 +146,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#tabs_base"><?php echo $lang->get('Base'); ?></a>
+                                <a class="nav-link active" data-toggle="tab" href="#tabs_base">
+                                    <?php echo $lang->get('Base'); ?>
+                                    <span id="extra_msg_base"></span>
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tabs_more"><?php echo $lang->get('More'); ?></a>
+                                <a class="nav-link" data-toggle="tab" href="#tabs_more">
+                                    <?php echo $lang->get('More'); ?>
+                                    <span id="extra_msg_more"></span>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -222,6 +227,15 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <?php } ?>
 
                                     <div class="form-group">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" <?php if ($articleRow['article_top'] > 0) { ?>checked<?php } ?> id="article_top" name="article_top" value="1" class="custom-control-input">
+                                            <label for="article_top" class="custom-control-label">
+                                                <?php echo $lang->get('Sticky'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label><?php echo $lang->get('Mark'); ?></label>
                                         <select name="article_mark_id" class="form-control">
                                             <option value=""><?php echo $lang->get('None'); ?></option>
@@ -232,11 +246,39 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     </div>
                                 </div>
 
+                                <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-cover">
+                                    <span><?php echo $lang->get('Cover'); ?></span>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-cover"></small>
+                                </a>
+
+                                <div id="bg-form-cover" data-key="cover" class="list-group-item collapse">
+                                    <div class="form-group">
+                                        <div id="article_attach_img" class="mb-2">
+                                            <?php if (isset($attachRow['attach_thumb']) && !empty($attachRow['attach_thumb'])) { ?>
+                                                <img src="<?php echo $attachRow['attach_thumb']; ?>" class="img-fluid">
+                                            <?php } ?>
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <input type="text" id="article_attach_src" readonly value="<?php if (isset($attachRow['attach_thumb'])) { echo $attachRow['attach_thumb']; } ?>" class="form-control">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-outline-secondary" data-toggle="modal" href="#article_modal" data-id="<?php echo $articleRow['article_id']; ?>" data-act="cover">
+                                                    <span class="fas fa-image"></span>
+                                                    <?php echo $lang->get('Select'); ?>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="article_attach_id" id="article_attach_id" value="<?php echo $articleRow['article_attach_id']; ?>">
+                                    </div>
+                                </div>
+
                                 <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-time">
                                     <span>
                                         <?php echo $lang->get('Time'); ?>
+                                        <span id="extra_msg_time"></span>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-time"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-time"></small>
                                 </a>
 
                                 <div id="bg-form-time" data-key="time" class="list-group-item collapse">
@@ -284,7 +326,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <span>
                                         <?php echo $lang->get('Tag'); ?>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-tag"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-tag"></small>
                                 </a>
 
                                 <div id="bg-form-tag" data-key="tag" class="list-group-item collapse">
@@ -293,15 +335,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <?php $_arr_langReplace = array(
                                             'tag_count'   => $config['var_extra']['visit']['count_tag'],
                                         );
-                                        echo $lang->get('Up to {:tag_count} tags', '', $_arr_langReplace); ?>
+                                        echo $lang->get('For multiple TAG, please use <kbd>,</kbd> to separate. Up to {:tag_count} tags', '', $_arr_langReplace); ?>
                                     </small>
                                 </div>
 
                                 <a class="list-group-item list-group-item-action bg-light d-flex justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-excerpt">
                                     <span>
                                         <?php echo $lang->get('Excerpt'); ?>
+                                        <span id="extra_msg_excerpt"></span>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-excerpt"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-excerpt"></small>
                                 </a>
 
                                 <div id="bg-form-excerpt" data-key="excerpt" class="list-group-item collapse">
@@ -326,7 +369,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <span>
                                         <?php echo $lang->get('Source'); ?>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-source"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-source"></small>
                                 </a>
 
                                 <div id="bg-form-source" data-key="source" class="list-group-item collapse">
@@ -387,7 +430,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                         <span>
                                             <?php echo $lang->get('Template'); ?>
                                         </span>
-                                        <small class="fas fa-chevron-down" id="bg-caret-tpl"></small>
+                                        <small class="fas fa-chevron-down" id="bg-caret-form-tpl"></small>
                                     </a>
 
                                     <div id="bg-form-tpl" data-key="tpl" class="list-group-item collapse">
@@ -409,7 +452,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <span>
                                         <?php echo $lang->get('Special topic'); ?>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-spec"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-spec"></small>
                                 </a>
 
                                 <div id="bg-form-spec" data-key="spec" class="list-group-item collapse">
@@ -438,7 +481,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     <span>
                                         <?php echo $lang->get('Custom fields'); ?>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-custom"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-custom"></small>
                                 </a>
 
                                 <div id="bg-form-custom" data-key="custom" class="list-group-item collapse">
@@ -450,8 +493,9 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                 <a class="list-group-item list-group-item-action d-flex bg-light justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-link">
                                     <span>
                                         <?php echo $lang->get('Jump to'); ?>
+                                        <span id="extra_msg_link"></span>
                                     </span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-link"></small>
+                                    <small class="fas fa-chevron-down" id="bg-caret-form-link"></small>
                                 </a>
 
                                 <div id="bg-form-link" data-key="link" class="list-group-item collapse <?php if (!empty($articleRow['article_link'])) { ?>show list-group-item-warning<?php } ?>">
@@ -538,12 +582,23 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         format_msg: {
             date_time: '<?php echo $lang->get('{:attr} not a valid datetime'); ?>'
         },
+        extra_boxes: {
+            article_cate_id: '#extra_msg_base',
+            article_excerpt: '#extra_msg_base,#extra_msg_excerpt',
+            article_status: '#extra_msg_base',
+            article_box: '#extra_msg_base',
+            article_link: '#extra_msg_more,#extra_msg_link',
+            article_time_show_format: '#extra_msg_base,#extra_msg_time',
+            article_time_pub_format: '#extra_msg_base,#extra_msg_time',
+            article_time_hide_format: '#extra_msg_base,#extra_msg_time'
+        },
         box: {
             msg: '<?php echo $lang->get('Input error'); ?>'
         }
     };
 
     var opts_submit_form = {
+        replaces: 'article_id',
         modal: {
             btn_text: {
                 close: '<?php echo $lang->get('Close'); ?>',
@@ -621,10 +676,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
     $(document).ready(function(){
         $('#article_excerpt_type').change(function(){
             var _excerpt_type = $(this).val();
+
             excerptProcess(_excerpt_type);
         });
 
         customProcess('<?php echo $articleRow['article_cate_id']; ?>');
+
         $('#article_cate_id').change(function(){
             var _cate_id = $(this).val();
             customProcess(_cate_id);
@@ -633,17 +690,24 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         $('#article_modal').on('shown.bs.modal',function(event) {
     		var _obj_button   = $(event.relatedTarget);
     		var _act          = _obj_button.data('act');
+            var _id           = _obj_button.data('id');
+            var _url          = '<?php echo $route_console; ?>';
 
     		switch (_act) {
         		case 'album':
-            		var _url  = '<?php echo $route_console; ?>album/choose/view/modal/';
+            		_url  += 'album/choose/view/modal/';
         		break;
 
+                case 'cover':
+                    _url  += 'attach/choose/article/' + _id + '/target/article_cover/';
+                break;
+
         		default:
-            		var _id   = _obj_button.data('id');
-            		var _url  = '<?php echo $route_console; ?>attach/choose/article/' + _id + '/view/modal/';
+            		_url  += 'attach/choose/article/' + _id + '/';
         		break;
     		}
+
+            _url  += 'view/modal/';
 
             $('#article_modal .modal-content').load(_url);
     	}).on('hidden.bs.modal', function(){
@@ -682,6 +746,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
             $('#article_source').val(sourceJson[_source_id].source_name);
             $('#article_source_url').val(sourceJson[_source_id].source_url);
             $('#article_author').val(sourceJson[_source_id].source_author);
+        });
+
+        $('.list-group-item.collapse').on('shown.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-up');
+        });
+
+        $('.list-group-item.collapse').on('hidden.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-down');
         });
 
         var _obj_tag = $('#article_tag').baigoTag({
@@ -726,4 +800,5 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
         });
     });
     </script>
+
 <?php include($cfg['pathInclude'] . 'html_foot' . GK_EXT_TPL);

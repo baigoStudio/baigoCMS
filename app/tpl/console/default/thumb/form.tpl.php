@@ -39,7 +39,7 @@
                 <label><?php echo $lang->get('Quality'); ?> <span class="text-danger">*</span></label>
                 <input value="<?php echo $thumbRow['thumb_quality']; ?>" name="thumb_quality" id="thumb_quality" class="form-control">
                 <small class="form-text" id="msg_thumb_quality">
-                    <?php echo $lang->get('0 - 100, only valid for JPG'); ?>
+                    <?php echo $lang->get('0 - 100, only valid for JPG and PNG'); ?>
                 </small>
             </div>
 

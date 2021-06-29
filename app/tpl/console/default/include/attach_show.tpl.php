@@ -81,6 +81,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label><?php echo $lang->get('Note'); ?></label>
+                            <div class="form-text"><?php echo $attachRow['attach_note']; ?></div>
+                        </div>
+
+                        <div class="form-group">
                             <label><?php echo $lang->get('Administrator'); ?></label>
                             <div class="form-text">
                                 <?php if (isset($adminRow['admin_name'])) { ?>

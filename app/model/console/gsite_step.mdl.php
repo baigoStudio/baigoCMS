@@ -7,7 +7,7 @@
 namespace app\model\console;
 
 use app\model\Gsite;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
@@ -45,7 +45,7 @@ class Gsite_Step extends Gsite {
             );
         }
 
-        $_arr_gsiteData['gsite_page_content_replace']  = Json::encode($_arr_gsiteData['gsite_page_content_replace']);
+        $_arr_gsiteData['gsite_page_content_replace']  = Arrays::toJson($_arr_gsiteData['gsite_page_content_replace']);
 
         $_num_count     = $this->where('gsite_id', '=', $_num_gsiteId)->update($_arr_gsiteData);
 
@@ -163,7 +163,7 @@ class Gsite_Step extends Gsite {
         }
 
         foreach ($this->configContent as $_key=>$_value) {
-            $_arr_gsiteData['gsite_' . $_key . '_replace']  = Json::encode($_arr_gsiteData['gsite_' . $_key . '_replace']);
+            $_arr_gsiteData['gsite_' . $_key . '_replace']  = Arrays::toJson($_arr_gsiteData['gsite_' . $_key . '_replace']);
         }
 
         $_num_count     = $this->where('gsite_id', '=', $_num_gsiteId)->update($_arr_gsiteData);

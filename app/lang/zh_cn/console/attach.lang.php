@@ -81,6 +81,7 @@ return array(
     'Note'                  => '备注',
     'Action'                => '操作', //生效
     'Please select'         => '请选择',
+    'Select'                => '选择',
     'Empty'                 => '清空',
     'Add on album'          => '加入相册',
 

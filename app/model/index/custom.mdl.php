@@ -7,7 +7,6 @@
 namespace app\model\index;
 
 use app\model\Custom as Custom_Base;
-use ginkgo\Func;
 use ginkgo\Cache;
 
 //不能非法包含或直接执行

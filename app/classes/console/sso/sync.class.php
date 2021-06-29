@@ -7,7 +7,7 @@
 namespace app\classes\console\sso;
 
 use app\classes\Sso;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Crypt;
 use ginkgo\Sign;
 
@@ -38,7 +38,7 @@ class Sync extends Sso {
             'timestamp'         => GK_NOW,
         );
 
-        $_str_crypt = Json::encode($_arr_crypt);
+        $_str_crypt = Arrays::toJson($_arr_crypt);
 
         $_str_encrypt = Crypt::encrypt($_str_crypt, $this->config['app_key'], $this->config['app_secret']);
 

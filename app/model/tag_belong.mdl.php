@@ -7,7 +7,7 @@
 namespace app\model;
 
 use app\classes\Model;
-use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -30,7 +30,7 @@ class Tag_Belong extends Model {
             $_arr_tagIds[]   = $_value['belong_tag_id'];
         }
 
-        return Func::arrayFilter($_arr_tagIds);
+        return Arrays::filter($_arr_tagIds);
     }
 
 

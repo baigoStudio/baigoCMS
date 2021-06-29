@@ -45,7 +45,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>
@@ -190,7 +190,11 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                         <th class="d-none d-lg-table-cell">&nbsp;</th>
                         <th><?php echo $lang->get('Detail'); ?></th>
                         <th class="d-none d-lg-table-cell bg-td-md">
-                            <small><?php echo $lang->get('Administrator'); ?></small>
+                            <small>
+                                <?php echo $lang->get('Administrator'); ?>
+                                /
+                                <?php echo $lang->get('Note'); ?>
+                            </small>
                         </th>
                         <th class="d-none d-lg-table-cell bg-td-md text-right">
                             <small>
@@ -214,7 +218,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-xs">
                                 <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid" id="img_<?php echo $value['attach_id']; ?>">
+                                    <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid" id="img_<?php echo $value['attach_id']; ?>">
                                 </a>
                             </td>
                             <td>
@@ -247,17 +251,16 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 <?php echo $lang->get('Edit'); ?>
                                             </a>
                                             <?php if ($value['attach_type'] == 'image') { ?>
-                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="right" title="<?php echo $lang->get('Use when the image cannot be displayed'); ?>" data-id="<?php echo $value['attach_id']; ?>" class="attach_fix">
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="right" title="<?php echo $lang->get('Use when the image cannot be displayed'); ?>" data-id="<?php echo $value['attach_id']; ?>" class="attach_fix mr-2">
                                                     <span class="fas fa-sync-alt"></span>
                                                     <?php echo $lang->get('Fix it'); ?>
                                                 </a>
                                             <?php } ?>
-                                            <a href="javascript:void(0);" data-id="<?php echo $value['attach_id']; ?>" class="text-danger attach_recycle mr-2">
+                                            <a href="javascript:void(0);" data-id="<?php echo $value['attach_id']; ?>" class="text-danger attach_recycle">
                                                 <span class="fas fa-trash"></span>
                                                 <?php echo $lang->get('Recycle'); ?>
                                             </a>
                                         <?php } ?>
-
                                     </div>
                                 </div>
                                 <dl class="row collapse mt-3 mb-0" id="td-collapse-<?php echo $value['attach_id']; ?>">
@@ -266,7 +269,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                     </dt>
                                     <dd class="col-9">
                                         <a href="<?php echo $route_console; ?>attach/show/id/<?php echo $value['attach_id']; ?>/">
-                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['thumb_default']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid" id="img_<?php echo $value['attach_id']; ?>">
+                                            <img src="{:DIR_STATIC}image/loading.gif" data-src="<?php echo $value['attach_thumb']; ?>" data-toggle="async" alt="<?php echo $value['attach_name']; ?>" class="img-fluid" id="img_<?php echo $value['attach_id']; ?>">
                                         </a>
                                     </dd>
                                     <dt class="col-3">
@@ -280,6 +283,12 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                                                 echo $lang->get('Unknown');
                                             } ?>
                                         </small>
+                                    </dd>
+                                    <dt class="col-3">
+                                        <small><?php echo $lang->get('Note'); ?></small>
+                                    </dt>
+                                    <dd class="col-9">
+                                        <small><?php echo $value['attach_note']; ?></small>
                                     </dd>
                                     <dt class="col-3">
                                         <small><?php echo $lang->get('Size'); ?></small>
@@ -297,20 +306,23 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md">
                                 <small>
-                                    <?php if (isset($value['adminRow']['admin_name'])) { ?>
-                                        <a href="<?php echo $route_console; ?>attach/index/admin/<?php echo $value['attach_admin_id']; ?>/"><?php echo $value['adminRow']['admin_name']; ?></a>
-                                    <?php } else {
-                                        echo $lang->get('Unknown');
-                                    } ?>
+                                    <div class="mb-2">
+                                        <?php if (isset($value['adminRow']['admin_name'])) { ?>
+                                            <a href="<?php echo $route_console; ?>attach/index/admin/<?php echo $value['attach_admin_id']; ?>/"><?php echo $value['adminRow']['admin_name']; ?></a>
+                                        <?php } else {
+                                            echo $lang->get('Unknown');
+                                        } ?>
+                                    </div>
+                                    <div><?php echo $value['attach_note']; ?></div>
                                 </small>
                             </td>
                             <td class="d-none d-lg-table-cell bg-td-md text-right">
-                                <div>
-                                    <small><?php echo $value['attach_size_format']; ?></small>
-                                </div>
-                                <div>
-                                    <small data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></small>
-                                </div>
+                                <small>
+                                    <div class="mb-2"><?php echo $value['attach_size_format']; ?></div>
+                                    <div>
+                                        <abbr data-toggle="tooltip" data-placement="bottom" title="<?php echo $value['attach_time_format']['date_time']; ?>"><?php echo $value['attach_time_format']['date_time_short']; ?></abbr>
+                                    </div>
+                                </small>
                             </td>
                         </tr>
                     <?php } ?>

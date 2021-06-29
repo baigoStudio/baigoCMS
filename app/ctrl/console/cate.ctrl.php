@@ -20,7 +20,10 @@ class Cate extends Ctrl {
     protected function c_init($param = array()) {
         parent::c_init();
 
-        $this->mdl_cate    = Loader::model('Cate');
+        $this->obj_qlist  = Loader::classes('Qlist');
+        $this->mdl_cate   = Loader::model('Cate');
+        $this->mdl_admin  = Loader::model('Admin');
+        $this->mdl_attach = Loader::model('Attach');
 
         $this->generalData['status']    = $this->mdl_cate->arr_status;
         $this->generalData['pasv']      = $this->mdl_cate->arr_pasv;
@@ -97,10 +100,12 @@ class Cate extends Ctrl {
         }
 
         $_arr_cateParent = $this->mdl_cate->read($_arr_cateRow['cate_parent_id']);
+        $_arr_attachRow  = $this->mdl_attach->read($_arr_cateRow['cate_attach_id']);
 
         $_arr_tplData = array(
             'cateParent'    => $_arr_cateParent,
             'cateRow'       => $_arr_cateRow,
+            'attachRow'     => $_arr_attachRow,
             'token'         => $this->obj_request->token(),
         );
 
@@ -137,6 +142,8 @@ class Cate extends Ctrl {
             if ($_arr_cateRow['rcode'] != 'y250102') {
                 return $this->error($_arr_cateRow['msg'], $_arr_cateRow['rcode']);
             }
+
+            $_arr_attachRow = $this->mdl_attach->read($_arr_cateRow['cate_attach_id']);
         } else {
             if (!isset($this->groupAllow['cate']['add']) && !$this->isSuper) { //判断权限
                 return $this->error('You do not have permission', 'x250302');
@@ -148,6 +155,7 @@ class Cate extends Ctrl {
                 'cate_status'       => $this->mdl_cate->arr_status[0],
                 'cate_alias'        => '',
                 'cate_parent_id'    => -1,
+                'cate_attach_id'    => 0,
                 'cate_perpage'      => 0,
                 'cate_prefix'       => '',
                 'cate_content'      => '',
@@ -159,6 +167,10 @@ class Cate extends Ctrl {
                 'cate_ftp_path'     => '',
                 'cate_ftp_pasv'     => $this->mdl_cate->arr_pasv[0],
             );
+
+            $_arr_attachRow = array(
+                'attach_thumb' => '',
+            );
         }
 
         $_arr_search['parent_id'] = 0;
@@ -169,6 +181,7 @@ class Cate extends Ctrl {
             'tplRows'   => File::instance()->dirList(BG_TPL_INDEX),
             'cateRow'   => $_arr_cateRow,
             'cateRows'  => $_arr_cateRows,
+            'attachRow' => $_arr_attachRow,
             'token'     => $this->obj_request->token(),
         );
 
@@ -206,6 +219,14 @@ class Cate extends Ctrl {
         } else {
             if (!isset($this->groupAllow['cate']['add']) && !$this->isSuper) {
                 return $this->fetchJson('You do not have permission', 'x250302');
+            }
+        }
+
+        if ($_arr_inputSubmit['cate_attach_id'] < 1) {
+            $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['cate_content']);
+
+            if ($_arr_attachIds[0] > 0) {
+                $this->mdl_cate->inputSubmit['cate_attach_id'] = $_arr_attachIds[0];
             }
         }
 
@@ -290,6 +311,99 @@ class Cate extends Ctrl {
     }
 
 
+    function attach() {
+        $_mix_init = $this->init();
+
+        if ($_mix_init !== true) {
+            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
+        }
+
+        $_num_cateId = 0;
+
+        if (isset($this->param['id'])) {
+            $_num_cateId = $this->obj_request->input($this->param['id'], 'int', 0);
+        }
+
+        if ($_num_cateId < 1) {
+            return $this->error('Missing ID', 'x250202');
+        }
+
+        $_arr_cateRow = $this->mdl_cate->read($_num_cateId);
+
+        if ($_arr_cateRow['rcode'] != 'y250102') {
+            return $this->error($_arr_cateRow['msg'], $_arr_cateRow['rcode']);
+        }
+
+        if (!isset($this->groupAllow['cate']['edit']) && !isset($this->adminLogged['admin_allow_cate'][$_num_cateId]['cate']) && !$this->isSuper) { //判断权限
+            return $this->error('You do not have permission', 'x250303');
+        }
+
+        $_arr_search = array(
+            'box'           => 'normal',
+            'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_cateRow['cate_content']),
+        );
+
+        if ($_arr_cateRow['cate_attach_id'] > 0) {
+            $_arr_search['attach_ids'][] = $_arr_cateRow['cate_attach_id'];
+        }
+
+        $_arr_attachRows   = $this->mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
+
+        foreach ($_arr_attachRows as $_key=>&$_value) {
+            $_value['adminRow'] = $this->mdl_admin->read($_value['attach_admin_id']);
+        }
+
+        $_arr_attachRow = $this->mdl_attach->read($_arr_cateRow['cate_attach_id']);
+
+        $_arr_tplData = array(
+            'ids'        => implode(',', $_arr_search['attach_ids']),
+            'cateRow'    => $_arr_cateRow,
+            'attachRows' => $_arr_attachRows,
+            'attachRow'  => $_arr_attachRow,
+            'token'      => $this->obj_request->token(),
+        );
+
+        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
+
+        $this->assign($_arr_tpl);
+
+        return $this->fetch();
+    }
+
+
+    function cover() {
+        $_mix_init = $this->init();
+
+        if ($_mix_init !== true) {
+            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+        }
+
+        if (!$this->isAjaxPost) {
+            return $this->fetchJson('Access denied', '', 405);
+        }
+
+        $_arr_inputCover = $this->mdl_cate->inputCover();
+
+        if ($_arr_inputCover['rcode'] != 'y250201') {
+            return $this->fetchJson($_arr_inputCover['msg'], $_arr_inputCover['rcode']);
+        }
+
+        if (!isset($this->groupAllow['cate']['edit']) && !isset($this->adminLogged['admin_allow_cate'][$_arr_inputCover['cate_id']]['cate']) && !$this->isSuper) { //判断权限
+            return $this->fetchJson('You do not have permission', 'x250303');
+        }
+
+        $_arr_attachRow = $this->mdl_attach->check($_arr_inputCover['attach_id']);
+
+        if ($_arr_attachRow['rcode'] != 'y070102') {
+            return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);
+        }
+
+        $_arr_coverResult   = $this->mdl_cate->cover();
+
+        return $this->fetchJson($_arr_coverResult['msg'], $_arr_coverResult['rcode']);
+    }
+
+
     function duplicate() {
         $_mix_init = $this->init();
 
@@ -341,7 +455,7 @@ class Cate extends Ctrl {
         }
 
         $_arr_return = array(
-            'article_ids'      => $_arr_inputDelete['article_ids'],
+            'cate_ids'      => $_arr_inputDelete['cate_ids'],
         );
 
         Plugin::listen('action_console_cate_delete', $_arr_return); //删除链接时触发
@@ -380,7 +494,7 @@ class Cate extends Ctrl {
         }
 
         $_arr_return = array(
-            'cate_ids'      => $_arr_inputStatus['article_ids'],
+            'cate_ids'      => $_arr_inputStatus['cate_ids'],
             'cate_status'   => $_arr_inputStatus['act'],
         );
 

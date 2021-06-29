@@ -5,8 +5,8 @@
 -----------------------------------------------------------------*/
 namespace app\model\console;
 
-use ginkgo\Func;
 use app\model\Pm as Pm_Base;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -66,7 +66,7 @@ class Pm extends Pm_Base {
 
         $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputDelete['pm_ids'] = Func::arrayFilter($_arr_inputDelete['pm_ids']);
+        $_arr_inputDelete['pm_ids'] = Arrays::filter($_arr_inputDelete['pm_ids']);
 
         $_is_vld = $this->vld_pm->scene('delete')->verify($_arr_inputDelete);
 
@@ -95,7 +95,7 @@ class Pm extends Pm_Base {
 
         $_arr_inputStatus = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputStatus['pm_ids'] = Func::arrayFilter($_arr_inputStatus['pm_ids']);
+        $_arr_inputStatus['pm_ids'] = Arrays::filter($_arr_inputStatus['pm_ids']);
 
         $_is_vld = $this->vld_pm->scene('status')->verify($_arr_inputStatus);
 

@@ -7,7 +7,6 @@
 namespace app\model\index;
 
 use app\model\Spec as Spec_Base;
-use ginkgo\Func;
 use ginkgo\Config;
 
 //不能非法包含或直接执行

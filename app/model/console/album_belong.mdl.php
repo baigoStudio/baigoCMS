@@ -8,6 +8,7 @@ namespace app\model\console;
 use app\model\Album_Belong as Album_Belong_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -198,25 +199,25 @@ class Album_Belong extends Album_Belong_Base {
         }
 
         if (!Func::isEmpty($arr_albumIds)) {
-            $arr_albumIds = Func::arrayFilter($arr_albumIds);
+            $arr_albumIds = Arrays::filter($arr_albumIds);
 
             $_arr_where[] = array('belong_album_id', 'IN', $arr_albumIds, 'album_ids');
         }
 
         if (!Func::isEmpty($arr_attachIds)) {
-            $arr_attachIds = Func::arrayFilter($arr_attachIds);
+            $arr_attachIds = Arrays::filter($arr_attachIds);
 
             $_arr_where[] = array('belong_attach_id', 'IN', $arr_attachIds, 'attach_ids');
         }
 
         if (!Func::isEmpty($arr_notAlbumIds)) {
-            $arr_notAlbumIds = Func::arrayFilter($arr_notAlbumIds);
+            $arr_notAlbumIds = Arrays::filter($arr_notAlbumIds);
 
             $_arr_where[] = array('belong_album_id', 'NOT IN', $arr_notAlbumIds, 'not_album_ids');
         }
 
         if (!Func::isEmpty($arr_notAttachIds)) {
-            $arr_notAttachIds = Func::arrayFilter($arr_notAttachIds);
+            $arr_notAttachIds = Arrays::filter($arr_notAttachIds);
 
             $_arr_where[] = array('belong_attach_id', 'NOT IN', $arr_notAttachIds, 'not_attach_ids');
         }

@@ -8,7 +8,7 @@ namespace app\classes;
 
 use ginkgo\Sign;
 use ginkgo\Crypt;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Config;
 use ginkgo\Http;
 use ginkgo\Request;
@@ -20,6 +20,7 @@ defined('IN_GINKGO') or exit('Access Denied');
 class Sso {
 
     public $dataCommon;
+    protected $obj_http;
     protected $obj_request;
 
     function __construct() { //构造函数
@@ -65,7 +66,7 @@ class Sso {
             );
         }
 
-        $_arr_return = Json::decode($_str_decrypt);
+        $_arr_return = Arrays::fromJson($_str_decrypt);
 
         if (!isset($_arr_return['timestamp'])) {
             return array(

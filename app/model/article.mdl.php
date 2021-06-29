@@ -8,6 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
+use ginkgo\Arrays;
 use ginkgo\Config;
 use ginkgo\Loader;
 use ginkgo\Html;
@@ -50,7 +51,7 @@ class Article extends Model {
             return $_arr_articleRow;
         }
 
-        $_arr_contentRow       = $this->mdl_articleContent->read($num_articleId);
+        $_arr_contentRow = $this->mdl_articleContent->read($num_articleId);
 
         $_arr_articleRow = array_replace_recursive($_arr_contentRow, $_arr_articleRow);
         $_arr_articleRow['article_customs'] = $this->mdl_articleCustom->read($num_articleId);
@@ -166,8 +167,10 @@ class Article extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -242,19 +245,19 @@ class Article extends Model {
         }
 
         if (isset($arr_search['article_ids']) && !Func::isEmpty($arr_search['article_ids'])) {
-            $arr_search['article_ids'] = Func::arrayFilter($arr_search['article_ids']);
+            $arr_search['article_ids'] = Arrays::filter($arr_search['article_ids']);
 
             $_arr_where[] = array('article_id', 'IN', $arr_search['article_ids'], 'article_ids');
         }
 
         if (isset($arr_search['not_ids']) && !Func::isEmpty($arr_search['not_ids'])) {
-            $arr_search['not_ids'] = Func::arrayFilter($arr_search['not_ids']);
+            $arr_search['not_ids'] = Arrays::filter($arr_search['not_ids']);
 
             $_arr_where[] = array('article_id', 'NOT IN', $arr_search['not_ids'], 'not_ids');
         }
 
         if (isset($arr_search['cate_ids']) && !Func::isEmpty($arr_search['cate_ids'])) {
-            $arr_search['cate_ids'] = Func::arrayFilter($arr_search['cate_ids']);
+            $arr_search['cate_ids'] = Arrays::filter($arr_search['cate_ids']);
 
             $_arr_where[] = array('article_cate_id', 'IN', $arr_search['cate_ids'], 'cate_ids');
         } else if (isset($arr_search['cate_id'])) {
@@ -285,10 +288,16 @@ class Article extends Model {
         }
 
         $arr_articleRow['article_time_show_format'] = $this->dateFormat($arr_articleRow['article_time_show']);
-
-        $arr_articleRow['article_time_pub_format'] = $this->dateFormat($arr_articleRow['article_time_pub']);
-
+        $arr_articleRow['article_time_pub_format']  = $this->dateFormat($arr_articleRow['article_time_pub']);
         $arr_articleRow['article_time_hide_format'] = $this->dateFormat($arr_articleRow['article_time_hide']);
+
+        if ($arr_articleRow['article_time_pub'] < GK_NOW) {
+            $arr_articleRow['article_is_time_pub'] = 0;
+        }
+
+        if ($arr_articleRow['article_time_hide'] < 1) {
+            $arr_articleRow['article_is_time_pub'] = 0;
+        }
 
         return $arr_articleRow;
     }

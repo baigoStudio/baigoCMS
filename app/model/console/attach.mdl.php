@@ -9,7 +9,7 @@ namespace app\model\console;
 use app\model\Attach as Attach_Base;
 use ginkgo\Loader;
 use ginkgo\Config;
-use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -28,19 +28,16 @@ class Attach extends Attach_Base {
      * @return void
      */
     function submit() {
-        $_tm_time = GK_NOW;
         $_num_attachId = 0;
 
-        $_arr_attachData = array(
-            'attach_box'    => 'normal',
-        );
+        $_arr_attachData = array();
 
         if (isset($this->inputSubmit['attach_id'])) {
             $_num_attachId  = $this->inputSubmit['attach_id'];
         }
 
-        if (isset($this->inputSubmit['attach_name'])) {
-            $_arr_attachData['attach_name']     = $this->inputSubmit['attach_name'];
+        if (isset($this->inputSubmit['attach_note'])) {
+            $_arr_attachData['attach_note']     = $this->inputSubmit['attach_note'];
         }
 
         if (isset($this->inputSubmit['attach_ext'])) {
@@ -63,10 +60,24 @@ class Attach extends Attach_Base {
             $_arr_attachData['attach_size']     = $this->inputSubmit['attach_size'];
         }
 
+        if (isset($this->inputSubmit['attach_box'])) {
+            $_arr_attachData['attach_box']     = $this->inputSubmit['attach_box'];
+        }
+
+        if ($_num_attachId > 0) {
+            $_str_vld = 'submit_edit_db';
+        } else {
+            $_str_vld = 'submit_add_db';
+
+            if (isset($this->inputSubmit['attach_name'])) {
+                $_arr_attachData['attach_name']     = $this->inputSubmit['attach_name'];
+            }
+        }
+
         $_arr_return    = array();
         $_arr_attachRow = array();
 
-        $_mix_vld = $this->validate($_arr_attachData, '', 'submit_db');
+        $_mix_vld = $this->validate($_arr_attachData, '', $_str_vld);
 
         if ($_mix_vld !== true) {
             return array(
@@ -80,7 +91,7 @@ class Attach extends Attach_Base {
             $_arr_return    = $this->updateProcess($_arr_attachData, $_num_attachId);
             $_arr_attachRow = $this->check($_num_attachId);
         } else {
-            $_arr_attachData['attach_time'] = $_tm_time;
+            $_arr_attachData['attach_time'] = GK_NOW;
 
             $_arr_attachRow = $this->check('reserve', 'attach_box');
 
@@ -117,7 +128,7 @@ class Attach extends Attach_Base {
 
         $_arr_attachResult = $this->rowProcess($_arr_attachResult);
 
-        $_arr_attachResult['thumbRows'] = $this->thumbProcess($_arr_attachResult);
+        $_arr_attachResult = $this->thumbProcess($_arr_attachResult);
 
         //print_r($_arr_attachResult);
 
@@ -148,7 +159,7 @@ class Attach extends Attach_Base {
             $_str_msg   = 'Successfully deleted {:count} attachments';
         } else {
             $_str_rcode = 'x070104';
-            $_str_msg   = 'No attachment have been deleteds';
+            $_str_msg   = 'No attachment have been deleted';
         }
 
         return array(
@@ -189,9 +200,7 @@ class Attach extends Attach_Base {
             'DISTINCT FROM_UNIXTIME(`attach_time`, \'%Y\') AS `attach_year`',
         );
 
-        $_arr_yearRows = $this->where('attach_time', '>', 0, 'attach_time')->order('attach_time', 'ASC')->limit(100)->select($_arr_attachSelect);
-
-        return $_arr_yearRows;
+        return $this->where('attach_time', '>', 0)->order('attach_time', 'ASC')->select($_arr_attachSelect);
     }
 
 
@@ -263,13 +272,15 @@ class Attach extends Attach_Base {
 
     function inputUpload() {
         $_arr_inputParam = array(
-            'attach_album_ids'  => array('str', ''),
+            'attach_album_ids'  => array('arr', array()),
             '__token__'         => array('str', ''),
         );
 
         $_arr_inputUpload = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputUpload['attach_album_ids'] = Func::arrayFilter($_arr_inputUpload['attach_album_ids']);
+        //print_r($_arr_inputUpload);
+
+        $_arr_inputUpload['attach_album_ids'] = Arrays::filter($_arr_inputUpload['attach_album_ids']);
 
         $_mix_vld = $this->validate($_arr_inputUpload, '', 'common');
 
@@ -316,6 +327,7 @@ class Attach extends Attach_Base {
         $_arr_inputParam = array(
             'attach_id'         => array('int', 0),
             'attach_name'       => array('str', ''),
+            'attach_note'       => array('str', ''),
             'attach_ext'        => array('str', ''),
             'attach_mime'       => array('str', ''),
             'attach_box'        => array('str', ''),
@@ -325,21 +337,27 @@ class Attach extends Attach_Base {
 
         $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputSubmit['attach_album_ids'] = Func::arrayFilter($_arr_inputSubmit['attach_album_ids']);
+        $_arr_inputSubmit['attach_album_ids'] = Arrays::filter($_arr_inputSubmit['attach_album_ids']);
 
-        $_mix_vld = $this->validate($_arr_inputSubmit, '', 'submit');
+        if ($_arr_inputSubmit['attach_id'] > 0) {
+            $_arr_attachRow = $this->check($_arr_inputSubmit['attach_id']);
+
+            if ($_arr_attachRow['rcode'] != 'y070102') {
+                return $_arr_attachRow;
+            }
+
+            $_str_vld = 'submit_edit';
+        } else {
+            $_str_vld = 'submit_add';
+        }
+
+        $_mix_vld = $this->validate($_arr_inputSubmit, '', $_str_vld);
 
         if ($_mix_vld !== true) {
             return array(
                 'rcode' => 'x070201',
                 'msg'   => end($_mix_vld),
             );
-        }
-
-        $_arr_attachRow = $this->check($_arr_inputSubmit['attach_id']);
-
-        if ($_arr_attachRow['rcode'] != 'y070102') {
-            return $_arr_attachRow;
         }
 
         $_arr_inputSubmit['rcode'] = 'y070201';
@@ -441,7 +459,7 @@ class Attach extends Attach_Base {
 
         $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputDelete['attach_ids'] = Func::arrayFilter($_arr_inputDelete['attach_ids']);
+        $_arr_inputDelete['attach_ids'] = Arrays::filter($_arr_inputDelete['attach_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -469,7 +487,7 @@ class Attach extends Attach_Base {
 
         $_arr_inputBox = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputBox['attach_ids'] = Func::arrayFilter($_arr_inputBox['attach_ids']);
+        $_arr_inputBox['attach_ids'] = Arrays::filter($_arr_inputBox['attach_ids']);
 
         $_mix_vld = $this->validate($_arr_inputBox, '', 'status');
 
@@ -488,15 +506,15 @@ class Attach extends Attach_Base {
     }
 
     protected function thumbProcess($arr_attachRow) {
-        $_arr_thumbRows = parent::thumbProcess($arr_attachRow);
+        $arr_attachRow = parent::thumbProcess($arr_attachRow);
 
-        foreach ($_arr_thumbRows as $_key=>$_value) {
-            $_str_thumbNamePath                         = $this->nameProcess($arr_attachRow, $_value, DS);
-            $_arr_thumbRows[$_key]['thumb_path_name']   = $_str_thumbNamePath;
-            $_arr_thumbRows[$_key]['thumb_path']        = GK_PATH_ATTACH . $_str_thumbNamePath;
+        foreach ($arr_attachRow['thumbRows'] as $_key=>&$_value) {
+            $_str_thumbNamePath        = $this->nameProcess($arr_attachRow, $_value, DS);
+            $_value['thumb_path_name'] = $_str_thumbNamePath;
+            $_value['thumb_path']      = GK_PATH_ATTACH . $_str_thumbNamePath;
         }
 
-        return $_arr_thumbRows;
+        return $arr_attachRow;
     }
 
 

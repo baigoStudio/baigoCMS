@@ -7,6 +7,7 @@
 namespace app\model\console;
 
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -68,7 +69,7 @@ class Article_Spec_View extends Article {
 
         $_arr_where         = $this->queryProcess($arr_search);
         $_arr_pagination    = $this->paginationProcess($pagination);
-        $_arr_getData       = $this->where($_arr_where)->order($arr_order)->group($arr_group)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'])->select($_arr_articleSelect);
+        $_arr_getData       = $this->where($_arr_where)->order($arr_order)->group($arr_group)->limit($_arr_pagination['limit'], $_arr_pagination['length'])->paginate($_arr_pagination['perpage'], $_arr_pagination['current'], $_arr_pagination['pageparam'])->select($_arr_articleSelect);
 
         if (isset($_arr_getData['dataRows'])) {
             $_arr_eachData = &$_arr_getData['dataRows'];
@@ -134,7 +135,7 @@ class Article_Spec_View extends Article {
         }
 
         if (isset($arr_search['cate_ids']) && !Func::isEmpty($arr_search['cate_ids'])) {
-            $arr_search['cate_ids'] = Func::arrayFilter($arr_search['cate_ids']);
+            $arr_search['cate_ids'] = Arrays::filter($arr_search['cate_ids']);
 
             $_arr_where[] = array('belong_cate_id', 'IN', $arr_search['cate_ids'], 'cate_ids');
         }
@@ -144,7 +145,7 @@ class Article_Spec_View extends Article {
         }
 
         if (isset($arr_search['spec_ids']) && !Func::isEmpty($arr_search['spec_ids'])) {
-            $arr_search['spec_ids'] = Func::arrayFilter($arr_search['spec_ids']);
+            $arr_search['spec_ids'] = Arrays::filter($arr_search['spec_ids']);
 
             $_arr_where[] = array('belong_spec_id', 'IN', $arr_search['spec_ids'], 'spec_ids');
         }

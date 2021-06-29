@@ -77,6 +77,15 @@
             <?php } ?>
 
             <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" <?php if ($articleRow['article_top'] > 0) { ?>checked<?php } ?> id="article_top" name="article_top" value="1" class="custom-control-input">
+                    <label for="article_top" class="custom-control-label">
+                        <?php echo $lang->get('Sticky'); ?>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label><?php echo $lang->get('Mark'); ?></label>
                 <select name="article_mark_id" class="form-control">
                     <option value=""><?php echo $lang->get('None'); ?></option>
@@ -120,15 +129,6 @@
                 <div id="time_hide_input" class="collapse <?php if ($articleRow['article_is_time_hide'] > 0) { ?>show<?php } ?>">
                     <input type="text" name="article_time_hide_format" id="article_time_hide_format" value="<?php echo $articleRow['article_time_hide_format']['date_time']; ?>" class="form-control input_date">
                     <small class="form-text" id="msg_article_time_hide_format"></small>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" <?php if ($articleRow['article_top'] > 0) { ?>checked<?php } ?> id="article_top" name="article_top" value="1" class="custom-control-input">
-                    <label for="article_top" class="custom-control-label">
-                        <?php echo $lang->get('Sticky'); ?>
-                    </label>
                 </div>
             </div>
 

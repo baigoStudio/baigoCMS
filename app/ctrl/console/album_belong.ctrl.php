@@ -60,25 +60,18 @@ class Album_Belong extends Ctrl {
 
         $_arr_attachRows   = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
-        foreach ($_arr_attachRows['dataRows'] as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-        }
-
         $_arr_searchBelong = array(
             'album_id' => $_arr_albumRow['album_id'],
         );
 
         $_str_pageParamBelong     = 'page_belong';
 
-        $_arr_getData    = $this->mdl_attachAlbumView->lists($this->config['var_default']['perpage'], $_arr_searchBelong); //列出
+        $_arr_pagination = array(
+            0 => $this->config['var_default']['perpage'],
+            3 => $_str_pageParamBelong,
+        );
 
-        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-        }
+        $_arr_getData    = $this->mdl_attachAlbumView->lists($_arr_pagination, $_arr_searchBelong); //列出
 
         $_arr_tplData = array(
             'albumRow'          => $_arr_albumRow,

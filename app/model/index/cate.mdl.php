@@ -10,6 +10,7 @@ use app\model\Cate as Cate_Base;
 use ginkgo\Config;
 use ginkgo\Func;
 use ginkgo\Cache;
+use ginkgo\Loader;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -23,6 +24,7 @@ class Cate extends Cate_Base {
         parent::m_init();
 
         $this->obj_cache  = Cache::instance();
+        $this->mdl_attach = Loader::model('Attach');
     }
 
 
@@ -111,15 +113,13 @@ class Cate extends Cate_Base {
         $_arr_getData   = $this->lists(array(1000, 'limit'), $arr_search);
 
         foreach ($_arr_getData as $_key=>$_value) {
-            $_arr_cateRow                                   = $_value;
-            $_arr_cateRow['cate_url']                       = $this->urlProcess($_arr_cateRow);
-
-            $_arr_cates[$_value['cate_id']]                 = $_arr_cateRow;
-
-            $_arr_cates[$_value['cate_id']]['cate_level']   = $num_level;
+            $_value['cate_url']                            = $this->urlProcess($_value);
+            $_value['attachRow']                           = $this->mdl_attach->read($_value['cate_attach_id']);
+            $_arr_cates[$_value['cate_id']]                = $_value;
+            $_arr_cates[$_value['cate_id']]['cate_level']  = $num_level;
             unset($_arr_cates[$_value['cate_id']]['cate_breadcrumb']);
-            $arr_search['parent_id']                        = $_value['cate_id'];
-            $_arr_cates[$_value['cate_id']]['cate_childs']  = $this->listsTree($arr_search, $num_level + 1);
+            $arr_search['parent_id']                       = $_value['cate_id'];
+            $_arr_cates[$_value['cate_id']]['cate_childs'] = $this->listsTree($arr_search, $num_level + 1);
         }
 
         return $_arr_cates;
@@ -134,6 +134,7 @@ class Cate extends Cate_Base {
 
         if ($_arr_cateRow['rcode'] == 'y250102') {
             $_arr_cateRow['cate_url']        = $this->urlProcess($_arr_cateRow);
+            $_arr_cateRow['attachRow']       = $this->mdl_attach->read($_arr_cateRow['cate_attach_id']);
             $_arr_cateRow['cate_breadcrumb'] = $this->breadcrumbRowProcess($_arr_cateRow['cate_breadcrumb']);
             $_arr_cateRow['cate_ids']        = $this->ids($num_cateId);
             $_return                         = $this->obj_cache->write('cate_' . $num_cateId, $_arr_cateRow);

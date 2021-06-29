@@ -58,12 +58,12 @@ class Article_Custom extends Article_Custom_Base {
         }
 
         if (!Func::isEmpty($_arr_clearData)) {
-            $_mdl_article = Loader::model('article');
+            $_mdl_article = Loader::model('Article');
 
             foreach ($_arr_clearData as $_key=>$_value) {
                 $_arr_articleRow = $_mdl_article->check($_value['article_id']);
 
-                if (!$_arr_articleRow) {
+                if ($_arr_articleRow['rcode'] != 'y120102') {
                     $this->where('article_id', '=', $_value['article_id'])->delete();
                 }
             }

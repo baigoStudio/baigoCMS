@@ -33,14 +33,14 @@ class Article_Custom extends Ctrl {
             return $this->fetchJson('Access denied', '', 405);
         }
 
+        if (!isset($this->groupAllow['article']['edit']) && !$this->isSuper) { //判断权限
+            return $this->fetchJson('You do not have permission', 'x120303');
+        }
+
         $_arr_inputClear = $this->mdl_articleCustom->inputClear();
 
         if ($_arr_inputClear['rcode'] != 'y210201') {
             return $this->fetchJson($_arr_inputClear['msg'], $_arr_inputClear['rcode']);
-        }
-
-        if (!isset($this->groupAllow['article']['edit']) && !$this->isSuper) { //判断权限
-            return $this->fetchJson('You do not have permission', 'x120303');
         }
 
         $_num_maxId = $_arr_inputClear['max_id'];

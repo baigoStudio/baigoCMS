@@ -9,6 +9,7 @@ namespace app\classes\install;
 use app\classes\Ctrl as Ctrl_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\File;
 use ginkgo\Config;
 use ginkgo\Plugin;
 
@@ -107,7 +108,7 @@ class Ctrl extends Ctrl_Base {
         $_str_jump      = '';
         $_str_msg       = '';
 
-        if (Func::isFile(GK_APP_CONFIG . $this->configInstalled)) {
+        if (File::fileHas(GK_APP_CONFIG . $this->configInstalled)) {
             $_arr_installed = Config::load(GK_APP_CONFIG . $this->configInstalled, 'installed');
             $_str_rcode     = 'x030412';
             $_str_msg       = 'System already installed';
@@ -134,7 +135,7 @@ class Ctrl extends Ctrl_Base {
         $_str_jump      = '';
         $_str_msg       = '';
 
-        if (Func::isFile(GK_APP_CONFIG . $this->configInstalled)) {
+        if (File::fileHas(GK_APP_CONFIG . $this->configInstalled)) {
             $_arr_installed = Config::load(GK_APP_CONFIG . $this->configInstalled, 'installed');
 
             if (!isset($_arr_installed['prd_installed_pub'])) {

@@ -42,7 +42,7 @@ class Cate extends Ctrl {
         );
 
         $_arr_search    = $this->obj_request->param($_arr_searchParam);
-        $_arr_pageRow   = $this->obj_request->pagination();
+        $_arr_pageRow   = $this->obj_request->pagination(0);
         $_arr_cateRow   = $this->mdl_cate->next($_arr_search['min']);
         $_str_jump      = $this->url['route_gen'];
 
@@ -179,11 +179,6 @@ class Cate extends Ctrl {
         }
 
         if ($this->ftpInit) {
-            if (!$this->obj_ftp->init()) {
-                $_str_error = $this->obj_ftp->getError();
-                return $this->fetchJson($_str_error, 'x070410');
-            }
-
             $_ftp_status = $this->obj_ftp->fileUpload($_arr_cateRow['cate_path'], '/' . $_arr_cateRow['cate_path_name']);
         }
 
@@ -233,8 +228,7 @@ class Cate extends Ctrl {
 
         //$arr_tplData['path_tpl']   = $_str_pathTpl;
 
-        $_mix_result = Plugin::listen('filter_gen_cate', $arr_tplData); //编辑文章时触发
-        $arr_tplData = Plugin::resultProcess($arr_tplData, $_mix_result);
+        $arr_tplData = Plugin::listen('filter_gen_cate', $arr_tplData); //编辑文章时触发
 
         if (isset($_arr_cateRow['cate_path_index'])) {
             $this->outputProcess($arr_tplData, $_arr_cateRow['cate_path_index'], $_str_pathTpl, 'cate' . DS . 'index');

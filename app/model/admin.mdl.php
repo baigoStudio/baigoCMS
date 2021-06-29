@@ -7,7 +7,7 @@
 namespace app\model;
 
 use app\classes\Model;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Func;
 
 //不能非法包含或直接执行
@@ -222,7 +222,7 @@ class Admin extends Model {
 
     protected function rowProcess($arr_adminRow = array()) {
         if (isset($arr_adminRow['admin_allow_cate'])) {
-            $arr_adminRow['admin_allow_cate'] = Json::decode($arr_adminRow['admin_allow_cate']); //json 解码
+            $arr_adminRow['admin_allow_cate'] = Arrays::fromJson($arr_adminRow['admin_allow_cate']); //json 解码
         } else {
             $arr_adminRow['admin_allow_cate'] = array();
         }
@@ -230,19 +230,19 @@ class Admin extends Model {
         //print_r($arr_adminRow['admin_allow_cate']);
 
         if (isset($arr_adminRow['admin_allow_profile'])) {
-            $arr_adminRow['admin_allow_profile'] = Json::decode($arr_adminRow['admin_allow_profile']); //json 解码
+            $arr_adminRow['admin_allow_profile'] = Arrays::fromJson($arr_adminRow['admin_allow_profile']); //json 解码
         } else {
             $arr_adminRow['admin_allow_profile'] = array();
         }
 
         if (isset($arr_adminRow['admin_shortcut'])) {
-            $arr_adminRow['admin_shortcut'] = Json::decode($arr_adminRow['admin_shortcut']); //json 解码
+            $arr_adminRow['admin_shortcut'] = Arrays::fromJson($arr_adminRow['admin_shortcut']); //json 解码
         } else {
             $arr_adminRow['admin_shortcut'] = array();
         }
 
         if (isset($arr_adminRow['admin_prefer'])) {
-            $arr_adminRow['admin_prefer'] = Json::decode($arr_adminRow['admin_prefer']); //json 解码
+            $arr_adminRow['admin_prefer'] = Arrays::fromJson($arr_adminRow['admin_prefer']); //json 解码
         } else {
             $arr_adminRow['admin_prefer'] = array();
         }

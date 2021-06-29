@@ -66,6 +66,12 @@ class Attach extends Model {
                 'comment'   => '原始文件名',
                 'old'       => 'upfile_name',
             ),
+            'attach_note' => array(
+                'type'      => 'varchar(1000)',
+                'not_null'  => true,
+                'default'   => '',
+                'comment'   => '备注',
+            ),
             'attach_admin_id' => array(
                 'type'      => 'int(11)',
                 'not_null'  => true,

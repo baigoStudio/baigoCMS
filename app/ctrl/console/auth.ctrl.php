@@ -18,7 +18,7 @@ class Auth extends Ctrl {
     protected function c_init($param = array()) {
         parent::c_init();
 
-        $this->obj_user     = Loader::classes('User', 'sso');
+        $this->obj_reg      = Loader::classes('Reg', 'sso');
         $this->mdl_cate     = Loader::model('Cate');
 
         $this->mdl_auth     = Loader::model('Auth');
@@ -87,10 +87,10 @@ class Auth extends Ctrl {
         }
 
         //检验用户名是否存在
-        $_arr_userRow = $this->obj_user->read($_arr_inputSubmit['admin_name'], 'user_name');
+        $_arr_userRow = $this->obj_reg->chkname($_arr_inputSubmit['admin_name']);
 
-        if ($_arr_userRow['rcode'] != 'y010102') {
-            return $this->fetchJson('User not found, please use add administrator', $_arr_userRow['rcode']);
+        if ($_arr_userRow['rcode'] != 'x010404') {
+            return $this->fetchJson('User not found, please use add administrator', 'x010102');
         }
 
         $_arr_checkResult = $this->mdl_auth->check($_arr_userRow['user_id']);
@@ -124,24 +124,24 @@ class Auth extends Ctrl {
         $_str_adminName = $this->obj_request->get('admin_name');
 
         if (!Func::isEmpty($_str_adminName)) {
-            $_arr_userRow   = $this->obj_user->read($_str_adminName, 'user_name');
+            $_arr_userRow   = $this->obj_reg->chkname($_str_adminName);
 
-            if ($_arr_userRow['rcode'] != 'y010102') {
-                $_arr_return = array(
-                    'rcode' => $_arr_userRow['rcode'],
-                    'error_msg' => $this->obj_lang->get('User not found, please use add administrator'),
-                );
-            } else {
+            if ($_arr_userRow['rcode'] == 'x010404') {
                 $_arr_checkResult = $this->mdl_auth->check($_arr_userRow['user_id']);
 
                 //print_r($_arr_checkResult);
 
                 if ($_arr_checkResult['rcode'] == 'y020102') {
                     $_arr_return = array(
-                        'rcode' => 'x020404',
+                        'rcode'     => 'x020404',
                         'error_msg' => $this->obj_lang->get('Administrator already exists'),
                     );
                 }
+            } else {
+                $_arr_return = array(
+                    'rcode'     => 'x010102',
+                    'error_msg' => $this->obj_lang->get('User not found, please use add administrator'),
+                );
             }
         }
 

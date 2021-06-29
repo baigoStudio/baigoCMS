@@ -8,6 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
+use ginkgo\Cache;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -16,6 +17,14 @@ defined('IN_GINKGO') or exit('Access Denied');
 class Thumb extends Model {
 
     public $arr_type = array('ratio', 'cut');
+
+    protected $obj_cache;
+
+    function m_init() { //构造函数
+        parent::m_init();
+
+        $this->obj_cache    = Cache::instance();
+    }
 
     function check($num_thumbId = 0, $thumbWidth = 0, $thumbHeight = 0, $thumbType = '', $notId = 0) {
         if ($num_thumbId === 0 || ($thumbWidth == 100 && $thumbHeight == 100 && $thumbType == 'cut')) {
@@ -130,5 +139,33 @@ class Thumb extends Model {
 
     function count() {
         return $this->count();
+    }
+
+
+    function cache() {
+        $_arr_return = array();
+
+        $_str_cacheName = 'thumb_lists';
+
+        if (!$this->obj_cache->check($_str_cacheName, true)) {
+            $this->cacheProcess();
+        }
+
+        $_arr_return = $this->obj_cache->read($_str_cacheName);
+
+        return $_arr_return;
+    }
+
+
+    function cacheProcess() {
+        $_arr_thumbRows = $this->lists(array(1000, 'limit'));
+
+        $_arr_thumbs = array();
+
+        foreach ($_arr_thumbRows as $_key=>$_value) {
+            $_arr_thumbs[$_value['thumb_id']] = $_value;
+        }
+
+        return $this->obj_cache->write('thumb_lists', $_arr_thumbs);
     }
 }

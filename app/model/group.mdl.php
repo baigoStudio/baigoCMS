@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -143,7 +143,7 @@ class Group extends Model {
 
     protected function rowProcess($arr_groupRow = array()) {
         if (isset($arr_groupRow['group_allow'])) {
-            $arr_groupRow['group_allow'] = Json::decode($arr_groupRow['group_allow']); //json解码
+            $arr_groupRow['group_allow'] = Arrays::fromJson($arr_groupRow['group_allow']); //json解码
         } else {
             $arr_groupRow['group_allow'] = array();
         }

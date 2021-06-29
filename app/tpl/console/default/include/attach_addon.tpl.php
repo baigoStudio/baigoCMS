@@ -5,7 +5,7 @@
                                 <div class="input-group mb-2" id="album_item_<?php echo $value['album_id']; ?>">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text border-success">
-                                            <input type="hidden" name="attach_album_ids[]" value="<?php echo $value['album_id']; ?>">
+                                            <input type="hidden" name="attach_album_ids[]" class="attach_album_ids" value="<?php echo $value['album_id']; ?>">
                                             <span class="fas fa-check-circle text-primary"></span>
                                         </div>
                                     </div>
@@ -27,7 +27,7 @@
                             var _album_list_html = '<div class="input-group mb-2" id="album_item_' + album_id + '">' +
                                 '<div class="input-group-prepend">' +
                                     '<div class="input-group-text border-success">' +
-                                        '<input type="hidden" name="attach_album_ids[]" value="' + album_id + '">' +
+                                        '<input type="hidden" name="attach_album_ids[]" value="' + album_id + '" class="attach_album_ids">' +
                                         '<span class="fas fa-check-circle text-primary"></span>' +
                                     '</div>' +
                                 '</div>' +

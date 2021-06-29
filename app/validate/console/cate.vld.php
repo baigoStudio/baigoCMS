@@ -64,6 +64,9 @@ class Cate extends Validate {
         'cate_orders' => array(
             'require' => true,
         ),
+        'attach_id' => array(
+            '>' => 0,
+        ),
         '__token__' => array(
             'require' => true,
             'token'   => true,
@@ -105,6 +108,13 @@ class Cate extends Validate {
             'cate_id' => array(
                 '>' => 0,
             ),
+            '__token__',
+        ),
+        'cover' => array(
+            'cate_id' => array(
+                '>' => 0,
+            ),
+            'attach_id',
             '__token__',
         ),
         'delete' => array(

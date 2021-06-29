@@ -25,7 +25,7 @@ include($cfg['pathInclude'] . 'gsite_head' . GK_EXT_TPL); ?>
                             <?php foreach ($configContent as $key=>$value) { ?>
                                 <a class="list-group-item list-group-item-action d-flex bg-light justify-content-between align-items-center" data-toggle="collapse" href="#bg-form-<?php echo $key; ?>">
                                     <span><?php echo $lang->get($value['title']); ?></span>
-                                    <small class="fas fa-chevron-down" id="bg-caret-<?php echo $key; ?>"></small>
+                                    <small class="fas fa-chevron-<?php if (isset($value['show'])) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-form-<?php echo $key; ?>"></small>
                                 </a>
                                 <div id="bg-form-<?php echo $key; ?>" data-key="<?php echo $key; ?>" class="list-group-item collapse<?php if (isset($value['show'])) { ?> show<?php } ?>" data-parent="#bg-step-content">
                                     <div class="form-group">
@@ -426,6 +426,16 @@ include($cfg['pathInclude'] . 'console_foot' . GK_EXT_TPL); ?>
         $('#attr_except').on('click', '.except_del', function(){
             var _count = $(this).data('count');
             exceptDel(_count);
+        });
+
+        $('.list-group-item.collapse').on('shown.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-up');
+        });
+
+        $('.list-group-item.collapse').on('hidden.bs.collapse', function(){
+            var _key = $(this).data('key');
+            $('#bg-caret-form-' + _key).attr('class', 'fas fa-chevron-down');
         });
 
         $('#gsite_preview').html('<div class="embed-responsive embed-responsive-21by9"><iframe class="embed-responsive-item" scrolling="auto" src="<?php echo $route_console; ?>gsite-preview/content/id/<?php echo $gsiteRow['gsite_id']; ?>/"></iframe></div>');

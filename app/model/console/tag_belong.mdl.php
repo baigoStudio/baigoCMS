@@ -9,6 +9,7 @@ namespace app\model\console;
 use app\model\Tag_Belong as Tag_Belong_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -83,8 +84,8 @@ class Tag_Belong extends Tag_Belong_Base {
         }
 
         if (!Func::isEmpty($_arr_clearData)) {
-            $_mdl_article = Loader::model('article');
-            $_mdl_tag     = Loader::model('tag');
+            $_mdl_article = Loader::model('Article');
+            $_mdl_tag     = Loader::model('Tag');
 
             foreach ($_arr_clearData as $_key=>$_value) {
                 $_arr_articleRow = $_mdl_article->check($_value['belong_article_id']);
@@ -126,25 +127,25 @@ class Tag_Belong extends Tag_Belong_Base {
         }
 
         if (!Func::isEmpty($arr_tagIds)) {
-            $arr_tagIds = Func::arrayFilter($arr_tagIds);
+            $arr_tagIds = Arrays::filter($arr_tagIds);
 
             $_arr_where[] = array('belong_tag_id', 'IN', $arr_tagIds, 'tag_ids');
         }
 
         if (!Func::isEmpty($arr_articleIds)) {
-            $arr_articleIds = Func::arrayFilter($arr_articleIds);
+            $arr_articleIds = Arrays::filter($arr_articleIds);
 
             $_arr_where[] = array('belong_article_id', 'IN', $arr_articleIds, 'article_ids');
         }
 
         if (!Func::isEmpty($arr_notTagIds)) {
-            $arr_notTagIds = Func::arrayFilter($arr_notTagIds);
+            $arr_notTagIds = Arrays::filter($arr_notTagIds);
 
             $_arr_where[] = array('belong_tag_id', 'NOT IN', $arr_notTagIds, 'not_tag_ids');
         }
 
         if (!Func::isEmpty($arr_notArticleIds)) {
-            $arr_notArticleIds = Func::arrayFilter($arr_notArticleIds);
+            $arr_notArticleIds = Arrays::filter($arr_notArticleIds);
 
             $_arr_where[] = array('belong_article_id', 'NOT IN', $arr_notArticleIds, 'not_article_ids');
         }

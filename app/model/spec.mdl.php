@@ -8,6 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
+use ginkgo\Arrays;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
@@ -41,7 +42,7 @@ class Spec extends Model {
             $_arr_specIds[] = $_value['spec_id'];
         }
 
-        return Func::arrayFilter($_arr_specIds);
+        return Arrays::filter($_arr_specIds);
     }
 
 
@@ -134,8 +135,10 @@ class Spec extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -181,7 +184,7 @@ class Spec extends Model {
         }
 
         if (isset($arr_search['spec_ids']) && !Func::isEmpty($arr_search['spec_ids'])) {
-            $arr_search['spec_ids'] = Func::arrayFilter($arr_search['spec_ids']);
+            $arr_search['spec_ids'] = Arrays::filter($arr_search['spec_ids']);
 
             $_arr_where[] = array('spec_id', 'IN', $arr_search['spec_ids'], 'spec_ids');
         }
@@ -206,9 +209,8 @@ class Spec extends Model {
             $arr_specRow['spec_time_update'] = GK_NOW;
         }
 
-        $arr_specRow['spec_url_name'] = $this->nameProcess($arr_specRow);
-        $arr_specRow['spec_time_format'] = $this->dateFormat($arr_specRow['spec_time']);
-
+        $arr_specRow['spec_url_name']           = $this->nameProcess($arr_specRow);
+        $arr_specRow['spec_time_format']        = $this->dateFormat($arr_specRow['spec_time']);
         $arr_specRow['spec_time_update_format'] = $this->dateFormat($arr_specRow['spec_time_update']);
 
         return $arr_specRow;

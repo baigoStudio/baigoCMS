@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
@@ -23,7 +23,6 @@ class Call extends Model {
     public $arr_file   = array('html', 'shtml', 'js', 'json');
 
     protected $configRoute;
-    protected $obj_request;
 
     function m_init() { //构造函数
         parent::m_init();
@@ -133,8 +132,10 @@ class Call extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -191,7 +192,7 @@ class Call extends Model {
 
     protected function rowProcess($arr_callRow = array()) {
         if (isset($arr_callRow['call_amount'])) {
-            $arr_callRow['call_amount']      = Json::decode($arr_callRow['call_amount']); //json解码
+            $arr_callRow['call_amount']      = Arrays::fromJson($arr_callRow['call_amount']); //json解码
         } else {
             $arr_callRow['call_amount']      = array();
         }
@@ -209,25 +210,25 @@ class Call extends Model {
         }
 
         if (isset($arr_callRow['call_cate_ids'])) {
-            $arr_callRow['call_cate_ids'] = Json::decode($arr_callRow['call_cate_ids']); //json解码
+            $arr_callRow['call_cate_ids'] = Arrays::fromJson($arr_callRow['call_cate_ids']); //json解码
         } else {
             $arr_callRow['call_cate_ids'] = array();
         }
 
         if (isset($arr_callRow['call_cate_excepts'])) {
-            $arr_callRow['call_cate_excepts'] = Json::decode($arr_callRow['call_cate_excepts']); //json解码
+            $arr_callRow['call_cate_excepts'] = Arrays::fromJson($arr_callRow['call_cate_excepts']); //json解码
         } else {
             $arr_callRow['call_cate_excepts'] = array();
         }
 
         if (isset($arr_callRow['call_mark_ids'])) {
-            $arr_callRow['call_mark_ids'] = Json::decode($arr_callRow['call_mark_ids']); //json解码
+            $arr_callRow['call_mark_ids'] = Arrays::fromJson($arr_callRow['call_mark_ids']); //json解码
         } else {
             $arr_callRow['call_mark_ids'] = array();
         }
 
         if (isset($arr_callRow['call_spec_ids'])) {
-            $arr_callRow['call_spec_ids'] = Json::decode($arr_callRow['call_spec_ids']); //json解码
+            $arr_callRow['call_spec_ids'] = Arrays::fromJson($arr_callRow['call_spec_ids']); //json解码
         } else {
             $arr_callRow['call_spec_ids'] = array();
         }
@@ -289,7 +290,7 @@ class Call extends Model {
 
         $arr_callRow['call_path_name'] = $_str_callPathName;
         $arr_callRow['call_path']      = GK_PATH_PUBLIC . $this->configRoute['call'] . DS . $_str_callPathName;
-        $arr_callRow['call_url']       = $this->obj_request->root(true) . $this->configRoute['call'] . '/' . $_str_callPathName;
+        $arr_callRow['call_url']       = $this->configRoute['call'] . '/' . $_str_callPathName;
 
         return $arr_callRow;
     }

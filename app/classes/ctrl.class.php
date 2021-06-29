@@ -51,7 +51,7 @@ abstract class Ctrl extends Gk_Ctrl {
             $this->genOpen = true;
         }
 
-        App::setTimezone($this->configBase['site_timezone']);
+        App::setTimezone($this->configBase['site_timezone'], true);
 
         $_arr_data = array(
             'ui_ctrl'       => $this->configUi,

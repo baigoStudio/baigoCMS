@@ -1,5 +1,5 @@
 /*
-v3.0.1 jQuery baigoValidate plugin 表单验证插件
+v3.0.3 jQuery baigoValidate plugin 表单验证插件
 (c) 2017 baigo studio - http://www.baigo.net/jquery/baigovalidate.html
 License: http://www.opensource.org/licenses/mit-license.php
 */
@@ -29,6 +29,10 @@ License: http://www.opensource.org/licenses/mit-license.php
         var opts_default = {
             timeout: 30000,
             delimiter: ' - ',
+            result_obj: {
+                error_msg: 'error_msg',
+                msg: 'msg'
+            },
             type_msg: {
                 require: '{:attr} require',
                 confirm: '{:attr} out of accord with {:confirm}',
@@ -83,7 +87,7 @@ License: http://www.opensource.org/licenses/mit-license.php
             },
             field_selector: {
                 prefix_msg: '#msg_',
-                prefix_group: '#group_'
+                prefix_group: '#group_',
             },
             class_name: {
                 input: {
@@ -95,6 +99,10 @@ License: http://www.opensource.org/licenses/mit-license.php
                     err: 'invalid-feedback',
                     loading: 'text-info'
                 },
+                group: {
+                    success: 'text-success',
+                    err: 'text-danger'
+                },
                 attach: {
                     success: 'text-success',
                     err: 'text-danger'
@@ -105,6 +113,7 @@ License: http://www.opensource.org/licenses/mit-license.php
                 ajax_err: 'Error'
             },
             box: {
+                msg: 'Input error',
                 selector: {
                     box: '.bg-validate-box',
                     content: '.bg-content',
@@ -112,11 +121,22 @@ License: http://www.opensource.org/licenses/mit-license.php
                     msg: '.bg-msg'
                 },
                 class_name: 'alert-danger',
-                class_icon: 'fas fa-times-circle',
-                msg: 'Input error',
+                class_icon: 'fas fa-exclamation-circle',
                 tpl: '<div class="alert alert-dismissible bg-content"><button type="button" class="close" data-dismiss="alert">&times;</button><span class="bg-icon"></span> <span class="bg-msg"></span></div>',
                 delay: 5000
             },
+            extra: {
+                selector: {
+                    content: '.bg-content',
+                    icon: '.bg-icon',
+                    msg: '.bg-msg'
+                },
+                class_name: 'text-danger',
+                class_icon: 'fas fa-exclamation-circle',
+                tpl: '<span class="bg-content"><span class="bg-icon"></span> <span class="bg-msg"></span></span>',
+                delay: 15000
+            },
+            extra_boxes: {},
             selector_types: {},
             rules: {},
             attr_names: {}
@@ -322,9 +342,9 @@ License: http://www.opensource.org/licenses/mit-license.php
                         var _str_msg = message[str_key];
                     }
 
-                    process.output(str_key, _str_msg, opts.class_name.input.err, opts.class_name.msg.err, opts.class_name.attach.err);
+                    process.output(str_key, _str_msg, 'err');
                 } else {
-                    process.output(str_key, '', opts.class_name.input.success, opts.class_name.msg.success, opts.class_name.attach.success);
+                    process.output(str_key, '', 'success');
                 }
 
                 //return err_count;
@@ -603,34 +623,94 @@ License: http://www.opensource.org/licenses/mit-license.php
                     return false;
                 }
             },
-            output: function(key, msg, class_input, class_msg, class_attach) {
+            output: function(key, msg, status) {
                 //console.log(_type);
 
                 var _selector   = process.getSelector(key);
-                var _tag        = $(_selector).prop('tagName');
-                var _type       = $(_selector).attr('type');
-
-                if (typeof _tag != 'undefined') {
-                    _tag = _tag.toLowerCase();
-                }
-
-                if (typeof _type != 'undefined') {
-                    _type = _type.toLowerCase();
-                }
-
-                $(_selector).removeClass(opts.class_name.input.success + ' ' + opts.class_name.input.err);
-
-                $(_selector + ':not(select,:radio:not(:checked),:checkbox:not(:checked))').addClass(class_input);
 
                 $(opts.field_selector.prefix_msg + key).text(msg); //填充消息
 
+                $(_selector).removeClass(opts.class_name.input.success + ' ' + opts.class_name.input.err);
                 $(opts.field_selector.prefix_msg + key).removeClass(opts.class_name.msg.success + ' ' + opts.class_name.msg.err + ' ' + opts.class_name.msg.loading);
-                $(opts.field_selector.prefix_msg + key).addClass(class_msg);
+                $(opts.field_selector.prefix_group + key).removeClass(opts.class_name.group.success + ' ' + opts.class_name.group.err);
+                $(opts.field_selector.prefix_group + key).removeClass(opts.class_name.attach.success + ' ' + opts.class_name.attach.err);
+
+                if (typeof opts.class_name.input[status] != 'undefined') {
+                    $(_selector + ':not(select,:radio:not(:checked),:checkbox:not(:checked))').addClass(opts.class_name.input[status]);
+                }
+
+                if (typeof opts.class_name.msg[status] != 'undefined') {
+                    $(opts.field_selector.prefix_msg + key).addClass(opts.class_name.msg[status]);
+                }
 
                 $(opts.field_selector.prefix_msg + key).show(); //显示消息
 
-                $(opts.field_selector.prefix_group + key).removeClass(opts.class_name.attach.success + ' ' + opts.class_name.attach.err);
-                $(opts.field_selector.prefix_group + key).addClass(class_attach);
+                if (typeof opts.class_name.group[status]) {
+                    $(opts.field_selector.prefix_group + key).addClass(opts.class_name.group[status]);
+                } else if (typeof opts.class_name.attach[status]) {
+                    $(opts.field_selector.prefix_group + key).addClass(opts.class_name.attach[status]);
+                }
+
+                if (typeof opts.extra_boxes[key] != 'undefined') {
+                    var _extra_box = opts.extra_boxes[key];
+
+                    if (typeof _extra_box == 'object') {
+                        if (typeof _extra_box.selector != 'undefined') {
+                            process.extraOutput(status, _extra_box.selector, _extra_box.msg);
+                        }
+                    } else if (typeof _extra_box == 'string') {
+                        process.extraOutput(status, _extra_box);
+                    }
+                }
+            },
+            boxOutput: function() {
+                var _box_selector   = opts.box.selector;
+                var _obj_box        = $(_box_selector.box);
+
+                if (_obj_box.length > 0) {
+                    if (err_count > 0) {
+                        _obj_box.html(opts.box.tpl);
+
+                        $(_box_selector.box + ' ' + _box_selector.content).addClass(opts.box.class_name);
+                        $(_box_selector.box + ' ' + _box_selector.icon).addClass(opts.box.class_icon); //填充消息
+
+                        if (typeof opts.box.msg != 'undefined' && opts.box.msg.length > 0) {
+                            $(_box_selector.box + ' ' + _box_selector.msg).text(opts.box.msg); //填充消息
+                        }
+
+                        _obj_box.slideDown(function(){
+                            setTimeout(function(){
+                                _obj_box.slideUp();
+                            }, opts.box.delay);
+                        });
+                    } else {
+                        _obj_box.slideUp();
+                    }
+                }
+            },
+            extraOutput: function(status, selector, msg) {
+                var _obj_box = $(selector);
+
+                if (_obj_box.length > 0) {
+                    var _box_selector   = opts.extra.selector;
+
+                    if (status == 'err') {
+                        _obj_box.html(opts.extra.tpl);
+
+                        $(selector + ' ' + _box_selector.content).addClass(opts.extra.class_name);
+                        $(selector + ' ' + _box_selector.icon).addClass(opts.extra.class_icon); //填充消息
+
+                        if (typeof msg != 'undefined' && msg.length > 0) {
+                            $(selector + ' ' + _box_selector.msg).text(msg); //填充消息
+                        }
+
+                        _obj_box.show();
+                    } else {
+                        if (err_count < 1) {
+                            _obj_box.hide();
+                        }
+                    }
+                }
             },
             getSelector: function(key) {
                 var _selector = '';
@@ -703,6 +783,7 @@ License: http://www.opensource.org/licenses/mit-license.php
             verify: function(field){
                 process.getData();
                 var _status = true;
+                var _err    = '';
 
                 //console.log(form_data);
 
@@ -720,28 +801,7 @@ License: http://www.opensource.org/licenses/mit-license.php
                         _status = false;
                     }
 
-                    var _obj_selector   = opts.box.selector.box;
-                    var _obj_box        = $(_obj_selector);
-
-                    if (_obj_box.length > 0) {
-                        _obj_box.hide();
-                        _obj_box.empty();
-
-                        if (err_count > 0) {
-                            _obj_box.html(opts.box.tpl);
-
-                            $(_obj_selector + ' ' + opts.box.selector.content).addClass(opts.box.class_name);
-                            $(_obj_selector + ' ' + opts.box.selector.icon).addClass(opts.box.class_icon);
-                            $(_obj_selector + ' ' + opts.box.selector.msg).html(opts.box.msg);
-                            _obj_box.slideDown(function(){
-                                setTimeout(function(){
-                                    _obj_box.slideUp();
-                                }, opts.box.delay);
-                            });
-                        } else {
-                            _obj_box.slideUp();
-                        }
-                    }
+                    process.boxOutput();
                 } else {
                     if (typeof opts.rules[field] != 'undefined') {
                         process.check(form_data[field], opts.rules[field], field);
@@ -1104,18 +1164,18 @@ License: http://www.opensource.org/licenses/mit-license.php
                     data: _ajaxData,
                     timeout: opts.timeout,
                     beforeSend: function(){
-                        process.output(key, opts.msg.loading, '', opts.class_name.msg.loading);
+                        process.output(key, opts.msg.loading, 'loading');
                     },
                     error: function(result){
                         //console.log(result);
-                        process.output(key, opts.msg.ajax_err + '! ' + result.status + ' ' + result.statusText, opts.class_name.input.err, opts.class_name.msg.err, opts.class_name.attach.err);
+                        process.output(key, opts.msg.ajax_err + '! ' + result.status + ' ' + result.statusText, 'err');
                     },
                     success: function(result) { //读取返回结果
                         //console.log(result);
-                        if (typeof result.error != 'undefined') {
-                            process.output(key, result.error, opts.class_name.input.err, opts.class_name.msg.err, opts.class_name.attach.err);
-                        } else if (typeof result.msg != 'undefined') {
-                            process.output(key, result.msg, opts.class_name.input.success, opts.class_name.msg.success, opts.class_name.attach.success);
+                        if (typeof result[opts.result_obj.error_msg] != 'undefined') {
+                            process.output(key, result[opts.result_obj.error_msg], 'err');
+                        } else if (typeof result[opts.result_obj.msg] != 'undefined') {
+                            process.output(key, result[opts.result_obj.msg], 'success');
                         }
                     }
                 });

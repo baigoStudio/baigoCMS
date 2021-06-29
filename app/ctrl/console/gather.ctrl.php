@@ -151,7 +151,7 @@ class Gather extends Ctrl {
 
         $_arr_tplData = array(
             'cateRow'       => $_arr_cateRow,
-            'gatherRow'      => $_arr_gatherRow,
+            'gatherRow'     => $_arr_gatherRow,
             'token'         => $this->obj_request->token(),
         );
 
@@ -197,7 +197,7 @@ class Gather extends Ctrl {
             $_arr_search['gather_ids'] = false;
         }
 
-        $_arr_pageRow       = $this->mdl_gather->pagination($_arr_search, $this->configConsole['count_gather']); //取得分页数据
+        $_arr_pageRow    = $this->mdl_gather->pagination($_arr_search, $this->configConsole['count_gather']); //取得分页数据
 
         if ($_arr_search['page'] > $_arr_pageRow['total']) {
             return $this->error('Completed storage', 'y280404');
@@ -381,18 +381,16 @@ class Gather extends Ctrl {
         }
 
         if ($this->ftpInit) {
-            if ($this->obj_ftp->init()) {
-                if ($this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false, FTP_BINARY)) {
-                    if ($attachRow['attach_type'] == 'image') {
-                        $_arr_thumbs = $_obj_image->getThumbs();
+            if ($this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false)) {
+                if ($attachRow['attach_type'] == 'image') {
+                    $_arr_thumbs = $_obj_image->getThumbs();
 
-                        //print_r($_arr_thumbs);
+                    //print_r($_arr_thumbs);
 
-                        foreach ($_arr_thumbs as $_key=>$_value) {
-                            $_str_remoteThumb = str_ireplace(GK_PATH_ATTACH, '', $_value);
+                    foreach ($_arr_thumbs as $_key=>$_value) {
+                        $_str_remoteThumb = str_ireplace(GK_PATH_ATTACH, '', $_value);
 
-                            $this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false, FTP_BINARY);
-                        }
+                        $this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false);
                     }
                 }
             }
@@ -405,31 +403,13 @@ class Gather extends Ctrl {
         $_arr_imgRows   = $this->obj_qlist->getImages($str_content, $this->gsiteRow['gsite_img_filter'], $this->gsiteRow['gsite_img_src']);
 
         if (!Func::isEmpty($_arr_imgRows)) {
-            $_mdl_mime          = Loader::model('Mime');
-            $_mdl_thumb         = Loader::model('Thumb');
             $_mdl_attach        = Loader::model('Attach');
+            $_mdl_mime          = Loader::model('Mime');
 
-            $_arr_mimeRows      = $_mdl_mime->lists(array(1000, 'limit'));
-            $_arr_thumbRows     = $_mdl_thumb->lists(array(1000, 'limit'));
+            $_arr_mimeRows      = $_mdl_mime->cache();
+            $this->obj_http->setMime($_arr_mimeRows);
 
-            $_arr_mimes         = array();
-            $_arr_allowMimes    = array();
-
-            foreach ($_arr_mimeRows as $_key=>$_value) {
-                $_arr_allowExts[] = strtolower($_value['mime_ext']);
-                if (is_array($_value['mime_content'])) {
-                    if (Func::isEmpty($_arr_allowMimes)) {
-                        $_arr_allowMimes  = $_value['mime_content'];
-                    } else {
-                        $_arr_allowMimes  = array_merge($_arr_allowMimes, $_value['mime_content']);
-                    }
-
-                    $_arr_mimes[strtolower($_value['mime_ext'])] = $_value['mime_content'];
-                }
-            }
-
-            $this->thumbRows = $_arr_thumbRows;
-            $this->obj_http->setMime($_arr_mimes);
+            $this->thumbRows = $_mdl_attach->thumbRows;;
 
             foreach ($_arr_imgRows as $_key=>$_value) {
                 $_arr_fileInfo = $this->obj_http->getRemote($_value);
@@ -440,10 +420,12 @@ class Gather extends Ctrl {
                 if ($_arr_fileInfo && isset($_arr_fileInfo['size']) && $_arr_fileInfo['size'] > 0) {
                     $_mdl_attach->inputSubmit = array(
                         'attach_name'       => $_arr_fileInfo['name'],
+                        'attach_note'       => $_arr_fileInfo['name'],
                         'attach_ext'        => $_arr_fileInfo['ext'],
                         'attach_mime'       => $_arr_fileInfo['mime'],
-                        'attach_admin_id'   => $this->adminLogged['admin_id'],
                         'attach_size'       => $_arr_fileInfo['size'],
+                        'attach_box'        => 'normal',
+                        'attach_admin_id'   => $this->adminLogged['admin_id'],
                         'attach_src_hash'   => md5($_value),
                     );
 

@@ -9,6 +9,7 @@ namespace app\model\console;
 use app\model\Cate_Belong as Cate_Belong_Base;
 use ginkgo\Loader;
 use ginkgo\Func;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -27,7 +28,7 @@ class Cate_Belong extends Cate_Belong_Base {
         );
 
         if (!Func::isEmpty($arr_cateIds)) {
-            $arr_cateIds        = Func::arrayFilter($arr_cateIds);
+            $arr_cateIds        = Arrays::filter($arr_cateIds);
             $_arr_where[] = array('belong_cate_id', 'IN', $arr_cateIds, 'cate_ids');
         }
 
@@ -111,8 +112,8 @@ class Cate_Belong extends Cate_Belong_Base {
         }
 
         if (!Func::isEmpty($_arr_clearData)) {
-            $_mdl_article = Loader::model('article');
-            $_mdl_cate    = Loader::model('cate');
+            $_mdl_article = Loader::model('Article');
+            $_mdl_cate    = Loader::model('Cate');
 
             foreach ($_arr_clearData as $_key=>$_value) {
                 $_arr_articleRow = $_mdl_article->check($_value['belong_article_id']);
@@ -154,25 +155,25 @@ class Cate_Belong extends Cate_Belong_Base {
         }
 
         if (!Func::isEmpty($arr_cateIds)) {
-            $arr_cateIds = Func::arrayFilter($arr_cateIds);
+            $arr_cateIds = Arrays::filter($arr_cateIds);
 
             $_arr_where[] = array('belong_cate_id', 'IN', $arr_cateIds, 'cate_ids');
         }
 
         if (!Func::isEmpty($arr_articleIds)) {
-            $arr_articleIds = Func::arrayFilter($arr_articleIds);
+            $arr_articleIds = Arrays::filter($arr_articleIds);
 
             $_arr_where[] = array('belong_article_id', 'IN', $arr_articleIds, 'article_ids');
         }
 
         if (!Func::isEmpty($arr_notCateIds)) {
-            $arr_notCateIds = Func::arrayFilter($arr_notCateIds);
+            $arr_notCateIds = Arrays::filter($arr_notCateIds);
 
             $_arr_where[] = array('belong_cate_id', 'NOT IN', $arr_notCateIds, 'not_cate_ids');
         }
 
         if (!Func::isEmpty($arr_notArticleIds)) {
-            $arr_notArticleIds = Func::arrayFilter($arr_notArticleIds);
+            $arr_notArticleIds = Arrays::filter($arr_notArticleIds);
 
             $_arr_where[] = array('belong_article_id', 'NOT IN', $arr_notArticleIds, 'not_article_ids');
         }

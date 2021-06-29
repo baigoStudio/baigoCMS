@@ -9,7 +9,7 @@ namespace app\ctrl\console;
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Ftp;
 use ginkgo\Http;
 use ginkgo\Image;
@@ -44,6 +44,7 @@ class Article extends Ctrl {
             }
         }
 
+        $this->obj_http         = Http::instance();
         $this->obj_qlist        = Loader::classes('Qlist');
         $this->obj_index        = Loader::classes('Index', '', false);
 
@@ -52,6 +53,7 @@ class Article extends Ctrl {
         $this->mdl_source       = Loader::model('Source');
         $this->mdl_custom       = Loader::model('Custom');
         $this->mdl_cate         = Loader::model('Cate');
+        $this->mdl_attach       = Loader::model('Attach');
 
         $this->mdl_tag          = Loader::model('Tag');
         $this->mdl_tagView      = Loader::model('Tag_View');
@@ -112,6 +114,15 @@ class Article extends Ctrl {
             $_arr_search['cate_ids'] = false;
         }
 
+        $_arr_adminRow = array();
+
+        if ($_arr_search['admin'] > 0) {
+            $_arr_adminRow           = $this->mdl_admin->read($_arr_search['admin']);
+            if (isset($_arr_adminRow['admin_id'])) {
+                $_arr_search['admin_id'] = $_arr_adminRow['admin_id'];
+            }
+        }
+
         $_arr_markRow = array();
 
         if ($_arr_search['mark'] > 0) {
@@ -121,26 +132,15 @@ class Article extends Ctrl {
             }
         }
 
-        $_arr_unknownCate   = array();
         $_arr_getData       = $this->mdl_article->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
         foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            $_arr_articleCateRow   = $this->mdl_cate->read($_value['article_cate_id']);
-
-            if ($_arr_articleCateRow['rcode'] != 'y250102' && $_value['article_cate_id'] > 0) {
-                $_arr_unknownCate[] = $_value['article_id'];
-            }
-
-            $_value['cateRow']     = $_arr_articleCateRow;
+            $_value['cateRow']     = $this->mdl_cate->read($_value['article_cate_id']);
             $_value['markRow']     = $this->mdl_mark->read($_value['article_mark_id']);
             $_value['adminRow']    = $this->mdl_admin->read($_value['article_admin_id']);
         }
 
-        if (!Func::isEmpty($_arr_unknownCate)) { //更新无栏目的文章
-            $this->mdl_article->unknownCate($_arr_unknownCate);
-        }
-
-        $_arr_articleCount['all']       = $this->mdl_article->count();
+        $_arr_articleCount['all']  = $this->mdl_article->count();
 
         $_arr_searchDraft = array(
             'box'       => 'draft',
@@ -168,6 +168,7 @@ class Article extends Ctrl {
             'search'        => $_arr_search,
             'cateRow'       => $_arr_cateRow,
             'markRow'       => $_arr_markRow,
+            'adminRow'      => $_arr_adminRow,
             'cateRows'      => $_arr_cateRows,
             'markRows'      => $_arr_markRows, //标记列表
             'articleCount'  => $_arr_articleCount,
@@ -272,6 +273,8 @@ class Article extends Ctrl {
             $this->mdl_article->inputSimple['article_status'] = 'wait';
         }
 
+        $_is_move = false;
+
         if ($_arr_articleRow['article_cate_id'] != $_arr_inputSimple['article_cate_id']) {
             $_arr_moveBelongResult = $this->mdl_cateBelong->move($_arr_inputSimple['article_id'], $_arr_articleRow['article_cate_id'], $_arr_inputSimple['article_cate_id']);
 
@@ -325,7 +328,7 @@ class Article extends Ctrl {
         $_arr_articleRow['article_cate_ids']    = $this->mdl_cateBelong->ids($_arr_searchCate);
         $_arr_articleRow['article_cate_ids'][]  = $_arr_articleRow['article_cate_id'];
 
-        $_arr_articleRow['article_cate_ids'] = Func::arrayFilter($_arr_articleRow['article_cate_ids']);
+        $_arr_articleRow['article_cate_ids'] = Arrays::filter($_arr_articleRow['article_cate_ids']);
 
         if (count($_arr_articleRow['article_cate_ids']) > 1) {
             $_arr_articleRow['cate_ids_check'] = 1;
@@ -333,8 +336,9 @@ class Article extends Ctrl {
             $_arr_articleRow['cate_ids_check'] = 0;
         }
 
-        $_arr_cateRow = $this->mdl_cate->read( $_arr_articleRow['article_cate_id']);
-        $_arr_markRow = $this->mdl_mark->read( $_arr_articleRow['article_mark_id']);
+        $_arr_cateRow   = $this->mdl_cate->read( $_arr_articleRow['article_cate_id']);
+        $_arr_markRow   = $this->mdl_mark->read( $_arr_articleRow['article_mark_id']);
+        $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
 
         $_arr_searchTag = array(
             'status'        => 'show',
@@ -360,6 +364,7 @@ class Article extends Ctrl {
 
         $_arr_tplData = array(
             'articleRow'    => $_arr_articleRow,
+            'attachRow'     => $_arr_attachRow,
             'cateRow'       => $_arr_cateRow,
             'markRow'       => $_arr_markRow,
             'specRows'      => $_arr_specRows,
@@ -433,6 +438,8 @@ class Article extends Ctrl {
                 'article_id'    => $_arr_articleRow['article_id'],
             );
             $_arr_specRows = $this->mdl_specView->lists(array(1000, 'limit'), $_arr_searchSpec);
+
+            $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
         } else {
             if (isset($this->groupAllow['article']['approve']) || $this->isSuper) {
                 $_str_status = 'pub';
@@ -449,6 +456,7 @@ class Article extends Ctrl {
                 'article_excerpt'           => '',
                 'article_cate_id'           => -1,
                 'article_mark_id'           => -1,
+                'article_attach_id'         => 0,
                 'article_is_time_pub'       => 0,
                 'article_is_time_hide'      => 0,
                 'article_time_show_format'  => $this->mdl_article->dateFormat(),
@@ -463,6 +471,7 @@ class Article extends Ctrl {
                 'article_customs'           => array(),
                 'article_cate_ids'          => array(),
                 'article_is_gen'            => $this->mdl_article->arr_gen[0],
+                'article_top'               => 0,
             );
 
             if ($_num_gatherId > 0) {
@@ -478,6 +487,10 @@ class Article extends Ctrl {
                     $_arr_articleRow['article_author']      = $_arr_gatherRow['gather_author'];
                 }
             }
+
+            $_arr_attachRow = array(
+                'attach_thumb' => '',
+            );
         }
 
         if (Func::isEmpty($_arr_articleRow['article_excerpt'])) {
@@ -490,7 +503,7 @@ class Article extends Ctrl {
             $_arr_articleRow['article_excerpt_type'] = 'manual';
         }
 
-        $_arr_articleRow['article_cate_ids'] = Func::arrayFilter($_arr_articleRow['article_cate_ids']);
+        $_arr_articleRow['article_cate_ids'] = Arrays::filter($_arr_articleRow['article_cate_ids']);
 
         if (count($_arr_articleRow['article_cate_ids']) > 1) {
             $_arr_articleRow['cate_ids_check'] = 1;
@@ -508,7 +521,7 @@ class Article extends Ctrl {
             $_arr_sourceJson[$_value['source_id']] = $_value;
         }
 
-        $_arr_articleRow['article_tags_json'] = Json::encode($_arr_articleRow['article_tags']);
+        $_arr_articleRow['article_tags_json'] = Arrays::toJson($_arr_articleRow['article_tags']);
 
         $_arr_tplRows  = File::instance()->dirList(BG_TPL_ARTICLE);
 
@@ -518,13 +531,14 @@ class Article extends Ctrl {
 
         $_arr_tplData = array(
             'tplRows'       => $_arr_tplRows,
+            'attachRow'     => $_arr_attachRow,
             'articleRow'    => $_arr_articleRow,
             'specRows'      => $_arr_specRows,
             'cateRows'      => $_arr_cateRows,
             'markRows'      => $_arr_markRows,
             'customRows'    => $_arr_customRows,
             'sourceRows'    => $_arr_sourceRows,
-            'sourceJson'    => Json::encode($_arr_sourceJson),
+            'sourceJson'    => Arrays::toJson($_arr_sourceJson),
             'token'         => $this->obj_request->token(),
         );
 
@@ -640,11 +654,14 @@ class Article extends Ctrl {
             $this->mdl_article->inputSubmit['article_status'] = 'wait';
         }
 
-        //解析图片
-        $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['article_content']);
+        if ($_arr_inputSubmit['article_attach_id'] < 1) {
+            //解析图片
+            $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['article_content']);
 
-        if (isset($_arr_attachIds[0])) {
-            $this->mdl_article->inputSubmit['article_attach_id'] = $_arr_attachIds[0];
+            if ($_arr_attachIds[0] > 0) {
+                $this->mdl_article->inputSubmit['article_attach_id'] = $_arr_attachIds[0];
+                $_arr_inputSubmit['article_attach_id'] = $_arr_attachIds[0]; // 供后续远程抓取图片用
+            }
         }
 
         //提交数据
@@ -656,7 +673,7 @@ class Article extends Ctrl {
             return $this->fetchJson($_arr_submitResult['msg'], $_arr_submitResult['rcode']);
         }
 
-        $this->gatherImgs($_arr_inputSubmit['article_content'], $_arr_submitResult['article_id']);
+        $this->gatherImgs($_arr_inputSubmit['article_content'], $_arr_submitResult['article_id'], $_arr_inputSubmit['article_attach_id']);
 
         //提交成功，处理关联数据
         foreach ($_arr_inputSubmit['article_tags'] as $_key=>$_value) { //处理 tag
@@ -687,7 +704,9 @@ class Article extends Ctrl {
 
         $this->obj_request->setDuplicate();
 
-        return $this->fetchJson($_arr_submitResult['msg'], $_arr_submitResult['rcode']);
+        $_arr_submitResult['msg'] = $this->obj_lang->get($_arr_submitResult['msg']);
+
+        return $this->json($_arr_submitResult);
     }
 
 
@@ -718,25 +737,24 @@ class Article extends Ctrl {
             return $this->error('You do not have permission', 'x120301');
         }
 
-        $_mdl_attach       = Loader::model('Attach');
-
         $_arr_search = array(
             'box'           => 'normal',
             'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_articleRow['article_content']),
         );
 
-        $_arr_attachRows   = $_mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
+        if ($_arr_articleRow['article_attach_id'] > 0) {
+            $_arr_search['attach_ids'][] = $_arr_articleRow['article_attach_id'];
+        }
+
+        $_arr_attachRows   = $this->mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
 
         foreach ($_arr_attachRows as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-
             $_value['adminRow'] = $this->mdl_admin->read($_value['attach_admin_id']);
         }
 
-        $_arr_cateRow = $this->mdl_cate->read($_arr_articleRow['article_cate_id']);
-        $_arr_markRow = $this->mdl_mark->read($_arr_articleRow['article_mark_id']);
+        $_arr_cateRow   = $this->mdl_cate->read($_arr_articleRow['article_cate_id']);
+        $_arr_markRow   = $this->mdl_mark->read($_arr_articleRow['article_mark_id']);
+        $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
 
         $_arr_tplData = array(
             'ids'           => implode(',', $_arr_search['attach_ids']),
@@ -744,6 +762,7 @@ class Article extends Ctrl {
             'markRow'       => $_arr_markRow,
             'articleRow'    => $_arr_articleRow,
             'attachRows'    => $_arr_attachRows,
+            'attachRow'     => $_arr_attachRow,
             'token'         => $this->obj_request->token(),
         );
 
@@ -776,8 +795,7 @@ class Article extends Ctrl {
             return $this->fetchJson('You do not have permission', 'x120303');
         }
 
-        $_mdl_attach    = Loader::model('Attach');
-        $_arr_attachRow = $_mdl_attach->check($_arr_inputCover['attach_id']);
+        $_arr_attachRow = $this->mdl_attach->check($_arr_inputCover['attach_id']);
 
         if ($_arr_attachRow['rcode'] != 'y070102') {
             return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);
@@ -955,7 +973,7 @@ class Article extends Ctrl {
             $_arr_articleIds[] = $_value['article_id'];
         }
 
-        $this->mdl_article->inputDelete['article_ids'] = Func::arrayFilter($_arr_articleIds);
+        $this->mdl_article->inputDelete['article_ids'] = Arrays::filter($_arr_articleIds);
 
         $_arr_emptyResult = $this->mdl_article->delete(false, $_num_adminId, 'recycle');
 
@@ -1002,12 +1020,62 @@ class Article extends Ctrl {
     }
 
 
+    function clear() {
+        $_mix_init = $this->init();
+
+        if ($_mix_init !== true) {
+            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+        }
+
+        if (!$this->isAjaxPost) {
+            return $this->fetchJson('Access denied', '', 405);
+        }
+
+        if (!isset($this->groupAllow['article']['edit']) && !$this->isSuper) { //判断权限
+            return $this->fetchJson('You do not have permission', 'x120303');
+        }
+
+        $_arr_inputClear = $this->mdl_article->inputClear();
+
+        if ($_arr_inputClear['rcode'] != 'y120201') {
+            return $this->fetchJson($_arr_inputClear['msg'], $_arr_inputClear['rcode']);
+        }
+
+        $_num_maxId = $_arr_inputClear['max_id'];
+
+        $_arr_search = array(
+            'max_id' => $_arr_inputClear['max_id'],
+        );
+
+        $_arr_getData   = $this->mdl_article->clear(array(10, 'post'), $_arr_search);
+
+        if (Func::isEmpty($_arr_getData['dataRows'])) {
+            $_str_status    = 'complete';
+            $_str_msg       = 'Complete';
+        } else {
+            $_arr_articleRow = end($_arr_getData['dataRows']);
+            $_str_status    = 'loading';
+            $_str_msg       = 'Submitting';
+            $_num_maxId     = $_arr_articleRow['article_id'];
+        }
+
+        $_arr_return = array(
+            'msg'       => $this->obj_lang->get($_str_msg),
+            'count'     => $_arr_getData['pageRow']['total'],
+            'max_id'    => $_num_maxId,
+            'status'    => $_str_status,
+        );
+
+        return $this->json($_arr_return);
+    }
+
+
     private function belongProcess($num_articleId = 0, $arr_cateIds = array(), $arr_tagIds = array(), $arr_specIds = array(), $is_edit = 0) {
         $_is_submit = false;
 
-        $arr_cateIds    = Func::arrayFilter($arr_cateIds);
-        $arr_tagIds     = Func::arrayFilter($arr_tagIds);
-        $arr_specIds    = Func::arrayFilter($arr_specIds);
+        $arr_cateIds    = Arrays::filter($arr_cateIds);
+        $arr_tagIds     = Arrays::filter($arr_tagIds);
+        $arr_specIds    = Arrays::filter($arr_specIds);
 
         if ($is_edit > 0) {
             if (Func::isEmpty($arr_cateIds)) {
@@ -1114,18 +1182,16 @@ class Article extends Ctrl {
         }
 
         if ($this->ftpInit) {
-            if ($this->obj_ftp->init()) {
-                if ($this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false, FTP_BINARY)) {
-                    if ($attachRow['attach_type'] == 'image') {
-                        $_arr_thumbs = $_obj_image->getThumbs();
+            if ($this->obj_ftp->fileUpload($attachRow['attach_path'], '/' . $attachRow['attach_url_name'], false)) {
+                if ($attachRow['attach_type'] == 'image') {
+                    $_arr_thumbs = $_obj_image->getThumbs();
 
-                        //print_r($_arr_thumbs);
+                    //print_r($_arr_thumbs);
 
-                        foreach ($_arr_thumbs as $_key=>$_value) {
-                            $_str_remoteThumb = str_ireplace(GK_PATH_ATTACH, '', $_value);
+                    foreach ($_arr_thumbs as $_key=>$_value) {
+                        $_str_remoteThumb = str_ireplace(GK_PATH_ATTACH, '', $_value);
 
-                            $this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false, FTP_BINARY);
-                        }
+                        $this->obj_ftp->fileUpload($_value, '/' . $_str_remoteThumb, false);
                     }
                 }
             }
@@ -1133,80 +1199,62 @@ class Article extends Ctrl {
     }
 
 
-    private function gatherImgs($str_content, $num_articleId) {
-        $_num_attachId  = 0;
+    private function gatherImgs($str_content, $num_articleId, $num_attachId = 0) {
         $_arr_imgRows   = $this->obj_qlist->getImages($str_content);
 
         if (!Func::isEmpty($_arr_imgRows) && $num_articleId > 0) {
-            $_obj_http          = Http::instance();
             $_mdl_mime          = Loader::model('Mime');
-            $_mdl_thumb         = Loader::model('Thumb');
-            $_mdl_attach        = Loader::model('Attach');
 
-            $_arr_mimeRows      = $_mdl_mime->lists(array(1000, 'limit'));
-            $_arr_thumbRows     = $_mdl_thumb->lists(array(1000, 'limit'));
+            $_arr_mimeRows      = $_mdl_mime->cache();
+            $this->obj_http->setMime($_arr_mimeRows);
 
-            $_arr_mimes         = array();
-            $_arr_allowMimes    = array();
-
-            foreach ($_arr_mimeRows as $_key=>$_value) {
-                $_arr_allowExts[] = strtolower($_value['mime_ext']);
-                if (is_array($_value['mime_content'])) {
-                    if (Func::isEmpty($_arr_allowMimes)) {
-                        $_arr_allowMimes  = $_value['mime_content'];
-                    } else {
-                        $_arr_allowMimes  = array_merge($_arr_allowMimes, $_value['mime_content']);
-                    }
-                    $_arr_mimes[strtolower($_value['mime_ext'])] = $_value['mime_content'];
-                }
-            }
-
-            $this->thumbRows        = $_arr_thumbRows;
-            $_obj_http->setMime($_arr_mimes);
+            $this->thumbRows = $this->mdl_attach->thumbRows;;
 
             foreach ($_arr_imgRows as $_key=>$_value) {
-                $_arr_fileInfo = $_obj_http->getRemote($_value);
+                $_arr_fileInfo = $this->obj_http->getRemote($_value);
 
                 /*print_r($_arr_fileInfo);
                 print_r(PHP_EOL);*/
 
                 if ($_arr_fileInfo && isset($_arr_fileInfo['size']) && $_arr_fileInfo['size'] > 0) {
-                    $_mdl_attach->inputSubmit = array(
+                    $this->mdl_attach->inputSubmit = array(
                         'attach_name'       => $_arr_fileInfo['name'],
+                        'attach_note'       => $_arr_fileInfo['name'],
                         'attach_ext'        => $_arr_fileInfo['ext'],
                         'attach_mime'       => $_arr_fileInfo['mime'],
-                        'attach_admin_id'   => $this->adminLogged['admin_id'],
                         'attach_size'       => $_arr_fileInfo['size'],
+                        'attach_box'        => 'normal',
+                        'attach_admin_id'   => $this->adminLogged['admin_id'],
                     );
 
-                    $_arr_attachResult = $_mdl_attach->submit();
+                    $_arr_attachResult = $this->mdl_attach->submit();
 
                     if ($_arr_attachResult['rcode'] == 'y070101') {
                         $_arr_attachPath = pathinfo($_arr_attachResult['attach_path']);
 
-                        if ($_obj_http->move($_arr_attachPath['dirname'], $_arr_attachPath['basename'])) {
+                        if ($this->obj_http->move($_arr_attachPath['dirname'], $_arr_attachPath['basename'])) {
                             $this->imgProcess($_arr_attachResult);
-                            if ($_num_attachId < 1) {
-                                $_num_attachId = $_arr_attachResult['attach_id'];
+                            if ($num_attachId < 1) {
+                                $num_attachId = $_arr_attachResult['attach_id'];
                             }
 
                             $str_content = str_ireplace($_value, $_arr_attachResult['attach_url'], $str_content);  //图片, 用新地址替换老地址
                         } else {
-                            $_mdl_attach->inputReserve['attach_id'] = $_arr_attachResult['attach_id'];
-                            $_mdl_attach->reserve();
+                            $this->mdl_attach->inputReserve['attach_id'] = $_arr_attachResult['attach_id'];
+                            $this->mdl_attach->reserve();
                         }
                     }
                 }
             }
 
-            if ($_num_attachId > 0 && !Func::isEmpty($str_content)) {
+            if ($num_attachId > 0 && !Func::isEmpty($str_content)) {
                 $this->mdl_article->inputSubmit = array(
                     'article_id'        => $num_articleId,
                     'article_content'   => $str_content,
                 );
 
                 $_arr_contentResult  = $this->mdl_article->submitContent($num_articleId);
-                $_arr_attachResult   = $this->mdl_article->submitAttach($num_articleId, $_num_attachId);
+                $_arr_attachResult   = $this->mdl_article->submitAttach($num_articleId, $num_attachId);
             }
         }
     }

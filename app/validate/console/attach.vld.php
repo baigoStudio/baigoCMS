@@ -22,6 +22,9 @@ class Attach extends Validate {
         'attach_name' => array(
             'length'   => '1,1000',
         ),
+        'attach_note' => array(
+            'max'   => 1000,
+        ),
         'attach_ext' => array(
             'length'   => '1,5',
         ),
@@ -45,15 +48,30 @@ class Attach extends Validate {
     );
 
     protected $scene    = array(
-        'submit' => array(
-            'attach_id',
+        'submit_add' => array(
             'attach_name',
+            'attach_note',
             'attach_ext',
             'attach_mime',
             '__token__',
         ),
-        'submit_db' => array(
+        'submit_edit' => array(
+            'attach_id' => array(
+                '>' => 0,
+            ),
+            'attach_note',
+            'attach_ext',
+            'attach_mime',
+            '__token__',
+        ),
+        'submit_add_db' => array(
             'attach_name',
+            'attach_note',
+            'attach_ext',
+            'attach_mime',
+        ),
+        'submit_edit_db' => array(
+            'attach_note',
             'attach_ext',
             'attach_mime',
         ),
@@ -92,6 +110,7 @@ class Attach extends Validate {
         $_arr_attrName = array(
             'attach_id'     => $this->obj_lang->get('ID'),
             'attach_name'   => $this->obj_lang->get('Original name'),
+            'attach_note'   => $this->obj_lang->get('Note'),
             'attach_ext'    => $this->obj_lang->get('Extension'),
             'attach_mime'   => $this->obj_lang->get('MIME'),
             'attach_ids'    => $this->obj_lang->get('Attachment'),

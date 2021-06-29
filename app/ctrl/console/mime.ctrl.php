@@ -9,7 +9,7 @@ namespace app\ctrl\console;
 use app\classes\console\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Config;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Func;
 
 //不能非法包含或直接执行
@@ -139,16 +139,16 @@ class Mime extends Ctrl {
 
         $_arr_mimeOften  = Config::get('mime', 'console');
 
-        foreach ($_arr_mimeOften as $_key=>$_value) {
+        foreach ($_arr_mimeOften as $_key=>&$_value) {
             if (in_array($_key, $_arr_mimes)) {
-                unset($_arr_mimeOften[$_key]);
-            } else {
-                $_arr_mimeOften[$_key]['note'] = $this->obj_lang->get($_value['note']);
+                $_value['exist'] = true;
             }
+
+            $_value['note'] = $this->obj_lang->get($_value['note']);
         }
 
         $_arr_tplData = array(
-            'mimeOftenJson' => Json::encode($_arr_mimeOften),
+            'mimeOftenJson' => Arrays::toJson($_arr_mimeOften),
             'mimeOften'     => $_arr_mimeOften,
             'mimeRow'       => $_arr_mimeRow,
             'token'         => $this->obj_request->token(),
@@ -193,6 +193,8 @@ class Mime extends Ctrl {
 
         $_arr_submitResult = $this->mdl_mime->submit();
 
+        $this->cacheProcess();
+
         return $this->fetchJson($_arr_submitResult['msg'], $_arr_submitResult['rcode']);
     }
 
@@ -219,6 +221,8 @@ class Mime extends Ctrl {
         }
 
         $_arr_deleteResult = $this->mdl_mime->delete();
+
+        $this->cacheProcess();
 
         $_arr_langReplace = array(
             'count' => $_arr_deleteResult['count'],
@@ -258,5 +262,40 @@ class Mime extends Ctrl {
         }
 
         return $this->json($_arr_return);
+    }
+
+
+    function cache() {
+        if (!$this->isAjaxPost) {
+            return $this->fetchJson('Access denied', '', 405);
+        }
+
+        $_arr_inputCommon = $this->mdl_mime->inputCommon();
+
+        if ($_arr_inputCommon['rcode'] != 'y080201') {
+            return $this->fetchJson($_arr_inputCommon['msg'], $_arr_inputCommon['rcode']);
+        }
+
+        $_arr_cacheResult = $this->cacheProcess();
+
+        return $this->fetchJson($_arr_cacheResult['msg'], $_arr_cacheResult['rcode']);
+    }
+
+
+    private function cacheProcess() {
+        $_num_cacheSize = $this->mdl_mime->cacheProcess();
+
+        if ($_num_cacheSize > 0) {
+            $_str_rcode = 'y080110';
+            $_str_msg   = 'Refresh cache successfully';
+        } else {
+            $_str_rcode = 'x080110';
+            $_str_msg   = 'Refresh cache failed';
+        }
+
+        return array(
+            'rcode'     => $_str_rcode,
+            'msg'       => $_str_msg,
+        );
     }
 }

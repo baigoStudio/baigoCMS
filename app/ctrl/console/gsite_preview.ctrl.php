@@ -364,7 +364,7 @@ class Gsite_Preview extends Ctrl {
             $this->obj_html->setAttrAllow($_arr_gsiteRow['gsite_attr_allow']);
         }
         if (!Func::isEmpty($_arr_gsiteRow['gsite_ignore_tag'])) {
-            $this->obj_html->setAttrIgnore($_arr_gsiteRow['gsite_ignore_tag']);
+            $this->obj_html->setTagIgnore($_arr_gsiteRow['gsite_ignore_tag']);
         }
         if (!Func::isEmpty($_arr_gsiteRow['gsite_attr_except'])) {
             $this->obj_html->setAttrExcept($_arr_gsiteRow['gsite_attr_except']);
@@ -374,7 +374,7 @@ class Gsite_Preview extends Ctrl {
             $content = $this->obj_html->stripAttr($content);
         }
 
-        $content = Func::fillImg($content, $contentUrl); //补全 URL
+        $content = Html::fillImg($content, $contentUrl); //补全 URL
 
         return $content;
     }

@@ -221,8 +221,7 @@ class Call extends Ctrl {
             'cateRows'  => $_arr_cateRows,
         );
 
-        $_mix_result = Plugin::listen('filter_gen_call_cate', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_gen_call_cate', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -248,8 +247,7 @@ class Call extends Ctrl {
             'specRows'  => $_arr_specRows,
         );
 
-        $_mix_result = Plugin::listen('filter_gen_call_spec', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_gen_call_spec', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -275,8 +273,7 @@ class Call extends Ctrl {
             'tagRows'  => $_arr_tagRows,
         );
 
-        $_mix_result = Plugin::listen('filter_gen_call_tag', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_gen_call_tag', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -288,6 +285,7 @@ class Call extends Ctrl {
         $_arr_searchLink = array(
             'status'    => 'enable',
             'type'      => 'friend',
+            'cate_ids'  => $_arr_callRow['call_cate_ids'],
         );
 
         $_arr_linkRows = $this->mdl_link->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchLink);
@@ -296,8 +294,7 @@ class Call extends Ctrl {
             'linkRows'  => $_arr_linkRows,
         );
 
-        $_mix_result = Plugin::listen('filter_gen_call_link', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_gen_call_link', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -344,8 +341,7 @@ class Call extends Ctrl {
             'articleRows'   => $this->obj_index->articleListsProcess($_arr_articleRows),
         );
 
-        $_mix_result = Plugin::listen('filter_gen_call_article', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_gen_call_article', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -424,13 +420,6 @@ class Call extends Ctrl {
 
             if (!Func::isEmpty($_config_ftp['host']) && !Func::isEmpty($_config_ftp['user']) && !Func::isEmpty($_config_ftp['pass'])) {
                 $this->obj_ftp = Ftp::instance($_config_ftp);
-
-                if (!$this->obj_ftp->init()) {
-                    return array(
-                        'msg'   => $this->obj_ftp->getError(),
-                        'rcode' => 'x070410',
-                    );
-                }
 
                 $_ftp_status = $this->obj_ftp->fileUpload($arr_callRow['call_path'], '/' . $this->configRoute['call'] . '/' . $arr_callRow['call_path_name']);
 

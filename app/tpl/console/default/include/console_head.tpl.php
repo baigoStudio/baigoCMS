@@ -29,9 +29,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
             <ul class="navbar-nav">
                 <li class="nav-item dropdown<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'pm') { ?> active<?php } ?>">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        <svg class="bi" width="1em" height="1em" fill="currentColor">
-                            <use xlink:href="{:DIR_STATIC}lib/bootstrap-icons/1.0.0/bootstrap-icons.svg#envelope-fill"/>
-                        </svg>
+                        <span class="fas fa-envelope"></span>
                         <?php echo $lang->get('Private message', 'console.common'); ?>
                         <span id="box_pm_new" class="badge badge-secondary badge-pill"></span>
                     </a>
@@ -122,7 +120,7 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
                                 </div>
 
                                 <?php foreach ($config['console']['console_mod'] as $key_m=>$value_m) { ?>
-                                    <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> bg-primary border-primary active<?php } ?>" data-toggle="collapse" href="#bg-collapse-<?php echo $key_m; ?>">
+                                    <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> bg-primary border-primary active<?php } ?>" <?php if (isset($value_m['lists']) && !empty($value_m['lists'])) { ?>data-toggle="collapse" href="#bg-collapse-<?php echo $key_m; ?>"<?php } else { ?>href="<?php echo $route_console, $value_m['main']['ctrl']; ?>/"<?php } ?>>
                                         <span>
                                             <?php if (isset($value_m['main']['icon'])) { ?>
                                                 <span class="fas fa-<?php echo $value_m['main']['icon']; ?> fa-fw"></span>
@@ -131,10 +129,12 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
                                             echo $lang->get($value_m['main']['title'], 'console.common'); ?>
                                         </span>
 
-                                        <small class="fas fa-chevron-<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-<?php echo $key_m; ?>"></small>
+                                        <?php if (isset($value_m['lists']) && !empty($value_m['lists'])) { ?>
+                                            <small class="fas fa-chevron-<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?>down<?php } else { ?>right<?php } ?>" id="bg-caret-<?php echo $key_m; ?>"></small>
+                                        <?php } ?>
                                     </a>
 
-                                    <div id="bg-collapse-<?php echo $key_m; ?>" data-key="<?php echo $key_m; ?>" class="collapse<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> show<?php } ?>" data-parent="#bg-accordion">
+                                    <div id="bg-collapse-<?php echo $key_m; ?>" data-key="<?php echo $key_m; ?>" class="collapse bg-collapse<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m) { ?> show<?php } ?>" data-parent="#bg-accordion">
 
                                         <?php if ($key_m == 'link' && isset($links) && !empty($links)) {
                                             foreach ($links as $key_link=>$value_link) { ?>
@@ -149,11 +149,13 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
                                             Plugin::listen('action_console_menu_plugin');
                                         }
 
-                                        foreach ($value_m['lists'] as $key_s=>$value_s) { ?>
-                                            <a class="list-group-item<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m && isset($cfg['sub_active']) && $cfg['sub_active'] == $key_s) { ?> list-group-item-primary<?php } ?>" href="<?php echo $route_console, $value_s['ctrl']; ?>/<?php echo $value_s['act']; ?>/">
-                                                <?php echo $lang->get($value_s['title'], 'console.common'); ?>
-                                            </a>
-                                        <?php } ?>
+                                        if (isset($value_m['lists']) && !empty($value_m['lists'])) {
+                                            foreach ($value_m['lists'] as $key_s=>$value_s) { ?>
+                                                <a class="list-group-item<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == $key_m && isset($cfg['sub_active']) && $cfg['sub_active'] == $key_s) { ?> list-group-item-primary<?php } ?>" href="<?php echo $route_console, $value_s['ctrl']; ?>/<?php echo $value_s['act']; ?>/">
+                                                    <?php echo $lang->get($value_s['title'], 'console.common'); ?>
+                                                </a>
+                                            <?php }
+                                        } ?>
                                     </div>
                                 <?php } ?>
 
@@ -164,10 +166,10 @@ include($cfg['pathInclude'] . 'html_head' . GK_EXT_TPL);
                                         <?php echo $lang->get('System settings', 'console.common'); ?>
                                     </span>
 
-                                    <small class="fas fa-chevron-<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?>up<?php } else { ?>down<?php } ?>" id="bg-caret-opt"></small>
+                                    <small class="fas fa-chevron-<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?>down<?php } else { ?>right<?php } ?>" id="bg-caret-opt"></small>
                                 </a>
 
-                                <div id="bg-collapse-opt" data-key="opt" class="collapse<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?> show<?php } ?>" data-parent="#bg-accordion">
+                                <div id="bg-collapse-opt" data-key="opt" class="collapse bg-collapse<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt') { ?> show<?php } ?>" data-parent="#bg-accordion">
                                     <?php foreach ($config['console']['opt_extra'] as $key_s=>$value_s) { ?>
                                         <a class="list-group-item<?php if (isset($cfg['menu_active']) && $cfg['menu_active'] == 'opt' && isset($cfg['sub_active']) && $cfg['sub_active'] == $key_s) { ?> list-group-item-primary<?php } ?>" href="<?php echo $route_console, $value_s['ctrl']; ?>/<?php echo $value_s['act']; ?>/">
                                             <?php echo $lang->get($value_s['title'], 'console.common'); ?>

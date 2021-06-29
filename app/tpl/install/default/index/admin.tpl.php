@@ -109,13 +109,13 @@ include($cfg['pathInclude'] . 'index_head' . GK_EXT_TPL);
             submitting: '<?php echo $lang->get('Submitting'); ?>'
         },
         jump: {
-            //url: '<?php echo $route_install; ?>index/over/',
+            url: '<?php echo $route_install; ?>index/over/',
             text: '<?php echo $lang->get('Redirecting'); ?>'
         }
     };
 
     $(document).ready(function(){
-        var obj_validate_form    = $('#admin_form').baigoValidate(opts_validate_form);
+        var obj_validate_form     = $('#admin_form').baigoValidate(opts_validate_form);
         var obj_submit_form       = $('#admin_form').baigoSubmit(opts_submit_form);
         $('#admin_form').submit(function(){
             if (obj_validate_form.verify()) {

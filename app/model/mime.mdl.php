@@ -7,7 +7,7 @@
 namespace app\model;
 
 use app\classes\Model;
-use ginkgo\Json;
+use ginkgo\Arrays;
 use ginkgo\Func;
 
 //不能非法包含或直接执行
@@ -91,8 +91,10 @@ class Mime extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -108,7 +110,7 @@ class Mime extends Model {
 
     protected function rowProcess($arr_mimeRow = array()) {
         if (isset($arr_mimeRow['mime_content'])) {
-            $arr_mimeRow['mime_content'] = Json::decode($arr_mimeRow['mime_content']); //json解码
+            $arr_mimeRow['mime_content'] = Arrays::fromJson($arr_mimeRow['mime_content']); //json解码
         } else {
             $arr_mimeRow['mime_content'] = array();
         }

@@ -7,6 +7,7 @@
         'gen'       => true,
         'gather'    => true,
     ),
+    'debug' => true,
     'tpl' => array(
         'path'    => 'default',
     ),
@@ -34,11 +35,49 @@
             'console/gsite-step/page-content'   => 'console/gsite-step/form',
             'console/gsite-source/lists'        => 'console/gsite-source/form',
             'console/gsite-source/page-lists'   => 'console/gsite-source/form',
-            array('/^album\/id\/(\d+)(\/page\/(\d+))?.*$/ui', 'index/album/show', array('id', '', 'page')),
-            array('article/:year/:month/:id', 'index/article/index'), //动态例子 array(规则, 地址)
-            array('/^spec\/\d+\/\d+\/(\d+)(\/page\/(\d+))?.*$/ui', 'index/spec/show', array('id', '', 'page')),
-            array('/^tag\/[\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)(\/page\/(\d+))?.*$/ui', 'index/tag/index', array('id', '', 'page')),
-            array('/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)(\/page\/(\d+))?.*$/ui', 'index/cate/index', array('id', '', 'page')), //正则例子 array(规则, 地址, 参数)
+            'call'                              => 'index/call/index',
+            'article/:year/:month/:id'          => 'index/article/index',
+
+            '/^album\/id\/(\d+)(\/page\/(\d+))?.*$/ui' => array(
+                'index/album/show',
+                array('id', '', 'page'),
+            ),
+
+            '/^spec\/\d+\/\d+\/(\d+)(\/page\/(\d+))?.*$/ui' => array(
+                'index/spec/show',
+                array('id', '', 'page'),
+            ),
+
+            '/^tag\/[\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)(\/page\/(\d+))?.*$/ui' => array(
+                'index/tag/index',
+                array('id', '', 'page'),
+            ),
+
+            '/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)\/key\/(.+)\/page\/(\d+).*$/ui' => array(
+                'index/cate/index',
+                array('id', 'key', 'page'),
+            ),
+
+            '/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)\/page\/(\d+)\/key\/(.+).*$/ui' => array(
+                'index/cate/index',
+                array('id', 'page', 'key'),
+            ),
+
+            '/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)\/key\/(.+).*$/ui' => array(
+                'index/cate/index',
+                array('id', 'key'),
+            ),
+
+            '/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+)\/page\/(\d+).*$/ui' => array(
+                'index/cate/index',
+                array('id', 'page'),
+            ),
+
+            '/^cate[\/\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-\s+]+\/id\/(\d+).*$/ui' => array(
+                'index/cate/index',
+                'id',
+            ),
+
             'album'                             => 'index/album/index',
             'spec'                              => 'index/spec/index',
         ),

@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -129,8 +129,10 @@ class Custom extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -190,7 +192,7 @@ class Custom extends Model {
 
     protected function rowProcess($arr_customRow = array()) {
         if (isset($arr_customRow['custom_opt'])) {
-            $arr_customRow['custom_opt'] = Json::decode($arr_customRow['custom_opt']);
+            $arr_customRow['custom_opt'] = Arrays::fromJson($arr_customRow['custom_opt']);
         } else {
             $arr_customRow['custom_opt'] = array();
         }

@@ -70,6 +70,12 @@ class Cate extends Model {
                 'default'   => 0,
                 'comment'   => '父栏目',
             ),
+            'cate_attach_id' => array(
+                'type'      => 'int(11)',
+                'not_null'  => true,
+                'default'   => 0,
+                'comment'   => '附件 ID',
+            ),
             'cate_alias' => array(
                 'type'      => 'varchar(300)',
                 'not_null'  => true,

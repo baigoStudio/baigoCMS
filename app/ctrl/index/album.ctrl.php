@@ -19,6 +19,7 @@ class Album extends Ctrl {
         parent::c_init();
 
         $this->mdl_album            = Loader::model('Album');
+        $this->mdl_attach           = Loader::model('Attach');
         $this->mdl_attachAlbumView  = Loader::model('Attach_Album_View');
     }
 
@@ -40,14 +41,12 @@ class Album extends Ctrl {
 
         $_arr_getData  = $this->mdl_album->lists($this->configVisit['perpage_album'], $_arr_search); //列出
 
-        $_mdl_attach   = Loader::model('Attach');
-
         foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            $_arr_attachRow = $_mdl_attach->read($_value['album_attach_id']);
+            $_arr_attachRow = $this->mdl_attach->read($_value['album_attach_id']);
 
             if ($_arr_attachRow['rcode'] == 'y070102') {
-                if (!isset($_arr_attachRow['thumb_default'])) {
-                    $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
+                if (Func::isEmpty($_arr_attachRow['thumb_default'])) {
+                    $_value['thumb_default'] = $this->dirStatic . 'image/file_' . $_arr_attachRow['attach_ext'] . '.png';
                 }
             } else {
                 $_value['thumb_default'] = '';
@@ -107,11 +106,7 @@ class Album extends Ctrl {
 
         $_arr_getData   = $this->mdl_attachAlbumView->lists($this->configVisit['perpage_in_album'], $_arr_search); //列出
 
-        foreach ($_arr_getData['dataRows'] as $_key=>&$_value) {
-            if (!isset($_value['thumb_default'])) {
-                $_value['thumb_default'] = $this->url['dir_static'] . 'image/file_' . $_value['attach_ext'] . '.png';
-            }
-        }
+        $_arr_attachRow = $this->mdl_attach->read($_arr_albumRow['album_attach_id']);
 
         $_arr_tplData = array(
             'urlRow'        => $this->mdl_album->urlProcess($_arr_albumRow),
@@ -119,6 +114,7 @@ class Album extends Ctrl {
             'pageRow'       => $_arr_getData['pageRow'],
             'attachRows'    => $_arr_getData['dataRows'],
             'albumRow'      => $_arr_albumRow,
+            'attachRow'     => $_arr_attachRow,
         );
 
         $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);

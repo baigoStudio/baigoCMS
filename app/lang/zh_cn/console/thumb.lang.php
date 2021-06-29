@@ -36,7 +36,7 @@ return array(
     'cut'                                       => '裁切',
     'To'                                        => '至',
     'Quality'                                   => '图片质量',
-    '0 - 100, only valid for JPG'               => '0 - 100，仅对 JPG 有效',
+    '0 - 100, only valid for JPG and PNG'       => '0 - 100，仅对 JPG、PNG 有效',
     '<kbd>0</kbd> is unlimited'                 => '<kbd>0</kbd> 为无限制',
     'Attachment ID range'                       => '附件 ID 范围',
     'Server side error'                         => '服务器错误',

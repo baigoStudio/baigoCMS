@@ -39,6 +39,10 @@
                                 <span class="fas fa-edit"></span>
                                 <?php echo $lang->get('Edit'); ?>
                             </a>
+                            <a href="<?php echo $route_console; ?>cate/attach/id/<?php echo $value['cate_id']; ?>/" class="mr-2">
+                                <span class="fas fa-images"></span>
+                                <?php echo $lang->get('Cover management'); ?>
+                            </a>
                             <?php if ($gen_open) { ?>
                                 <a href="#gen_modal" data-url="<?php echo $route_gen; ?>cate/single/id/<?php echo $value['cate_id']; ?>/view/iframe/" data-toggle="modal" class="mr-2">
                                     <span class="fas fa-sync-alt"></span>
@@ -125,7 +129,7 @@ include($cfg['pathInclude'] . 'console_head' . GK_EXT_TPL); ?>
                     </button>
                 </span>
                 <span class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more" >
+                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="collapse" data-target="#bg-search-more">
                         <span class="sr-only">Dropdown</span>
                     </button>
                 </span>

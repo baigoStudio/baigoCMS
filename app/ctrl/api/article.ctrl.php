@@ -11,7 +11,6 @@ use ginkgo\Loader;
 use ginkgo\Func;
 use ginkgo\Html;
 use ginkgo\Plugin;
-use ginkgo\Base64;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -81,8 +80,7 @@ class Article extends Ctrl {
             'articleRows'   => $this->obj_index->articleListsProcess($_arr_getData['dataRows'], false),
         );
 
-        $_mix_result    = Plugin::listen('filter_api_article_lists', $_arr_return); //编辑文章时触发
-        $_arr_return    = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return    = Plugin::listen('filter_api_article_lists', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }
@@ -122,21 +120,22 @@ class Article extends Ctrl {
             $_arr_tagIds[] = $_value['tag_id'];
         }
 
-        if (!Func::isEmpty($_arr_tagIds)) {
-            $_arr_assRows = $this->obj_index->assLists($_arr_tagIds);
-        }
+        $_arr_assRows = $this->obj_index->assLists($_arr_tagIds, $_arr_cateRow['cate_ids']);
 
         $_arr_articleRow['article_content'] = $this->obj_index->linkProcess($_arr_articleRow['article_content'], $_arr_cateRow['cate_ids']);
+        $_arr_articleRow['article_content'] = $this->obj_index->albumProcess($_arr_articleRow['article_content']);
+
+        $_arr_attachRow = $this->mdl_attach->read($_arr_articleRow['article_attach_id']);
 
         $_arr_return = array(
             'cateRow'       => $_arr_cateRow,
+            'attachRow'     => $_arr_attachRow,
             'articleRow'    => $_arr_articleRow,
             'tagRows'       => $_arr_tagRows,
             'associateRows' => $_arr_assRows,
         );
 
-        $_mix_result    = Plugin::listen('filter_api_article_read', $_arr_return); //编辑文章时触发
-        $_arr_return    = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return    = Plugin::listen('filter_api_article_read', $_arr_return); //编辑文章时触发
 
         return $this->json($_arr_return);
     }

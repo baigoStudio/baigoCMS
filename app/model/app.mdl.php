@@ -8,7 +8,7 @@ namespace app\model;
 
 use app\classes\Model;
 use ginkgo\Func;
-use ginkgo\Json;
+use ginkgo\Arrays;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access denied');
@@ -111,8 +111,10 @@ class App extends Model {
             $_arr_eachData = &$_arr_getData;
         }
 
-        foreach ($_arr_eachData as $_key=>&$_value) {
-            $_value = $this->rowProcess($_value);
+        if (!Func::isEmpty($_arr_eachData)) {
+            foreach ($_arr_eachData as $_key=>&$_value) {
+                $_value = $this->rowProcess($_value);
+            }
         }
 
         return $_arr_getData;
@@ -154,7 +156,7 @@ class App extends Model {
         }
 
         if (isset($arr_search['not_ids']) && !Func::isEmpty($arr_search['not_ids'])) {
-            $arr_search['not_ids'] = Func::arrayFilter($arr_search['not_ids']);
+            $arr_search['not_ids'] = Arrays::filter($arr_search['not_ids']);
 
             $_arr_where[] = array('app_id', 'NOT IN', $arr_search['not_ids'], 'not_ids');
         }
@@ -176,13 +178,13 @@ class App extends Model {
 
     protected function rowProcess($arr_appRow = array()) {
         if (isset($arr_appRow['app_allow'])) {
-            $arr_appRow['app_allow'] = Json::decode($arr_appRow['app_allow']);
+            $arr_appRow['app_allow'] = Arrays::fromJson($arr_appRow['app_allow']);
         } else {
             $arr_appRow['app_allow'] = array();
         }
 
         if (isset($arr_appRow['app_param'])) {
-            $arr_appRow['app_param'] = Json::decode($arr_appRow['app_param']);
+            $arr_appRow['app_param'] = Arrays::fromJson($arr_appRow['app_param']);
         } else {
             $arr_appRow['app_param'] = array();
         }

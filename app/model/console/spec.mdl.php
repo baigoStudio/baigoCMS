@@ -10,6 +10,8 @@ use app\model\Spec as Spec_Base;
 use ginkgo\Func;
 use ginkgo\Plugin;
 use ginkgo\Html;
+use ginkgo\Arrays;
+use ginkgo\String;
 
 //不能非法包含或直接执行
 defined('IN_GINKGO') or exit('Access Denied');
@@ -33,16 +35,13 @@ class Spec extends Spec_Base {
             'spec_status'       => $this->inputSubmit['spec_status'],
             'spec_content'      => $this->inputSubmit['spec_content'],
             'spec_tpl'          => $this->inputSubmit['spec_tpl'],
+            'spec_attach_id'    => $this->inputSubmit['spec_attach_id'],
         );
-
-        if (isset($this->inputSubmit['spec_attach_id'])) {
-            $_arr_specData['spec_attach_id'] = $this->inputSubmit['spec_attach_id'];
-        }
 
         if (isset($this->inputSubmit['spec_time_update'])) {
             $_arr_specData['spec_time_update'] = $this->inputSubmit['spec_time_update'];
         } else if (isset($this->inputSubmit['spec_time_update_format'])) {
-            $_arr_specData['spec_time_update'] = Func::strtotime($this->inputSubmit['spec_time_update_format']);
+            $_arr_specData['spec_time_update'] = String::toTime($this->inputSubmit['spec_time_update_format']);
         } else {
             $_arr_specData['spec_time_update'] = GK_NOW;
         }
@@ -53,8 +52,7 @@ class Spec extends Spec_Base {
             $_str_hook = 'add';
         }
 
-        $_mix_result    = Plugin::listen('filter_console_spec_' . $_str_hook, $_arr_specData); //编辑文章时触发
-        $_arr_specData  = Plugin::resultProcess($_arr_specData, $_mix_result);
+        $_arr_specData    = Plugin::listen('filter_console_spec_' . $_str_hook, $_arr_specData); //编辑文章时触发
 
         $_mix_vld = $this->validate($_arr_specData, '', 'submit_db');
 
@@ -206,6 +204,7 @@ class Spec extends Spec_Base {
         return $this->where($_arr_where)->find('spec_id');
     }
 
+
     function inputCover() {
         $_arr_inputParam = array(
             'spec_id'   => array('int', 0),
@@ -246,6 +245,7 @@ class Spec extends Spec_Base {
             'spec_content'              => array('str', '', true),
             'spec_tpl'                  => array('str', ''),
             'spec_time_update_format'   => array('str', ''),
+            'spec_attach_id'            => array('int', 0),
             '__token__'                 => array('str', ''),
         );
 
@@ -294,7 +294,7 @@ class Spec extends Spec_Base {
 
         //print_r($_arr_inputDelete);
 
-        $_arr_inputDelete['spec_ids'] = Func::arrayFilter($_arr_inputDelete['spec_ids']);
+        $_arr_inputDelete['spec_ids'] = Arrays::filter($_arr_inputDelete['spec_ids']);
 
         $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
 
@@ -324,7 +324,7 @@ class Spec extends Spec_Base {
 
         //print_r($_arr_inputStatus);
 
-        $_arr_inputStatus['spec_ids'] = Func::arrayFilter($_arr_inputStatus['spec_ids']);
+        $_arr_inputStatus['spec_ids'] = Arrays::filter($_arr_inputStatus['spec_ids']);
 
         $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
 

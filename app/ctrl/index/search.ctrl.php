@@ -42,23 +42,24 @@ class Search extends Ctrl {
             }
         }
 
-        $_arr_pageRow   = array();
         $_arr_getData   = array(
             'dataRows' => array(),
+            'pageRow'  => array(),
         );
 
         if (!Func::isEmpty($_arr_search['key']) || isset($_arr_search['has_custom'])) {
             $_arr_search['cate_ids'] = false;
 
             if ($_arr_search['cate'] > 0) {
-                $_arr_cateRow            = $this->obj_index->cateRead($_arr_search['cate']);
-            } else if ($_arr_search['cate'] < 0) {
-                $_arr_search['cate_id']  = $_arr_search['cate'];
+                $_arr_cateRow = $this->obj_index->cateRead($_arr_search['cate']);
+
+                if (isset($_arr_cateRow['cate_ids'])) {
+                    $_arr_search['cate_ids']  = $_arr_cateRow['cate_ids'];
+                }
             }
 
-            $_mdl_articleCustomView    = Loader::model('Article_Custom_View');
-
-            $_arr_getData   = $_mdl_articleCustomView->lists($this->configVisit['perpage_in_search'], $_arr_search); //列出
+            $_mdl_articleCustomView = Loader::model('Article_Custom_View');
+            $_arr_getData           = $_mdl_articleCustomView->lists($this->configVisit['perpage_in_search'], $_arr_search); //列出
         }
 
         if (!Func::isEmpty($_arr_getData['dataRows'])) {
@@ -102,7 +103,7 @@ class Search extends Ctrl {
             $_arr_getData            = $_mdl_articleCateView->lists(array($this->configVisit['perpage_in_ajax'], 'limit'), $_arr_search); //列出
         }
 
-        $_arr_getData = $this->obj_index->articleListsProcess($_arr_getData, false);
+        $_arr_getData = $this->obj_index->articleListsProcess($_arr_getData);
 
         return $this->json($_arr_getData);
     }

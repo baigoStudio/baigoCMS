@@ -97,7 +97,7 @@ class Call {
             'parent_id' => $_arr_callRow['call_cate_id'],
         );
 
-        $_arr_cateRow = $this->obj_index->cateRead($_arr_callRow['call_cate_id']);
+        $_arr_cateRow  = $this->obj_index->cateRead($_arr_callRow['call_cate_id']);
 
         $_arr_cateRows = $this->obj_index->cateLists($_arr_searchCate);
 
@@ -106,8 +106,7 @@ class Call {
             'cateRows'  => $_arr_cateRows,
         );
 
-        $_mix_result = Plugin::listen('filter_pub_call_cate', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_pub_call_cate', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -132,11 +131,10 @@ class Call {
         $_arr_specRows = $_mdl_spec->lists(array($_arr_callRow['call_amount']['top'], $_arr_callRow['call_amount']['except'], 'limit'), $_arr_searchSpec);
 
         $_arr_return = array(
-            'specRows'  => $_arr_specRows,
+            'specRows'  => $this->obj_index->specListsProcess($_arr_specRows),
         );
 
-        $_mix_result = Plugin::listen('filter_pub_call_spec', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_pub_call_spec', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -168,8 +166,7 @@ class Call {
             'tagRows'  => $_arr_tagRows,
         );
 
-        $_mix_result = Plugin::listen('filter_pub_call_tag', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_pub_call_tag', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -181,6 +178,7 @@ class Call {
         $_arr_searchLink = array(
             'status'    => 'enable',
             'type'      => 'friend',
+            'cate_ids'  => $_arr_callRow['call_cate_ids'],
         );
 
         $_mdl_link = Loader::model('Link');
@@ -191,8 +189,7 @@ class Call {
             'linkRows'  => $_arr_linkRows,
         );
 
-        $_mix_result = Plugin::listen('filter_pub_call_link', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_pub_call_link', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
@@ -239,8 +236,7 @@ class Call {
             'articleRows' => $this->obj_index->articleListsProcess($_arr_articleRows),
         );
 
-        $_mix_result = Plugin::listen('filter_pub_call_article', $_arr_return); //编辑文章时触发
-        $_arr_return = Plugin::resultProcess($_arr_return, $_mix_result);
+        $_arr_return = Plugin::listen('filter_pub_call_article', $_arr_return); //编辑文章时触发
 
         return $_arr_return;
     }
