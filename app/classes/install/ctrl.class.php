@@ -14,7 +14,9 @@ use ginkgo\Config;
 use ginkgo\Plugin;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 
 /*-------------安装通用控制器-------------*/
@@ -93,7 +95,7 @@ class Ctrl extends Ctrl_Base {
 
         if ($_num_errCount > 0) {
             $_str_rcode     = 'x030405';
-            $_str_msg       = 'Missing PHP extensions';
+            $_str_msg       = 'Missing PHP Extensions';
         }
 
         return array(

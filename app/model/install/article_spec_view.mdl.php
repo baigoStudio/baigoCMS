@@ -10,7 +10,9 @@ use app\classes\install\Model;
 use ginkgo\Loader;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------文章模型-------------*/
 class Article_Spec_View extends Model {

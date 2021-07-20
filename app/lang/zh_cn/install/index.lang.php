@@ -5,7 +5,9 @@
 -----------------------------------------------------------------*/
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------------------通用-------------------------*/
 return array(
@@ -65,7 +67,7 @@ return array(
     'Previous'                          => '上一步',
     'Password'                          => '密码',
     'Submitting'                        => '正在提交 ...',
-    'Missing PHP extensions'            => '缺少必要的 PHP 扩展',
+    'Missing PHP Extensions'            => '缺少必要的 PHP 扩展',
     'PHP Extensions'                    => '服务器环境检查',
     'Redirecting'                       => '正在跳转 ...',
     'Save'                              => '保存',

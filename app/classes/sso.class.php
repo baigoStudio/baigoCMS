@@ -14,7 +14,9 @@ use ginkgo\Http;
 use ginkgo\Request;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------单点登录类-------------*/
 class Sso {
@@ -87,7 +89,6 @@ class Sso {
      */
     function resultCheck($arr_get) {
         //print_r($arr_get);
-        //exit;
 
         if (!isset($arr_get['code'])) {
             return array(

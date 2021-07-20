@@ -9,7 +9,9 @@ namespace app\model;
 use app\classes\Model;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------专题模型-------------*/
 class Spec_View extends Model {

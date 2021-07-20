@@ -10,7 +10,9 @@ use app\classes\install\Model;
 use ginkgo\Loader;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------相册归属模型-------------*/
 class Album_View extends Model {

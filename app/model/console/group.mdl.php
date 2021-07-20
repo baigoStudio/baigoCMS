@@ -10,7 +10,9 @@ use app\model\Group as Group_Base;
 use ginkgo\Arrays;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------群组模型-------------*/
 class Group extends Group_Base {

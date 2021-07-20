@@ -53,7 +53,7 @@
 
 ##### 其他模式
 
-其他模式下，可以用调用对象 `$call` 的 `get` 方法来调用，执行此方法后，会返回一个多维数组，可以通过遍历数组的方式来显示调用结果，返回数组会根据不同的调用类型有所不同，数组结构请查看纯静态模式下的模板。关于调用以及调用 ID 请查看 `管理后台 -> 调用管理`。以下是一个示例：
+其他模式下，可以用调用对象 `$call` 的 `get()` 方法来调用，执行此方法后，会返回一个多维数组，可以通过遍历数组的方式来显示调用结果，返回数组会根据不同的调用类型有所不同，数组结构请查看纯静态模式下的模板。关于调用以及调用 ID 请查看 `管理后台 -> 调用管理`。以下是一个示例：
 
 ``` php
 $_arr_callRow = $call->get(1);
@@ -75,9 +75,9 @@ print_r($_arr_callRow);
 | call_cate_ids | array | 栏目 ID |   |
 | call_cate_excepts | array | 排除栏目 ID |   |
 | call_cate_id | int | 栏目 ID |   |
-| call_spec_ids | array | 专题 ID |  | 
+| call_spec_ids | array | 专题 ID |  |
 | call_mark_ids | array | 标记 ID |   |
-| call_file | string | 生成文件类型 |  
+| call_file | string | 生成文件类型 |
 | call_amount | array | 显示数量 | top 键为显示数量、except 键为排除数量 |
 | call_attach | string | 附件选项 | all 全部、attach 仅显示带附件文章、none 仅显示无附件文章 |
 | call_status | string | 调用状态 | enable 为启用，disable 为禁用。 |

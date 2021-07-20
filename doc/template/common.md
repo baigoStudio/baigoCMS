@@ -50,7 +50,7 @@
 <?php echo $request->cookie('name'); ?>  // 输出 $_COOKIE['name'] 变量
 ```
 
-支持输出 `$_SERVER`、`$_POST`、`$_GET`、`$_REQUEST`、`$_SESSION` 和 `$_COOKIE` 变量，详情请查看 ginkgo 文档的 [请求 -> 输入变量](//doc.baigo.net/ginkgo/request/input)
+支持输出 `$_SERVER`、`$_POST`、`$_GET`、`$_REQUEST`、`$_SESSION` 和 `$_COOKIE` 变量，详情请查看 ginkgo 文档的 [请求 -> 输入变量](//doc.baigo.net/ginkgo/quick/request/input)
 
 ----------
 

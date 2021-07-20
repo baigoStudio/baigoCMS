@@ -7,7 +7,9 @@
 namespace ginkgo;
 
 // 不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 // 常用函数
 class Func {
@@ -347,37 +349,37 @@ class Func {
 
     /** 强化版 strtotime 向下兼容 */
     public static function strtotime($time) {
-        return String::toTime($time);
+        return Strings::toTime($time);
     }
 
     /** 将字符串中每个单词的首字母转换为大写 向下兼容 */
     public static function ucwords($string, $delimiter = "\t\r\n\f\v") {
-        return String::ucwords($string, $delimiter);
+        return Strings::ucwords($string, $delimiter);
     }
 
     /** 转换为驼峰命名 向下兼容 */
     public static function toHump($string, $delimiter = '_', $lcfirst = false) {
-        return String::toHump($string, $delimiter, $lcfirst);
+        return Strings::toHump($string, $delimiter, $lcfirst);
     }
 
     /** 转换为分隔符命名 向下兼容 */
     public static function toLine($string, $delimiter = '_') {
-        return String::toLine($string, $delimiter);
+        return Strings::toLine($string, $delimiter);
     }
 
     /** 容量格式化 向下兼容 */
     public static function sizeFormat($size = 0, $float = 2) {
-        return String::sizeFormat($size = 0, $float);
+        return Strings::sizeFormat($size = 0, $float);
     }
 
     /** 数字格式化 向下兼容 */
     public static function numFormat($num, $float = 2) {
-        return String::numFormat($num, $float);
+        return Strings::numFormat($num, $float);
     }
 
     /** 隐私字符串 向下兼容 */
     public static function strSecret($string, $left = 5, $right = 5, $hide = '*'){
-        return String::secrecy($string, $left, $right, $hide);
+        return Strings::secrecy($string, $left, $right, $hide);
     }
 
     /** 文件是否存在 向下兼容 */

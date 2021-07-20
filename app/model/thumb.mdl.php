@@ -11,7 +11,9 @@ use ginkgo\Func;
 use ginkgo\Cache;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------缩略图模型-------------*/
 class Thumb extends Model {

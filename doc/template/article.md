@@ -42,12 +42,12 @@
 | article_time_hide | int | 文章下线时间 | 指文章下线时间。 |
 | article_time_hide_format | array | 文章下线时间 | 日期时间格式 |
 | article_status | string | 文章状态 | pub 为发布，wait 为待审，hide 为隐藏。 |
-| article_customs | array | 自定义字段 | 自定义字段的内容。用 article_customs['custom_{\:id}'] 的方式便可获取自定义字段的内容。详情请查看 [概况](overview.md#common)。 |
+| article_customs | array | 自定义字段 | 自定义字段的内容。用 article_customs['custom_{\:id}'] 的方式便可获取自定义字段的内容。详情请查看 [概况](index.md#common)。 |
 | article_source | string | 文章来源 | 常用于转载文章时，表明文章的出处，以示对原作者的尊重。 |
 | article_source_url | string | 文章来源 URL | 常用于转载文章时，表明文章的出处，以示对原作者的尊重。 |
 | article_author | string | 文章作者 | 常用于转载文章时，表明文章的出处，以示对原作者的尊重。 |
 | article_url | string | 文章 URL | |
- 
+
 数据示例
 
 ``` php

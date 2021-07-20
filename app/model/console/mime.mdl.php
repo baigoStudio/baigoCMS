@@ -12,7 +12,9 @@ use ginkgo\Arrays;
 use ginkgo\Cache;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------MIME 模型-------------*/
 class Mime extends Mime_Base {

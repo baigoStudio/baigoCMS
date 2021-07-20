@@ -10,7 +10,9 @@ use app\model\Album as Album_Base;
 use ginkgo\Arrays;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------群组模型-------------*/
 class Album extends Album_Base {

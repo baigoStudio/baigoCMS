@@ -31,7 +31,7 @@
 | 允许上传单位 | 文件大小的单位，可选 KB、MB，默认为 KB。 |
 | 允许同时上传数 | 允许同时上传的文件数量，默认可以同时上传 10 个。 |
 | URL 前缀 | 此项用于附件的分发，如您的附件保存在同一台服务器上，可忽略此项。 |
-| FTP 服务器 | 以下选项根据不同系统，有可能无相应选项。此项用于附件的分发，需开启 FTP 分发功能，开启方法请查看 [概况 ->常见问题](../overview/faq.md)，如您想将附件分发到其他服务器，需填写本项。详情请查看 [附件分发设置示例](#attach) |
+| FTP 服务器 | 以下选项根据不同系统，有可能无相应选项。此项用于附件的分发，需开启 FTP 分发功能，开启方法请查看 [概况 -> 常见问题](../index/faq.md)，如您想将附件分发到其他服务器，需填写本项。详情请查看 [附件分发设置示例](#attach) |
 | 服务器端口 | 请按照服务器提供商所提供的资料填写。 |
 | 用户名 | 请按照服务器提供商所提供的资料填写。 |
 | 密码 | 请按照服务器提供商所提供的资料填写。 |
@@ -95,31 +95,31 @@
 
 * 默认
 
-    使用 PHP 的 pathinfo 方式访问网站，URL 的形式为 http://www.domain.com/index.php/article/show/id/123
-    
-    * 优点：兼容性好；    
+    使用 PHP 的 pathinfo 方式访问网站，URL 的形式为 http://server/index.php/article/show/id/123
+
+    * 优点：兼容性好；
     * 缺点：URL 中包含类似 `index.php` 的文件名，对于搜索引擎的收录有一定影响。
 
 
 * 伪静态
 
-    使用友好的 URL 方式访问网站，URL 的形式为 http://www.domain.com/article/123
-            
-    在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，其他环境下的设置，请查看 ginkgo 文档的 [部署 -> URL 重写](//doc.baigo.net/ginkgo/deploy/url_rewrite)；
-    
+    使用友好的 URL 方式访问网站，URL 的形式为 http://server/article/123
+
+    在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，其他环境下的设置，请查看 ginkgo 文档的 [部署 -> URL 重写](//doc.baigo.net/ginkgo/quick/deploy/url_rewrite/)；
+
     * 优点：URL 较为友好，有利于搜索引擎的收录；
     * 缺点：因为需要服务器解析 URL，效率会有一些影响，且需要重新配置服务器。
-    
+
 
 * 纯静态
-    
-    将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 http://www.domain.com/article/123.html
-        
-    此方式需开启静态页面生成模块，开启方法请查看 [概况 ->常见问题](../overview/faq.md)；
-    
+
+    将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 http://server/article/123.html
+
+    此方式需开启静态页面生成模块，开启方法请查看 [概况 -> 常见问题](../index/faq.md)；
+
     * 优点：效率最高，无数据库服务器压力，有利于搜索引擎的收录；
     * 缺点：占用硬盘空间相对较多，页面需要定时生成。
-    
+
 ----------
 
 <span id="attach"></span>

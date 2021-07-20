@@ -23,7 +23,7 @@ GET
 ##### 返回结果
 
 | 名称 | 类型 | 描述 | 备注 |
-| - | - | - | - | - |
+| - | - | - | - |
 | attachRow | array | 附件详细信息 | 详情请查看 [$attachRow](#attachRow) |
 
 返回结果示例
@@ -111,7 +111,7 @@ GET
 在上传图片时，系统会根据缩略图的设置自动生成缩略图，系统生成缩略图以后，需要在适当的地方给予显示，一般缩略图信息位于 `attachRow` 对象中。
 
 以文章列表为例，第一篇文章有一个 `articleRows[0].attachRow` 对象，此对象包含了第一篇文章的所有图片信息，包括原始图片、多个缩略图等，而缩略图位于 `articleRows[0].attachRow.thumbRows`。
- 
+
 ----------
 
 <span id="attachRow"></span>

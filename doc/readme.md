@@ -5,20 +5,20 @@
 
 概况 / 安装
 
-* [概况](./overview/overview.md)
-* [安装](./overview/install.md)
-* [升级](./overview/upgrade.md)
-* [手动安装](./overview/manual.md)
-* [高级部署](./overview/advance.md)
-* [常见问题](./overview/faq.md)
-* [更新日志](./overview/changelog.md)
+* [概况](./index/index.md)
+* [安装](./index/install.md)
+* [升级](./index/upgrade.md)
+* [手动安装](./index/manual.md)
+* [高级部署](./index/advance.md)
+* [常见问题](./index/faq.md)
+* [更新日志](./index/changelog.md)
 
 
 ----------
 
 管理后台
 
-* [概况](./console/overview.md)
+* [概况](./console/index.md)
 * [文章管理](./console/article.md)
 * [文章相关](./console/article_relation.md)
 * [专题](./console/spec.md)
@@ -40,7 +40,7 @@
 
 API 接口
 
-* [概况](./api/overview.md)
+* [概况](./api/index.md)
 * [准备工作](./api/prepare.md)
 * [分页](./api/pagination.md)
 * [栏目接口](./api/cate.md)
@@ -58,7 +58,7 @@ API 接口
 
 模板
 
-* [概况](./template/overview.md)
+* [概况](./template/index.md)
 * [通用](./template/common.md)
 * [首页](./template/homepage.md)
 * [分页](./template/pagination.md)
@@ -77,7 +77,7 @@ API 接口
 
 插件
 
-* [概况](./plugin/overview.md)
+* [概况](./plugin/index.md)
 * [插件钩子](./plugin/hook.md)
 * [安装程序钩子](./plugin/install.md)
 * [管理后台钩子](./plugin/console.md)

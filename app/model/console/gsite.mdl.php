@@ -10,7 +10,9 @@ use app\model\Gsite as Gsite_Base;
 use ginkgo\Arrays;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------采集点模型-------------*/
 class Gsite extends Gsite_Base {

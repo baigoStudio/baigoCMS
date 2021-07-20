@@ -2,7 +2,7 @@
 
 baigo CMS 的管理后台地址为 http://server/index.php/console，在登录界面输入用户名、密码、验证码登录。进入后台后的界面如下：
 
-![后台界面](overview.png){.img-fluid .bg-img}
+![后台界面](index.png){.img-fluid .bg-img}
 
 在纯静态模式下，右上角将会显示“生成静态页面”菜单。
 

@@ -10,7 +10,9 @@ use app\model\Tag as Tag_Base;
 use ginkgo\Config;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------栏目模型-------------*/
 class Tag extends Tag_Base {

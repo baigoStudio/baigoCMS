@@ -45,7 +45,7 @@
 
 该插件位于 `./public/static/lib/baigoQuery/`
 
-[点击查看 baigoQuery 文档](https://doc.baigo.net/jquery/query/)。
+[点击查看 baigoQuery 文档](//doc.baigo.net/ginkgo/jquery/query/)。
 
 
 ``` php
@@ -73,11 +73,11 @@
         </div>
         <button type="submit" id="search" class="btn btn-primary">搜索</button>
     </form>
-    
+
     <script type="text/javascript">
     $(document).ready(function(){
         var obj_query = $('#search_form').baigoQuery(); // 初始化插件
-    
+
         $('#search_form').submit(function(){
             obj_query.formSubmit(); // 提交
         });

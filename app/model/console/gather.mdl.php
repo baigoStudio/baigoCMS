@@ -9,10 +9,12 @@ namespace app\model\console;
 use app\model\Gather as Gather_Base;
 use ginkgo\Func;
 use ginkgo\Arrays;
-use ginkgo\String;
+use ginkgo\Strings;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------文章模型-------------*/
 class Gather extends Gather_Base {
@@ -65,7 +67,7 @@ class Gather extends Gather_Base {
         if (isset($arr_gatherSubmit['gather_time_show'])) {
             $_arr_gatherData['gather_time_show']  = $this->obj_request->input($arr_gatherSubmit['gather_time_show'], 'int', 0);
         } else if (isset($arr_gatherSubmit['gather_time_show_format'])) {
-            $_arr_gatherData['gather_time_show']  = String::toTime($this->obj_request->input($arr_gatherSubmit['gather_time_show_format'], 'str', ''));
+            $_arr_gatherData['gather_time_show']  = Strings::toTime($this->obj_request->input($arr_gatherSubmit['gather_time_show_format'], 'str', ''));
         }
 
         if (isset($arr_gatherSubmit['gather_content'])) {

@@ -12,7 +12,9 @@ use ginkgo\Func;
 use ginkgo\Plugin;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 class Call extends Ctrl {
 

@@ -9,7 +9,9 @@ namespace app\model\gen;
 use app\model\index\Article_Custom_View as Article_Custom_View_Index;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------文章模型-------------*/
 class Article_Custom_View extends Article_Custom_View_Index {

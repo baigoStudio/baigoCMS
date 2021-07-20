@@ -8,7 +8,7 @@ baigo CMS 的 API 接口主要用于提供信息源，您可以在各类应用�
 
 ##### API 调用示例
 
-本文档的所有的示例都是在 ginkgo 框架基础之上建立的，关于 ginkgo 框架的详情请查看 [ginkgo 框架文档](//doc.baigo.net/ginkgo/)。以下为完整的调用文章列表接口的示例：
+本文档的所有的示例都是在 ginkgo 框架基础之上建立的，关于 ginkgo 框架的详情请查看 [ginkgo 框架文档](//doc.baigo.net/ginkgo/quick/)。以下为完整的调用文章列表接口的示例：
 
 ``` php
 use ginkgo/Http;

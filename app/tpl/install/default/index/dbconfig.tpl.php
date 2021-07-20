@@ -28,7 +28,7 @@ include($cfg['pathInclude'] . 'index_head' . GK_EXT_TPL); ?>
             submitting: '<?php echo $lang->get('Submitting'); ?>'
         },
         jump: {
-            //url: '<?php echo $route_install; ?>index/<?php echo $step['next']; ?>/',
+            url: '<?php echo $route_install; ?>index/<?php echo $step['next']; ?>/',
             text: '<?php echo $lang->get('Redirecting'); ?>'
         }
     };

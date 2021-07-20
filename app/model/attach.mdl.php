@@ -11,10 +11,12 @@ use ginkgo\Loader;
 use ginkgo\Func;
 use ginkgo\Arrays;
 use ginkgo\Config;
-use ginkgo\String;
+use ginkgo\Strings;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------附件模型-------------*/
 class Attach extends Model {
@@ -313,7 +315,7 @@ class Attach extends Model {
         $arr_attachRow['attach_url']         = $this->urlPrefix . $_str_attachNameUrl;
         $arr_attachRow['attach_time_format'] = $this->dateFormat($arr_attachRow['attach_time']);
 
-        $arr_attachRow['attach_size_format'] = String::sizeFormat($arr_attachRow['attach_size']);
+        $arr_attachRow['attach_size_format'] = Strings::sizeFormat($arr_attachRow['attach_size']);
 
         return $arr_attachRow;
     }

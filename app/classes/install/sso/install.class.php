@@ -16,7 +16,9 @@ use ginkgo\File;
 use ginkgo\Crypt;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------单点登录类-------------*/
 class Install extends Sso {
@@ -240,7 +242,7 @@ class Install extends Sso {
 
     function over() {
         $_arr_crypt = array(
-            'app_name'          => 'baigo ADS',
+            'app_name'          => 'baigo CMS',
             'app_url_notify'    => $this->obj_request->baseUrl(true) . 'sso/notify',
             'app_url_sync'      => $this->obj_request->baseUrl(true) . 'sso/sync',
             'timestamp'         => GK_NOW,

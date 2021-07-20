@@ -12,10 +12,12 @@ use ginkgo\Func;
 use ginkgo\Html;
 use ginkgo\Plugin;
 use ginkgo\Arrays;
-use ginkgo\String;
+use ginkgo\Strings;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------文章模型-------------*/
 class Article extends Article_Base {
@@ -58,7 +60,7 @@ class Article extends Article_Base {
         if (isset($this->inputSubmit['article_time_show'])) {
             $_arr_articleData['article_time_show'] = $this->inputSubmit['article_time_show'];
         } else if (isset($this->inputSubmit['article_time_show_format'])) {
-            $_arr_articleData['article_time_show'] = String::toTime($this->inputSubmit['article_time_show_format']);
+            $_arr_articleData['article_time_show'] = Strings::toTime($this->inputSubmit['article_time_show_format']);
         }
 
         if (isset($this->inputSubmit['article_is_time_pub'])) {
@@ -72,11 +74,11 @@ class Article extends Article_Base {
         } else {
             if ($_num_articleId > 0) { //编辑文章时
                 if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSubmit['article_time_pub_format'])) { //表单有输入则更新
-                    $_arr_articleData['article_time_pub'] = String::toTime($this->inputSubmit['article_time_pub_format']);
+                    $_arr_articleData['article_time_pub'] = Strings::toTime($this->inputSubmit['article_time_pub_format']);
                 }
             } else { //创建文章时
                 if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSubmit['article_time_pub_format'])) { //表单有输入
-                    $_arr_articleData['article_time_pub'] = String::toTime($this->inputSubmit['article_time_pub_format']);
+                    $_arr_articleData['article_time_pub'] = Strings::toTime($this->inputSubmit['article_time_pub_format']);
                 } else {
                     $_arr_articleData['article_time_pub'] = GK_NOW; //表单无输入则当前时间
                 }
@@ -93,7 +95,7 @@ class Article extends Article_Base {
             $_arr_articleData['article_time_hide'] = $this->inputSubmit['article_time_hide'];
         } else {
             if ($_arr_articleData['article_is_time_hide'] > 0 && isset($this->inputSubmit['article_time_hide_format'])) { //表单有输入则更新
-                $_arr_articleData['article_time_hide'] = String::toTime($this->inputSubmit['article_time_hide_format']);
+                $_arr_articleData['article_time_hide'] = Strings::toTime($this->inputSubmit['article_time_hide_format']);
             }
         }
 
@@ -319,15 +321,15 @@ class Article extends Article_Base {
         );
 
         if (isset($this->inputSimple['article_time_show_format'])) {
-            $_arr_articleData['article_time_show'] = String::toTime($this->inputSimple['article_time_show_format']);
+            $_arr_articleData['article_time_show'] = Strings::toTime($this->inputSimple['article_time_show_format']);
         }
 
         if ($_arr_articleData['article_is_time_pub'] > 0 && isset($this->inputSimple['article_time_pub_format'])) { //表单有输入则更新
-            $_arr_articleData['article_time_pub']  = String::toTime($this->inputSimple['article_time_pub_format']);
+            $_arr_articleData['article_time_pub']  = Strings::toTime($this->inputSimple['article_time_pub_format']);
         }
 
         if ($_arr_articleData['article_is_time_hide'] > 0 && isset($this->inputSimple['article_time_hide_format'])) { //表单有输入则更新
-            $_arr_articleData['article_time_hide'] = String::toTime($this->inputSimple['article_time_hide_format']);
+            $_arr_articleData['article_time_hide'] = Strings::toTime($this->inputSimple['article_time_hide_format']);
         }
 
         $_mix_vld = $this->validate($_arr_articleData, '', 'simple_db');

@@ -11,10 +11,12 @@ use ginkgo\Func;
 use ginkgo\Plugin;
 use ginkgo\Html;
 use ginkgo\Arrays;
-use ginkgo\String;
+use ginkgo\Strings;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access Denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------专题模型-------------*/
 class Spec extends Spec_Base {
@@ -41,7 +43,7 @@ class Spec extends Spec_Base {
         if (isset($this->inputSubmit['spec_time_update'])) {
             $_arr_specData['spec_time_update'] = $this->inputSubmit['spec_time_update'];
         } else if (isset($this->inputSubmit['spec_time_update_format'])) {
-            $_arr_specData['spec_time_update'] = String::toTime($this->inputSubmit['spec_time_update_format']);
+            $_arr_specData['spec_time_update'] = Strings::toTime($this->inputSubmit['spec_time_update_format']);
         } else {
             $_arr_specData['spec_time_update'] = GK_NOW;
         }

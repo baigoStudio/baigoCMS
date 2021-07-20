@@ -17,7 +17,7 @@ include($cfg['pathInclude'] . 'index_head' . GK_EXT_TPL);
 
         <div class="alert alert-danger">
             <span class="fas fa-times-circle"></span>
-            <?php echo $lang->get('Missing PHP extensions'); ?>
+            <?php echo $lang->get('Missing PHP Extensions'); ?>
         </div>
     <?php }
 

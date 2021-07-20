@@ -10,7 +10,9 @@ use app\model\Admin as Admin_Base;
 use ginkgo\Arrays;
 
 //不能非法包含或直接执行
-defined('IN_GINKGO') or exit('Access denied');
+if (!defined('IN_GINKGO')) {
+    return 'Access denied';
+}
 
 /*-------------管理员模型-------------*/
 class Auth extends Admin_Base {
@@ -73,7 +75,7 @@ class Auth extends Admin_Base {
         if ($_arr_adminRow['rcode'] == 'x020102') {
             $_num_adminId   = $this->insert($_arr_adminData);
 
-            if ($_num_adminId > 0) {
+            if ($_num_adminId >= 0) {
                 $_str_rcode = 'y020101'; //插入成功
                 $_str_msg   = 'Add administrator successfully';
             } else {
