@@ -764,10 +764,6 @@ class Attach extends Ctrl {
 
     $_num_maxId = $_arr_inputClear['max_id'];
 
-    $_arr_searchCount = array(
-      'box'   => 'normal',
-    );
-
     $_arr_searchList = array(
       'box'       => 'normal',
       'max_id'    => $_num_maxId,

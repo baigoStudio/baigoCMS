@@ -57,10 +57,10 @@ class Login extends Admin_Base {
 
     return array(
       'admin_id'          => $this->inputSubmit['admin_id'],
-      //'admin_name'        => $arr_adminSubmit['admin_name'],
       'admin_ip'          => $_str_adminIp,
       'admin_time_login'  => $_tm_timeLogin,
-      'rcode'             => $_str_rcode, //成功
+      'rcode'             => $_str_rcode,
+      'msg'               => $_str_msg,
     );
   }
 

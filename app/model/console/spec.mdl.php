@@ -258,7 +258,7 @@ class Spec extends Spec_Base {
 
     $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
 
-    $_arr_inputSubmit['spec_time_update_format'] = Html::decode($_arr_inputSimple['spec_time_update_format'], 'date_time');
+    $_arr_inputSubmit['spec_time_update_format'] = Html::decode($_arr_inputSubmit['spec_time_update_format'], 'date_time');
 
     $_mix_vld = $this->validate($_arr_inputSubmit, '', 'submit');
 

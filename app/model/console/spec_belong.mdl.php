@@ -63,10 +63,6 @@ class Spec_Belong extends Spec_Belong_Base {
         print_r(PHP_EOL);*/
 
         if ($_arr_belongRow['rcode'] == 'y230102') { //存在
-          $_arr_belongData = array(
-            'belong_spec_id'  => 0,
-          );
-
           $_num_count = $this->delete(0, 0, false, false, false, false, $_arr_belongRow['belong_id']); //作为闲置数据
 
           if ($_num_count > 0) {

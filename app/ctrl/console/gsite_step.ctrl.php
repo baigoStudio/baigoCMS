@@ -94,8 +94,6 @@ class Gsite_Step extends Ctrl {
 
     $_arr_cateRow   = $this->mdl_cate->read($_arr_gsiteRow['gsite_cate_id']);
 
-    $_arr_configContent = array();
-
     $_arr_tplData = array(
       'configContent' => $this->configContent,
       'keepTag'       => $this->mdl_gsiteStep->keepTag,

@@ -194,8 +194,6 @@ class Grab extends Ctrl {
       return $this->fetchJson($_arr_gsiteRow['msg'], $_arr_gsiteRow['rcode']);
     }
 
-    $_arr_gatherRows = array();
-
     $_arr_gatherRow = $this->mdl_gather->check($_arr_inputGrab['url'], 'gather_source_url');
 
     if ($_arr_gatherRow['rcode'] == 'y280102') {
@@ -284,13 +282,6 @@ class Grab extends Ctrl {
 
       $_arr_gatherResult = $this->mdl_gather->submit($_arr_gatherSubmit);
     }
-
-    //print_r($_arr_gatherResult);
-
-    $_arr_tpl = array(
-      'gatherRow' => $_arr_gatherResult,
-      'rcode'     => $_arr_gatherResult['rcode'],
-    );
 
     $_arr_gatherResult['msg'] = $this->obj_lang->get($_arr_gatherResult['msg']);
 

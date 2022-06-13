@@ -809,6 +809,8 @@ class Article extends Ctrl {
       return $this->fetchJson($_arr_inputCover['msg'], $_arr_inputCover['rcode']);
     }
 
+    $_arr_articleRow = $this->mdl_article->read($_arr_inputCover['article_id']);
+
     if (!isset($this->groupAllow['article']['edit']) && !isset($this->adminLogged['admin_allow_cate'][$_arr_articleRow['article_cate_id']]['edit']) && !$this->isSuper) {
       return $this->fetchJson('You do not have permission', 'x120303');
     }

@@ -214,6 +214,7 @@ class Cate extends Model {
     $_str_tpl     = $this->configBase['site_tpl'];
 
     $_arr_cateRow = $this->readProcess($num_cateId);
+
     if ($_arr_cateRow['rcode'] == 'y250102' && $_arr_cateRow['cate_status'] == 'show') {
       $_str_cateTpl = $_arr_cateRow['cate_tpl'];
 
@@ -224,12 +225,7 @@ class Cate extends Model {
       $_str_cateTpl = $_str_tpl;
     }
 
-    if ($_str_cateTpl == '-1') {
-      $_str_cateTpl = $_str_tpl;
-    } else {
-      $_str_cateTpl = $_str_cateTpl;
-    }
-    if (Func::isEmpty($_str_cateTpl)) {
+    if ($_str_cateTpl == '-1' || Func::isEmpty($_str_cateTpl)) {
       $_str_cateTpl = $_str_tpl;
     }
 

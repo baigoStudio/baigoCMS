@@ -48,7 +48,7 @@ class Album extends Ctrl {
       return $this->fetchJson('Album is invalid', 'x060102');
     }
 
-    $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+    $_arr_attachRow = $this->mdl_attach->read($_arr_albumRow['spec_attach_id']);
 
     $_arr_return = array(
       'albumRow'   => $_arr_albumRow,

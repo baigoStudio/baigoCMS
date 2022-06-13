@@ -346,7 +346,7 @@ class Index {
 
     $_str_pathTpl = BG_TPL_INDEX . $_arr_configBase['site_tpl'] . DS;
 
-    $_obj_view->setPath($str_tplPath);
+    $_obj_view->setPath($_str_pathTpl);
 
     $_str_tplName = 'album' . DS . 'content';
 

@@ -35,8 +35,6 @@ class Call extends Ctrl {
       return $this->fetchJson('Missing ID', 'x170202', 400);
     }
 
-    $_str_callBack = $this->obj_request->get('callBack', 'int', 0);
-
     $_arr_callRow = $this->obj_call->get($_arr_search['id']);
 
     $_arr_callRow = Plugin::listen('filter_pub_call_show', $_arr_callRow);
