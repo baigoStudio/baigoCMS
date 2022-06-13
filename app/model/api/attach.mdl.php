@@ -11,20 +11,19 @@ use ginkgo\Func;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------栏目模型-------------*/
 class Attach extends Attach_Index {
 
-    function m_init() {
-        parent::m_init();
+  protected function m_init() {
+    parent::m_init();
 
-        $this->urlPrefix    = $this->obj_request->root(true) . $this->dirAttach;
+    $this->urlPrefix    = $this->obj_request->root(true) . $this->dirAttach;
 
-        if (!Func::isEmpty($this->configUpload['ftp_host']) && !Func::isEmpty($this->configUpload['url_prefix'])) {
-            $this->urlPrefix = Func::fixDs($this->configUpload['url_prefix'], '/');
-        }
+    if (Func::notEmpty($this->configUpload['ftp_host']) && Func::notEmpty($this->configUpload['url_prefix'])) {
+      $this->urlPrefix = Func::fixDs($this->configUpload['url_prefix'], '/');
     }
-
+  }
 }

@@ -1,20 +1,20 @@
 {
-    "name": "baigo-studio/baigo-cms",
-    "type": "project",
-    "keywords": [
-        "framework",
-        "baigo-cms",
-        "cms"
-    ],
-    "homepage": "http://www.baigo.net/cms/",
-    "license": "GPL-2",
-    "authors": [
-        {
-            "name": "fone",
-            "email": "fone@baigo.net"
-        }
-    ],
-    "require": {
-        "jaeger/querylist": "3.*.*"
+  "name": "baigo-studio/baigo-cms",
+  "type": "project",
+  "keywords": [
+    "framework",
+    "baigo-cms",
+    "cms"
+  ],
+  "homepage": "https://www.baigo.net/cms/",
+  "license": "GPL-2",
+  "authors": [
+    {
+      "name": "fone",
+      "email": "fone@baigo.net"
     }
+  ],
+  "require": {
+    "jaeger/querylist": "3.*.*"
+  }
 }

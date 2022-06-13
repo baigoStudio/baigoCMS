@@ -30,14 +30,14 @@ GET
 
 ``` javascript
 {
-    "specRow": {
-        "spec_id": "11", //专题 ID
-        "spec_name": "专题名称", //专题名称
-        "spec_status": "show", //状态
-        "spec_content": "专题内容", //内容
-        "spec_attach_id": "3517",
-        "rcode": "y180102" //返回代码
-    }
+  "specRow": {
+    "spec_id": "11", //专题 ID
+    "spec_name": "专题名称", //专题名称
+    "spec_status": "show", //状态
+    "spec_content": "专题内容", //内容
+    "spec_attach_id": "3517",
+    "rcode": "y180102" //返回代码
+  }
 }
 ```
 
@@ -87,4 +87,3 @@ GET
 | spec_status | string | pub 为发布，hide 为隐藏 |
 | spec_attach_id | int | 封面图片 ID | |
 | rcode | string | 返回码 |
-

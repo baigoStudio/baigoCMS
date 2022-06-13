@@ -10,7 +10,7 @@ use app\model\index\Article_Tag_View as Article_Tag_View_Index;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------文章模型-------------*/

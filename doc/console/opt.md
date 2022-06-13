@@ -95,30 +95,28 @@
 
 * 默认
 
-    使用 PHP 的 pathinfo 方式访问网站，URL 的形式为 http://server/index.php/article/show/id/123
+  使用 PHP 的 pathinfo 方式访问网站，URL 的形式为 http://server/index.php/article/show/id/123
 
-    * 优点：兼容性好；
-    * 缺点：URL 中包含类似 `index.php` 的文件名，对于搜索引擎的收录有一定影响。
-
+  * 优点：兼容性好；
+  * 缺点：URL 中包含类似 `index.php` 的文件名，对于搜索引擎的收录有一定影响。
 
 * 伪静态
 
-    使用友好的 URL 方式访问网站，URL 的形式为 http://server/article/123
+  使用友好的 URL 方式访问网站，URL 的形式为 http://server/article/123
 
-    在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，其他环境下的设置，请查看 ginkgo 文档的 [部署 -> URL 重写](//doc.baigo.net/ginkgo/quick/deploy/url_rewrite/)；
+  在 Apache 环境下，如支持 URL 重写，安装程序会自动帮您设置，其他环境下的设置，请查看 ginkgo 文档的 [部署 -> URL 重写](//doc.baigo.net/ginkgo/index/deploy/url_rewrite/)；
 
-    * 优点：URL 较为友好，有利于搜索引擎的收录；
-    * 缺点：因为需要服务器解析 URL，效率会有一些影响，且需要重新配置服务器。
-
+  * 优点：URL 较为友好，有利于搜索引擎的收录；
+  * 缺点：因为需要服务器解析 URL，效率会有一些影响，且需要重新配置服务器。
 
 * 纯静态
 
-    将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 http://server/article/123.html
+  将所有栏目、文章等内容生成为静态 HTML 文件，URL 的形式为 http://server/article/123.html
 
-    此方式需开启静态页面生成模块，开启方法请查看 [概况 -> 常见问题](../index/faq.md)；
+  此方式需开启静态页面生成模块，开启方法请查看 [概况 -> 常见问题](../index/faq.md)；
 
-    * 优点：效率最高，无数据库服务器压力，有利于搜索引擎的收录；
-    * 缺点：占用硬盘空间相对较多，页面需要定时生成。
+  * 优点：效率最高，无数据库服务器压力，有利于搜索引擎的收录；
+  * 缺点：占用硬盘空间相对较多，页面需要定时生成。
 
 ----------
 

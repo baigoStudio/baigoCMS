@@ -11,72 +11,72 @@ use ginkgo\Cache;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------栏目模型-------------*/
 class Call extends Call_Base {
 
-    protected $obj_cache;
+  protected $obj_cache;
 
-    function m_init() { //构造函数
-        parent::m_init();
+  protected function m_init() { //构造函数
+    parent::m_init();
 
-        $this->obj_cache  = Cache::instance();
+    $this->obj_cache  = Cache::instance();
+  }
+
+  public function cache($num_callId = 0) {
+    if ($num_callId > 0) {
+      $_str_cacheName = 'call_' . $num_callId;
+
+      if (!$this->obj_cache->check($_str_cacheName, true)) {
+        $this->cacheProcess($num_callId);
+      }
+    } else {
+      $_str_cacheName = 'call_lists';
+
+      if (!$this->obj_cache->check($_str_cacheName, true)) {
+        $this->cacheListsProcess();
+      }
     }
 
-    function cache($num_callId = 0) {
-        if ($num_callId > 0) {
-            $_str_cacheName = 'call_' . $num_callId;
+    $_arr_return = $this->obj_cache->read($_str_cacheName);
 
-            if (!$this->obj_cache->check($_str_cacheName, true)) {
-                $this->cacheProcess($num_callId);
-            }
-        } else {
-            $_str_cacheName = 'call_lists';
+    if ($num_callId > 0) {
+      if (!isset($_arr_return['rcode'])) {
+        $_arr_return['rcode'] = 'x170102';
+      }
 
-            if (!$this->obj_cache->check($_str_cacheName, true)) {
-                $this->cacheListsProcess();
-            }
-        }
-
-        $_arr_return = $this->obj_cache->read($_str_cacheName);
-
-        if ($num_callId > 0) {
-            if (!isset($_arr_return['rcode'])) {
-                $_arr_return['rcode'] = 'x170102';
-            }
-
-            if (!isset($_arr_return['msg'])) {
-                $_arr_return['msg'] = 'Call not found';
-            }
-        }
-
-        return $_arr_return;
+      if (!isset($_arr_return['msg'])) {
+        $_arr_return['msg'] = 'Call not found';
+      }
     }
 
+    return $_arr_return;
+  }
 
-    function cacheProcess($num_callId) {
-        $_return = 0;
-        $_arr_callRow = $this->read($num_callId);
 
-        //print_r($_arr_callRow);
+  public function cacheProcess($num_callId) {
+    $_return = 0;
+    $_arr_callRow = $this->read($num_callId);
 
-        if ($_arr_callRow['rcode'] == 'y170102') {
-            $_return = $this->obj_cache->write('call_' . $num_callId, $_arr_callRow);
-        }
+    //print_r($_arr_callRow);
 
-        return $_return;
+    if ($_arr_callRow['rcode'] == 'y170102') {
+      $_return = $this->obj_cache->write('call_' . $num_callId, $_arr_callRow);
     }
 
+    return $_return;
+  }
 
-    function cacheListsProcess() {
-        $_arr_search = array(
-            'status' => 'enable',
-        );
 
-        $_arr_callRows = $this->lists(array(1000, 'limit'), $_arr_search);
+  public function cacheListsProcess() {
+    $_arr_search = array(
+      'status' => 'enable',
+    );
 
-        return $this->obj_cache->write('call_lists', $_arr_callRows);
-    }
+    $_arr_callRows = $this->lists(array(1000, 'limit'), $_arr_search);
+
+    return $this->obj_cache->write('call_lists', $_arr_callRows);
+  }
 }

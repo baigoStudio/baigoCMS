@@ -28,16 +28,16 @@ GET
 
 ``` javascript
 {
-    "markRows": [
-        {
-            "mark_id": "3", //标记 ID
-            "mark_name": "推荐" //名称
-        },
-        {
-            "mark_id": "4", //标记 ID
-            "mark_name": "推荐到首页" //名称
-        }
-    ]
+  "markRows": [
+    {
+      "mark_id": "3", //标记 ID
+      "mark_name": "推荐" //名称
+    },
+    {
+      "mark_id": "4", //标记 ID
+      "mark_name": "推荐到首页" //名称
+    }
+  ]
 }
 ```
 

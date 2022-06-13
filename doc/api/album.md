@@ -30,14 +30,14 @@ GET
 
 ``` javascript
 {
-    "albumRow": {
-        "album_id": "11", //相册 ID
-        "album_name": "相册名称", //相册名称
-        "album_status": "show", //状态
-        "album_content": "相册内容", //内容
-        "album_attach_id": "3517",
-        "rcode": "y180102" //返回代码
-    }
+  "albumRow": {
+    "album_id": "11", //相册 ID
+    "album_name": "相册名称", //相册名称
+    "album_status": "show", //状态
+    "album_content": "相册内容", //内容
+    "album_attach_id": "3517",
+    "rcode": "y180102" //返回代码
+  }
 }
 ```
 

@@ -10,396 +10,417 @@ use app\classes\console\Ctrl;
 use ginkgo\Loader;
 use ginkgo\Plugin;
 use ginkgo\File;
+use ginkgo\Arrays;
+use ginkgo\Func;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 class Spec extends Ctrl {
 
-    protected function c_init($param = array()) {
-        parent::c_init();
+  protected function c_init($param = array()) {
+    parent::c_init();
 
-        $this->obj_qlist       = Loader::classes('Qlist');
+    $this->obj_qlist       = Loader::classes('Qlist');
 
-        $this->mdl_attach      = Loader::model('Attach');
-        $this->mdl_spec        = Loader::model('Spec');
+    $this->mdl_attach      = Loader::model('Attach');
+    $this->mdl_spec        = Loader::model('Spec');
 
-        $this->generalData['status']    = $this->mdl_spec->arr_status;
+    $_str_hrefBase = $this->hrefBase . 'spec/';
+
+    $_arr_hrefRow = array(
+      'index'         => $_str_hrefBase . 'index/',
+      'add'           => $_str_hrefBase . 'form/',
+      'show'          => $_str_hrefBase . 'show/id/',
+      'edit'          => $_str_hrefBase . 'form/id/',
+      'submit'        => $_str_hrefBase . 'submit/',
+      'status'        => $_str_hrefBase . 'status/',
+      'delete'        => $_str_hrefBase . 'delete/',
+      'attach'        => $_str_hrefBase . 'attach/id/',
+      'cover'         => $_str_hrefBase . 'cover/',
+      'spec_belong'   => $this->url['route_console'] . 'spec_belong/index/id/',
+      'album-choose'  => $this->url['route_console'] . 'album/choose/',
+      'attach-choose' => $this->url['route_console'] . 'attach/choose/',
+      'attach-cover'  => $this->url['route_console'] . 'attach/choose/target/spec_cover/spec/',
+      'attach-index'  => $this->url['route_console'] . 'attach/index/ids/',
+      'attach-show'   => $this->url['route_console'] . 'attach/show/id/',
+    );
+
+    $this->generalData['status']    = $this->mdl_spec->arr_status;
+    $this->generalData['hrefRow']   = array_replace_recursive($this->generalData['hrefRow'], $_arr_hrefRow);
+  }
+
+
+  public function index() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
-
-    function index() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
-            return $this->error('You do not have permission', 'x180301');
-        }
-
-        $_arr_searchParam = array(
-            'key'       => array('str', ''),
-            'status'    => array('str', ''),
-        );
-
-        $_arr_search = $this->obj_request->param($_arr_searchParam);
-
-        $_arr_getData   = $this->mdl_spec->lists($this->config['var_default']['perpage'], $_arr_search); //列出
-
-        $_arr_tplData = array(
-            'search'     => $_arr_search,
-            'pageRow'    => $_arr_getData['pageRow'],
-            'specRows'   => $_arr_getData['dataRows'],
-            'token'      => $this->obj_request->token(),
-        );
-
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        $this->assign($_arr_tpl);
-
-        return $this->fetch();
+    if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
+      return $this->error('You do not have permission', 'x180301');
     }
 
+    $_arr_searchParam = array(
+      'key'       => array('str', ''),
+      'status'    => array('str', ''),
+    );
 
-    function typeahead() {
-        $_mix_init = $this->init();
+    $_arr_search  = $this->obj_request->param($_arr_searchParam);
 
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_getData = $this->mdl_spec->lists($this->config['var_default']['perpage'], $_arr_search); //列出
 
-        if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
-            return $this->fetchJson('You do not have permission', 'x180301');
-        }
+    $_arr_tplData = array(
+      'search'     => $_arr_search,
+      'pageRow'    => $_arr_getData['pageRow'],
+      'specRows'   => $_arr_getData['dataRows'],
+      'token'      => $this->obj_request->token(),
+    );
 
-        $_arr_searchParam = array(
-            'key' => array('str', ''),
-        );
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_arr_search     = $this->obj_request->param($_arr_searchParam);
+    $this->assign($_arr_tpl);
 
-        $_arr_getData   = $this->mdl_spec->lists(array(1000, 'limit'), $_arr_search); //列出
+    return $this->fetch();
+  }
 
-        return $this->json($_arr_getData);
+
+  public function typeahead() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
     }
 
-
-    function show() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
-            return $this->error('You do not have permission', 'x180301');
-        }
-
-        $_num_specId = 0;
-
-        if (isset($this->param['id'])) {
-            $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
-        }
-
-        if ($_num_specId < 1) {
-            return $this->error('Missing ID', 'x180202');
-        }
-
-        $_arr_specRow = $this->mdl_spec->read($_num_specId);
-
-        if ($_arr_specRow['rcode'] != 'y180102') {
-            return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
-        }
-
-        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
-
-        $_arr_tplData = array(
-            'specRow'   => $_arr_specRow,
-            'attachRow' => $_arr_attachRow,
-        );
-
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        $this->assign($_arr_tpl);
-
-        return $this->fetch();
+    if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
+      return $this->fetchJson('You do not have permission', 'x180301');
     }
 
+    $_arr_searchParam = array(
+      'key' => array('str', ''),
+    );
 
-    function form() {
-        $_mix_init = $this->init();
+    $_arr_search    = $this->obj_request->param($_arr_searchParam);
 
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_getData   = $this->mdl_spec->lists(array(1000, 'limit'), $_arr_search); //列出
 
-        $_num_specId = 0;
-
-        if (isset($this->param['id'])) {
-            $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
-        }
+    return $this->json($_arr_getData);
+  }
 
 
-        if ($_num_specId > 0) {
-            if (!isset($this->specAllow['spec']['edit']) && !$this->isSuper) { //判断权限
-                return $this->error('You do not have permission', 'x180303');
-            }
+  public function show() {
+    $_mix_init = $this->init();
 
-            $_arr_specRow = $this->mdl_spec->read($_num_specId);
-
-            if ($_arr_specRow['rcode'] != 'y180102') {
-                return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
-            }
-
-            $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
-        } else {
-            if (!isset($this->groupAllow['spec']['add']) && !$this->isSuper) { //判断权限
-                return $this->error('You do not have permission', 'x180302');
-            }
-
-            $_arr_specRow = array(
-                'spec_id'                   => 0,
-                'spec_name'                 => '',
-                'spec_status'               => $this->mdl_spec->arr_status[0],
-                'spec_content'              => '',
-                'spec_tpl'                  => '',
-                'spec_time_update_format'   => $this->mdl_spec->dateFormat(),
-                'spec_attach_id'            => 0,
-            );
-
-            $_arr_attachRow = array(
-                'attach_thumb' => '',
-            );
-        }
-
-        $_arr_tplRows  = File::instance()->dirList(BG_TPL_SPEC);
-
-        foreach ($_arr_tplRows as $_key=>$_value) {
-            $_arr_tplRows[$_key]['name_s'] = basename($_value['name'], GK_EXT_TPL);
-        }
-
-        $_arr_tplData = array(
-            'tplRows'   => $_arr_tplRows,
-            'specRow'   => $_arr_specRow,
-            'attachRow' => $_arr_attachRow,
-            'token'     => $this->obj_request->token(),
-        );
-
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        $this->assign($_arr_tpl);
-
-        return $this->fetch();
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
-
-    function submit() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        if (!$this->isAjaxPost) {
-            return $this->fetchJson('Access denied', '', 405);
-        }
-
-        $_arr_inputSubmit = $this->mdl_spec->inputSubmit();
-
-        if ($_arr_inputSubmit['rcode'] != 'y180201') {
-            return $this->fetchJson($_arr_inputSubmit['msg'], $_arr_inputSubmit['rcode']);
-        }
-
-        if ($_arr_inputSubmit['spec_id'] > 0) {
-            if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) {
-                return $this->fetchJson('You do not have permission', 'x180303');
-            }
-        } else {
-            if (!isset($this->groupAllow['spec']['add']) && !$this->isSuper) {
-                return $this->fetchJson('You do not have permission', 'x180302');
-            }
-        }
-
-        if ($_arr_inputSubmit['spec_attach_id'] < 1) {
-            $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['spec_content']);
-
-            if ($_arr_attachIds[0] > 0) {
-                $this->mdl_spec->inputSubmit['spec_attach_id'] = $_arr_attachIds[0];
-            }
-        }
-
-        $_arr_submitResult = $this->mdl_spec->submit();
-
-        $_arr_submitResult['msg'] = $this->obj_lang->get($_arr_submitResult['msg']);
-
-        return $this->fetchJson($_arr_submitResult['msg'], $_arr_submitResult['rcode']);
+    if (!isset($this->groupAllow['spec']['browse']) && !$this->isSuper) { //判断权限
+      return $this->error('You do not have permission', 'x180301');
     }
 
+    $_num_specId = 0;
 
-    function attach() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        $_num_specId = 0;
-
-        if (isset($this->param['id'])) {
-            $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
-        }
-
-        if ($_num_specId < 1) {
-            return $this->error('Missing ID', 'x180202');
-        }
-
-        $_arr_specRow = $this->mdl_spec->read($_num_specId);
-
-        if ($_arr_specRow['rcode'] != 'y180102') {
-            return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
-        }
-
-        if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) { //判断权限
-            return $this->error('You do not have permission', 'x180301');
-        }
-
-        $_arr_search = array(
-            'box'           => 'normal',
-            'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_specRow['spec_content']),
-        );
-
-        if ($_arr_specRow['spec_attach_id'] > 0) {
-            $_arr_search['attach_ids'][] = $_arr_specRow['spec_attach_id'];
-        }
-
-        $_arr_getData   = $this->mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
-
-        $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
-
-        $_arr_tplData = array(
-            'ids'           => implode(',', $_arr_search['attach_ids']),
-            'specRow'       => $_arr_specRow,
-            'attachRows'    => $_arr_getData,
-            'attachRow'     => $_arr_attachRow,
-            'token'         => $this->obj_request->token(),
-        );
-
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        $this->assign($_arr_tpl);
-
-        return $this->fetch();
+    if (isset($this->param['id'])) {
+      $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
     }
 
-
-    function cover() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        if (!$this->isAjaxPost) {
-            return $this->fetchJson('Access denied', '', 405);
-        }
-
-        if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) {
-            return $this->fetchJson('You do not have permission', 'x180303');
-        }
-
-        $_arr_inputCover = $this->mdl_spec->inputCover();
-
-        if ($_arr_inputCover['rcode'] != 'y180201') {
-            return $this->fetchJson($_arr_inputCover['msg'], $_arr_inputCover['rcode']);
-        }
-
-        $_arr_attachRow = $this->mdl_attach->check($_arr_inputCover['attach_id']);
-
-        if ($_arr_attachRow['rcode'] != 'y070102') {
-            return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);
-        }
-
-        $_arr_coverResult   = $this->mdl_spec->cover();
-
-        return $this->fetchJson($_arr_coverResult['msg'], $_arr_coverResult['rcode']);
+    if ($_num_specId < 1) {
+      return $this->error('Missing ID', 'x180202');
     }
 
+    $_arr_specRow = $this->mdl_spec->read($_num_specId);
 
-    function delete() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        if (!$this->isAjaxPost) {
-            return $this->fetchJson('Access denied', '', 405);
-        }
-
-        if (!isset($this->groupAllow['spec']['delete']) && !$this->isSuper) { //判断权限
-            return $this->fetchJson('You do not have permission', 'x180304');
-        }
-
-        $_arr_inputDelete = $this->mdl_spec->inputDelete();
-
-        if ($_arr_inputDelete['rcode'] != 'y180201') {
-            return $this->fetchJson($_arr_inputDelete['msg'], $_arr_inputDelete['rcode']);
-        }
-
-        $_arr_return = array(
-            'spec_ids'      => $_arr_inputDelete['spec_ids'],
-        );
-
-        Plugin::listen('action_console_spec_delete', $_arr_return); //删除链接时触发
-
-        $_arr_deleteResult = $this->mdl_spec->delete();
-
-        $_arr_langReplace = array(
-            'count' => $_arr_deleteResult['count'],
-        );
-
-        return $this->fetchJson($_arr_deleteResult['msg'], $_arr_deleteResult['rcode'], '', $_arr_langReplace);
+    if ($_arr_specRow['rcode'] != 'y180102') {
+      return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
     }
 
+    $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
 
-    function status() {
-        $_mix_init = $this->init();
+    $_arr_tplData = array(
+      'specRow'   => $_arr_specRow,
+      'attachRow' => $_arr_attachRow,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        if (!$this->isAjaxPost) {
-            return $this->fetchJson('Access denied', '', 405);
-        }
+    $this->assign($_arr_tpl);
 
-        if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) { //判断权限
-            return $this->fetchJson('You do not have permission', 'x180303');
-        }
+    return $this->fetch();
+  }
 
-        $_arr_inputStatus = $this->mdl_spec->inputStatus();
 
-        if ($_arr_inputStatus['rcode'] != 'y180201') {
-            return $this->fetchJson($_arr_inputStatus['msg'], $_arr_inputStatus['rcode']);
-        }
+  public function form() {
+    $_mix_init = $this->init();
 
-        $_arr_return = array(
-            'spec_ids'      => $_arr_inputStatus['spec_ids'],
-            'spec_status'   => $_arr_inputStatus['act'],
-        );
-
-        Plugin::listen('action_console_spec_status', $_arr_return); //删除链接时触发
-
-        $_arr_statusResult = $this->mdl_spec->status();
-
-        $_arr_langReplace = array(
-            'count' => $_arr_statusResult['count'],
-        );
-
-        return $this->fetchJson($_arr_statusResult['msg'], $_arr_statusResult['rcode'], '', $_arr_langReplace);
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
+
+    $_num_specId = 0;
+
+    if (isset($this->param['id'])) {
+      $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
+    }
+
+    $_arr_specRow = $this->mdl_spec->read($_num_specId);
+
+    if ($_num_specId > 0) {
+      if (!isset($this->specAllow['spec']['edit']) && !$this->isSuper) { //判断权限
+        return $this->error('You do not have permission', 'x180303');
+      }
+      if ($_arr_specRow['rcode'] != 'y180102') {
+        return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
+      }
+
+      $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+    } else {
+      if (!isset($this->groupAllow['spec']['add']) && !$this->isSuper) { //判断权限
+        return $this->error('You do not have permission', 'x180302');
+      }
+
+      $_arr_attachRow = array(
+        'attach_thumb' => '',
+      );
+    }
+
+    $_arr_tplRows  = File::instance()->dirList(BG_TPL_SPEC);
+
+    foreach ($_arr_tplRows as $_key=>&$_value) {
+      $_value['name_s'] = basename($_value['name'], GK_EXT_TPL);
+    }
+
+    $_arr_tplData = array(
+      'tplRows'   => $_arr_tplRows,
+      'specRow'   => $_arr_specRow,
+      'attachRow' => $_arr_attachRow,
+      'token'     => $this->obj_request->token(),
+    );
+
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
+
+    $this->assign($_arr_tpl);
+
+    return $this->fetch();
+  }
+
+
+  public function submit() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    if (!$this->isAjaxPost) {
+      return $this->fetchJson('Access denied', '', 405);
+    }
+
+    $_arr_inputSubmit = $this->mdl_spec->inputSubmit();
+
+    if ($_arr_inputSubmit['rcode'] != 'y180201') {
+      return $this->fetchJson($_arr_inputSubmit['msg'], $_arr_inputSubmit['rcode']);
+    }
+
+    if ($_arr_inputSubmit['spec_id'] > 0) {
+      if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) {
+        return $this->fetchJson('You do not have permission', 'x180303');
+      }
+    } else {
+      if (!isset($this->groupAllow['spec']['add']) && !$this->isSuper) {
+        return $this->fetchJson('You do not have permission', 'x180302');
+      }
+    }
+
+    if ($_arr_inputSubmit['spec_attach_id'] < 1) {
+      $_arr_attachIds = $this->obj_qlist->getAttachIds($_arr_inputSubmit['spec_content']);
+
+      if ($_arr_attachIds[0] > 0) {
+        $this->mdl_spec->inputSubmit['spec_attach_id'] = $_arr_attachIds[0];
+      }
+    }
+
+    $_arr_submitResult = $this->mdl_spec->submit();
+
+    $_arr_submitResult['msg'] = $this->obj_lang->get($_arr_submitResult['msg']);
+
+    return $this->fetchJson($_arr_submitResult['msg'], $_arr_submitResult['rcode']);
+  }
+
+
+  public function attach() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    $_num_specId = 0;
+
+    if (isset($this->param['id'])) {
+      $_num_specId = $this->obj_request->input($this->param['id'], 'int', 0);
+    }
+
+    if ($_num_specId < 1) {
+      return $this->error('Missing ID', 'x180202');
+    }
+
+    $_arr_specRow = $this->mdl_spec->read($_num_specId);
+
+    if ($_arr_specRow['rcode'] != 'y180102') {
+      return $this->error($_arr_specRow['msg'], $_arr_specRow['rcode']);
+    }
+
+    if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) { //判断权限
+      return $this->error('You do not have permission', 'x180301');
+    }
+
+    $_arr_search = array(
+      'box'           => 'normal',
+      'attach_ids'    => $this->obj_qlist->getAttachIds($_arr_specRow['spec_content']),
+    );
+
+    if ($_arr_specRow['spec_attach_id'] > 0) {
+      $_arr_search['attach_ids'][] = $_arr_specRow['spec_attach_id'];
+    }
+
+    $_arr_search['attach_ids'] = Arrays::unique($_arr_search['attach_ids'], true);
+
+    $_arr_attachRows   = array();
+
+    $_arr_attachRows   = array();
+
+    if (Func::notEmpty($_arr_search['attach_ids'])) {
+      $_arr_attachRows   = $this->mdl_attach->lists(array(1000, 'limit'), $_arr_search); //列出
+    }
+
+    $_arr_attachRow = $this->mdl_attach->read($_arr_specRow['spec_attach_id']);
+
+    //print_r($_arr_attachRow);
+
+    $_arr_tplData = array(
+      'ids'           => implode(',', $_arr_search['attach_ids']),
+      'specRow'       => $_arr_specRow,
+      'attachRows'    => $_arr_attachRows,
+      'attachRow'     => $_arr_attachRow,
+      'token'         => $this->obj_request->token(),
+    );
+
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
+
+    $this->assign($_arr_tpl);
+
+    return $this->fetch();
+  }
+
+
+  public function cover() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    if (!$this->isAjaxPost) {
+      return $this->fetchJson('Access denied', '', 405);
+    }
+
+    if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) {
+      return $this->fetchJson('You do not have permission', 'x180303');
+    }
+
+    $_arr_inputCover = $this->mdl_spec->inputCover();
+
+    if ($_arr_inputCover['rcode'] != 'y180201') {
+      return $this->fetchJson($_arr_inputCover['msg'], $_arr_inputCover['rcode']);
+    }
+
+    $_arr_attachRow = $this->mdl_attach->check($_arr_inputCover['attach_id']);
+
+    if ($_arr_attachRow['rcode'] != 'y070102') {
+      return $this->fetchJson($_arr_attachRow['msg'], $_arr_attachRow['rcode']);
+    }
+
+    $_arr_coverResult   = $this->mdl_spec->cover();
+
+    return $this->fetchJson($_arr_coverResult['msg'], $_arr_coverResult['rcode']);
+  }
+
+
+  public function delete() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    if (!$this->isAjaxPost) {
+      return $this->fetchJson('Access denied', '', 405);
+    }
+
+    if (!isset($this->groupAllow['spec']['delete']) && !$this->isSuper) { //判断权限
+      return $this->fetchJson('You do not have permission', 'x180304');
+    }
+
+    $_arr_inputDelete = $this->mdl_spec->inputDelete();
+
+    if ($_arr_inputDelete['rcode'] != 'y180201') {
+      return $this->fetchJson($_arr_inputDelete['msg'], $_arr_inputDelete['rcode']);
+    }
+
+    $_arr_return = array(
+      'spec_ids'      => $_arr_inputDelete['spec_ids'],
+    );
+
+    Plugin::listen('action_console_spec_delete', $_arr_return); //删除链接时触发
+
+    $_arr_deleteResult = $this->mdl_spec->delete();
+
+    $_arr_langReplace = array(
+      'count' => $_arr_deleteResult['count'],
+    );
+
+    return $this->fetchJson($_arr_deleteResult['msg'], $_arr_deleteResult['rcode'], '', $_arr_langReplace);
+  }
+
+
+  public function status() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    if (!$this->isAjaxPost) {
+      return $this->fetchJson('Access denied', '', 405);
+    }
+
+    if (!isset($this->groupAllow['spec']['edit']) && !$this->isSuper) { //判断权限
+      return $this->fetchJson('You do not have permission', 'x180303');
+    }
+
+    $_arr_inputStatus = $this->mdl_spec->inputStatus();
+
+    if ($_arr_inputStatus['rcode'] != 'y180201') {
+      return $this->fetchJson($_arr_inputStatus['msg'], $_arr_inputStatus['rcode']);
+    }
+
+    $_arr_return = array(
+      'spec_ids'      => $_arr_inputStatus['spec_ids'],
+      'spec_status'   => $_arr_inputStatus['act'],
+    );
+
+    Plugin::listen('action_console_spec_status', $_arr_return); //删除链接时触发
+
+    $_arr_statusResult = $this->mdl_spec->status();
+
+    $_arr_langReplace = array(
+      'count' => $_arr_statusResult['count'],
+    );
+
+    return $this->fetchJson($_arr_statusResult['msg'], $_arr_statusResult['rcode'], '', $_arr_langReplace);
+  }
 }

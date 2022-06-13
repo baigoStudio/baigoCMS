@@ -34,7 +34,6 @@ baigo CMS 采用 MVC（Model-View-Controller）模式开发，各个模块相对
 
 `3.0` 起，基于 baigo 自主开发的框架 —— ginkgo 进行开发。
 
-
 * [项目主页](https://www.baigo.net/cms/)
 * [演示](https://demo.baigo.net/cms/index.php/console/)
 * [下载](https://www.baigo.net/cate/baigoCMS/download/)

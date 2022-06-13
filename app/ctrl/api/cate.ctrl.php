@@ -12,73 +12,73 @@ use ginkgo\Plugin;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 
 /*-------------文章类-------------*/
 class Cate extends Ctrl {
 
-    protected function c_init($param = array()) { //构造函数
-        parent::c_init();
+  protected function c_init($param = array()) { //构造函数
+    parent::c_init();
 
-        $this->mdl_cate     = Loader::model('Cate');
+    $this->mdl_cate     = Loader::model('Cate');
+  }
+
+
+  public function read() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_num_cateId = $this->obj_request->get('cate_id', 'int', 0);
 
-    function read() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        $_num_cateId = $this->obj_request->get('cate_id', 'int', 0);
-
-        if ($_num_cateId < 1) {
-            return $this->fetchJson('Missing ID', 'x250202', 400);
-        }
-
-        $_arr_cateRow = $this->obj_index->cateRead($_num_cateId);
-
-        if ($_arr_cateRow['rcode'] != 'y250102') {
-            return $this->fetchJson($_arr_cateRow['msg'], $_arr_cateRow['rcode'], 404);
-        }
-
-        $_arr_cateRow['cate_content'] = $this->obj_index->linkProcess($_arr_cateRow['cate_content'], $_arr_cateRow['cate_ids']);
-
-        $_arr_return = array(
-            'cateRow'   => $_arr_cateRow,
-        );
-
-        $_arr_return  = Plugin::listen('filter_api_cate_read', $_arr_return); //编辑文章时触发
-
-        return $this->json($_arr_return);
+    if ($_num_cateId < 1) {
+      return $this->fetchJson('Missing ID', 'x250202', 400);
     }
 
+    $_arr_cateRow = $this->obj_index->cateRead($_num_cateId);
 
-    function tree() {
-        $_mix_init = $this->init();
-
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        $_arr_searchParam = array(
-            'parent_id' => array('int', 0),
-        );
-
-        $_arr_search = $this->obj_request->get($_arr_searchParam);
-        $_arr_search['status'] = 'show';
-
-        $_arr_cateTree    = $this->mdl_cate->listsTree($_arr_search);
-
-        $_arr_return = array(
-            'cate_tree'   => $_arr_cateTree,
-        );
-
-        $_arr_return   = Plugin::listen('filter_api_cate_tree', $_arr_return); //编辑文章时触发
-
-        return $this->json($_arr_return);
+    if ($_arr_cateRow['rcode'] != 'y250102') {
+      return $this->fetchJson($_arr_cateRow['msg'], $_arr_cateRow['rcode'], 404);
     }
+
+    $_arr_cateRow['cate_content'] = $this->obj_index->linkProcess($_arr_cateRow['cate_content'], $_arr_cateRow['cate_ids']);
+
+    $_arr_return = array(
+      'cateRow'   => $_arr_cateRow,
+    );
+
+    $_arr_return  = Plugin::listen('filter_api_cate_read', $_arr_return); //编辑文章时触发
+
+    return $this->json($_arr_return);
+  }
+
+
+  public function tree() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
+    }
+
+    $_arr_searchParam = array(
+      'parent_id' => array('int', 0),
+    );
+
+    $_arr_search = $this->obj_request->get($_arr_searchParam);
+    $_arr_search['status'] = 'show';
+
+    $_arr_cateTree    = $this->mdl_cate->listsTree($_arr_search);
+
+    $_arr_return = array(
+      'cate_tree'   => $_arr_cateTree,
+    );
+
+    $_arr_return   = Plugin::listen('filter_api_cate_tree', $_arr_return); //编辑文章时触发
+
+    return $this->json($_arr_return);
+  }
 }

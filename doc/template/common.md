@@ -50,7 +50,7 @@
 <?php echo $request->cookie('name'); ?>  // 输出 $_COOKIE['name'] 变量
 ```
 
-支持输出 `$_SERVER`、`$_POST`、`$_GET`、`$_REQUEST`、`$_SESSION` 和 `$_COOKIE` 变量，详情请查看 ginkgo 文档的 [请求 -> 输入变量](//doc.baigo.net/ginkgo/quick/request/input)
+支持输出 `$_SERVER`、`$_POST`、`$_GET`、`$_REQUEST`、`$_SESSION` 和 `$_COOKIE` 变量，详情请查看 ginkgo 文档的 [请求 -> 输入变量](//doc.baigo.net/ginkgo/index/request/input)
 
 ----------
 
@@ -73,79 +73,79 @@
 
 ``` php
 array(
-    1 => array(
-        'cate_id'           => 1, // ID
-        'cate_name'         => 'baigo', // 名称
-        'cate_alias'        => 'baigo',
-        'cate_content'      => 'nickname',
-        'cate_status'       => 'wait',
+  1 => array(
+    'cate_id'           => 1, // ID
+    'cate_name'         => 'baigo', // 名称
+    'cate_alias'        => 'baigo',
+    'cate_content'      => 'nickname',
+    'cate_status'       => 'wait',
+    'cate_link'         => '',
+    'cate_parent_id'    => 0,
+    'cate_level'        => 1, // 栏目层级
+    'cate_childs'       => array( // 子栏目
+      31 => array(
+        'cate_id'           => 31,
+        'cate_name'         => 'gh',
         'cate_link'         => '',
-        'cate_parent_id'    => 0,
-        'cate_level'        => 1, // 栏目层级
-        'cate_childs'       => array( // 子栏目
-            31 => array(
-                'cate_id'           => 31,
-                'cate_name'         => 'gh',
-                'cate_link'         => '',
-                'cate_alias'        => '',
-                'cate_status'       => 'show',
-                'cate_parent_id'    => 1,
-                'cate_prefix'       => '',
-                'cate_perpage'      => 50,
-                'cate_level'        => 2,
-                'cate_childs'       => array(),
-            ),
-            27 => array(
-                'cate_id'           => 27,
-                'cate_name'         => 'gh',
-                'cate_link'         => '',
-                'cate_alias'        => 'hhhhhhhh',
-                'cate_status'       => 'show',
-                'cate_parent_id'    => 1,
-                'cate_prefix'       => '',
-                'cate_perpage'      => 50,
-                'cate_level'        => 2,
-                'cate_childs'       => array(
-                    26 => array(
-                        'cate_id'           => 26,
-                        'cate_name'         => 'gh',
-                        'cate_link'         => '',
-                        'cate_alias'        => 'hhhhhhhh',
-                        'cate_status'       => 'show',
-                        'cate_parent_id'    => 27,
-                        'cate_prefix'       => '',
-                        'cate_perpage'      => 50',
-                        'cate_level'        => 3,
-                        'cate_childs'       => array()
-                    )
-                )
-            )
-        )
-    ),
-    2 => array(
-        'cate_id'           => 2, // ID
-        'cate_name'         => 'baigo', // 名称
-        'cate_alias'        => 'baigo',
-        'cate_content'      => 'nickname',
-        'cate_status'       => 'wait',
+        'cate_alias'        => '',
+        'cate_status'       => 'show',
+        'cate_parent_id'    => 1,
+        'cate_prefix'       => '',
+        'cate_perpage'      => 50,
+        'cate_level'        => 2,
+        'cate_childs'       => array(),
+      ),
+      27 => array(
+        'cate_id'           => 27,
+        'cate_name'         => 'gh',
         'cate_link'         => '',
-        'cate_parent_id'    => 0,
-        'cate_level'        => 1, // 栏目层级
-        'cate_childs'       => array( // 子栏目
-            30 => array(
-                'cate_id'           => 30,
-                'cate_name'         => 'gh',
-                'cate_link'         => '',
-                'cate_alias'        => '',
-                'cate_status'       => 'show',
-                'cate_parent_id'    => 1,
-                'cate_prefix'       => '',
-                'cate_perpage'      => 50,
-                'cate_level'        => 2,
-                'cate_childs'       => array(),
-            )
+        'cate_alias'        => 'hhhhhhhh',
+        'cate_status'       => 'show',
+        'cate_parent_id'    => 1,
+        'cate_prefix'       => '',
+        'cate_perpage'      => 50,
+        'cate_level'        => 2,
+        'cate_childs'       => array(
+          26 => array(
+            'cate_id'           => 26,
+            'cate_name'         => 'gh',
+            'cate_link'         => '',
+            'cate_alias'        => 'hhhhhhhh',
+            'cate_status'       => 'show',
+            'cate_parent_id'    => 27,
+            'cate_prefix'       => '',
+            'cate_perpage'      => 50',
+            'cate_level'        => 3,
+            'cate_childs'       => array()
+          )
         )
+      )
     )
+  ),
+  2 => array(
+    'cate_id'           => 2, // ID
+    'cate_name'         => 'baigo', // 名称
+    'cate_alias'        => 'baigo',
+    'cate_content'      => 'nickname',
+    'cate_status'       => 'wait',
+    'cate_link'         => '',
+    'cate_parent_id'    => 0,
+    'cate_level'        => 1, // 栏目层级
+    'cate_childs'       => array( // 子栏目
+      30 => array(
+        'cate_id'           => 30,
+        'cate_name'         => 'gh',
+        'cate_link'         => '',
+        'cate_alias'        => '',
+        'cate_status'       => 'show',
+        'cate_parent_id'    => 1,
+        'cate_prefix'       => '',
+        'cate_perpage'      => 50,
+        'cate_level'        => 2,
+        'cate_childs'       => array(),
+      )
+    )
+  )
 )
 ```
 
@@ -157,20 +157,19 @@ array(
 
 ``` php
 array(
-    array(
-        'custom_id' => '4', //字段 ID
-        'custom_name' => '尺寸', //名称
-        'custom_parent_id' => '0', //隶属字段 ID
-        'custom_cate_id' => '0', //隶属栏目 ID
-        'custom_childs' => array( //子字段
-            array(
-                'custom_id' => '5',
-                'custom_name' => '长',
-                'custom_parent_id' => '4',
-                'custom_cate_id' => '2'
-            )
-        )
+  array(
+    'custom_id' => '4', //字段 ID
+    'custom_name' => '尺寸', //名称
+    'custom_parent_id' => '0', //隶属字段 ID
+    'custom_cate_id' => '0', //隶属栏目 ID
+    'custom_childs' => array( //子字段
+      array(
+        'custom_id' => '5',
+        'custom_name' => '长',
+        'custom_parent_id' => '4',
+        'custom_cate_id' => '2'
+      )
     )
+  )
 )
-
 ```

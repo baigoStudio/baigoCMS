@@ -42,15 +42,15 @@
 | spec_content | string | 专题内容 |
 | spec_status | string | 状态 pub 为发布，hide 为隐藏 |
 | rcode | string | 返回码 |
- 
+
 数据示例
 
 ``` php
 array(
-    'spec_id'       => 62,
-    'spec_name'     => '专题名称',
-    'spec_content'  => '专题内容',
-    'spec_status'   => 'pub',
-    'rcode'         => 'y120102'
+  'spec_id'       => 62,
+  'spec_name'     => '专题名称',
+  'spec_content'  => '专题内容',
+  'spec_status'   => 'pub',
+  'rcode'         => 'y120102'
 );
 ```

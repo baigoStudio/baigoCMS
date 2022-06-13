@@ -6,16 +6,17 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 define('PRD_CMS_NAME', 'baigo CMS');
-define('PRD_CMS_URL', 'http://www.baigo.net/cms/');
-define('PRD_CMS_VER', '3.0-alpha-2');
-define('PRD_CMS_PUB', 20210720);
-define('PRD_CMS_HELP', 'http://doc.baigo.net/cms/');
-define('PRD_VER_CHECK', 'http://www.baigo.net/ver_check/check.php');
+define('PRD_CMS_URL', 'https://www.baigo.net/cms/');
+define('PRD_CMS_VER', '3.0');
+define('PRD_CMS_PUB', 20220613);
+define('PRD_CMS_HELP', 'https://doc.baigo.net/cms/');
+define('PRD_VER_CHECK', 'https://www.baigo.net/ver_check/check.php');
 
+defined('BG_EXT_SVG') || define('BG_EXT_SVG', '.svg'); //SVG
 defined('BG_TPL_INDEX') || define('BG_TPL_INDEX', GK_APP_TPL . 'index' . DS); //前台模板
 defined('BG_TPL_CALL') || define('BG_TPL_CALL', GK_APP_TPL . 'call' . DS); //调用模板
 

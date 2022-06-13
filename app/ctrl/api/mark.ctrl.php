@@ -11,32 +11,32 @@ use ginkgo\Loader;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------文章类-------------*/
 class Mark extends Ctrl {
 
-    protected function c_init($param = array()) { //构造函数
-        parent::c_init();
+  protected function c_init($param = array()) { //构造函数
+    parent::c_init();
 
-        $this->mdl_mark     = Loader::model('Mark');
+    $this->mdl_mark     = Loader::model('Mark');
+  }
+
+
+  public function lists() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_markRows   = $this->mdl_mark->lists(array(1000, 'limit'));
 
-    function lists() {
-        $_mix_init = $this->init();
+    $_arr_return = array(
+      'markRows'   => $_arr_markRows,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        $_arr_markRows   = $this->mdl_mark->lists(array(1000, 'limit'));
-
-        $_arr_return = array(
-            'markRows'   => $_arr_markRows,
-        );
-
-        return $this->json($_arr_return);
-    }
+    return $this->json($_arr_return);
+  }
 }

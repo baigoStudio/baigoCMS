@@ -6,13 +6,13 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Access denied'         => '拒绝访问',
-    'Album not found'       => '相册不存在',
-    'Album is invalid'      => '相册无效',
-    'Missing ID'            => '无法获取 ID',
+  'Access denied'         => '拒绝访问',
+  'Album not found'       => '相册不存在',
+  'Album is invalid'      => '相册无效',
+  'Missing ID'            => '无法获取 ID',
 );

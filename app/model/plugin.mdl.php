@@ -7,16 +7,27 @@
 namespace app\model;
 
 use ginkgo\Config;
+use ginkgo\Loader;
+use ginkgo\Request;
+use ginkgo\File;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------插件模型-------------*/
 class Plugin {
 
-    function __construct() { //构造函数
-        $this->configPlugin = Config::get('plugin');
-    }
+  protected $configPlugin = array();
+  protected $obj_request;
+  protected $vld_opt;
+
+  public function __construct() { //构造函数
+    $this->configPlugin = Config::get('plugin');
+
+    $this->obj_request  = Request::instance();
+    $this->obj_file     = File::instance();
+    $this->vld_plugin   = Loader::validate('plugin');
+  }
 }

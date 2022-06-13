@@ -39,8 +39,8 @@
 
 * 返回、回传参数
 
-    详情请参考 [模板 -> 文章](../template/article.md)
-    
+  详情请参考 [模板 -> 文章](../template/article.md)
+
 ----------
 
 <span id="action_console_article_box"></span>
@@ -49,11 +49,11 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | article_ids | array | 被更改的文章 ID |
-    | article_box | array | 保存位置 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | article_ids | array | 被更改的文章 ID |
+  | article_box | array | 保存位置 |
+
 ----------
 
 <span id="action_console_article_status"></span>
@@ -62,11 +62,11 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | article_ids | array | 被更改的文章 ID |
-    | article_status | array | 状态 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | article_ids | array | 被更改的文章 ID |
+  | article_status | array | 状态 |
+
 ----------
 
 <span id="action_console_article_delete"></span>
@@ -75,9 +75,9 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | article_ids | array | 被删除的文章 ID |
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | article_ids | array | 被删除的文章 ID |
 
 ----------
 
@@ -87,7 +87,7 @@
 
 * 返回、回传参数
 
-    详情请参考 [模板 -> 栏目](../template/cate.md)
+  详情请参考 [模板 -> 栏目](../template/cate.md)
 
 ----------
 
@@ -97,11 +97,11 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | cate_ids | array | 被更改的栏目 ID |
-    | cate_status | array | 状态 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | cate_ids | array | 被更改的栏目 ID |
+  | cate_status | array | 状态 |
+
 ----------
 
 <span id="action_console_cate_delete"></span>
@@ -110,9 +110,9 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | cate_ids | array | 被删除的栏目 ID |
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | cate_ids | array | 被删除的栏目 ID |
 
 ----------
 
@@ -122,8 +122,8 @@
 
 * 返回、回传参数
 
-    详情请参考 [模板 -> 专题](../template/spec.md)
-    
+  详情请参考 [模板 -> 专题](../template/spec.md)
+
 ----------
 
 <span id="action_console_spec_status"></span>
@@ -132,11 +132,11 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | spec_ids | array | 被更改的专题 ID |
-    | spec_status | array | 状态 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | spec_ids | array | 被更改的专题 ID |
+  | spec_status | array | 状态 |
+
 ----------
 
 <span id="action_console_spec_delete"></span>
@@ -145,9 +145,9 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | spec_ids | array | 被删除的专题 ID |
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | spec_ids | array | 被删除的专题 ID |
 
 ----------
 
@@ -157,13 +157,13 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | link_name | string | 链接名称 |
-    | link_url | string | 链接地址 |
-    | link_status | string | 状态 |
-    | link_blank | bool | 是否新窗口打开 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | link_name | string | 链接名称 |
+  | link_url | string | 链接地址 |
+  | link_status | string | 状态 |
+  | link_blank | bool | 是否新窗口打开 |
+
 ----------
 
 <span id="action_console_link_edit"></span>
@@ -172,13 +172,13 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | link_id | int | 链接 ID |
-    | link_name | string | 链接名称 |
-    | link_url | string | 链接地址 |
-    | link_status | string | 状态 |
-    | link_blank | bool | 是否新窗口打开 |
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | link_id | int | 链接 ID |
+  | link_name | string | 链接名称 |
+  | link_url | string | 链接地址 |
+  | link_status | string | 状态 |
+  | link_blank | bool | 是否新窗口打开 |
 
 ----------
 
@@ -188,11 +188,11 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | link_ids | array | 被更改的链接 ID |
-    | link_status | array | 状态 |
-    
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | link_ids | array | 被更改的链接 ID |
+  | link_status | array | 状态 |
+
 ----------
 
 <span id="action_console_link_delete"></span>
@@ -201,6 +201,6 @@
 
 * 返回
 
-    | 参数 | 类型 | 描述 |
-    | - | - | - |
-    | link_ids | array | 被删除的链接 ID |
+  | 参数 | 类型 | 描述 |
+  | - | - | - |
+  | link_ids | array | 被删除的链接 ID |

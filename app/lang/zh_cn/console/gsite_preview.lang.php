@@ -6,13 +6,13 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Access denied' => '拒绝访问',
-    'Time'          => '时间',
-    'Source'        => '来源',
-    'Author'        => '作者',
+  'Access denied' => '拒绝访问',
+  'Time'          => '时间',
+  'Source'        => '来源',
+  'Author'        => '作者',
 );

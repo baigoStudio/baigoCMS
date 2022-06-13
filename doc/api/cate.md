@@ -30,68 +30,68 @@ GET
 
 ``` javascript
 {
-    "cateRow": {
+  "cateRow": {
+    "cate_id": "7",
+    "cate_name": "Tech",
+    "cate_alias": "tech",
+    "cate_tpl": "-1",
+    "cate_content": "",
+    "cate_link": "",
+    "cate_parent_id": "2",
+    "cate_attach_id": "3517",
+    "cate_prefix": "",
+    "cate_status": "show",
+    "cate_perpage": "30",
+    "rcode": "y250102",
+    "cate_breadcrumb": {
+      0: {
+        "cate_id": "1",
+        "cate_name": "baigo CMS",
+        "cate_alias": "baigocms",
+        "cate_tpl": "-1",
+        "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
+        "cate_link": "",
+        "cate_parent_id": "0",
+        "cate_prefix": "",
+        "cate_status": "show",
+        "cate_perpage": "30",
+        "rcode": "y250102"
+      },
+      1: {
+        "cate_id": "2",
+        "cate_name": "Support",
+        "cate_alias": "support",
+        "cate_tpl": "-1",
+        "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
+        "cate_link": "",
+        "cate_parent_id": "1",
+        "cate_prefix": "",
+        "cate_status": "show",
+        "cate_perpage": "30",
+        "rcode": "y250102"
+      },
+      3: {
         "cate_id": "7",
         "cate_name": "Tech",
         "cate_alias": "tech",
         "cate_tpl": "-1",
-        "cate_content": "",
+        "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
         "cate_link": "",
         "cate_parent_id": "2",
-        "cate_attach_id": "3517",
         "cate_prefix": "",
         "cate_status": "show",
         "cate_perpage": "30",
-        "rcode": "y250102",
-        "cate_breadcrumb": {
-            0: {
-                "cate_id": "1",
-                "cate_name": "baigo CMS",
-                "cate_alias": "baigocms",
-                "cate_tpl": "-1",
-                "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
-                "cate_link": "",
-                "cate_parent_id": "0",
-                "cate_prefix": "",
-                "cate_status": "show",
-                "cate_perpage": "30",
-                "rcode": "y250102"
-            },
-            1: {
-                "cate_id": "2",
-                "cate_name": "Support",
-                "cate_alias": "support",
-                "cate_tpl": "-1",
-                "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
-                "cate_link": "",
-                "cate_parent_id": "1",
-                "cate_prefix": "",
-                "cate_status": "show",
-                "cate_perpage": "30",
-                "rcode": "y250102"
-            },
-            3: {
-                "cate_id": "7",
-                "cate_name": "Tech",
-                "cate_alias": "tech",
-                "cate_tpl": "-1",
-                "cate_content": "<p>aaaaaaaaaaaasdfdsf</p>",
-                "cate_link": "",
-                "cate_parent_id": "2",
-                "cate_prefix": "",
-                "cate_status": "show",
-                "cate_perpage": "30",
-                "rcode": "y250102"
-            }
-        },
-        "ids": {
-            0: "30",
-            1: "14",
-            2: "13",
-            3: "17",
-            4: "7"
-        },
+        "rcode": "y250102"
+      }
+    },
+    "ids": {
+      0: "30",
+      1: "14",
+      2: "13",
+      3: "17",
+      4: "7"
     }
+  }
 }
 ```
 
@@ -125,81 +125,81 @@ GET
 
 ``` javascript
 {
-    "cate_tree": {
-        "1": {
-            "cate_id": "1", // ID
-            "cate_name": "baigo", // 名称
-            "cate_alias": "baigo",
-            "cate_content": "nickname",
-            "cate_status": "wait",
-            "cate_link": "",
-            "cate_parent_id": "0",
-            "cate_level": 1, // 栏目层级
-            "cate_childs": { // 子栏目
-                31: {
-                    "cate_id": "31",
-                    "cate_name": "gh",
-                    "cate_link": "",
-                    "cate_alias": "",
-                    "cate_status": "show",
-                    "cate_parent_id": "1",
-                    "cate_prefix": "",
-                    "cate_perpage": "50",
-                    "cate_level": 2,
-                    "cate_childs":  {}
-                },
-                27: {
-                    "cate_id": "27",
-                    "cate_name": "gh",
-                    "cate_link": "",
-                    "cate_alias": "hhhhhhhh",
-                    "cate_status": "show",
-                    "cate_parent_id": "1",
-                    "cate_prefix": "",
-                    "cate_perpage": "50",
-                    "cate_level": 2,
-                    "cate_childs": {
-                        26: {
-                            "cate_id": "26",
-                            "cate_name": "gh",
-                            "cate_link": "",
-                            "cate_alias": "hhhhhhhh",
-                            "cate_status": "show",
-                            "cate_parent_id": "27",
-                            "cate_prefix": "",
-                            "cate_perpage": "50",
-                            "cate_level": 3,
-                            "cate_childs": {}
-                        }
-                    }
-                }
-            }
+  "cate_tree": {
+    "1": {
+      "cate_id": "1", // ID
+      "cate_name": "baigo", // 名称
+      "cate_alias": "baigo",
+      "cate_content": "nickname",
+      "cate_status": "wait",
+      "cate_link": "",
+      "cate_parent_id": "0",
+      "cate_level": 1, // 栏目层级
+      "cate_childs": { // 子栏目
+        31: {
+          "cate_id": "31",
+          "cate_name": "gh",
+          "cate_link": "",
+          "cate_alias": "",
+          "cate_status": "show",
+          "cate_parent_id": "1",
+          "cate_prefix": "",
+          "cate_perpage": "50",
+          "cate_level": 2,
+          "cate_childs":  {}
         },
-        "2": {
-            "cate_id": "2", // ID
-            "cate_name": "baigo", // 名称
-            "cate_alias": "baigo",
-            "cate_content": "nickname",
-            "cate_status": "wait",
-            "cate_link": "",
-            "cate_parent_id": "0",
-            "cate_level": 1, // 栏目层级
-            "cate_childs": { // 子栏目
-                30: {
-                    "cate_id": "30",
-                    "cate_name": "gh",
-                    "cate_link": "",
-                    "cate_alias": "",
-                    "cate_status": "show",
-                    "cate_parent_id": "1",
-                    "cate_prefix": "",
-                    "cate_perpage": "50",
-                    "cate_level": 2,
-                    "cate_childs":  {}
-                }
+        27: {
+          "cate_id": "27",
+          "cate_name": "gh",
+          "cate_link": "",
+          "cate_alias": "hhhhhhhh",
+          "cate_status": "show",
+          "cate_parent_id": "1",
+          "cate_prefix": "",
+          "cate_perpage": "50",
+          "cate_level": 2,
+          "cate_childs": {
+            26: {
+              "cate_id": "26",
+              "cate_name": "gh",
+              "cate_link": "",
+              "cate_alias": "hhhhhhhh",
+              "cate_status": "show",
+              "cate_parent_id": "27",
+              "cate_prefix": "",
+              "cate_perpage": "50",
+              "cate_level": 3,
+              "cate_childs": {}
             }
+          }
         }
+      }
+    },
+    "2": {
+      "cate_id": "2", // ID
+      "cate_name": "baigo", // 名称
+      "cate_alias": "baigo",
+      "cate_content": "nickname",
+      "cate_status": "wait",
+      "cate_link": "",
+      "cate_parent_id": "0",
+      "cate_level": 1, // 栏目层级
+      "cate_childs": { // 子栏目
+        30: {
+          "cate_id": "30",
+          "cate_name": "gh",
+          "cate_link": "",
+          "cate_alias": "",
+          "cate_status": "show",
+          "cate_parent_id": "1",
+          "cate_prefix": "",
+          "cate_perpage": "50",
+          "cate_level": 2,
+          "cate_childs":  {}
+        }
+      }
     }
+  }
 }
 ```
 

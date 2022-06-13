@@ -11,42 +11,43 @@ use ginkgo\Loader;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------相册归属模型-------------*/
 class Album_View extends Model {
 
-    function createView() {
-        $_arr_viewCreate = array(
-            array('album.album_id'),
-            array('album.album_name'),
-            array('album.album_status'),
-            array('album.album_tpl'),
-            array('album.album_time'),
-            array('album.album_attach_id'),
-            array('album_belong.belong_attach_id'),
-        );
+  protected $create = array(
+    array('album.album_id'),
+    array('album.album_name'),
+    array('album.album_status'),
+    array('album.album_tpl'),
+    array('album.album_time'),
+    array('album.album_attach_id'),
+    array('album_belong.belong_attach_id'),
+  );
 
-        $_arr_join = array(
-            'album_belong',
-            array('album.album_id', '=', 'album_belong.belong_album_id'),
-            'LEFT',
-        );
 
-        $_num_count  = $this->viewFrom('album')->viewJoin($_arr_join)->create($_arr_viewCreate);
+  public function createView() {
+    $_arr_join = array(
+      'album_belong',
+      array('album.album_id', '=', 'album_belong.belong_album_id'),
+      'LEFT',
+    );
 
-        if ($_num_count !== false) {
-            $_str_rcode = 'y290108'; //更新成功
-            $_str_msg   = 'Create view successfully';
-        } else {
-            $_str_rcode = 'x290108'; //更新成功
-            $_str_msg   = 'Create view failed';
-        }
+    $_num_count  = $this->viewFrom('album')->viewJoin($_arr_join)->create();
 
-        return array(
-            'rcode' => $_str_rcode, //更新成功
-            'msg'   => $_str_msg,
-        );
+    if ($_num_count !== false) {
+      $_str_rcode = 'y290108'; //更新成功
+      $_str_msg   = 'Create view successfully';
+    } else {
+      $_str_rcode = 'x290108'; //更新成功
+      $_str_msg   = 'Create view failed';
     }
+
+    return array(
+      'rcode' => $_str_rcode, //更新成功
+      'msg'   => $_str_msg,
+    );
+  }
 }

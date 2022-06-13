@@ -6,37 +6,38 @@ baigo CMS 使用 PHP 作为模板。
 
 模板目录结构说明
 
-    +-- default
-    |   +-- index
-    |   |   +-- index.tpl.php         首页
-    |   |
-    |   +-- cate
-    |   |   +-- index.tpl.php         显示栏目
-    |   |
-    |   +-- article
-    |   |   +-- index.tpl.php         显示文章
-    |   |
-    |   +-- tag
-    |   |   +-- index.tpl.php         显示 TAG
-    |   |
-    |   +-- search
-    |   |   +-- index.tpl.php         显示搜索结果
-    |   |
-    |   +-- spec
-    |   |   +-- index.tpl.php         专题列表
-    |   |   +-- show.tpl.php          显示专题
-    |   |
-    |   +-- common                    通用
-    |   |   +-- error.tpl.php         出错信息
-    |   |
-    |   +-- include                   include
-    |      +-- html_head.tpl.php      HTML 头部
-    |      +-- html_foot.tpl.php      HTML 底部
-    |      +-- index_head.tpl.php     头部
-    |      +-- index_foot.tpl.php     底部
-    |   
-    +--  ...
-
+```
++-- default
+|   +-- index
+|   |   +-- index.tpl.php         首页
+|   |
+|   +-- cate
+|   |   +-- index.tpl.php         显示栏目
+|   |
+|   +-- article
+|   |   +-- index.tpl.php         显示文章
+|   |
+|   +-- tag
+|   |   +-- index.tpl.php         显示 TAG
+|   |
+|   +-- search
+|   |   +-- index.tpl.php         显示搜索结果
+|   |
+|   +-- spec
+|   |   +-- index.tpl.php         专题列表
+|   |   +-- show.tpl.php          显示专题
+|   |
+|   +-- common                    通用
+|   |   +-- error.tpl.php         出错信息
+|   |
+|   +-- include                   include
+|      +-- html_head.tpl.php      HTML 头部
+|      +-- html_foot.tpl.php      HTML 底部
+|      +-- index_head.tpl.php     头部
+|      +-- index_foot.tpl.php     底部
+|
++--  ...
+```
 
 ----------
 
@@ -46,20 +47,22 @@ baigo CMS 使用 PHP 作为模板。
 
 这些模板都位于 ./app/tpl/single 目录下，模板目录结构说明：
 
-    +-- tag                           TAG 模板
-    |   +-- default.tpl.php           默认
-    |   +-- ...
-    +-- spec                          专题模板
-    |   +-- default.tpl.php           默认
-    |   +-- ...
-    +-- album                         相册模板
-    |   +-- default.tpl.php           默认
-    |   +-- ...
-    +-- article                       文章模板
-    |   +-- default.tpl.php           默认
-    |   +-- ...
-    |   
-    +--  ...
+```
++-- tag                           TAG 模板
+|   +-- default.tpl.php           默认
+|   +-- ...
++-- spec                          专题模板
+|   +-- default.tpl.php           默认
+|   +-- ...
++-- album                         相册模板
+|   +-- default.tpl.php           默认
+|   +-- ...
++-- article                       文章模板
+|   +-- default.tpl.php           默认
+|   +-- ...
+|
++--  ...
+```
 
 > 注意：每个目录下只能建立文件，无法建立文件夹，系统会忽略文件夹
 

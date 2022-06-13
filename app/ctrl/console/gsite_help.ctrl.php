@@ -12,101 +12,101 @@ use ginkgo\Config;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 class Gsite_Help extends Ctrl {
 
-    protected function c_init($param = array()) {
-        parent::c_init();
+  protected function c_init($param = array()) {
+    parent::c_init();
 
-        $_str_configCharset    = BG_PATH_CONFIG . 'console' . DS . 'charset' . GK_EXT_INC;
-        $this->charsetRows     = Config::load($_str_configCharset, 'charset', 'console');
+    $_str_configCharset    = BG_PATH_CONFIG . 'console' . DS . 'charset' . GK_EXT_INC;
+    $this->charsetRows     = Config::load($_str_configCharset, 'charset', 'console');
 
-        $_str_current          = $this->obj_lang->getCurrent();
-        $_str_langCharset      = GK_APP_LANG . $_str_current . DS . 'console' . DS . 'charset' . GK_EXT_LANG;
-        $this->obj_lang->load($_str_langCharset, 'console.charset');
+    $_str_current          = $this->obj_lang->getCurrent();
+    $_str_langCharset      = GK_APP_LANG . $_str_current . DS . 'console' . DS . 'charset' . GK_EXT_LANG;
+    $this->obj_lang->load($_str_langCharset, 'console.charset');
+  }
+
+
+  public function charset() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_tplData = array(
+      'charsetRows'   => $this->charsetRows,
+    );
 
-    function charset() {
-        $_mix_init = $this->init();
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $this->assign($_arr_tpl);
 
-        $_arr_tplData = array(
-            'charsetRows'   => $this->charsetRows,
-        );
+    return $this->fetch();
+  }
 
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $this->assign($_arr_tpl);
+  public function attrQlist() {
+    $_mix_init = $this->init();
 
-        return $this->fetch();
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_attrQlist         = Config::get('attr_qlist', 'console.gsite_help');
 
-    function attrQlist() {
-        $_mix_init = $this->init();
+    $_arr_tplData = array(
+      'attrQlist'     => $_arr_attrQlist,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_arr_attrQlist         = Config::get('attr_qlist', 'console.gsite_help');
+    $this->assign($_arr_tpl);
 
-        $_arr_tplData = array(
-            'attrQlist'     => $_arr_attrQlist,
-        );
+    return $this->fetch();
+  }
 
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $this->assign($_arr_tpl);
+  public function filter() {
+    $_mix_init = $this->init();
 
-        return $this->fetch();
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_filterRows = Config::get('filter', 'console.gsite_help');
 
-    function filter() {
-        $_mix_init = $this->init();
+    $_arr_tplData = array(
+      'filterRows'    => $_arr_filterRows,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_arr_filterRows = Config::get('filter', 'console.gsite_help');
+    $this->assign($_arr_tpl);
 
-        $_arr_tplData = array(
-            'filterRows'    => $_arr_filterRows,
-        );
+    return $this->fetch();
+  }
 
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $this->assign($_arr_tpl);
+  public function selector() {
+    $_mix_init = $this->init();
 
-        return $this->fetch();
+    if ($_mix_init !== true) {
+      return $this->error($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_selectorRows      = Config::get('selector', 'console.gsite_help');
 
-    function selector() {
-        $_mix_init = $this->init();
+    $_arr_tplData = array(
+      'selectorRows'   => $_arr_selectorRows,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->error($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
 
-        $_arr_selectorRows      = Config::get('selector', 'console.gsite_help');
+    $this->assign($_arr_tpl);
 
-        $_arr_tplData = array(
-            'selectorRows'   => $_arr_selectorRows,
-        );
-
-        $_arr_tpl = array_replace_recursive($this->generalData, $_arr_tplData);
-
-        $this->assign($_arr_tpl);
-
-        return $this->fetch();
-    }
+    return $this->fetch();
+  }
 }

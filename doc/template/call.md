@@ -14,40 +14,39 @@
 
 * 文章列表、日排行、周排行、月排行、年排行、总排行
 
-    | 变量名 | 类型 | 描述 |
-    | - | - | - |
-    | callRow | array | 详情请查看 [调用详情](#callRow) |
-    | articleRows | array | 详情请查看 [文章列表](article.md) |
-
+  | 变量名 | 类型 | 描述 |
+  | - | - | - |
+  | callRow | array | 详情请查看 [调用详情](#callRow) |
+  | articleRows | array | 详情请查看 [文章列表](article.md) |
 
 * 栏目列表
 
-    | 变量名 | 类型 | 描述 |
-    | - | - | - |
-    | callRow | array | 详情请查看 [调用详情](#callRow) |
-    | cateRow | array | 详情请查看 [父栏目](cate.md) |
-    | cateRows | array | 详情请查看 [栏目列表](cate.md) |
+  | 变量名 | 类型 | 描述 |
+  | - | - | - |
+  | callRow | array | 详情请查看 [调用详情](#callRow) |
+  | cateRow | array | 详情请查看 [父栏目](cate.md) |
+  | cateRows | array | 详情请查看 [栏目列表](cate.md) |
 
 * 专题列表
 
-    | 变量名 | 类型 | 描述 |
-    | - | - | - |
-    | callRow | array | 详情请查看 [调用详情](#callRow) |
-    | specRows | array | 详情请查看 [专题列表](spec.md) |
+  | 变量名 | 类型 | 描述 |
+  | - | - | - |
+  | callRow | array | 详情请查看 [调用详情](#callRow) |
+  | specRows | array | 详情请查看 [专题列表](spec.md) |
 
 * TAG 列表、TAG 排行
 
-    | 变量名 | 类型 | 描述 |
-    | - | - | - |
-    | callRow | array | 详情请查看 [调用详情](#callRow) |
-    | tagRows | array | 详情请查看 [TAG 列表](tag.md) |
+  | 变量名 | 类型 | 描述 |
+  | - | - | - |
+  | callRow | array | 详情请查看 [调用详情](#callRow) |
+  | tagRows | array | 详情请查看 [TAG 列表](tag.md) |
 
 * 友情链接
 
-    | 变量名 | 类型 | 描述 |
-    | - | - | - |
-    | callRow | array | 详情请查看 [调用详情](#callRow) |
-    | linkRows | array | 详情请查看 [友情链接](#linkRow) |
+  | 变量名 | 类型 | 描述 |
+  | - | - | - |
+  | callRow | array | 详情请查看 [调用详情](#callRow) |
+  | linkRows | array | 详情请查看 [友情链接](#linkRow) |
 
 ----------
 
@@ -69,21 +68,20 @@ print_r($_arr_callRow);
 
 | 键名 | 类型 | 描述 | 备注 |
 | - | - | - | - |
-| call_id | int | 调用 ID |   |
+| call_id | int | 调用 ID | |
 | call_name | string | 调用变量名 | 调用的名称。 |
 | call_type | string | 调用类型 | article 文章列表、hits_day 日排行、hits_week 周排行、hits_month 月排行、hits_year 年排行、hits_all 总排行、spec 专题列表、cate 栏目列表、tag_list TAG 列表、tag_rank TAG 排行 |
-| call_cate_ids | array | 栏目 ID |   |
-| call_cate_excepts | array | 排除栏目 ID |   |
-| call_cate_id | int | 栏目 ID |   |
-| call_spec_ids | array | 专题 ID |  |
-| call_mark_ids | array | 标记 ID |   |
+| call_cate_ids | array | 栏目 ID | |
+| call_cate_excepts | array | 排除栏目 ID | |
+| call_cate_id | int | 栏目 ID | |
+| call_spec_ids | array | 专题 ID | |
+| call_mark_ids | array | 标记 ID | |
 | call_file | string | 生成文件类型 |
 | call_amount | array | 显示数量 | top 键为显示数量、except 键为排除数量 |
 | call_attach | string | 附件选项 | all 全部、attach 仅显示带附件文章、none 仅显示无附件文章 |
 | call_status | string | 调用状态 | enable 为启用，disable 为禁用。 |
-| call_tpl | string | 模板 |   |
+| call_tpl | string | 模板 | |
 | rcode | string | 返回代码 | 显示当前调用的状态，详情请查看 返回代码。 |
-
 
 ----------
 

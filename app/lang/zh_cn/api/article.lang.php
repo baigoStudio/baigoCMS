@@ -6,15 +6,15 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Access denied'         => '拒绝访问',
-    'Article not found'     => '文章不存在',
-    'Article is invalid'    => '文章无效',
-    'Missing ID'            => '无法获取 ID',
-    'Count successful'      => '计数成功',
-    'Count failed'          => '计数失败',
+  'Access denied'         => '拒绝访问',
+  'Article not found'     => '文章不存在',
+  'Article is invalid'    => '文章无效',
+  'Missing ID'            => '无法获取 ID',
+  'Count successful'      => '计数成功',
+  'Count failed'          => '计数失败',
 );

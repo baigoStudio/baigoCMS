@@ -30,43 +30,43 @@ GET
 
 ``` javascript
 {
-    "attachRow": {
-        "attach_id": "2662", //附件 ID
-        "attach_name": "20080228_765bd81512e1d286d713fnYZzWPWCwbf.jpg", //原始文件名
-        "attach_time": "1438308616",  //上传时间
-        "attach_ext": "jpg",  //扩展名
-        "attach_mime": "image/jpeg",  //MIME
-        "attach_size": "42996", //大小
-        "attach_type": "image", //附件类型
-        "attach_url": "/public/attach/2015/07/2662.jpg",  //附件 URL
-        "thumbRows": {
-            "0": {
-                "thumb_id": "0",
-                "thumb_width": "100",
-                "thumb_height": "100",
-                "thumb_type": "cut",
-                "thumb_url_name": "2019/08/4016_100_100_cut.jpg",
-                "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_100_100_cut.jpg"
-            },
-            "21": {
-                "thumb_id": "21",
-                "thumb_width": "200",
-                "thumb_height": "200",
-                "thumb_type": "ratio",
-                "thumb_url_name": "2019/08/4016_200_200_ratio.jpg",
-                "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_200_200_ratio.jpg"
-            },
-            "20": {
-                "thumb_id": "20",
-                "thumb_width": "50",
-                "thumb_height": "50",
-                "thumb_type": "ratio",
-                "thumb_url_name": "2019/08/4016_50_50_ratio.jpg",
-                "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_50_50_ratio.jpg"
-            }
-        },
-        "rcode": "y070102"
+  "attachRow": {
+    "attach_id": "2662", //附件 ID
+    "attach_name": "20080228_765bd81512e1d286d713fnYZzWPWCwbf.jpg", //原始文件名
+    "attach_time": "1438308616",  //上传时间
+    "attach_ext": "jpg",  //扩展名
+    "attach_mime": "image/jpeg",  //MIME
+    "attach_size": "42996", //大小
+    "attach_type": "image", //附件类型
+    "attach_url": "/public/attach/2015/07/2662.jpg",  //附件 URL
+    "thumbRows": {
+      "0": {
+        "thumb_id": "0",
+        "thumb_width": "100",
+        "thumb_height": "100",
+        "thumb_type": "cut",
+        "thumb_url_name": "2019/08/4016_100_100_cut.jpg",
+        "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_100_100_cut.jpg"
+      },
+      "21": {
+        "thumb_id": "21",
+        "thumb_width": "200",
+        "thumb_height": "200",
+        "thumb_type": "ratio",
+        "thumb_url_name": "2019/08/4016_200_200_ratio.jpg",
+        "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_200_200_ratio.jpg"
+      },
+      "20": {
+        "thumb_id": "20",
+        "thumb_width": "50",
+        "thumb_height": "50",
+        "thumb_type": "ratio",
+        "thumb_url_name": "2019/08/4016_50_50_ratio.jpg",
+        "thumb_url": "http://dev.baigo.net/attach/2019/08/4016_50_50_ratio.jpg"
+      }
     },
+    "rcode": "y070102"
+  }
 }
 ```
 
@@ -102,7 +102,6 @@ GET
 | - | - | - |
 | attachRows | array | 附件列表 | 详情请查看 [读取附件](#read) |
 | pageRow | array | 分页参数 | 详情请查看 [分页](pagination.md) |
-
 
 ----------
 

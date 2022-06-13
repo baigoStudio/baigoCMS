@@ -1,16 +1,12 @@
-    </div>
+<?php use ginkgo\Plugin; ?>
+  </div>
 
-    <footer class="container">
+<?php Plugin::listen('action_pub_foot_before'); ?>
 
-    </footer>
+  <footer class="container">
 
+  </footer>
 
-    <script type="text/javascript">
-    $(document).ready(function(){
-        var obj_query_global = $('#search_form_global').baigoQuery();
+<?php Plugin::listen('action_pub_foot_after');
 
-        $('#search_form_global').submit(function(){
-            obj_query_global.formSubmit();
-        });
-    });
-    </script>
+include($tpl_include . 'script_foot' . GK_EXT_TPL);

@@ -10,7 +10,7 @@ use app\model\index\Article as Article_Index;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------前台文章模型-------------*/

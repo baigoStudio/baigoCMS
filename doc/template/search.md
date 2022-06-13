@@ -47,42 +47,41 @@
 
 [点击查看 baigoQuery 文档](//doc.baigo.net/ginkgo/jquery/query/)。
 
-
 ``` php
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>搜索<title>
-    <script src="./public/static/lib/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
-    <script src="./public/static/lib/baigoQuery/1.0.0/baigoQuery.min.js" type="text/javascript"></script>
+  <meta charset="utf-8">
+  <title>搜索<title>
+  <script src="./public/static/lib/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+  <script src="./public/static/lib/baigoQuery/1.0.0/baigoQuery.min.js" type="text/javascript"></script>
 </head>
 <body>
 
-    <form name="search_form" id="search_form" action="<?php echo $url_search; ?>">
-        <div class="form-group">
-            <label>关键词</label>
-            <input type="text" name="key" id="key" value="<?php echo $search['key']; ?>" class="form-control" placeholder="关键词">
-        </div>
-        <div class="form-group">
-            <label>电压</label>
-            <input type="text" name="custom_25" value="<?php echo $search['custom_25']; ?>" class="form-control" placeholder="电压">
-        </div>
-        <div class="form-group">
-            <label>序列号</label>
-            <input type="text" name="custom_5" value="<?php echo $search['custom_5']; ?>" class="form-control" placeholder="序列号">
-        </div>
-        <button type="submit" id="search" class="btn btn-primary">搜索</button>
-    </form>
+  <form name="search_form" id="search_form" action="<?php echo $url_search; ?>">
+    <div class="form-group">
+      <label>关键词</label>
+      <input type="text" name="key" id="key" value="<?php echo $search['key']; ?>" class="form-control" placeholder="关键词">
+    </div>
+    <div class="form-group">
+      <label>电压</label>
+      <input type="text" name="custom_25" value="<?php echo $search['custom_25']; ?>" class="form-control" placeholder="电压">
+    </div>
+    <div class="form-group">
+      <label>序列号</label>
+      <input type="text" name="custom_5" value="<?php echo $search['custom_5']; ?>" class="form-control" placeholder="序列号">
+    </div>
+    <button type="submit" id="search" class="btn btn-primary">搜索</button>
+  </form>
 
-    <script type="text/javascript">
-    $(document).ready(function(){
-        var obj_query = $('#search_form').baigoQuery(); // 初始化插件
+  <script type="text/javascript">
+  $(document).ready(function(){
+    var obj_query = $('#search_form').baigoQuery(); // 初始化插件
 
-        $('#search_form').submit(function(){
-            obj_query.formSubmit(); // 提交
-        });
+    $('#search_form').submit(function(){
+      obj_query.formSubmit(); // 提交
     });
-    </script>
+  });
+  </script>
 
 </body>
 </html>

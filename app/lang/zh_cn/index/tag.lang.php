@@ -6,13 +6,13 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Access denied'     => '拒绝访问',
-    'Tag not found'     => 'TAG 不存在',
-    'Tag is invalid'    => 'TAG 无效',
-    'Missing ID or Tag' => '无法获取 ID 或 Tag',
+  'Access denied'     => '拒绝访问',
+  'Tag not found'     => 'TAG 不存在',
+  'Tag is invalid'    => 'TAG 无效',
+  'Missing ID or Tag' => '无法获取 ID 或 Tag',
 );

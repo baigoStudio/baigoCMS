@@ -6,13 +6,19 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Console'                       => '管理后台',
-    'Back'                          => '返回',
-    'Error'                         => '错误',
-    'You have not logged in'        => '您尚未登录',
+  'Console'                       => '管理后台',
+  'Back'                          => '返回',
+  'Error'                         => '错误',
+  'OK'                            => '确定',
+  'Cancel'                        => '取消',
+  'Confirm'                       => '确定',
+  'Close'                         => '关闭',
+  'Submitting'                    => '正在提交 ...',
+  'Complete'                      => '完成',
+  'You have not logged in'        => '您尚未登录',
 );

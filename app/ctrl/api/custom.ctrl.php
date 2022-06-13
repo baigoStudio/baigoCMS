@@ -11,49 +11,49 @@ use ginkgo\Loader;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------文章类-------------*/
 class Custom extends Ctrl {
 
-    protected function c_init($param = array()) { //构造函数
-        parent::c_init();
+  protected function c_init($param = array()) { //构造函数
+    parent::c_init();
 
-        $this->mdl_custom   = Loader::model('Custom');
+    $this->mdl_custom   = Loader::model('Custom');
+  }
+
+
+  public function tree() {
+    $_mix_init = $this->init();
+
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_customTree = $this->mdl_custom->cache();
 
-    function tree() {
-        $_mix_init = $this->init();
+    $_arr_return = array(
+      'custom_tree'   => $_arr_customTree,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
+    return $this->json($_arr_return);
+  }
 
-        $_arr_customTree = $this->mdl_custom->cache();
 
-        $_arr_return = array(
-            'custom_tree'   => $_arr_customTree,
-        );
+  public function lists() {
+    $_mix_init = $this->init();
 
-        return $this->json($_arr_return);
+    if ($_mix_init !== true) {
+      return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
     }
 
+    $_arr_customRows = $this->mdl_custom->cache(false);
 
-    function lists() {
-        $_mix_init = $this->init();
+    $_arr_return = array(
+      'customRows'   => $_arr_customRows,
+    );
 
-        if ($_mix_init !== true) {
-            return $this->fetchJson($_mix_init['msg'], $_mix_init['rcode']);
-        }
-
-        $_arr_customRows = $this->mdl_custom->cache(false);
-
-        $_arr_return = array(
-            'customRows'   => $_arr_customRows,
-        );
-
-        return $this->json($_arr_return);
-    }
+    return $this->json($_arr_return);
+  }
 }

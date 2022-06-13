@@ -28,20 +28,20 @@ GET
 
 ``` javascript
 {
-    "customRows": [
-        {
-            "custom_id": "4", //字段 ID
-            "custom_name": "尺寸", //名称
-            "custom_parent_id": "0", //隶属字段 ID
-            "custom_cate_id": "0", //隶属栏目 ID
-        },
-        {
-            "custom_id": "5",
-            "custom_name": "长",
-            "custom_parent_id": "4",
-            "custom_cate_id": "2"
-        }
-    ]
+  "customRows": [
+    {
+      "custom_id": "4", //字段 ID
+      "custom_name": "尺寸", //名称
+      "custom_parent_id": "0", //隶属字段 ID
+      "custom_cate_id": "0", //隶属栏目 ID
+    },
+    {
+      "custom_id": "5",
+      "custom_name": "长",
+      "custom_parent_id": "4",
+      "custom_cate_id": "2"
+    }
+  ]
 }
 ```
 
@@ -73,22 +73,22 @@ GET
 
 ``` javascript
 {
-    "custom_tree": [
+  "custom_tree": [
+    {
+      "custom_id": "4", //字段 ID
+      "custom_name": "尺寸", //名称
+      "custom_parent_id": "0", //隶属字段 ID
+      "custom_cate_id": "0", //隶属栏目 ID
+      "custom_childs": [ //子字段
         {
-            "custom_id": "4", //字段 ID
-            "custom_name": "尺寸", //名称
-            "custom_parent_id": "0", //隶属字段 ID
-            "custom_cate_id": "0", //隶属栏目 ID
-            "custom_childs": [ //子字段
-                {
-                    "custom_id": "5",
-                    "custom_name": "长",
-                    "custom_parent_id": "4",
-                    "custom_cate_id": "2"
-                }
-            ]
+          "custom_id": "5",
+          "custom_name": "长",
+          "custom_parent_id": "4",
+          "custom_cate_id": "2"
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 

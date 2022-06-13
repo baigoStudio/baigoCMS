@@ -13,323 +13,324 @@ use ginkgo\Crypt;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------应用模型-------------*/
 class App extends App_Base {
 
-    public $inputCommon;
-    public $inputSubmit;
-    public $inputDelete;
+  public $inputCommon = array();
+  public $inputSubmit = array();
+  public $inputDelete = array();
+  public $inputStatus = array();
 
 
-    /** 重置 app key
-     * reset function.
-     *
-     * @access public
-     * @param mixed $num_appId
-     * @return void
-     */
-    function reset() {
-        $_arr_appData = array(
-            'app_key'       => Func::rand(64),
-            'app_secret'    => Func::rand(16),
-        );
+  /** 重置 app key
+   * reset function.
+   *
+   * @access public
+   * @param mixed $num_appId
+   * @return void
+   */
+  public function reset() {
+    $_arr_appData = array(
+      'app_key'       => Func::rand(64),
+      'app_secret'    => Func::rand(16),
+    );
 
-        $_num_count     = $this->where('app_id', '=', $this->inputCommon['app_id'])->update($_arr_appData);
+    $_num_count     = $this->where('app_id', '=', $this->inputCommon['app_id'])->update($_arr_appData);
 
-        if ($_num_count > 0) {
-            $_str_rcode = 'y050103'; //更新成功
-            $_str_msg   = 'Reset successfully';
-        } else {
-            $_str_rcode = 'x050103'; //更新失败
-            $_str_msg   = 'Reset failed';
-        }
-
-        return array(
-            'rcode' => $_str_rcode, //成功
-            'msg'   => $_str_msg,
-        );
+    if ($_num_count > 0) {
+      $_str_rcode = 'y050103'; //更新成功
+      $_str_msg   = 'Reset successfully';
+    } else {
+      $_str_rcode = 'x050103'; //更新失败
+      $_str_msg   = 'Reset failed';
     }
 
+    return array(
+        'rcode' => $_str_rcode, //成功
+        'msg'   => $_str_msg,
+    );
+  }
 
-    /** 提交
-     * submit function.
-     *
-     * @access public
-     * @return void
-     */
-    function submit() {
-        $_str_appKey    = '';
-        $_str_appSecret = '';
 
-        $_arr_appData = array(
-            'app_name'          => $this->inputSubmit['app_name'],
-            'app_note'          => $this->inputSubmit['app_note'],
-            'app_status'        => $this->inputSubmit['app_status'],
-            'app_ip_allow'      => $this->inputSubmit['app_ip_allow'],
-            'app_ip_bad'        => $this->inputSubmit['app_ip_bad'],
-            'app_allow'         => $this->inputSubmit['app_allow'],
-            'app_param'         => $this->inputSubmit['app_param'],
-        );
+  /** 提交
+   * submit function.
+   *
+   * @access public
+   * @return void
+   */
+  public function submit() {
+    $_str_appKey    = '';
+    $_str_appSecret = '';
 
-        $_mix_vld = $this->validate($_arr_appData, '', 'submit_db');
+    $_arr_appData = array(
+      'app_name'          => $this->inputSubmit['app_name'],
+      'app_note'          => $this->inputSubmit['app_note'],
+      'app_status'        => $this->inputSubmit['app_status'],
+      'app_ip_allow'      => $this->inputSubmit['app_ip_allow'],
+      'app_ip_bad'        => $this->inputSubmit['app_ip_bad'],
+      'app_allow'         => $this->inputSubmit['app_allow'],
+      'app_param'         => $this->inputSubmit['app_param'],
+    );
 
-        if ($_mix_vld !== true) {
-            return array(
-                'app_id'        => $this->inputSubmit['app_id'],
-                'app_key'       => $_str_appKey,
-                'app_secret'    => $_str_appSecret,
-                'rcode'         => 'x050201',
-                'msg'           => end($_mix_vld),
-            );
-        }
+    $_mix_vld = $this->validate($_arr_appData, '', 'submit_db');
 
-        $_arr_appData['app_allow'] = Arrays::toJson($_arr_appData['app_allow']);
-        $_arr_appData['app_param'] = Arrays::toJson($_arr_appData['app_param']);
-
-        if ($this->inputSubmit['app_id'] > 0) {
-            $_num_appId     = $this->inputSubmit['app_id'];
-
-            $_num_count     = $this->where('app_id', '=', $_num_appId)->update($_arr_appData);
-
-            if ($_num_count > 0) {
-                $_str_rcode = 'y050103'; //更新成功
-                $_str_msg   = 'Update App successfully';
-            } else {
-                $_str_rcode = 'x050103'; //更新失败
-                $_str_msg   = 'Did not make any changes';
-            }
-        } else {
-            $_str_appKey    = Func::rand(64);
-            $_str_appSecret = Func::rand(16);
-            $_arr_insert = array(
-                'app_key'       => $_str_appKey,
-                'app_secret'    => $_str_appSecret,
-                'app_time'      => GK_NOW,
-            );
-            $_arr_data = array_replace_recursive($_arr_appData, $_arr_insert);
-
-            $_num_appId   = $this->insert($_arr_data);
-
-            if ($_num_appId > 0) {
-                $_str_rcode = 'y050101'; //更新成功
-                $_str_msg   = 'Add App successfully';
-            } else {
-                $_str_rcode = 'x050101'; //更新失败
-                $_str_msg   = 'Add App failed';
-            }
-        }
-
-        return array(
-            'app_id'        => $_num_appId,
-            'app_key'       => Crypt::crypt($_str_appKey, $this->inputSubmit['app_name']),
-            'app_secret'    => $_str_appSecret,
-            'rcode'         => $_str_rcode, //成功
-            'msg'           => $_str_msg,
-        );
+    if ($_mix_vld !== true) {
+      return array(
+        'app_id'        => $this->inputSubmit['app_id'],
+        'app_key'       => $_str_appKey,
+        'app_secret'    => $_str_appSecret,
+        'rcode'         => 'x050201',
+        'msg'           => end($_mix_vld),
+      );
     }
 
+    $_arr_appData['app_allow'] = Arrays::toJson($_arr_appData['app_allow']);
+    $_arr_appData['app_param'] = Arrays::toJson($_arr_appData['app_param']);
 
-    /** 更改状态
-     * status function.
-     *
-     * @access public
-     * @param mixed $str_status
-     * @return void
-     */
-    function status() {
-        $_arr_appUpdate = array(
-            'app_status' => $this->inputStatus['act'],
-        );
+    if ($this->inputSubmit['app_id'] > 0) {
+      $_num_appId     = $this->inputSubmit['app_id'];
 
-        $_num_count     = $this->where('app_id', 'IN', $this->inputStatus['app_ids'])->update($_arr_appUpdate);
+      $_num_count     = $this->where('app_id', '=', $_num_appId)->update($_arr_appData);
 
-        //如影响行数大于0则返回成功
-        if ($_num_count > 0) {
-            $_str_rcode = 'y050103'; //成功
-            $_str_msg   = 'Successfully updated {:count} Apps';
-        } else {
-            $_str_rcode = 'x050103'; //失败
-            $_str_msg   = 'Did not make any changes';
-        }
+      if ($_num_count > 0) {
+        $_str_rcode = 'y050103'; //更新成功
+        $_str_msg   = 'Update App successfully';
+      } else {
+        $_str_rcode = 'x050103'; //更新失败
+        $_str_msg   = 'Did not make any changes';
+      }
+    } else {
+      $_str_appKey    = Func::rand(64);
+      $_str_appSecret = Func::rand(16);
+      $_arr_insert = array(
+        'app_key'       => $_str_appKey,
+        'app_secret'    => $_str_appSecret,
+        'app_time'      => GK_NOW,
+      );
+      $_arr_data = array_replace_recursive($_arr_appData, $_arr_insert);
 
-        return array(
-            'count' => $_num_count,
-            'rcode' => $_str_rcode,
-            'msg'   => $_str_msg,
-        );
+      $_num_appId   = $this->insert($_arr_data);
+
+      if ($_num_appId > 0) {
+        $_str_rcode = 'y050101'; //更新成功
+        $_str_msg   = 'Add App successfully';
+      } else {
+        $_str_rcode = 'x050101'; //更新失败
+        $_str_msg   = 'Add App failed';
+      }
     }
 
+    return array(
+      'app_id'        => $_num_appId,
+      'app_key'       => Crypt::crypt($_str_appKey, $this->inputSubmit['app_name']),
+      'app_secret'    => $_str_appSecret,
+      'rcode'         => $_str_rcode, //成功
+      'msg'           => $_str_msg,
+    );
+  }
 
-    /** 删除
-     * delete function.
-     *
-     * @access public
-     * @return void
-     */
-    function delete() {
-        $_num_count     = $this->where('app_id', 'IN', $this->inputDelete['app_ids'])->delete();
 
-        //如车影响行数小于0则返回错误
-        if ($_num_count > 0) {
-            $_str_rcode = 'y050104'; //成功
-            $_str_msg   = 'Successfully deleted {:count} Apps';
-        } else {
-            $_str_rcode = 'x050104'; //失败
-            $_str_msg   = 'No App have been deleted';
-        }
+  /** 更改状态
+   * status function.
+   *
+   * @access public
+   * @param mixed $str_status
+   * @return void
+   */
+  public function status() {
+    $_arr_appUpdate = array(
+      'app_status' => $this->inputStatus['act'],
+    );
 
-        return array(
-            'count' => $_num_count,
-            'rcode' => $_str_rcode,
-            'msg'   => $_str_msg,
-        );
+    $_num_count     = $this->where('app_id', 'IN', $this->inputStatus['app_ids'])->update($_arr_appUpdate);
+
+    //如影响行数大于0则返回成功
+    if ($_num_count > 0) {
+      $_str_rcode = 'y050103'; //成功
+      $_str_msg   = 'Successfully updated {:count} Apps';
+    } else {
+      $_str_rcode = 'x050103'; //失败
+      $_str_msg   = 'Did not make any changes';
     }
 
+    return array(
+      'count' => $_num_count,
+      'rcode' => $_str_rcode,
+      'msg'   => $_str_msg,
+    );
+  }
 
-    /** 表单验证
-     * inputSubmit function.
-     *
-     * @access public
-     * @return void
-     */
-    function inputSubmit() {
-        $_arr_inputParam = array(
-            'app_id'            => array('int', 0),
-            'app_name'          => array('str', ''),
-            'app_note'          => array('str', ''),
-            'app_status'        => array('str', ''),
-            'app_ip_allow'      => array('str', ''),
-            'app_ip_bad'        => array('str', ''),
-            'app_allow'         => array('arr', array()),
-            'app_param'         => array('arr', array()),
-            '__token__'         => array('str', ''),
-        );
 
-        $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
+  /** 删除
+   * delete function.
+   *
+   * @access public
+   * @return void
+   */
+  public function delete() {
+    $_num_count     = $this->where('app_id', 'IN', $this->inputDelete['app_ids'])->delete();
 
-        $_mix_vld = $this->validate($_arr_inputSubmit, '', 'submit');
-
-        if ($_mix_vld !== true) {
-            return array(
-                'rcode' => 'x050201',
-                'msg'   => end($_mix_vld),
-            );
-        }
-
-        if ($_arr_inputSubmit['app_id'] > 0) {
-            $_arr_appRow = $this->check($_arr_inputSubmit['app_id']);
-
-            if ($_arr_appRow['rcode'] != 'y050102') {
-                return $_arr_appRow;
-            }
-        }
-
-        $_arr_inputSubmit['rcode'] = 'y050201';
-
-        $this->inputSubmit = $_arr_inputSubmit;
-
-        return $_arr_inputSubmit;
+    //如车影响行数小于0则返回错误
+    if ($_num_count > 0) {
+      $_str_rcode = 'y050104'; //成功
+      $_str_msg   = 'Successfully deleted {:count} Apps';
+    } else {
+      $_str_rcode = 'x050104'; //失败
+      $_str_msg   = 'No App have been deleted';
     }
 
+    return array(
+      'count' => $_num_count,
+      'rcode' => $_str_rcode,
+      'msg'   => $_str_msg,
+    );
+  }
 
-    /** 选择
-     * inputCommon function.
-     *
-     * @access public
-     * @return void
-     */
-    function inputCommon() {
-        $_arr_inputParam = array(
-            'app_id'    => array('int', 0),
-            '__token__' => array('str', ''),
-        );
 
-        $_arr_inputCommon = $this->obj_request->post($_arr_inputParam);
+  /** 表单验证
+   * inputSubmit function.
+   *
+   * @access public
+   * @return void
+   */
+  public function inputSubmit() {
+    $_arr_inputParam = array(
+      'app_id'            => array('int', 0),
+      'app_name'          => array('str', ''),
+      'app_note'          => array('str', ''),
+      'app_status'        => array('str', ''),
+      'app_ip_allow'      => array('str', ''),
+      'app_ip_bad'        => array('str', ''),
+      'app_allow'         => array('arr', array()),
+      'app_param'         => array('arr', array()),
+      '__token__'         => array('str', ''),
+    );
 
-        $_mix_vld = $this->validate($_arr_inputCommon, '', 'common');
+    $_arr_inputSubmit = $this->obj_request->post($_arr_inputParam);
 
-        if ($_mix_vld !== true) {
-            return array(
-                'rcode' => 'x050201',
-                'msg'   => end($_mix_vld),
-            );
-        }
+    $_mix_vld = $this->validate($_arr_inputSubmit, '', 'submit');
 
-        $_arr_appRow = $this->check($_arr_inputCommon['app_id']);
-
-        if ($_arr_appRow['rcode'] != 'y050102') {
-            return $_arr_appRow;
-        }
-
-        $_arr_inputCommon['rcode'] = 'y050201';
-
-        $this->inputCommon = $_arr_inputCommon;
-
-        return $_arr_inputCommon;
+    if ($_mix_vld !== true) {
+      return array(
+        'rcode' => 'x050201',
+        'msg'   => end($_mix_vld),
+      );
     }
 
+    if ($_arr_inputSubmit['app_id'] > 0) {
+      $_arr_appRow = $this->check($_arr_inputSubmit['app_id']);
 
-
-    /** 选择
-     * inputDelete function.
-     *
-     * @access public
-     * @return void
-     */
-    function inputDelete() {
-        $_arr_inputParam = array(
-            'app_ids'   => array('arr', array()),
-            '__token__' => array('str', ''),
-        );
-
-        $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
-
-        $_arr_inputDelete['app_ids'] = Arrays::filter($_arr_inputDelete['app_ids']);
-
-        $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
-
-        if ($_mix_vld !== true) {
-            return array(
-                'rcode' => 'x050201',
-                'msg'   => end($_mix_vld),
-            );
-        }
-
-        $_arr_inputDelete['rcode'] = 'y050201';
-
-        $this->inputDelete = $_arr_inputDelete;
-
-        return $_arr_inputDelete;
+      if ($_arr_appRow['rcode'] != 'y050102') {
+        return $_arr_appRow;
+      }
     }
 
+    $_arr_inputSubmit['rcode'] = 'y050201';
 
-    function inputStatus() {
-        $_arr_inputParam = array(
-            'app_ids'   => array('arr', array()),
-            'act'       => array('str', ''),
-            '__token__' => array('str', ''),
-        );
+    $this->inputSubmit = $_arr_inputSubmit;
 
-        $_arr_inputStatus = $this->obj_request->post($_arr_inputParam);
+    return $_arr_inputSubmit;
+  }
 
-        $_arr_inputStatus['app_ids'] = Arrays::filter($_arr_inputStatus['app_ids']);
 
-        $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
+  /** 选择
+   * inputCommon function.
+   *
+   * @access public
+   * @return void
+   */
+  public function inputCommon() {
+    $_arr_inputParam = array(
+      'app_id'    => array('int', 0),
+      '__token__' => array('str', ''),
+    );
 
-        if ($_mix_vld !== true) {
-            return array(
-                'rcode' => 'x050201',
-                'msg'   => end($_mix_vld),
-            );
-        }
+    $_arr_inputCommon = $this->obj_request->post($_arr_inputParam);
 
-        $_arr_inputStatus['rcode'] = 'y050201';
+    $_mix_vld = $this->validate($_arr_inputCommon, '', 'common');
 
-        $this->inputStatus = $_arr_inputStatus;
-
-        return $_arr_inputStatus;
+    if ($_mix_vld !== true) {
+      return array(
+        'rcode' => 'x050201',
+        'msg'   => end($_mix_vld),
+      );
     }
+
+    $_arr_appRow = $this->check($_arr_inputCommon['app_id']);
+
+    if ($_arr_appRow['rcode'] != 'y050102') {
+      return $_arr_appRow;
+    }
+
+    $_arr_inputCommon['rcode'] = 'y050201';
+
+    $this->inputCommon = $_arr_inputCommon;
+
+    return $_arr_inputCommon;
+  }
+
+
+
+  /** 选择
+   * inputDelete function.
+   *
+   * @access public
+   * @return void
+   */
+  public function inputDelete() {
+    $_arr_inputParam = array(
+      'app_ids'   => array('arr', array()),
+      '__token__' => array('str', ''),
+    );
+
+    $_arr_inputDelete = $this->obj_request->post($_arr_inputParam);
+
+    $_arr_inputDelete['app_ids'] = Arrays::unique($_arr_inputDelete['app_ids']);
+
+    $_mix_vld = $this->validate($_arr_inputDelete, '', 'delete');
+
+    if ($_mix_vld !== true) {
+      return array(
+        'rcode' => 'x050201',
+        'msg'   => end($_mix_vld),
+      );
+    }
+
+    $_arr_inputDelete['rcode'] = 'y050201';
+
+    $this->inputDelete = $_arr_inputDelete;
+
+    return $_arr_inputDelete;
+  }
+
+
+  public function inputStatus() {
+    $_arr_inputParam = array(
+      'app_ids'   => array('arr', array()),
+      'act'       => array('str', ''),
+      '__token__' => array('str', ''),
+    );
+
+    $_arr_inputStatus = $this->obj_request->post($_arr_inputParam);
+
+    $_arr_inputStatus['app_ids'] = Arrays::unique($_arr_inputStatus['app_ids']);
+
+    $_mix_vld = $this->validate($_arr_inputStatus, '', 'status');
+
+    if ($_mix_vld !== true) {
+      return array(
+        'rcode' => 'x050201',
+        'msg'   => end($_mix_vld),
+      );
+    }
+
+    $_arr_inputStatus['rcode'] = 'y050201';
+
+    $this->inputStatus = $_arr_inputStatus;
+
+    return $_arr_inputStatus;
+  }
 }

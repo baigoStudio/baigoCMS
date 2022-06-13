@@ -12,204 +12,181 @@ use ginkgo\Func;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------自定义字段模型-------------*/
 class Custom extends Model {
 
-    private $create;
+  protected $pk = 'custom_id';
+  protected $comment = '自定义字段';
+  protected $drop = array(
+    'custom_target',
+  );
 
-    function m_init() {
-        $_mdl_custom = Loader::model('Custom', '', false);
-        $this->arr_status   = $_mdl_custom->arr_status;
-        $this->arr_type     = $_mdl_custom->arr_type;
-        $this->arr_format   = $_mdl_custom->arr_format;
+  public $arr_status = array();
+  public $arr_type   = array();
+  public $arr_format = array();
 
-        $_str_status    = implode('\',\'', $this->arr_status);
-        $_str_type      = implode('\',\'', $this->arr_type);
-        $_str_format    = implode('\',\'', $this->arr_format);
+  protected function m_init() {
+    $_mdl_custom = Loader::model('Custom', '', false);
+    $this->arr_status   = $_mdl_custom->arr_status;
+    $this->arr_type     = $_mdl_custom->arr_type;
+    $this->arr_format   = $_mdl_custom->arr_format;
 
-        $this->create = array(
-            'custom_id' => array(
-                'type'      => 'smallint(6)',
-                'not_null'  => true,
-                'ai'        => true,
-                'comment'   => 'ID',
-            ),
-            'custom_name' => array(
-                'type'      => 'varchar(90)',
-                'not_null'  => true,
-                'default'   => '',
-                'comment'   => '名称',
-            ),
-            'custom_type' => array(
-                'type'      => 'enum(\'' . $_str_type . '\')',
-                'not_null'  => true,
-                'default'   => $this->arr_type[0],
-                'comment'   => '类型',
-                'update'    => $this->arr_type[0],
-            ),
-            'custom_status' => array(
-                'type'      => 'enum(\'' . $_str_status . '\')',
-                'not_null'  => true,
-                'default'   => $this->arr_status[0],
-                'comment'   => '状态',
-                'update'    => $this->arr_status[0],
-            ),
-            'custom_format' => array(
-                'type'      => 'enum(\'' . $_str_format . '\')',
-                'not_null'  => true,
-                'default'   => $this->arr_format[0],
-                'comment'   => '格式',
-                'update'    => $this->arr_format[0],
-            ),
-            'custom_opt' => array(
-                'type'      => 'varchar(1000)',
-                'not_null'  => true,
-                'default'   => '',
-                'comment'   => '选项',
-            ),
-            'custom_order' => array(
-                'type'      => 'smallint(6)',
-                'not_null'  => true,
-                'default'   => 0,
-                'comment'   => '排序',
-            ),
-            'custom_parent_id' => array(
-                'type'      => 'smallint(6)',
-                'not_null'  => true,
-                'default'   => 0,
-                'comment'   => '父字段',
-            ),
-            'custom_cate_id' => array(
-                'type'      => 'smallint(6)',
-                'not_null'  => true,
-                'default'   => 0,
-                'comment'   => '栏目ID',
-            ),
-            'custom_size' => array(
-                'type'      => 'smallint(6)',
-                'not_null'  => true,
-                'default'   => 0,
-                'comment'   => '字段长度',
-            ),
-        );
+    $_str_status    = implode('\',\'', $this->arr_status);
+    $_str_type      = implode('\',\'', $this->arr_type);
+    $_str_format    = implode('\',\'', $this->arr_format);
+
+    $this->create = array(
+      'custom_id' => array(
+        'type'      => 'smallint(6)',
+        'not_null'  => true,
+        'ai'        => true,
+        'comment'   => 'ID',
+      ),
+      'custom_name' => array(
+        'type'      => 'varchar(90)',
+        'not_null'  => true,
+        'default'   => '',
+        'comment'   => '名称',
+      ),
+      'custom_type' => array(
+        'type'      => 'enum(\'' . $_str_type . '\')',
+        'not_null'  => true,
+        'default'   => $this->arr_type[0],
+        'comment'   => '类型',
+        'update'    => $this->arr_type[0],
+      ),
+      'custom_status' => array(
+        'type'      => 'enum(\'' . $_str_status . '\')',
+        'not_null'  => true,
+        'default'   => $this->arr_status[0],
+        'comment'   => '状态',
+        'update'    => $this->arr_status[0],
+      ),
+      'custom_format' => array(
+        'type'      => 'enum(\'' . $_str_format . '\')',
+        'not_null'  => true,
+        'default'   => $this->arr_format[0],
+        'comment'   => '格式',
+        'update'    => $this->arr_format[0],
+      ),
+      'custom_opt' => array(
+        'type'      => 'varchar(1000)',
+        'not_null'  => true,
+        'default'   => '',
+        'comment'   => '选项',
+      ),
+      'custom_order' => array(
+        'type'      => 'smallint(6)',
+        'not_null'  => true,
+        'default'   => 0,
+        'comment'   => '排序',
+      ),
+      'custom_parent_id' => array(
+        'type'      => 'smallint(6)',
+        'not_null'  => true,
+        'default'   => 0,
+        'comment'   => '父字段',
+      ),
+      'custom_cate_id' => array(
+        'type'      => 'smallint(6)',
+        'not_null'  => true,
+        'default'   => 0,
+        'comment'   => '栏目ID',
+      ),
+      'custom_size' => array(
+        'type'      => 'smallint(6)',
+        'not_null'  => true,
+        'default'   => 0,
+        'comment'   => '字段长度',
+      ),
+    );
+  }
+
+
+  /**
+   * mdl_create_table function.
+   *
+   * @access public
+   * @return void
+   */
+  public function createTable() {
+    $_num_count  = $this->create();
+
+    if ($_num_count !== false) {
+      $_str_rcode = 'y200105'; //更新成功
+      $_str_msg   = 'Create table successfully';
+    } else {
+      $_str_rcode = 'x200105'; //更新成功
+      $_str_msg   = 'Create table failed';
     }
 
+    return array(
+      'rcode' => $_str_rcode, //更新成功
+      'msg'   => $_str_msg,
+    );
+  }
 
-    /**
-     * mdl_create_table function.
-     *
-     * @access public
-     * @return void
-     */
-    function createTable() {
-        $_num_count  = $this->create($this->create, 'custom_id', '自定义字段');
 
-        if ($_num_count !== false) {
-            $_str_rcode = 'y200105'; //更新成功
-            $_str_msg   = 'Create table successfully';
-        } else {
-            $_str_rcode = 'x200105'; //更新成功
-            $_str_msg   = 'Create table failed';
-        }
+  public function alterTable() {
+    $_str_rcode = 'y200111';
+    $_str_msg   = 'No need to update table';
 
-        return array(
-            'rcode' => $_str_rcode, //更新成功
-            'msg'   => $_str_msg,
-        );
+    $_num_count  = $this->alter();
+
+    if ($_num_count === false) {
+      $_str_rcode = 'x200106';
+      $_str_msg   = 'Update table failed';
+    } else if ($_num_count > 0) {
+      $_str_rcode = 'y200106';
+      $_str_msg   = 'Update table successfully';
     }
 
+    $_arr_field = $this->getFields();
 
+    if (in_array('custom_type', $_arr_field)) {
+      $_str_type = implode('\',\'', $this->arr_type);
 
-    function alterTable() {
-        $_arr_alter = $this->alterProcess($this->create);
+      $_arr_customData = array(
+        'custom_type' => 'text'
+      );
+      $this->update($_arr_customData); //全部更新为 text 类型 (原类型内包含)
 
-        $_str_rcode = 'y200111';
-        $_str_msg   = 'No need to update table';
+      $_arr_alter['custom_type'] = array(
+        'MODIFY',
+        array(
+          'type'      => 'enum(\'' . $_str_type . '\',\'text\')',
+          'not_null'  => true,
+          'default'   => $this->arr_type[0],
+          'comment'   => '类型',
+        ),
+      );
 
-        if (!Func::isEmpty($_arr_alter)) {
-            $_num_count  = $this->alter($_arr_alter);
+      $this->alter($_arr_alter);
 
-            if ($_num_count !== false) {
-                $_str_rcode = 'y200106';
-                $_str_msg   = 'Update table successfully';
+      $_arr_customData = array(
+        'custom_type' => $this->arr_type[0],
+      );
+      $this->update($_arr_customData); //全部更新为 str 类型
 
-                foreach ($this->create as $_key=>$_value) {
-                    if (isset($_value['update'])) {
-                        $_arr_data = array(
-                            $_key => $_value['update'],
-                        );
-                        $this->where('LENGTH(`' . $_key . '`) < 1')->update($_arr_data);
-                    }
-                }
-            } else {
-                $_str_rcode = 'x200106';
-                $_str_msg   = 'Update table failed';
-            }
-        }
+      $_arr_alter['custom_type'] = array(
+        'MODIFY',
+        array(
+          'type'      => 'enum(\'' . $_str_type . '\')',
+          'not_null'  => true,
+          'default'   => $this->arr_type[0],
+          'comment'   => '类型',
+        ),
+       );
 
-        unset($_arr_alter);
-
-        $_arr_col = $this->show();
-
-        if (isset($_arr_col['custom_type'])) {
-            $_str_type      = implode('\',\'', $this->arr_type);
-
-            $_arr_customData = array(
-                'custom_type' => 'text'
-            );
-            $this->update($_arr_customData); //全部更新为 text 类型 (原类型内包含)
-
-            $_arr_alter['custom_type'] = array('CHANGE', 'enum(\'' . $_str_type . '\',\'text\') NOT NULL DEFAULT \'' . $this->arr_type[0] . '\' COMMENT \'类型\'', 'custom_type');
-
-            $this->alter($_arr_alter);
-
-            $_arr_customData = array(
-                'custom_type' => $this->arr_type[0],
-            );
-            $this->update($_arr_customData); //全部更新为 str 类型
-
-            $_arr_alter['custom_type'] = array('CHANGE', 'enum(\'' . $_str_type . '\') NOT NULL DEFAULT \'' . $this->arr_type[0] . '\' COMMENT \'类型\'', 'custom_type');
-
-            $this->alter($_arr_alter);
-        }
-
-        return array(
-            'rcode' => $_str_rcode,
-            'msg'   => $_str_msg,
-        );
+      $this->alter($_arr_alter);
     }
 
-
-    function dropColumn() {
-        $_arr_col   = $this->show();
-        $_arr_alter = array();
-
-        $_str_rcode = 'y200115';
-        $_str_msg   = 'No need to drop fields';
-
-        if (in_array('custom_target', $_arr_col)) {
-            $_arr_alter['custom_target'] = array('DROP');
-        }
-
-        if (!Func::isEmpty($_arr_alter)) {
-            $_reselt = $this->alter($_arr_alter);
-
-            $_num_count  = $this->alter($_arr_alter);
-
-            if ($_num_count !== false) {
-                $_str_rcode = 'y200113';
-                $_str_msg   = 'Drop fields successfully';
-            } else {
-                $_str_rcode = 'x200113';
-                $_str_msg   = 'Drop fields failed';
-            }
-        }
-
-        return array(
-            'rcode' => $_str_rcode,
-        );
-    }
+    return array(
+        'rcode' => $_str_rcode,
+        'msg'   => $_str_msg,
+    );
+  }
 }

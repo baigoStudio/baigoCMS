@@ -30,13 +30,13 @@ GET
 
 ``` javascript
 {
-    "tagRow": {
-        "tag_id": "62",
-        "tag_name": "2",
-        "tag_article_count": "0",
-        "tag_status": "pub",
-        "rcode": "y120102"
-    }
+  "tagRow": {
+    "tag_id": "62",
+    "tag_name": "2",
+    "tag_article_count": "0",
+    "tag_status": "pub",
+    "rcode": "y120102"
+  }
 }
 ```
 
@@ -51,5 +51,5 @@ GET
 | tag_id | int | ID |
 | tag_name | string | 名称 |
 | tag_article_count | int | 与当前 TAG 关联的文章数 |
-| tag_status | string | 状态	pub 为发布，hide 为隐藏 |
+| tag_status | string | 状态  pub 为发布，hide 为隐藏 |
 | rcode | string | 返回码 |

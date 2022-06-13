@@ -10,7 +10,7 @@
 | $articleRows | array | 文章列表 | 隶属于当前栏目的所有文章。详情请查看 [文章](article.md)。 |
 | $pageRow | array | 分页参数 | 详情请查看 [分页](pagination.md) |
 | $urlRow | array | 栏目 URL | |
- 
+
 ----------
 
 <span id="cateRow"></a>
@@ -29,50 +29,50 @@
 | rcode | string | 返回代码 | 显示当前栏目的状态，详情请查看 返回代码。 |
 | cate_breadcrumb | array | 面包屑路径 | 关于面包屑路径请查看 [互动百科](http://www.baike.com/wiki/面包屑路径) |
 | cate_url | array | 栏目 URL | |
- 
+
 数据示例
 
 ``` php
 array(
-    'cate_id'           => '1',
-    'cate_name'         => '关于 baigo',
-    'cate_alias'        => 'about',
-    'cate_tpl_do'       => 'default',
-    'cate_content'      => 'baigo Studio 是一个公益性的团体',
-    'cate_link'         => '',
-    'cate_parent_id'    => '0',
-    'cate_prefix'       => '',
-    'cate_status'       => 'show',
-    'cate_perpage'      => '10',
-    'rcode'             => 'y250102',
-    'cate_breadcrumb'   => array(
-        0 => array(
-            'cate_id'           => '1',
-            'cate_name'         => '关于 baigo',
-            'cate_alias'        => 'about',
-            'cate_tpl_do'       => 'default',
-            'cate_content'      => 'baigo Studio 是一个公益性的团体',
-            'cate_link'         => '',
-            'cate_parent_id'    => '0',
-            'cate_prefix'       => '',
-            'cate_status'       => 'show',
-            'cate_perpage'      => '10',
-            'rcode'             => 'y250102',
-            'cate_url'          => array(
-                'url'           => '/public/index.php/cate/about/id/1/',
-                'url_more'      => '',
-                'param'         => 'page/',
-                'param_more'    => 'page/',
-                'suffix'        => '',
-            ),
-        ),
-    ),
-    'cate_url'          => array(
+  'cate_id'           => '1',
+  'cate_name'         => '关于 baigo',
+  'cate_alias'        => 'about',
+  'cate_tpl_do'       => 'default',
+  'cate_content'      => 'baigo Studio 是一个公益性的团体',
+  'cate_link'         => '',
+  'cate_parent_id'    => '0',
+  'cate_prefix'       => '',
+  'cate_status'       => 'show',
+  'cate_perpage'      => '10',
+  'rcode'             => 'y250102',
+  'cate_breadcrumb'   => array(
+    0 => array(
+      'cate_id'           => '1',
+      'cate_name'         => '关于 baigo',
+      'cate_alias'        => 'about',
+      'cate_tpl_do'       => 'default',
+      'cate_content'      => 'baigo Studio 是一个公益性的团体',
+      'cate_link'         => '',
+      'cate_parent_id'    => '0',
+      'cate_prefix'       => '',
+      'cate_status'       => 'show',
+      'cate_perpage'      => '10',
+      'rcode'             => 'y250102',
+      'cate_url'          => array(
         'url'           => '/public/index.php/cate/about/id/1/',
         'url_more'      => '',
         'param'         => 'page/',
         'param_more'    => 'page/',
         'suffix'        => '',
+      ),
     ),
+  ),
+  'cate_url'          => array(
+    'url'           => '/public/index.php/cate/about/id/1/',
+    'url_more'      => '',
+    'param'         => 'page/',
+    'param_more'    => 'page/',
+    'suffix'        => '',
+  ),
 );
 ```

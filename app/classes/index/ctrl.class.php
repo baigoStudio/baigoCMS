@@ -13,27 +13,27 @@ use ginkgo\Plugin;
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 
 /*-------------控制中心通用控制器-------------*/
 abstract class Ctrl extends Ctrl_Base {
 
-    protected function c_init($param = array()) { //构造函数
-        parent::c_init();
+  protected function c_init($param = array()) { //构造函数
+    parent::c_init();
 
-        $this->obj_index = Loader::classes('Index', '', false);
+    $this->obj_index = Loader::classes('Index', '', false);
 
-        if ($this->configVisit['visit_type'] != 'default') {
-            Config::set('route_type', 'noBaseFile', 'route');
-        }
-
-        Plugin::listen('action_pub_init');
-
-        $this->obj_call = Loader::classes('Call');
-        $this->setObj('call', $this->obj_call);
-
-        $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+    if ($this->configVisit['visit_type'] != 'default') {
+      Config::set('route_type', 'noBaseFile', 'route');
     }
+
+    Plugin::listen('action_pub_init');
+
+    $this->obj_call = Loader::classes('Call');
+    $this->setObj('call', $this->obj_call);
+
+    $this->obj_view->setPath(BG_TPL_INDEX . $this->configBase['site_tpl']);
+  }
 }

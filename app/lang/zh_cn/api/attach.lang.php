@@ -6,12 +6,12 @@
 
 //不能非法包含或直接执行
 if (!defined('IN_GINKGO')) {
-    return 'Access denied';
+  return 'Access denied';
 }
 
 /*-------------------------通用-------------------------*/
 return array(
-    'Access denied'         => '拒绝访问',
-    'Attachment not found'  => '附件不存在',
-    'Missing ID'            => '无法获取 ID',
+  'Access denied'         => '拒绝访问',
+  'Attachment not found'  => '附件不存在',
+  'Missing ID'            => '无法获取 ID',
 );
